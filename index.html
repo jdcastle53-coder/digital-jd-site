@@ -11,6 +11,33 @@
     .glass { backdrop-filter: blur(10px); background: rgba(255,255,255,0.75); }
     .shadow-soft { box-shadow: 0 10px 30px rgba(0,0,0,.08); }
     .gradient { background: linear-gradient(135deg,#0ea5e9,#6366f1,#22c55e); }
+    /* Signature moments vivid styling */
+    #moments {
+      position: relative;
+      min-height: 76px;
+    }
+    #moments .moment {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: .75rem 1rem;
+      border-radius: .75rem;
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      opacity: 0;
+      transform: translateY(8px);
+      background: linear-gradient(90deg, rgba(14,165,233,0.12), rgba(99,102,241,0.06));
+      color: #0f172a;
+      box-shadow: 0 8px 28px rgba(15,23,42,0.06);
+      border: 1px solid rgba(15,23,42,0.06);
+      text-align: center;
+      font-weight: 600;
+    }
+    #moments .moment.active { opacity: 1; transform: translateY(0); }
+    #moment-dots { display:flex; gap:.5rem; justify-content:center; }
+    #moment-dots button { width:10px; height:10px; border-radius:9999px; border:0; padding:0; }
+    #moment-dots button.active { background: #0f172a; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -206,34 +233,45 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
-    // Rotating signature moments
+    // Rotating signature moments with precise timing: 0.5s fade-in, 1s visible, 0.5s fade-out
     (function(){
       const container = document.getElementById('moments');
       if (!container) return;
       const moments = Array.from(container.querySelectorAll('.moment'));
       const dots = document.getElementById('moment-dots');
       let idx = 0;
-      let interval = 4000;
-      let timer;
+      let running = true;
 
-      function show(i){
-        moments.forEach((m, j) => {
-          m.style.display = j === i ? 'block' : 'none';
-          m.style.opacity = j === i ? '1' : '0';
-        });
-        if(dots){
-          dots.innerHTML = moments.map((_,j)=> `<button class=\"w-2 h-2 rounded-full ${j===i? 'bg-slate-800': 'bg-slate-300'}\"></button>`).join('');
-        }
+      function updateDots(i){
+        if(!dots) return;
+        dots.innerHTML = moments.map((_,j)=> `<button class=\"${j===i? 'active': ''}\" aria-label=\"Show moment ${j+1}\"></button>`).join('');
+        Array.from(dots.children).forEach((b, j)=> b.addEventListener('click', ()=> { goTo(j); }));
       }
 
-      function next(){ idx = (idx+1) % moments.length; show(idx); }
+      function goTo(i){
+        moments.forEach((m, j)=> m.classList.toggle('active', j===i));
+        updateDots(i);
+        idx = i;
+      }
 
-      container.addEventListener('mouseenter', ()=> { clearInterval(timer); });
-      container.addEventListener('mouseleave', ()=> { timer = setInterval(next, interval); });
+      function cycle(){
+        // timeline: fade-in 0.5s -> visible 1s -> fade-out 0.5s => total 2s per moment
+        if(!running) return;
+        goTo(idx);
+        setTimeout(()=>{
+          // start fade-out by removing active class
+          moments[idx].classList.remove('active');
+        }, 1500); // after 0.5 + 1.0s
+        idx = (idx + 1) % moments.length;
+        setTimeout(()=>{ if(running) cycle(); }, 2000);
+      }
+
+      container.addEventListener('mouseenter', ()=> { running = false; });
+      container.addEventListener('mouseleave', ()=> { if(!running){ running = true; cycle(); } });
 
       // init
-      show(0);
-      timer = setInterval(next, interval);
+      updateDots(0);
+      cycle();
     })();
   </script>
 </body>
