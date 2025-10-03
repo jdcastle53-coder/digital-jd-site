@@ -305,7 +305,7 @@
       function loop(){
         if(!running) return;
         highlight(i);
-        setTimeout(()=>{ if(!running) return; items[i].classList.remove('highlight'); i = (i+1) % items.length; setTimeout(loop, 0); }, 1000);
+        setTimeout(()=>{ if(!running) return; items[i].classList.remove('highlight'); i = (i+1) % items.length; setTimeout(loop, 0); }, 2000);
       }
 
       list.addEventListener('mouseenter', ()=> running = false);
