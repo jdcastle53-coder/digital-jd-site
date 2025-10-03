@@ -13,8 +13,8 @@
     .gradient { background: linear-gradient(135deg,#0ea5e9,#6366f1,#22c55e); }
 
     /* Right-side list styling (muted/highlight) */
-    #moments-list .muted { color: rgba(6,59,102,0.5); transition: color .35s cubic-bezier(.2,.8,.2,1), transform .35s cubic-bezier(.2,.8,.2,1); transform-origin: left center; }
-    #moments-list .highlight { color: rgba(6,59,102,1); transform: scale(1.2); font-weight:800; }
+  #moments-list .muted { color: rgba(6,59,102,0.6); transition: color .35s cubic-bezier(.2,.8,.2,1), transform .35s cubic-bezier(.2,.8,.2,1), opacity .45s ease; transform-origin: left center; opacity: .45; }
+  #moments-list .highlight { color: rgba(6,59,102,1); transform: scale(1.06); font-weight:800; opacity: 1; }
     #moments-list .dot { width:10px; height:10px; border-radius:9999px; background: rgba(6,59,102,0.12); flex:0 0 10px; transition: background .25s, transform .25s; transform-origin: center; }
     #moments-list .dot.active-dot { background: #0b3b66; transform: scale(1.25); }
     #moments-list .muted-text { display:inline-block; }
