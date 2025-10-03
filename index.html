@@ -14,32 +14,33 @@
     /* Signature moments vivid styling */
     #moments {
       position: relative;
-      min-height: 112px;
+      min-height: 76px;
     }
     #moments .moment {
       position: absolute;
       inset: 0;
       display: flex;
-      gap: .75rem;
       align-items: center;
       justify-content: center;
-      padding: 1rem 1.25rem;
-      border-radius: 1rem;
-      transition: opacity 0.5s cubic-bezier(.2,.9,.2,1), transform 0.5s cubic-bezier(.2,.9,.2,1);
+      padding: .75rem 1rem;
+      border-radius: .75rem;
+      transition: opacity 0.5s ease, transform 0.5s ease;
       opacity: 0;
-      transform: translateY(10px) scale(.98);
-      background: linear-gradient(90deg, rgba(59,130,246,0.08), rgba(99,102,241,0.06));
+      transform: translateY(8px);
+      background: linear-gradient(90deg, rgba(14,165,233,0.12), rgba(99,102,241,0.06));
       color: #0f172a;
-      box-shadow: 0 14px 40px rgba(2,6,23,0.08);
+      box-shadow: 0 8px 28px rgba(15,23,42,0.06);
       border: 1px solid rgba(15,23,42,0.06);
-      text-align: left;
-      font-weight: 700;
+      text-align: center;
+      font-weight: 600;
     }
-    #moments .moment .text-xs { color: rgba(15,23,42,0.6); font-weight:400 }
-    #moments .moment.active { opacity: 1; transform: translateY(0) scale(1); }
-    #moment-dots { display:flex; gap:.5rem; justify-content:center; margin-top:.5rem }
-    #moment-dots button { width:10px; height:10px; border-radius:9999px; border:0; padding:0; background: rgba(15,23,42,0.18); }
+    #moments .moment.active { opacity: 1; transform: translateY(0); }
+    #moment-dots { display:flex; gap:.5rem; justify-content:center; }
+    #moment-dots button { width:10px; height:10px; border-radius:9999px; border:0; padding:0; }
     #moment-dots button.active { background: #0f172a; }
+  /* Muted list on the right */
+  #moments-list .muted { color: rgba(15,23,42,0.45); transition: color .25s ease, transform .25s ease; }
+  #moments-list .highlight { color: rgba(15,23,42,1); transform: scale(1.2); font-weight:700; }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
@@ -95,57 +96,27 @@
         </div>
         <div class="glass shadow-soft rounded-2xl p-6">
           <div class="text-sm font-semibold text-slate-600 mb-2">Signature moments</div>
-          <div id="moments" class="relative">
-            <div class="moment p-4 rounded-xl text-sm" role="article">
-              <div class="text-2xl">⚔️</div>
-              <div class="ml-3">
-                <div class="font-semibold">Conflict Erupts Between Departments</div>
-                <div class="text-xs text-slate-600">Cut through politics, restore alignment fast.</div>
-              </div>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+            <div id="moments" class="relative">
+              <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm">Conflict Erupts Between Departments</div>
+              <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm" style="display:none">High-Performer Suddenly Disengages</div>
+              <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm" style="display:none">Merger or Acquisition Creates Culture Clash</div>
+              <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm" style="display:none">Critical Project Misses Its Deadline</div>
+              <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm" style="display:none">New Strategy Faces Silent Resistance</div>
+              <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm" style="display:none">A Crisis Demands a Tough, Unpopular Decision</div>
+              <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm" style="display:none">Leadership Trust is Eroding Across the Ranks</div>
+              <div class="mt-2 flex gap-2 justify-center" id="moment-dots"></div>
             </div>
-            <div class="moment p-4 rounded-xl text-sm" role="article">
-              <div class="text-2xl">📉</div>
-              <div class="ml-3">
-                <div class="font-semibold">High-Performer Suddenly Disengages</div>
-                <div class="text-xs text-slate-600">Diagnose root cause, win back top talent.</div>
-              </div>
-            </div>
-            <div class="moment p-4 rounded-xl text-sm" role="article">
-              <div class="text-2xl">🔀</div>
-              <div class="ml-3">
-                <div class="font-semibold">Merger or Acquisition Creates Culture Clash</div>
-                <div class="text-xs text-slate-600">Unify teams and reduce churn after M&A.</div>
-              </div>
-            </div>
-            <div class="moment p-4 rounded-xl text-sm" role="article">
-              <div class="text-2xl">⏳</div>
-              <div class="ml-3">
-                <div class="font-semibold">Critical Project Misses Its Deadline</div>
-                <div class="text-xs text-slate-600">Get delivery back on track without drama.</div>
-              </div>
-            </div>
-            <div class="moment p-4 rounded-xl text-sm" role="article">
-              <div class="text-2xl">🤫</div>
-              <div class="ml-3">
-                <div class="font-semibold">New Strategy Faces Silent Resistance</div>
-                <div class="text-xs text-slate-600">Expose blockers and build buy-in quickly.</div>
-              </div>
-            </div>
-            <div class="moment p-4 rounded-xl text-sm" role="article">
-              <div class="text-2xl">🔥</div>
-              <div class="ml-3">
-                <div class="font-semibold">A Crisis Demands a Tough, Unpopular Decision</div>
-                <div class="text-xs text-slate-600">Decide confidently and manage the aftermath.</div>
-              </div>
-            </div>
-            <div class="moment p-4 rounded-xl text-sm" role="article">
-              <div class="text-2xl">🤝</div>
-              <div class="ml-3">
-                <div class="font-semibold">Leadership Trust is Eroding Across the Ranks</div>
-                <div class="text-xs text-slate-600">Rebuild credibility and restore authority.</div>
-              </div>
-            </div>
-            <div class="mt-3 flex gap-2 justify-center" id="moment-dots" aria-hidden="false"></div>
+
+            <ul id="moments-list" class="space-y-2 text-sm md:pl-2">
+              <li class="muted p-2 rounded">Conflict Erupts Between Departments</li>
+              <li class="muted p-2 rounded">High-Performer Suddenly Disengages</li>
+              <li class="muted p-2 rounded">Merger or Acquisition Creates Culture Clash</li>
+              <li class="muted p-2 rounded">Critical Project Misses Its Deadline</li>
+              <li class="muted p-2 rounded">New Strategy Faces Silent Resistance</li>
+              <li class="muted p-2 rounded">A Crisis Demands a Tough, Unpopular Decision</li>
+              <li class="muted p-2 rounded">Leadership Trust is Eroding Across the Ranks</li>
+            </ul>
           </div>
         </div>
       </div>
@@ -316,6 +287,30 @@
       // init
       updateDots(0);
       cycle();
+    })();
+
+    // Right-side muted list highlight loop
+    (function(){
+      const list = document.getElementById('moments-list');
+      if(!list) return;
+      const items = Array.from(list.querySelectorAll('.muted'));
+      let i = 0;
+      let running = true;
+
+      function highlight(idx){
+        items.forEach((it,j)=> it.classList.toggle('highlight', j===idx));
+      }
+
+      function loop(){
+        if(!running) return;
+        highlight(i);
+        setTimeout(()=>{ if(!running) return; items[i].classList.remove('highlight'); i = (i+1) % items.length; setTimeout(loop, 0); }, 1000);
+      }
+
+      list.addEventListener('mouseenter', ()=> running = false);
+      list.addEventListener('mouseleave', ()=> { if(!running){ running = true; loop(); } });
+
+      loop();
     })();
   </script>
 </body>
