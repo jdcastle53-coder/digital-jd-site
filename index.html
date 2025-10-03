@@ -66,12 +66,16 @@
         </div>
         <div class="glass shadow-soft rounded-2xl p-6">
           <div class="text-sm font-semibold text-slate-600 mb-2">Signature moments</div>
-          <ul class="grid grid-cols-1 gap-3 text-sm">
-            <li class="p-3 bg-white rounded-xl border border-slate-200">🧩 Merger fallout: unite “us vs. them” teams</li>
-            <li class="p-3 bg-white rounded-xl border border-slate-200">⚖️ COO vs CFO: mediate cost vs growth fights</li>
-            <li class="p-3 bg-white rounded-xl border border-slate-200">🔥 Burned-out sales org: reset pace without fluff</li>
-            <li class="p-3 bg-white rounded-xl border border-slate-200">🗣️ Hard feedback: script it, rehearse it, deliver it</li>
-          </ul>
+          <div id="moments" class="relative">
+            <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm">Conflict Erupts Between Departments</div>
+            <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm" style="display:none">High-Performer Suddenly Disengages</div>
+            <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm" style="display:none">Merger or Acquisition Creates Culture Clash</div>
+            <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm" style="display:none">Critical Project Misses Its Deadline</div>
+            <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm" style="display:none">New Strategy Faces Silent Resistance</div>
+            <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm" style="display:none">A Crisis Demands a Tough, Unpopular Decision</div>
+            <div class="moment p-3 bg-white rounded-xl border border-slate-200 text-sm" style="display:none">Leadership Trust is Eroding Across the Ranks</div>
+            <div class="mt-2 flex gap-2 justify-center" id="moment-dots"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -202,6 +206,35 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+    // Rotating signature moments
+    (function(){
+      const container = document.getElementById('moments');
+      if (!container) return;
+      const moments = Array.from(container.querySelectorAll('.moment'));
+      const dots = document.getElementById('moment-dots');
+      let idx = 0;
+      let interval = 4000;
+      let timer;
+
+      function show(i){
+        moments.forEach((m, j) => {
+          m.style.display = j === i ? 'block' : 'none';
+          m.style.opacity = j === i ? '1' : '0';
+        });
+        if(dots){
+          dots.innerHTML = moments.map((_,j)=> `<button class=\"w-2 h-2 rounded-full ${j===i? 'bg-slate-800': 'bg-slate-300'}\"></button>`).join('');
+        }
+      }
+
+      function next(){ idx = (idx+1) % moments.length; show(idx); }
+
+      container.addEventListener('mouseenter', ()=> { clearInterval(timer); });
+      container.addEventListener('mouseleave', ()=> { timer = setInterval(next, interval); });
+
+      // init
+      show(0);
+      timer = setInterval(next, interval);
+    })();
   </script>
 </body>
 </html>
