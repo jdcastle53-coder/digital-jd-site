@@ -12,17 +12,24 @@
     .shadow-soft { box-shadow: 0 10px 30px rgba(0,0,0,.08); }
     .gradient { background: linear-gradient(135deg,#0ea5e9,#6366f1,#22c55e); }
 
-  /* specific moments box: subtle light-blue glass */
-  .moments-box { background: rgba(235,249,255,0.9); border: 1px solid rgba(14,165,233,0.08); }
+    /* specific moments box: slightly darker light-blue for contrast + stronger border */
+    .moments-box {
+      background: rgba(229,242,255,0.95); /* pale sky */
+      border: 2px solid rgba(14,165,233,0.32); /* stronger blue border */
+      box-shadow: 0 8px 24px rgba(2,6,23,0.06), inset 0 2px 6px rgba(14,165,233,0.03);
+    }
 
     /* Right-side list styling (muted/highlight) */
   #moments-list .muted { color: rgba(6,59,102,0.6); transition: color .35s cubic-bezier(.2,.8,.2,1), transform .35s cubic-bezier(.2,.8,.2,1), opacity .45s ease; transform-origin: left center; opacity: .45; }
   #moments-list .highlight { color: rgba(6,59,102,1); transform: scale(1.06); font-weight:800; opacity: 1; }
     #moments-list .dot { width:10px; height:10px; border-radius:9999px; background: rgba(6,59,102,0.12); flex:0 0 10px; transition: background .25s, transform .25s; transform-origin: center; }
-    #moments-list .dot.active-dot { background: #0b3b66; transform: scale(1.25); }
+  #moments-list .dot.active-dot { background: #0b3b66; transform: scale(1.25); box-shadow: 0 0 10px rgba(11,59,102,0.35); }
     #moments-list .muted-text { display:inline-block; }
     /* active item styles */
-    #moments-list li.highlight .muted-text { color: rgba(6,59,102,1); }
+  #moments-list li.highlight .muted-text { color: rgba(6,59,102,1); }
+  /* glow and attention for highlighted item */
+  #moments-list li.highlight { box-shadow: 0 8px 24px rgba(14,165,233,0.14); border-radius: 0.5rem; position: relative; z-index: 2; transition: box-shadow .25s ease, transform .15s ease; }
+  #moments-list li.highlight .muted-text { text-shadow: 0 4px 18px rgba(14,165,233,0.08); }
   </style>
 </head>
 <body class="bg-slate-50 text-slate-900">
