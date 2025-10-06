@@ -12,6 +12,9 @@
     .shadow-soft { box-shadow: 0 10px 30px rgba(0,0,0,.08); }
     .gradient { background: linear-gradient(135deg,#0ea5e9,#6366f1,#22c55e); }
 
+  /* specific moments box: subtle light-blue glass */
+  .moments-box { background: rgba(235,249,255,0.9); border: 1px solid rgba(14,165,233,0.08); }
+
     /* Right-side list styling (muted/highlight) */
   #moments-list .muted { color: rgba(6,59,102,0.6); transition: color .35s cubic-bezier(.2,.8,.2,1), transform .35s cubic-bezier(.2,.8,.2,1), opacity .45s ease; transform-origin: left center; opacity: .45; }
   #moments-list .highlight { color: rgba(6,59,102,1); transform: scale(1.06); font-weight:800; opacity: 1; }
@@ -67,7 +70,7 @@
 
             <p class="mt-3 text-xs text-slate-500">Cancel anytime – Secure checkout via STRIPE.</p>
         </div>
-        <div class="glass shadow-soft rounded-2xl p-6">
+  <div class="glass shadow-soft rounded-2xl p-6 moments-box">
           <div class="text-xl md:text-3xl font-extrabold text-[#0b3b66] mb-4">Career Defining Moments</div>
           <ul id="moments-list" class="space-y-4 text-base md:pl-0 grid grid-cols-1">
             <li class="muted p-3 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">Conflict Erupts Between Departments</span></li>
