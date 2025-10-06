@@ -15,8 +15,8 @@
     .accent-border-red { --accent-red: rgba(204,16,16,0.95); }
     .moments-box { background: rgba(204,16,16,0.08); border: 8px solid var(--accent-red); box-shadow: 0 12px 38px rgba(204,16,16,0.18); }
 
-    .hero-accent { color: var(--accent-red); font-weight: 800; font-style: italic; display: block; text-align: center; }
-    .hero-accent.large { font-size: 2rem; }
+  .hero-accent { color: var(--accent-red); font-weight: 800; font-style: italic; display: inline-block; }
+  .hero-accent.large { font-size: inherit; }
 
     /* Right-side list styling (muted/highlight) */
   #moments-list .muted { color: rgba(6,59,102,0.6); transition: color .35s cubic-bezier(.2,.8,.2,1), transform .35s cubic-bezier(.2,.8,.2,1), opacity .45s ease; transform-origin: left center; opacity: .45; }
@@ -62,7 +62,9 @@
             </p>
 
             <p class="mt-4 text-base text-slate-600">
-              <span class="accent-border-red"><span class="hero-accent large">Especially for those moments where careers are made, or broken</span></span>
+              <span style="display:flex; justify-content:center;">
+                <span class="accent-border-red"><span class="hero-accent large">Especially for those moments where careers are made, or broken</span></span>
+              </span>
             </p>
 
             <div class="mt-8 flex flex-wrap gap-3">
