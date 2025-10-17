@@ -2,21 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>Digital JD – McKinsey-grade leadership consigliere</title>
+  <title>Digital JD – McKinsey-grade leadership concierge</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="Digital JD gives founders and execs just-in-time coaching for high-stakes moments—mergers, exec conflict, burned-out teams—delivered in JD’s distinctive, no-fluff voice." />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
+    :root { --accent-blue: rgba(11,59,102,0.95); }
+    html { scroll-behavior: smooth; }
     .glass { backdrop-filter: blur(10px); background: rgba(255,255,255,0.75); }
     .shadow-soft { box-shadow: 0 10px 30px rgba(0,0,0,.08); }
     .gradient { background: linear-gradient(135deg,#0ea5e9,#6366f1,#22c55e); }
-    /* red accents for moments box */
-    .accent-border-red { --accent-red: rgba(204,16,16,0.95); }
-    .moments-box { background: rgba(204,16,16,0.08); border: 8px solid var(--accent-red); box-shadow: 0 12px 38px rgba(204,16,16,0.18); }
+  /* blue accents for moments box (used instead of red) */
+  .accent-border-blue { --accent-blue: rgba(11,59,102,0.95); }
+  .moments-box { background: rgba(11,59,102,0.06); border: 8px solid var(--accent-blue); box-shadow: 0 12px 38px rgba(11,59,102,0.18); }
 
-  .hero-accent { color: var(--accent-red); font-weight: 800; font-style: italic; display: inline-block; }
-  .hero-accent.large { font-size: inherit; }
+  .hero-accent { color: var(--accent-blue); font-weight: 800; font-style: italic; display: inline-block; }
+  /* increase by ~24% for readability */
+  .hero-accent.large { font-size: 1.24em; }
+  /* single-line hero variant */
+  .hero-accent-single { font-size: 1.28em; line-height:1.05; }
+
+  /* wavy heading for deep thought */
+  .wavy { display: inline-block; line-height: 1; }
+  .wavy span { display: inline-block; will-change: transform; animation: wave 1.6s ease-in-out 1 forwards; }
+  .wavy span:nth-child(odd) { animation-direction: alternate; }
+  @keyframes wave {
+    0% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-6px) rotate(-1deg); }
+    100% { transform: translateY(0) rotate(0deg); }
+  }
 
     /* Right-side list styling (muted/highlight) */
   #moments-list .muted { color: rgba(6,59,102,0.6); transition: color .35s cubic-bezier(.2,.8,.2,1), transform .35s cubic-bezier(.2,.8,.2,1), opacity .45s ease; transform-origin: left center; opacity: .45; }
@@ -40,51 +55,50 @@
         <a href="#how" class="hover:text-slate-600">How it helps</a>
         <a href="#pricing" class="hover:text-slate-600">Pricing</a>
         <a href="#faq" class="hover:text-slate-600">FAQ</a>
+        <a href="#compare" class="hover:text-slate-600">Compare</a>
       </nav>
-      <a href="https://buy.stripe.com/YOUR_STARTER_LINK" class="inline-flex items-center rounded-xl bg-slate-900 text-white px-4 py-2 text-sm font-medium shadow-soft hover:bg-black">
-        <span>Get started</span>
-      </a>
+      <div class="flex items-center gap-3">
+  <a href="#compare" class="md:hidden text-sm text-slate-700 hover:text-slate-900">Compare</a>
+  <a href="#pricing" id="header-cta" onclick="event.preventDefault(); (function(){var p=document.getElementById('pricing'); if(p){p.scrollIntoView({behavior:'smooth', block:'start'}); p.classList.add('ring-highlight'); setTimeout(function(){p.classList.remove('ring-highlight');},1400);} history.replaceState(null,'','#pricing');})();" class="inline-flex items-center rounded-xl bg-slate-900 text-white px-4 py-2 text-sm font-medium shadow-soft hover:bg-black">
+          <span>Get started</span>
+        </a>
+      </div>
     </div>
   </header>
 
   <!-- Hero -->
   <section class="relative overflow-hidden">
-    <div class="absolute inset-0 gradient opacity-10"></div>
+    <div class="absolute inset-0 gradient opacity-10" style="pointer-events:none;" aria-hidden="true"></div>
     <div class="max-w-6xl mx-auto px-4 py-20">
       <div class="grid md:grid-cols-2 gap-10 items-center">
         <div>
-            <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">
-              WHAT . . . a PhD in Organizational Leadership in Your POCKET!
+            <h1 class="text-4xl md:text-5xl font-extrabold leading-tight text-center md:text-left">
+              Executive clarity. On demand.
             </h1>
 
             <p class="mt-4 text-lg md:text-xl text-slate-700 font-semibold">
-              “Yes, a McKinsey-grade PhD Consigliere, specifically designed to help you manage and lead through any business dynamic 24/7”
+              Built on Dr. JD Castle’s lifetime of crisis-tested leadership frameworks and executive coaching experience — like having a McKinsey partner in your pocket.
             </p>
 
-            <p class="mt-4 text-base text-slate-600">
-              <span style="display:flex; justify-content:center;">
-                <span class="accent-border-red"><span class="hero-accent large">Especially for those moments where careers are made, or broken</span></span>
-              </span>
-            </p>
-
-            <div class="mt-8 flex flex-wrap gap-3">
-              <a href="https://buy.stripe.com/YOUR_STARTER_LINK" class="inline-flex items-center rounded-xl bg-blue-600 text-white px-6 py-3 text-base font-semibold shadow-soft hover:bg-blue-700">
-                Get started
+            <div class="mt-8 text-center md:text-left">
+              <!-- rebuilt hero CTA to ensure click works -->
+              <a href="#pricing" id="hero-cta" class="inline-flex items-center rounded-xl bg-blue-600 text-white px-6 py-3 text-base font-semibold shadow-soft hover:bg-blue-700" onclick="event.preventDefault(); var p=document.getElementById('pricing'); if(p){p.scrollIntoView({behavior:'smooth', block:'start'}); }">
+                Get clarity within 5 minutes →
               </a>
             </div>
 
             <p class="mt-3 text-xs text-slate-500">Cancel anytime – Secure checkout via STRIPE.</p>
         </div>
-  <div class="glass shadow-soft rounded-2xl p-6 moments-box accent-border-red">
+  <div class="glass shadow-soft rounded-2xl p-6 moments-box accent-border-blue">
           <div class="text-xl md:text-3xl font-extrabold text-[#0b3b66] mb-4">Career Defining Moments</div>
-          <ul id="moments-list" class="space-y-4 text-base md:pl-0 grid grid-cols-1">
-            <li class="muted p-3 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">Conflict Erupts Between Departments</span></li>
-            <li class="muted p-3 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">High-Performer Suddenly Disengages</span></li>
-            <li class="muted p-3 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">Merger or Acquisition Creates Culture Clash</span></li>
-            <li class="muted p-3 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">Critical Project Misses Its Deadline</span></li>
-            <li class="muted p-3 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">New Strategy Faces Silent Resistance</span></li>
-            <li class="muted p-3 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">A Crisis Demands a Tough, Unpopular Decision</span></li>
-            <li class="muted p-3 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">Leadership Trust is Eroding Across the Ranks</span></li>
+          <ul id="moments-list" class="space-y-1 text-base md:pl-0 grid grid-cols-1">
+            <li class="muted p-1 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">Conflict Erupts Between Departments</span></li>
+            <li class="muted p-1 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">High-Performer Suddenly Disengages</span></li>
+            <li class="muted p-1 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">Merger or Acquisition Creates Culture Clash</span></li>
+            <li class="muted p-1 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">Critical Project Misses Its Deadline</span></li>
+            <li class="muted p-1 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">New Strategy Faces Silent Resistance</span></li>
+            <li class="muted p-1 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">A Crisis Demands a Tough, Unpopular Decision</span></li>
+            <li class="muted p-1 rounded flex items-center gap-4 text-lg"><span class="dot"></span><span class="muted-text">Leadership Trust is Eroding Across the Ranks</span></li>
           </ul>
         </div>
       </div>
@@ -92,26 +106,37 @@
   </section>
 
   <!-- Value points -->
-  <section id="how" class="py-12 border-t border-slate-200 bg-white">
+  <section id="how" class="py-14 border-t border-slate-200" style="background: linear-gradient(180deg, rgba(243,246,255,0.8), rgba(255,255,255,0.95));">
     <div class="max-w-6xl mx-auto px-4">
-      <h3 class="text-xl md:text-2xl font-extrabold text-slate-800 mb-6">Reality Check</h3>
-      <!-- Strategic callout B: battle-tested -->
-      <div class="mb-6 p-4 rounded-lg bg-white border border-slate-200">
-        <p class="text-base md:text-lg text-slate-700 font-medium">“This isn’t theory. It’s a battle-tested PhD consigliere trained on decades of real leadership crises — available instantly when the stakes are highest.”</p>
-        <p class="mt-2 text-sm text-slate-600">✅ Stronger for founders/execs who want proof of scars + field experience, not just credentials.</p>
+      <div class="text-center mb-8">
+        <h3 class="text-2xl md:text-4xl font-extrabold text-[#0b3b66]">Reality Check</h3>
+        <div class="mx-auto mt-3 w-24 h-1 rounded-full" style="background: linear-gradient(90deg,#0b3b66,#22c55e);"></div>
+        <p class="mt-3 text-slate-600 max-w-2xl mx-auto">Practical, executive-grade guidance you can use now — clear diagnosis, decisive next steps, and a plan to rebuild trust and alignment.</p>
       </div>
-      <div class="grid md:grid-cols-3 gap-6">
-        <div class="p-6 rounded-2xl border border-slate-200 bg-slate-50">
-          <div class="text-4xl md:text-5xl font-extrabold">5 min</div>
-          <div class="mt-2 text-lg md:text-xl text-slate-600">to clarity before a pivotal meeting</div>
+
+      <!-- Three info boxes inline on md+ -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+        <div class="p-6 rounded-2xl bg-white shadow-soft text-center flex flex-col transform transition hover:-translate-y-2" style="border-left:6px solid var(--accent-blue);">
+          <div class="text-3xl mb-3">⚡</div>
+          <div class="text-2xl md:text-3xl font-extrabold">Fast Answers</div>
+          <div class="mt-4 text-lg md:text-lg text-slate-600 flex-1">Immediate, practical steps to clarify any situation and lay a strong path forward.</div>
         </div>
-        <div class="p-6 rounded-2xl border border-slate-200 bg-slate-50">
-          <div class="text-4xl md:text-5xl font-extrabold">0 fluff</div>
-          <div class="mt-2 text-lg md:text-xl text-slate-600">playbooks, not platitudes</div>
+        <div class="p-6 rounded-2xl bg-white shadow-soft text-center flex flex-col transform transition hover:-translate-y-2" style="border-left:6px solid var(--accent-blue);">
+          <div class="text-3xl mb-3">✂️</div>
+          <div class="text-2xl md:text-3xl font-extrabold">Zero Fluff</div>
+          <div class="mt-4 text-lg md:text-lg text-slate-600 flex-1">Direct, field-tested guidance—no filler—rooted in leadership frameworks and real cases.</div>
         </div>
-        <div class="p-6 rounded-2xl border border-slate-200 bg-slate-50">
-          <div class="text-4xl md:text-5xl font-extrabold">24/7</div>
-          <div class="mt-2 text-lg md:text-xl text-slate-600">on-demand, private, secure</div>
+        <div class="p-6 rounded-2xl bg-white shadow-soft text-center flex flex-col transform transition hover:-translate-y-2" style="border-left:6px solid var(--accent-blue);">
+          <div class="text-3xl mb-3">🌐</div>
+          <div class="text-2xl md:text-3xl font-extrabold">Always Available</div>
+          <div class="mt-4 text-lg md:text-lg text-slate-600 flex-1">Private, secure access 24/7—ready when you are, including on tight timelines.</div>
+        </div>
+      </div>
+
+      <!-- quote below the boxes (more prominent) -->
+      <div class="mt-8 flex items-center justify-center">
+        <div class="mb-6 p-6 rounded-2xl bg-gradient-to-r from-white to-slate-50 border border-slate-200 max-w-4xl shadow-lg">
+          <p class="text-2xl md:text-3xl text-[#0b3b66] font-semibold text-center leading-relaxed" style="font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">“This isn't theory — it's the knowledge and judgment of a battle-tested PhD concierge, shaped by decades of real-world leadership and crisis work.”</p>
         </div>
       </div>
     </div>
@@ -120,54 +145,148 @@
   <!-- Pricing -->
   <section id="pricing" class="py-20 bg-white border-t border-slate-200">
     <div class="max-w-6xl mx-auto px-4">
-      <!-- Strategic callout C: exclusivity / pricing value -->
-      <div class="mt-6 mb-4 p-4 rounded-lg bg-sky-50 border border-sky-100">
-        <p class="text-sm md:text-base text-sky-700 font-semibold">“You’re securing a PhD-backed leadership consigliere normally reserved for Fortune 500 boardrooms — now in your pocket for a fraction of the cost.”</p>
-        <p class="mt-1 text-xs text-sky-600">✅ Plays the exclusivity angle, making $299 feel like a steal.</p>
-      </div>
-      <h4 class="mt-2 text-slate-700 font-extrabold tracking-wide uppercase">Other Options</h4>
+      <!-- (removed previous marketing callout as requested) -->
+  <h4 class="mt-2 text-slate-700 font-extrabold tracking-wide uppercase text-center" style="font-size:2.1rem;">Strategic Packages & Pricing</h4>
 
       <div class="mt-6 grid md:grid-cols-3 gap-6">
-        <!-- JD Executive Partner (dark blue) -->
-        <div class="rounded-2xl p-6" style="background:#04263a; color: #ffffff;">
-          <h4 class="text-xl font-semibold">JD Executive Partner</h4>
+  <!-- JD Executive Partner (dark blue) -->
+  <div class="rounded-2xl p-6 relative pb-12" style="background:#04263a; color: #ffffff;">
+          <h4 class="text-xl font-semibold text-[calc(1.25rem+4pt)]">JD Executive Partner</h4>
           <ul class="mt-3 space-y-2 text-sm text-white/90">
-            <li>Weekly 1:1 with JD (live)</li>
-            <li>24/7 unlimited DigitalJD access</li>
-            <li>Priority escalation</li>
-            <li>Quarterly strategic review</li>
+            <li class="flex items-start gap-3"><div class="w-2 h-2 bg-white rounded-full mt-1"></div><div>2-hour Launch - personal 1:1 w/JD</div></li>
+            <li class="flex items-start gap-3"><div class="w-2 h-2 bg-white rounded-full mt-1"></div><div>1 hour Weekly 1:1 (virtual) meeting</div></li>
+            <li class="flex items-start gap-3"><div class="w-2 h-2 bg-white rounded-full mt-1"></div><div>Includes all Individual Pro benefits</div></li>
+            <li class="flex items-start gap-3"><div class="w-2 h-2 bg-white rounded-full mt-1"></div><div>Priority Escalation - Code RED</div></li>
+            <li class="flex items-start gap-3"><div class="w-2 h-2 bg-white rounded-full mt-1"></div><div>Quarterly Strategic Assessment &amp; Planning</div></li>
           </ul>
           <div class="mt-6">
-            <div class="text-3xl font-extrabold">$3,500<span class="text-lg font-bold align-top">/month</span></div>
-            <div class="mt-1 text-sm text-white/80">annual: $2,800; pilot: $2,500</div>
+            <div class="text-3xl md:text-4xl font-extrabold">$3,500<span class="text-lg font-bold align-top">/mth</span></div>
           </div>
-          <div class="mt-6">
-            <a href="https://buy.stripe.com/YOUR_EXEC_LINK" class="inline-flex items-center rounded-xl bg-white text-[#04263a] px-5 py-3 text-sm font-semibold hover:bg-slate-100">Get started</a>
-          </div>
+          <a href="https://buy.stripe.com/dRm3cw2aRdVLcwY5dAcwg01" class="inline-flex items-center rounded-xl bg-white text-[#04263a] px-5 py-3 text-sm font-semibold hover:bg-slate-100 absolute bottom-4 right-4">Step up</a>
         </div>
 
-        <!-- Individual Pro (medium blue) -->
-        <div class="rounded-2xl p-6" style="background:#0b4f78; color: #ffffff;">
-          <div class="text-xl font-semibold">Individual Pro</div>
+  <!-- Individual Pro (medium blue) -->
+  <div class="rounded-2xl p-6 relative pb-12" style="background:#0b4f78; color: #ffffff;">
+          <div class="text-2xl font-semibold text-[calc(1.25rem+8pt)]">Individual Pro</div>
           <ul class="mt-3 space-y-2 text-sm text-white/90">
-            <li>• 24/7 unlimited DigitalJD</li>
-            <li>• Priority meeting-prep summaries</li>
+            <li class="flex items-start gap-3"><div class="w-2 h-2 bg-white rounded-full mt-1"></div><div>24/7 access to Digital JD</div></li>
+            <li class="flex items-start gap-3"><div class="w-2 h-2 bg-white rounded-full mt-1"></div><div>Intro Welcome Video</div></li>
+            <li class="flex items-start gap-3"><div class="w-2 h-2 bg-white rounded-full mt-1"></div><div>Key Tips</div></li>
+            <li class="flex items-start gap-3"><div class="w-2 h-2 bg-white rounded-full mt-1"></div><div>Monthly Summary report</div></li>
           </ul>
-          <div class="mt-4 text-2xl font-extrabold">$249<span class="text-base font-bold text-white/90">/month</span></div>
-          <a href="https://buy.stripe.com/YOUR_PRO_LINK" class="mt-4 inline-flex items-center rounded-xl bg-white text-[#0b4f78] px-4 py-2 text-sm font-medium hover:bg-slate-100">Choose Pro</a>
+          <div class="mt-4 text-3xl md:text-4xl font-extrabold">$199<span class="text-lg font-bold text-white/90">/mth</span></div>
+          <a href="https://buy.stripe.com/3cIeVecPvbNDcwYfSecwg02" class="inline-flex items-center rounded-xl bg-white text-[#0b4f78] px-5 py-3 text-sm font-semibold hover:bg-slate-100 absolute bottom-4 right-4">Choose Pro</a>
         </div>
 
-        <!-- Team License (light blue) -->
-        <div class="rounded-2xl p-6" style="background:#2a7fb2; color: #ffffff;">
-          <div class="text-xl font-semibold">Team License <span class="text-white/90 text-sm">(10-seat bundle)</span></div>
+  <!-- Team License (light blue) -->
+  <div class="rounded-2xl p-6 relative pb-12" style="background:#2a7fb2; color: #ffffff;">
+          <div class="text-xl font-semibold text-[calc(1.25rem+4pt)]">Team License <span class="text-white/90 text-sm">(10-seat bundle)</span></div>
           <ul class="mt-3 space-y-2 text-sm text-white/90">
             <li>• Unlimited DigitalJD per seat</li>
             <li>• Learning Vault (anonymized cases)</li>
             <li>• Analytics dashboard</li>
           </ul>
-          <div class="mt-4 text-3xl font-extrabold">$7,500<span class="text-xl font-bold">/month</span></div>
-          <div class="mt-1 text-sm">volume discounts; annual: $6,000/month</div>
-          <a href="https://buy.stripe.com/YOUR_TEAM_LINK" class="mt-4 inline-flex items-center rounded-xl bg-white text-[#2a7fb2] px-4 py-2 text-sm font-semibold hover:bg-slate-50">Choose Team</a>
+          <div class="mt-4 text-3xl font-extrabold">$149<span class="text-xl font-bold">/mth/user</span></div>
+          <div class="mt-1 text-sm text-white/80">paid annually</div>
+          <div class="mt-1 text-sm text-white/80">$199/mth/user</div>
+          <a href="https://calendly.com/jdcastle53/meeting-with-jd" class="inline-flex items-center rounded-xl bg-white text-[#2a7fb2] px-5 py-3 text-sm font-semibold hover:bg-slate-50 absolute bottom-4 right-4">Build Your Team</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Compare: DigitalJD vs AI -->
+  <section id="compare" class="py-16 bg-slate-50 border-t border-slate-200">
+    <div class="max-w-6xl mx-auto px-4">
+      <div class="bg-white rounded-2xl p-10 shadow-soft">
+        <div class="md:flex md:items-start md:gap-8">
+          <div class="md:flex-1">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-[#0b3b66] mb-4">Why DigitalJD Delivers Beyond AI</h2>
+            <p class="text-slate-700 mb-6">Real questions. Real leadership intelligence — not just answers, but transformation.</p>
+
+            <div class="mb-6">
+              <h3 class="text-xl font-semibold mb-2">The Question</h3>
+              <blockquote class="border-l-4 pl-4 italic text-slate-600">“I have two employees showing friction. What’s my path forward to resolve this and build a stronger relationship?”</blockquote>
+              <p class="mt-3 text-slate-600">The source of your answer determines whether you get <strong>information</strong> — or <strong>transformation.</strong></p>
+            </div>
+
+            <div>
+              <h3 class="text-xl font-semibold mb-3">Comparison Results</h3>
+
+              <div class="grid md:grid-cols-2 gap-6">
+                <div class="space-y-4">
+                  <!-- Compact competitor cards with expandable details -->
+                  <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <div class="flex items-start justify-between">
+                      <h4 class="font-semibold">Gemini (Google)</h4>
+                      <div class="text-sm text-slate-700">✅ Practical — ❌ Surface-level</div>
+                    </div>
+                    <p class="mt-2 text-slate-600">Meet with both employees separately to understand perspectives, then run a structured joint meeting to align expectations.</p>
+                    <details class="mt-2 text-sm text-slate-500"><summary class="cursor-pointer">Read more</summary>
+                      <blockquote class="mt-2 text-slate-600">Meet with both employees separately to understand their perspectives. Then hold a joint meeting to clarify expectations, address concerns, and set ground rules for collaboration. Follow up regularly to ensure improvement.</blockquote>
+                    </details>
+                  </div>
+
+                  <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <div class="flex items-start justify-between">
+                      <h4 class="font-semibold">Cirrus (Search Aggregator)</h4>
+                      <div class="text-sm text-slate-700">✅ Comprehensive — ❌ Impersonal</div>
+                    </div>
+                    <p class="mt-2 text-slate-600">A broad checklist approach: identify cause, mediate, clarify roles, and encourage collaboration.</p>
+                    <details class="mt-2 text-sm text-slate-500"><summary class="cursor-pointer">Read more</summary>
+                      <blockquote class="mt-2 text-slate-600">1. Identify the cause of conflict. 2. Mediate discussion. 3. Clarify roles. 4. Encourage teamwork. 5. Reward collaboration.</blockquote>
+                    </details>
+                  </div>
+
+                  <div class="p-4 rounded-xl bg-slate-50 border border-slate-100">
+                    <div class="flex items-start justify-between">
+                      <h4 class="font-semibold">ChatGPT (Generic GPT-4)</h4>
+                      <div class="text-sm text-slate-700">✅ Structured — ❌ Neutral</div>
+                    </div>
+                    <p class="mt-2 text-slate-600">Offers structured, framework-driven steps (RACI, check-ins) but lacks transformational leadership tone.</p>
+                    <details class="mt-2 text-sm text-slate-500"><summary class="cursor-pointer">Read more</summary>
+                      <blockquote class="mt-2 text-slate-600">Hold one-on-one discussions to explore root causes, facilitate a joint meeting with structure and ground rules, clarify roles and responsibilities using frameworks like RACI, and set up alignment check-ins to reinforce collaboration.</blockquote>
+                    </details>
+                  </div>
+                </div>
+
+                <div>
+                  <!-- Highlighted DigitalJD card -->
+                  <div class="p-6 rounded-2xl bg-white shadow-soft border border-slate-100">
+                    <h4 class="text-2xl font-extrabold">DigitalJD (Leadership-Grade Intelligence)</h4>
+                    <p class="mt-3 text-slate-700">You’re not managing a conflict — you’re sculpting trust. DigitalJD brings empathic, executive judgment and specific frameworks to convert friction into culture-building.</p>
+                    <ul class="mt-4 list-disc list-inside text-slate-600">
+                      <li>Diagnose the underlying fears and patterns, not just symptoms.</li>
+                      <li>Design a future-focused joint conversation rather than rehashing the past.</li>
+                      <li>Co-create three operating agreements: communication, decision-making, and repair.</li>
+                    </ul>
+                    <div class="mt-4 p-3 border-l-4" style="border-color:var(--gold, #d4af37); background:#f8fafc">✅ Empathic, executive tone. — ✅ Built on behavioral insight and leadership frameworks. Converts conflict into culture-building.</div>
+                  </div>
+
+                  <!-- aside kept below on small screens, but the existing aside remains on the right in layout -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <aside class="md:w-80 mt-8 md:mt-0">
+            <div class="p-4 rounded-2xl bg-white border border-slate-200">
+              <h4 class="font-semibold text-slate-800 mb-2">What Makes DigitalJD Different</h4>
+              <table class="w-full text-sm">
+                <tr><th class="text-left text-slate-700">Trait</th><th class="text-left text-slate-700">DigitalJD</th></tr>
+                <tr><td class="pt-2 align-top">Voice</td><td class="pt-2">Conversational, executive, human</td></tr>
+                <tr><td class="pt-2 align-top">Depth</td><td class="pt-2">Rooted in leadership psychology and trust dynamics</td></tr>
+                <tr><td class="pt-2 align-top">Context</td><td class="pt-2">Reads emotional subtext and organizational patterns</td></tr>
+              </table>
+              <a href="#pricing" class="mt-4 inline-block rounded-md bg-[#0b3b66] text-white px-4 py-2 text-sm">See pricing</a>
+            </div>
+          </aside>
+        </div>
+
+        <div class="mt-10 p-6 rounded-2xl bg-white border border-slate-200 shadow-soft text-center">
+          <h3 class="text-2xl font-extrabold text-slate-800">Experience the Difference</h3>
+          <p class="mt-2 text-slate-600">Ask your toughest leadership question and feel how DigitalJD transforms answers into action.</p>
+          <a href="#pricing" id="compare-cta" class="mt-4 inline-block rounded-xl bg-[#0b3b66] text-white px-6 py-3 font-semibold">Try DigitalJD Now</a>
         </div>
       </div>
     </div>
@@ -218,6 +337,8 @@
     // set year
     document.getElementById('year').textContent = new Date().getFullYear();
 
+    // Reality Check heading is now static; no per-letter animation.
+
     // Right-side muted list highlight loop — 4s per item, pauses on hover, no skipping
     (function(){
       const list = document.getElementById('moments-list');
@@ -254,6 +375,30 @@
       show(0);
       scheduleNext();
     })();
+
+    // Consolidated CTA handler: header, hero, and compare buttons scroll to pricing and highlight it
+    (function(){
+      const ids = ['compare-cta','header-cta','hero-cta'];
+      const pricing = document.getElementById('pricing');
+      if(!pricing) return;
+      function doScroll(e){
+        e && e.preventDefault();
+        pricing.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        pricing.classList.add('ring-highlight');
+        setTimeout(()=> pricing.classList.remove('ring-highlight'), 1400);
+        history.replaceState(null, '', '#pricing');
+      }
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if(el) el.addEventListener('click', doScroll);
+      });
+      // expose a helper for inline onclick attributes
+      window.scrollToPricing = function(e){ doScroll(e); };
+    })();
   </script>
+  <style>
+    /* small helper: Tailwind ring equivalent for non-compiled setup */
+    .ring-highlight { box-shadow: 0 0 0 6px rgba(212,175,55,0.18); }
+  </style>
 </body>
 </html>
