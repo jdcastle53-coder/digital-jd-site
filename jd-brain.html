@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>DigitalJD Brain - Interactive Leadership Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Experience DigitalJD's AI-powered leadership coaching in real-time. Ask your toughest questions and get McKinsey-grade insights." />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { --accent-blue: rgba(11,59,102,0.95); }
+    .glass { backdrop-filter: blur(10px); background: rgba(255,255,255,0.75); }
+    .shadow-soft { box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+    .gradient { background: linear-gradient(135deg,#0ea5e9,#6366f1,#22c55e); }
+    
+    /* Full-screen iframe styles */
+    .brain-container {
+      position: fixed;
+      top: 80px; /* Account for header */
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 10;
+    }
+    
+    .brain-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      background: #f8fafc;
+    }
+    
+    /* Loading state */
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 overflow-hidden">
+  <!-- Header -->
+  <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200">
+    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <div class="w-8 h-8 rounded-xl gradient"></div>
+        <span class="font-semibold tracking-tight">Digital JD</span>
+      </a>
+      <nav class="hidden md:flex items-center gap-6 text-sm">
+        <a href="/" class="hover:text-slate-600">Home</a>
+        <a href="/digitaljd-vs-ai.html" class="hover:text-slate-600">JD vs AI</a>
+        <span class="text-[var(--accent-blue)] font-medium">JD Brain</span>
+      </nav>
+      <div class="flex items-center gap-3">
+        <button onclick="toggleFullscreen()" class="hidden md:inline-flex items-center rounded-lg bg-slate-100 text-slate-700 px-3 py-2 text-sm hover:bg-slate-200">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+          </svg>
+          Fullscreen
+        </button>
+        <a href="#" class="inline-flex items-center rounded-xl bg-slate-900 text-white px-4 py-2 text-sm font-medium shadow-soft hover:bg-black">
+          <span>Get Pro Access</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- JD Brain Interface Container -->
+  <div class="brain-container">
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="text-center">
+        <div class="w-16 h-16 gradient rounded-full animate-pulse mb-4 mx-auto"></div>
+        <h3 class="text-xl font-semibold text-slate-800 mb-2">Initializing DigitalJD Brain</h3>
+        <p class="text-slate-600">Preparing your personalized leadership assistant...</p>
+      </div>
+    </div>
+
+    <!-- JD Brain Iframe -->
+    <iframe 
+      id="jdBrainFrame"
+      class="brain-iframe"
+      src="REPLACE_WITH_JD_BRAIN_URL"
+      title="DigitalJD Brain Interface"
+      allow="microphone; camera; clipboard-write"
+      onload="hideLoading()"
+    ></iframe>
+  </div>
+
+  <!-- Fallback for when iframe fails to load -->
+  <div id="fallbackContent" style="display: none;" class="brain-container bg-white">
+    <div class="h-full flex items-center justify-center">
+      <div class="text-center max-w-md mx-auto p-8">
+        <div class="w-20 h-20 gradient rounded-2xl mb-6 mx-auto"></div>
+        <h2 class="text-3xl font-bold text-slate-800 mb-4">DigitalJD Brain</h2>
+        <p class="text-slate-600 mb-6">Experience McKinsey-grade leadership coaching powered by AI. Ask your toughest questions and get actionable insights.</p>
+        
+        <!-- Demo Interface -->
+        <div class="bg-slate-50 rounded-xl p-6 text-left">
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-slate-700 mb-2">Ask DigitalJD a question:</label>
+            <textarea 
+              class="w-full p-3 border border-slate-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
+              rows="3" 
+              placeholder="e.g., How do I handle a conflict between two senior executives who both report to me?"
+              id="questionInput"
+            ></textarea>
+          </div>
+          <button 
+            onclick="simulateResponse()" 
+            class="w-full bg-[var(--accent-blue)] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
+          >
+            Get DigitalJD's Insight
+          </button>
+          
+          <div id="responseArea" class="mt-4 p-4 bg-white border border-slate-200 rounded-lg hidden">
+            <div class="flex items-start gap-3">
+              <div class="w-8 h-8 gradient rounded-full flex-shrink-0"></div>
+              <div class="flex-1">
+                <p class="font-semibold text-slate-800 mb-2">DigitalJD:</p>
+                <div id="responseText" class="text-slate-700 leading-relaxed"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="mt-6 text-sm text-slate-500">
+          <p>This is a demo interface. The full DigitalJD Brain experience includes:</p>
+          <ul class="mt-2 space-y-1 text-left">
+            <li>• Real-time leadership coaching</li>
+            <li>• Scenario-based training</li>
+            <li>• Personalized development plans</li>
+            <li>• Integration with your team metrics</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function hideLoading() {
+      document.getElementById('loadingOverlay').style.display = 'none';
+    }
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // Show fallback if iframe fails to load
+    document.getElementById('jdBrainFrame').onerror = function() {
+      document.getElementById('jdBrainFrame').style.display = 'none';
+      document.getElementById('fallbackContent').style.display = 'block';
+      hideLoading();
+    };
+
+    // Demo functionality for fallback
+    function simulateResponse() {
+      const input = document.getElementById('questionInput').value;
+      const responseArea = document.getElementById('responseArea');
+      const responseText = document.getElementById('responseText');
+      
+      if (!input.trim()) {
+        alert('Please enter a question first.');
+        return;
+      }
+
+      // Show loading state
+      responseText.innerHTML = '<div class="flex items-center gap-2"><div class="w-2 h-2 bg-slate-400 rounded-full animate-pulse"></div><div class="w-2 h-2 bg-slate-400 rounded-full animate-pulse" style="animation-delay: 0.2s"></div><div class="w-2 h-2 bg-slate-400 rounded-full animate-pulse" style="animation-delay: 0.4s"></div><span class="ml-2 text-slate-500">DigitalJD is thinking...</span></div>';
+      responseArea.classList.remove('hidden');
+
+      // Simulate response after delay
+      setTimeout(() => {
+        const responses = [
+          "Start by acknowledging both perspectives privately. Schedule separate 30-minute sessions to understand each executive's core concerns—often it's about resources, recognition, or strategic direction. Then bring them together with a structured agenda focused on shared company goals, not personal positions. Use the 'Yes, and...' technique to build on common ground. Set clear expectations for collaboration moving forward.",
+          "This requires immediate intervention. First, assess if this is a personality clash or a systemic issue. Meet with each executive individually to understand their perspectives without taking sides. Focus on business impact—how is this affecting their teams and results? Then facilitate a joint conversation with clear ground rules and specific outcomes. Consider bringing in external mediation if needed.",
+          "Executive conflict often stems from unclear roles or competing priorities. Start by clarifying decision-making authority and accountability for each leader. Create explicit agreements about collaboration expectations. Schedule regular check-ins to prevent future conflicts. Most importantly, model the collaborative behavior you expect from them."
+        ];
+        
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        responseText.innerHTML = randomResponse;
+      }, 2000);
+    }
+
+    // Handle iframe load timeout
+    setTimeout(() => {
+      const iframe = document.getElementById('jdBrainFrame');
+      const loading = document.getElementById('loadingOverlay');
+      
+      if (loading.style.display !== 'none') {
+        // If still loading after 10 seconds, show fallback
+        iframe.style.display = 'none';
+        document.getElementById('fallbackContent').style.display = 'block';
+        hideLoading();
+      }
+    }, 10000);
+  </script>
+</body>
+</html>
