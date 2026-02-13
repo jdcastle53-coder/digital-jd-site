@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Access Expired - Digital JD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Renew your Digital JD access to continue using the JD Brain experience." />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --ink: #0b3b66;
+      --clay: #f7efe6;
+      --leaf: #22c55e;
+    }
+    body {
+      font-family: "Space Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: linear-gradient(160deg, rgba(34,197,94,0.12), transparent 45%),
+                  linear-gradient(20deg, rgba(11,59,102,0.15), transparent 55%),
+                  var(--clay);
+    }
+    .title-font { font-family: "Newsreader", Georgia, serif; }
+  </style>
+</head>
+<body class="min-h-screen text-slate-900">
+  <main class="max-w-3xl mx-auto px-4 py-20">
+    <div class="bg-white/85 backdrop-blur rounded-3xl p-10 shadow-xl border border-white">
+      <h1 class="title-font text-4xl md:text-5xl text-[var(--ink)] font-semibold">Your 24-hour access has ended</h1>
+      <p class="mt-4 text-lg text-slate-700">Renew to keep using the JD Brain experience. Your account is still here, but chat access is paused.</p>
+
+      <div class="mt-8 flex flex-col sm:flex-row gap-4">
+        <a href="/" class="inline-flex items-center justify-center rounded-xl bg-[var(--ink)] text-white px-6 py-3 font-semibold hover:opacity-90">View plans</a>
+        <a href="mailto:hello@your-domain.com" class="inline-flex items-center justify-center rounded-xl border border-[var(--ink)] text-[var(--ink)] px-6 py-3 font-semibold hover:bg-white">Contact support</a>
+      </div>
+
+      <p class="mt-6 text-sm text-slate-500">If you already renewed, sign out and sign back in to refresh your access.</p>
+    </div>
+  </main>
+</body>
+</html>

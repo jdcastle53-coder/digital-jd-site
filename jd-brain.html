@@ -7,6 +7,8 @@
   <meta name="description" content="Experience DigitalJD's AI-powered leadership coaching in real-time. Ask your toughest questions and get McKinsey-grade insights." />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
   <style>
     :root { --accent-blue: rgba(11,59,102,0.95); }
     .glass { backdrop-filter: blur(10px); background: rgba(255,255,255,0.75); }
@@ -64,6 +66,9 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
           </svg>
           Fullscreen
+        </button>
+        <button id="signOutButton" class="hidden md:inline-flex items-center rounded-lg border border-slate-200 text-slate-700 px-3 py-2 text-sm hover:bg-slate-100">
+          Sign out
         </button>
         <a href="#" class="inline-flex items-center rounded-xl bg-slate-900 text-white px-4 py-2 text-sm font-medium shadow-soft hover:bg-black">
           <span>Get Pro Access</span>
@@ -145,6 +150,17 @@
   </div>
 
   <script>
+    window.addEventListener('load', () => {
+      if (window.Auth && window.Auth.enabled) {
+        window.Auth.requireActiveSession();
+      }
+
+      const signOutButton = document.getElementById('signOutButton');
+      if (signOutButton && window.Auth && window.Auth.enabled) {
+        signOutButton.addEventListener('click', () => window.Auth.signOut());
+      }
+    });
+
     function hideLoading() {
       document.getElementById('loadingOverlay').style.display = 'none';
     }

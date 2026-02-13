@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Digital JD Sign In</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Sign in to access your Digital JD Brain account." />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+  <style>
+    :root {
+      --ink: #0b3b66;
+      --mist: #f3f7fb;
+      --sea: #0ea5e9;
+      --sage: #22c55e;
+      --sand: #f6f2ea;
+    }
+    body {
+      font-family: "Space Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(14,165,233,0.12), transparent 45%),
+                  radial-gradient(circle at 80% 10%, rgba(34,197,94,0.18), transparent 40%),
+                  linear-gradient(180deg, var(--mist), var(--sand));
+    }
+    .title-font { font-family: "Newsreader", Georgia, serif; }
+    .glass { backdrop-filter: blur(12px); background: rgba(255,255,255,0.78); }
+  </style>
+</head>
+<body class="min-h-screen text-slate-900">
+  <main class="max-w-5xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-10 items-center">
+    <section>
+      <a href="/" class="inline-flex items-center gap-3 mb-8">
+        <img src="images/ai-jd-logo.png" alt="Digital JD Logo" class="w-12 h-12 rounded-xl" />
+        <span class="font-semibold tracking-tight">Digital JD</span>
+      </a>
+      <h1 class="title-font text-4xl md:text-5xl font-semibold text-[var(--ink)]">Welcome back to Digital JD</h1>
+      <p class="mt-4 text-lg text-slate-700">Sign in to access the JD Brain experience. New accounts get a 24-hour access window by default.</p>
+      <div class="mt-6 p-4 rounded-2xl border border-slate-200 bg-white/80">
+        <p class="text-sm text-slate-600">Need access for longer? You can extend a user&#39;s expiration in your Supabase dashboard at any time.</p>
+      </div>
+    </section>
+
+    <section class="glass shadow-xl rounded-3xl p-8 border border-white">
+      <h2 class="text-2xl font-semibold text-[var(--ink)]">Sign in or create an account</h2>
+      <p class="mt-2 text-sm text-slate-600">Use the same email each time. Passwords are stored securely by Supabase.</p>
+
+      <form id="authForm" class="mt-6 space-y-4">
+        <label class="block">
+          <span class="text-sm text-slate-700">Email</span>
+          <input id="email" type="email" required class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--sea)]" placeholder="you@company.com" />
+        </label>
+        <label class="block">
+          <span class="text-sm text-slate-700">Password</span>
+          <input id="password" type="password" required minlength="6" class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--sea)]" placeholder="••••••••" />
+        </label>
+
+        <div id="status" class="text-sm text-slate-600"></div>
+
+        <div class="flex flex-col gap-3">
+          <button type="button" id="signInBtn" class="w-full rounded-xl bg-[var(--ink)] text-white py-3 font-semibold hover:opacity-90">Sign in</button>
+          <button type="button" id="signUpBtn" class="w-full rounded-xl border border-[var(--ink)] text-[var(--ink)] py-3 font-semibold hover:bg-white">Create account</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const statusEl = document.getElementById("status");
+    const signInBtn = document.getElementById("signInBtn");
+    const signUpBtn = document.getElementById("signUpBtn");
+
+    function setStatus(message, isError) {
+      statusEl.textContent = message;
+      statusEl.className = isError ? "text-sm text-red-600" : "text-sm text-slate-600";
+    }
+
+    async function handleSignIn() {
+      setStatus("Signing in...");
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const result = await window.Auth.client.auth.signInWithPassword({ email, password });
+
+      if (result.error) {
+        setStatus(result.error.message, true);
+        return;
+      }
+
+      const session = await window.Auth.requireActiveSession();
+      if (session) window.location.href = "jd-brain.html";
+    }
+
+    async function handleSignUp() {
+      setStatus("Creating account...");
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const result = await window.Auth.client.auth.signUp({ email, password });
+
+      if (result.error) {
+        setStatus(result.error.message, true);
+        return;
+      }
+
+      if (!result.data.session) {
+        setStatus("Check your email to confirm, then sign in.");
+        return;
+      }
+
+      await window.Auth.ensureExpiry(result.data.session);
+      window.location.href = "jd-brain.html";
+    }
+
+    signInBtn.addEventListener("click", handleSignIn);
+    signUpBtn.addEventListener("click", handleSignUp);
+  </script>
+</body>
+</html>
