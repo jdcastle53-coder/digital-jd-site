@@ -128,7 +128,7 @@ const supabase = window.supabase.createClient(
             ></textarea>
           </div>
           <button 
-            onclick="simulateResponse()" 
+            onclick="askDigitalJD()"
             class="w-full bg-[var(--accent-blue)] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
           >
             Get DigitalJD's Insight
@@ -300,3 +300,23 @@ content: aiReply
 </script>
 </body>
 </html>
+async function askDigitalJD() {
+
+  const question = document.getElementById("questionInput").value;
+
+  const response = await fetch("/api/jd-brain-gateway", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      message: question
+    })
+  });
+
+  const data = await response.json();
+
+  document.getElementById("responseArea").classList.remove("hidden");
+  document.getElementById("responseText").innerText = data.reply;
+
+}
