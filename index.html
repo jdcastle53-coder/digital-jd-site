@@ -891,7 +891,9 @@
 .tier-btn:hover {
   transform: translateY(-4px) scale(1.02);
   filter: brightness(1.08);
-  .tier-btn:active {
+}
+
+.tier-btn:active {
   transform: translateY(1px) scale(0.98);
 }
 
@@ -987,6 +989,195 @@
   background: transparent;
   color: white;
   font-size: 28px;
+}
+/* ================================
+   MOBILE RESPONSIVE RESCUE PATCH
+   Digital JD Launch Fix
+   ================================ */
+
+html,
+body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden !important;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 768px) {
+
+  nav {
+    position: relative;
+    padding: 1rem 1.25rem !important;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .nav-logo {
+    justify-content: center;
+    width: 100%;
+  }
+
+  .nav-logo img {
+    width: 82px !important;
+    height: 82px !important;
+    flex-basis: 82px !important;
+  }
+
+  .nav-brand-stack {
+    transform: translateY(10px) !important;
+  }
+
+  .nav-brand-line {
+    font-size: 15px !important;
+  }
+
+  #hero {
+    min-height: auto !important;
+    padding: 2rem 0 3rem !important;
+  }
+
+  .hero-content {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 2rem 1.25rem 0 !important;
+    text-align: center !important;
+  }
+
+  .hero-title {
+    font-size: clamp(2.35rem, 12vw, 3.2rem) !important;
+    line-height: 1.05 !important;
+    text-align: center !important;
+  }
+
+  .hero-tagline {
+    font-size: 0.95rem !important;
+    letter-spacing: 0.16em !important;
+    text-align: center !important;
+  }
+
+  .hero-descriptor,
+  .hero-bridge {
+    max-width: 100% !important;
+    font-size: 1rem !important;
+    line-height: 1.65 !important;
+    text-align: center !important;
+  }
+
+  .hero-cta-group {
+    justify-content: center !important;
+  }
+
+  .btn-primary {
+    width: 100% !important;
+    max-width: 320px !important;
+    justify-content: center !important;
+    padding: 0.9rem 1rem !important;
+    font-size: 1.1rem !important;
+  }
+
+  .stats-inner {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 1.25rem !important;
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .stat-item {
+    padding: 1.5rem 0.75rem !important;
+  }
+
+  .stat-number {
+    font-size: 2rem !important;
+  }
+
+  .stat-label {
+    font-size: 0.62rem !important;
+    letter-spacing: 0.14em !important;
+  }
+
+  section {
+    padding: 4.5rem 0 !important;
+  }
+
+  .section-inner,
+  #difference > div {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 0 1.25rem !important;
+  }
+
+  #difference h2 {
+    font-size: clamp(2.2rem, 13vw, 3rem) !important;
+    line-height: 1.12 !important;
+  }
+
+  #difference p {
+    max-width: 100% !important;
+  }
+
+  #difference div[style*="grid-template-columns:1fr 1fr 1fr"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 1.25rem !important;
+  }
+
+  #difference div[style*="grid-template-columns:1fr 1fr 1fr"] > div {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .what-grid,
+  .sprint-layout,
+  .tiers-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .sprint-card,
+  .tier-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 2rem 1.25rem !important;
+  }
+
+  .tier-card.pro-tier::before {
+    inset: -3px !important;
+  }
+
+  .tier-btn {
+    width: 100% !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  footer {
+    text-align: center !important;
+  }
+
+  .footer-links {
+    justify-content: center !important;
+    flex-wrap: wrap !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .stats-inner {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .hero-title {
+    font-size: 2.45rem !important;
+  }
+
+  #difference h2 {
+    font-size: 2.55rem !important;
+  }
 }
   </style>
 </head>
