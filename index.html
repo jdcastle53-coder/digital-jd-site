@@ -1487,6 +1487,54 @@ iframe {
     font-size: 2.55rem !important;
   }
 }
+/* FIX COMPARISON CARDS MOBILE OVERFLOW */
+
+@media (max-width: 768px) {
+  #difference {
+    overflow-x: hidden !important;
+  }
+
+  #difference > div {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  #difference div[style*="grid-template-columns"] {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  #difference div[style*="grid-template-columns"] > div {
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+    overflow-wrap: break-word !important;
+    word-break: normal !important;
+  }
+
+  #difference h2,
+  #difference p,
+  #difference div {
+    max-width: 100% !important;
+  }
+
+  #difference div[style*="font-family:'Cormorant Garamond'"] {
+    font-size: 1.45rem !important;
+    line-height: 1.35 !important;
+  }
+
+  #difference div[style*="font-family:'Barlow Condensed'"] {
+    letter-spacing: 0.18em !important;
+  }
+
+  #difference p {
+    font-size: 0.95rem !important;
+    line-height: 1.8 !important;
+  }
+}
   </style>
 </head>
 <body>
