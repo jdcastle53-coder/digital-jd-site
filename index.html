@@ -1215,18 +1215,7 @@ iframe {
   .tier-card.pro-tier::before {
     inset: -3px !important;
   }
-
-  .tier-btn {
-    width: 100% !important;
-    max-width: 100% !important;
-    white-space: normal !important;
-  }
-
-  footer {
-    text-align: center !important;
-  }
-
-  .footer-links {
+ {
     justify-content: center !important;
     flex-wrap: wrap !important;
   }
@@ -1300,73 +1289,239 @@ iframe {
 </p>
     </div>
   </section>
+.executive-cascade {
+  position: relative;
+  display: block;
+  max-width: 920px;
+  min-height: 1180px;
+  margin: 0 auto;
+  padding: 3rem 1rem 5rem;
+}
 
-<div class="stats-bar executive-step-flow">
+.cascade-card {
+  position: relative;
+  width: 520px;
+  min-height: 250px;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  padding: 2.4rem 2.8rem;
+  background: radial-gradient(circle at top right, rgba(0, 180, 255, 0.16), rgba(5, 12, 25, 0.96) 55%);
+  border: 2px solid rgba(0, 190, 255, 0.9);
+  border-radius: 14px;
+  box-shadow:
+    0 0 18px rgba(0, 190, 255, 0.75),
+    0 0 48px rgba(0, 90, 255, 0.28),
+    inset 0 0 28px rgba(0, 180, 255, 0.08);
+}
 
-  <div class="stat-card step-card step-one">
-    <div class="stat-number">5</div>
-    <div class="stat-title">Core Operating Principles</div>
-    <div class="stat-subtitle">Built from Decades of Leadership Research</div>
-  </div>
+.cascade-five {
+  margin-left: 0;
+  z-index: 4;
+}
 
-  <div class="stat-card step-card step-two">
-    <div class="stat-number">7</div>
-    <div class="stat-title">Days – Full System Access</div>
-    <div class="stat-subtitle">Free • No Card Required</div>
-  </div>
+.cascade-seven {
+  margin-left: 285px;
+  margin-top: -18px;
+  z-index: 3;
+  justify-content: space-between;
+}
 
-  <div class="stat-card step-card step-three">
-    <div class="stat-number">3</div>
-    <div class="stat-title">Output Dimensions Per Decision</div>
-    <div class="stat-subtitle">Situational Analysis<br>Strategic Comments<br>Executive Recommendations</div>
-  </div>
+.cascade-three {
+  margin-left: 40px;
+  margin-top: -18px;
+  z-index: 2;
+}
 
-  <div class="stat-card step-card phd-foundation">
-    <div class="phd-icon">🎓</div>
-    <div class="phd-content">
-      <div class="stat-number">Ph.D.</div>
-      <div class="stat-title">Organizational Leadership</div>
-      <div class="gold-divider"></div>
-      <div class="stat-subtitle">Operating Foundation</div>
-    </div>
-  </div>
+.cascade-phd {
+  width: 620px;
+  min-height: 285px;
+  margin-left: 330px;
+  margin-top: -10px;
+  z-index: 1;
+  background:
+    radial-gradient(circle at top center, rgba(255, 204, 72, 0.38), rgba(40, 24, 3, 0.95) 52%),
+    linear-gradient(135deg, rgba(90, 56, 6, 0.94), rgba(12, 10, 8, 0.98));
+  border: 2px solid rgba(255, 204, 72, 0.95);
+  box-shadow:
+    0 0 22px rgba(255, 194, 42, 0.85),
+    0 0 60px rgba(255, 174, 0, 0.32),
+    inset 0 0 36px rgba(255, 204, 72, 0.12);
+}
 
-</div>
-</div>
-     <div class="stat-item">
-    <div class="stat-number">7</div>
-   <div class="stat-label" style="font-size:0.82rem;font-weight:600;line-height:1.35;">
-        Days — Full System Access<br>
-       <span style="display:block;margin-top:0.45rem;font-size:0.68rem;color:#d4af37;line-height:1.35;">
-Free • No Card Required
-</span>
-    </div>
-</div>
-     <div class="stat-item">
-    <div class="stat-number" style="margin-bottom:0.35rem;">3</div>
-   <div class="stat-label" style="font-size:0.82rem;font-weight:600;line-height:1.35;">
-        Output Dimensions Per Decision<br>
-       <span style="display:block;margin-top:0.45rem;font-size:0.66rem;color:#d4af37;line-height:1.45;">
-    Situational Analysis<br>
-    Strategic Comments<br>
-    Executive Recommendations
-</span>
-    </div>
-</div>
-     <div class="stat-item">
-    <div class="stat-number">Ph.D.</div>
-  <div class="stat-label" style="color:#d4af37;font-size:1.02rem;line-height:1.35;padding-top:0.25rem;">
-    Organizational Leadership<br>
-    Foundations
-</div>
-</div>
-    </div>
-  </div>
+.cascade-icon,
+.phd-cap {
+  font-size: 4.5rem;
+  color: #08bfff;
+  text-shadow: 0 0 18px rgba(0, 190, 255, 0.8);
+  min-width: 90px;
+  text-align: center;
+}
 
+.phd-cap {
+  color: #f5c849;
+  text-shadow: 0 0 18px rgba(255, 204, 72, 0.85);
+}
+
+.cascade-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 4.5rem;
+  line-height: 0.9;
+  color: #18bfff;
+  font-weight: 700;
+  text-shadow: 0 0 16px rgba(0, 190, 255, 0.65);
+}
+
+.phd-number {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 5rem;
+  line-height: 0.9;
+  color: #ffe08a;
+  font-weight: 700;
+  text-shadow: 0 0 16px rgba(255, 204, 72, 0.65);
+}
+
+.cascade-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.45rem;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.cascade-title.small {
+  font-size: 1.25rem;
+}
+
+.cascade-line {
+  width: 54px;
+  height: 3px;
+  background: #08bfff;
+  margin: 1rem 0;
+  box-shadow: 0 0 12px rgba(0, 190, 255, 0.8);
+}
+
+.cascade-gold,
+.cascade-free,
+.phd-bullet {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 1.25rem;
+  line-height: 1.35;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: #f2bd35;
+  font-weight: 700;
+}
+
+.cascade-free {
+  font-size: 2.4rem;
+  line-height: 1;
+  margin-bottom: 0.45rem;
+}
+
+.phd-divider {
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, #f2bd35, rgba(242, 189, 53, 0.25));
+  margin: 1rem 0 1.1rem;
+}
+
+.phd-bullet {
+  color: #ffffff;
+  text-transform: none;
+  letter-spacing: 0.04em;
+  font-size: 1.15rem;
+  margin: 0.45rem 0;
+}
+
+/* Mobile: keep cascade look without horizontal scroll */
+@media (max-width: 768px) {
+  .executive-cascade {
+    max-width: 390px;
+    min-height: 980px;
+    padding: 2.5rem 0.75rem 4rem;
+    overflow: visible;
+  }
+
+  .cascade-card {
+    width: 300px;
+    min-height: 205px;
+    padding: 1.7rem 1.4rem;
+    gap: 1rem;
+    border-radius: 12px;
+  }
+
+  .cascade-five {
+    margin-left: 0;
+  }
+
+  .cascade-seven {
+    margin-left: 55px;
+    margin-top: -12px;
+  }
+
+  .cascade-three {
+    margin-left: 0;
+    margin-top: -12px;
+  }
+
+  .cascade-phd {
+    width: 325px;
+    min-height: 255px;
+    margin-left: 35px;
+    margin-top: -8px;
+  }
+
+  .cascade-icon,
+  .phd-cap {
+    font-size: 2.4rem;
+    min-width: 42px;
+  }
+
+  .cascade-number {
+    font-size: 3.2rem;
+  }
+
+  .phd-number {
+    font-size: 3.8rem;
+  }
+
+  .cascade-title {
+    font-size: 1rem;
+    letter-spacing: 0.11em;
+  }
+
+  .cascade-title.small {
+    font-size: 0.92rem;
+  }
+
+  .cascade-gold,
+  .phd-bullet {
+    font-size: 0.88rem;
+    letter-spacing: 0.08em;
+  }
+
+  .cascade-free {
+    font-size: 1.8rem;
+  }
+}
   <section id="difference" style="padding:7rem 0;background:#0a1628;border-top:1px solid rgba(0,180,216,0.08);">
     <div style="max-width:1100px;margin:0 auto;padding:0 4rem;">
       <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.68rem;letter-spacing:0.3em;text-transform:uppercase;color:#00b4d8;margin-bottom:1rem;font-weight:700;">The Distinction</div>
-      <h2 style="font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;line-height:1.15;margin-bottom:1.5rem;color:#f0f4f8;">They Answer Questions.<br><em style="font-style:italic;color:#00e5ff;">Digital JD Changes How You Think.</em></h2>
+      <h2 style="font-family:'C
+  .tier-btn {
+    width: 100% !important;
+    max-width: 100% !important;
+    white-space: normal !important;
+  }
+
+  footer {
+    text-align: center !important;
+  }
+
+  .footer-linksormorant Garamond',serif;font-size:3rem;font-weight:300;line-height:1.15;margin-bottom:1.5rem;color:#f0f4f8;">They Answer Questions.<br><em style="font-style:italic;color:#00e5ff;">Digital JD Changes How You Think.</em></h2>
       <p style="max-width:640px;font-size:1.05rem;line-height:1.85;color:rgba(240,244,248,0.85);margin-bottom:3rem;">Every major AI platform can give you advice on a leadership problem. We tested them. The responses were long and occasionally useful. But they all shared the same flaw — they searched the internet and gave you the most common answer. Digital JD was built on something different.</p>
 
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem;margin-bottom:3rem;">
