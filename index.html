@@ -357,7 +357,73 @@
       text-transform: uppercase;
       color: var(--white-dim);
     }
+.executive-step-flow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+  align-items: stretch;
+  max-width: 900px;
+  margin: 48px auto 0;
+  position: relative;
+}
 
+.step-card {
+  background: rgba(10, 18, 32, 0.92);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+  border-radius: 22px;
+  padding: 28px 24px;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+}
+
+.step-two {
+  transform: translateY(28px);
+}
+
+.step-three {
+  transform: translateY(-8px);
+}
+
+.phd-foundation {
+  transform: translateY(24px);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background:
+    radial-gradient(circle at center, rgba(212, 175, 55, 0.24), transparent 62%),
+    linear-gradient(135deg, rgba(20, 28, 44, 0.98), rgba(8, 14, 26, 0.98));
+  border: 1px solid rgba(212, 175, 55, 0.68);
+}
+
+.phd-icon {
+  font-size: 34px;
+  color: #d4af37;
+  flex-shrink: 0;
+}
+
+.gold-divider {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #d4af37, transparent);
+  margin: 10px 0;
+}
+
+@media (max-width: 768px) {
+  .executive-step-flow {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin-top: 36px;
+  }
+
+  .step-two,
+  .step-three,
+  .phd-foundation {
+    transform: none;
+  }
+
+  .phd-foundation {
+    align-items: flex-start;
+  }
+}
     section { padding: 7rem 0; }
 
     .section-inner {
@@ -1235,16 +1301,37 @@ iframe {
     </div>
   </section>
 
-  <div class="stats-bar">
-    <div class="stats-inner">
-     <div class="stat-item">
+<div class="stats-bar executive-step-flow">
+
+  <div class="stat-card step-card step-one">
     <div class="stat-number">5</div>
-  <div class="stat-label" style="font-size:0.82rem;font-weight:600;line-height:1.35;">
-        Core Operating Principles<br>
-      <span style="display:block;margin-top:0.45rem;font-size:0.68rem;color:#d4af37;line-height:1.35;">
-Built from Decades of Leadership Research
-</span>
+    <div class="stat-title">Core Operating Principles</div>
+    <div class="stat-subtitle">Built from Decades of Leadership Research</div>
+  </div>
+
+  <div class="stat-card step-card step-two">
+    <div class="stat-number">7</div>
+    <div class="stat-title">Days – Full System Access</div>
+    <div class="stat-subtitle">Free • No Card Required</div>
+  </div>
+
+  <div class="stat-card step-card step-three">
+    <div class="stat-number">3</div>
+    <div class="stat-title">Output Dimensions Per Decision</div>
+    <div class="stat-subtitle">Situational Analysis<br>Strategic Comments<br>Executive Recommendations</div>
+  </div>
+
+  <div class="stat-card step-card phd-foundation">
+    <div class="phd-icon">🎓</div>
+    <div class="phd-content">
+      <div class="stat-number">Ph.D.</div>
+      <div class="stat-title">Organizational Leadership</div>
+      <div class="gold-divider"></div>
+      <div class="stat-subtitle">Operating Foundation</div>
     </div>
+  </div>
+
+</div>
 </div>
      <div class="stat-item">
     <div class="stat-number">7</div>
