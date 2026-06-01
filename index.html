@@ -47,7 +47,7 @@
       display: flex;
       align-items: flex-start;
       justify-content: space-between;
-      padding: 1.4rem 4rem;
+      padding: 1rem 4rem;
       background: linear-gradient(to bottom, rgba(4,6,8,0.95), transparent);
       backdrop-filter: blur(4px);
     }
@@ -60,13 +60,28 @@
       min-width: 0;
     }
 
+    .nav-logo-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
     .nav-logo img {
-      width: 170px;
-      height: 170px;
+      width: 80px;
+      height: 80px;
       object-fit: contain;
       object-position: top center;
       display: block;
-      flex: 0 0 170px;
+    }
+
+    .nav-logo-name {
+      color: #d4af37;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      margin-top: 4px;
     }
 
     .nav-brand-stack {
@@ -74,7 +89,7 @@
       flex-direction: column;
       gap: 0;
       line-height: 1;
-      transform: translateY(34px);
+      transform: translateY(20px);
     }
 
     .nav-brand-line {
@@ -341,17 +356,20 @@
 
     .stat-item:last-child { border-right: none; }
 .executive-cascade-wrapper{
-padding:40px 0 80px;
+padding:20px 0 40px;
 background:#04070d;
 overflow:hidden;
 }
 
 .executive-cascade{
 width:100%;
-max-width:1100px;
+max-width:1200px;
 margin:0 auto;
-position:relative;
-padding:0 20px 120px;
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+gap:20px;
+padding:0 20px;
 }
 
 /* MASTER CARD STYLE */
@@ -387,87 +405,82 @@ box-shadow:
 /* CARD 1 */
 
 .cascade-five{
-width:520px;
-min-height:320px;
-padding:58px 40px 50px 190px;
-margin-left:40px;
+width:260px;
+min-height:200px;
+padding:24px 20px 24px 20px;
+margin:0;
 z-index:4;
 }
 
 .cascade-five::before{
 content:'🏛';
 position:absolute;
-left:52px;
-top:105px;
-font-size:82px;
+left:50%;
+top:20px;
+transform:translateX(-50%);
+font-size:40px;
 filter:drop-shadow(0 0 10px #00bfff);
 }
 
 .cascade-five::after{
-right:-9px;
-bottom:-9px;
+display:none;
 }
 
 /* CARD 2 */
 
 .cascade-seven{
-width:520px;
-min-height:320px;
-padding:58px 180px 50px 60px;
-margin-left:auto;
-margin-top:-18px;
-margin-right:70px;
+width:260px;
+min-height:200px;
+padding:24px 20px 24px 20px;
+margin:0;
 z-index:3;
 }
 
 .cascade-seven::before{
 content:'📅';
 position:absolute;
-right:48px;
-top:105px;
-font-size:78px;
+left:50%;
+top:20px;
+transform:translateX(-50%);
+font-size:40px;
 filter:drop-shadow(0 0 10px #00bfff);
 }
 
 .cascade-seven::after{
-left:-9px;
-bottom:-9px;
+display:none;
 }
 
 /* CARD 3 */
 
 .cascade-three{
-width:560px;
-min-height:330px;
-padding:58px 40px 50px 190px;
-margin-left:75px;
-margin-top:-18px;
+width:260px;
+min-height:200px;
+padding:24px 20px 24px 20px;
+margin:0;
 z-index:2;
 }
 
 .cascade-three::before{
 content:'🎯';
 position:absolute;
-left:50px;
-top:118px;
-font-size:82px;
+left:50%;
+top:20px;
+transform:translateX(-50%);
+font-size:40px;
 filter:drop-shadow(0 0 10px #00bfff);
 }
 
 .cascade-three::after{
-right:-9px;
-bottom:-9px;
+display:none;
 }
 
 /* PHD GOLD CARD */
 
 .cascade-phd{
-width:720px;
-min-height:300px;
-padding:42px 44px 42px 44px;
-margin-left:auto;
-margin-right:40px;
-margin-top:-18px;
+width:260px;
+min-height:200px;
+padding:24px 20px 24px 20px;
+margin:0;
 z-index:1;
 
 border:2px solid #f0c24f;
@@ -490,59 +503,66 @@ display:none;
 
 .cascade-number{
 font-family:'Cormorant Garamond',serif;
-font-size:84px;
+font-size:48px;
 line-height:.9;
 color:#00c8ff;
 text-shadow:0 0 14px rgba(0,200,255,.7);
-margin-bottom:12px;
+margin-top:50px;
+margin-bottom:8px;
+text-align:center;
 }
 
 .phd-number{
 font-family:'Cormorant Garamond',serif;
-font-size:92px;
+font-size:48px;
 line-height:.9;
 color:#ffe08c;
 text-shadow:0 0 14px rgba(255,220,120,.5);
+text-align:center;
 }
 
 .cascade-title{
 font-family:'Barlow Condensed',sans-serif;
-font-size:26px;
+font-size:14px;
 line-height:1.25;
 letter-spacing:.08em;
 text-transform:uppercase;
 color:#ffffff;
 font-weight:700;
+text-align:center;
 }
 
 .cascade-subtitle{
-margin-top:18px;
+margin-top:10px;
 font-family:'Barlow Condensed',sans-serif;
-font-size:24px;
+font-size:12px;
 line-height:1.35;
 letter-spacing:.06em;
 text-transform:uppercase;
 color:#e0af2e;
 font-weight:700;
+text-align:center;
 }
 
 .cascade-free{
-margin-top:20px;
+margin-top:10px;
 font-family:'Barlow Condensed',sans-serif;
-font-size:54px;
+font-size:28px;
 line-height:1;
 color:#f0c24f;
 font-weight:700;
+text-align:center;
 }
 
 .cascade-list{
-margin-top:18px;
+margin-top:10px;
+text-align:center;
 }
 
 .cascade-list div{
-margin-top:10px;
+margin-top:6px;
 font-family:'Barlow Condensed',sans-serif;
-font-size:22px;
+font-size:12px;
 letter-spacing:.05em;
 color:#e0af2e;
 text-transform:uppercase;
@@ -551,31 +571,34 @@ font-weight:700;
 
 .phd-top{
 display:flex;
+flex-direction:column;
 align-items:center;
-gap:28px;
+gap:8px;
+margin-top:10px;
 }
 
 .phd-icon{
-font-size:86px;
+font-size:40px;
 filter:drop-shadow(0 0 10px rgba(255,210,90,.5));
 }
 
 .phd-title{
 color:#ffffff;
-margin-top:6px;
+margin-top:4px;
 }
 
 .phd-divider{
 height:2px;
-margin:20px 0;
-background:linear-gradient(90deg,#f0c24f,transparent);
+margin:12px 0;
+background:linear-gradient(90deg,transparent,#f0c24f,transparent);
 }
 
 .phd-bullets div{
-margin-top:12px;
+margin-top:6px;
 color:#ffffff;
-font-size:20px;
+font-size:11px;
 line-height:1.45;
+text-align:center;
 }
 
 /* MOBILE */
@@ -583,64 +606,47 @@ line-height:1.45;
 @media(max-width:768px){
 
 .executive-cascade{
-max-width:420px;
-padding:0 10px 80px;
+flex-direction:column;
+align-items:center;
+gap:15px;
+padding:0 10px;
 }
 
 .cascade-card{
 border-radius:16px;
 }
 
-.cascade-five{
-  width:76%;
-  min-height:176px;
-  padding:29px 19px 27px 84px;
-margin-left:0;
-}
-
-.cascade-seven{
-  width:76%;
-  min-height:176px;
-  padding:29px 84px 27px 21px;
-margin-right:0;
-}
-
-.cascade-three{
-  width:92%;
-  min-height:240px;
-  padding:36px 24px 34px 105px;
-margin-left:0;
-}
-
+.cascade-five,
+.cascade-seven,
+.cascade-three,
 .cascade-phd{
-  width:80%;
-  min-height:200px;
-  padding:24px 19px;
+width:90%;
+max-width:300px;
+min-height:180px;
+padding:24px 20px;
+margin:0;
 }
 
 .cascade-five::before,
+.cascade-seven::before,
 .cascade-three::before{
-left:24px;
-top:78px;
-font-size:52px;
-}
-
-.cascade-seven::before{
-right:22px;
-top:78px;
-font-size:48px;
+left:50%;
+top:15px;
+transform:translateX(-50%);
+font-size:36px;
 }
 
 .cascade-number{
-font-size:46px;
+font-size:42px;
+margin-top:45px;
 }
 
 .phd-number{
-font-size:53px;
+font-size:42px;
 }
 
 .cascade-title{
-font-size:14px;
+font-size:13px;
 line-height:1.25;
 }
 
@@ -1541,7 +1547,10 @@ iframe {
 <body>
   <nav>
     <a href="#" class="nav-logo">
-      <img src="digital-jd-logo.png" alt="Digital JD" />
+      <div class="nav-logo-left">
+        <img src="digital-jd-logo.png" alt="Digital JD" />
+        <span class="nav-logo-name">Digital JD</span>
+      </div>
       <div class="nav-brand-stack" aria-label="Intelligent Leadership System">
         <div class="nav-brand-line">Intelligent</div>
         <div class="nav-brand-line">Leadership</div>
@@ -1639,27 +1648,18 @@ iframe {
     </div>
 
     <div class="cascade-card cascade-phd">
-
       <div class="phd-top">
         <div class="phd-icon">🎓</div>
-
-        <div>
-          <div class="phd-number">Ph.D.</div>
-
-          <div class="cascade-title phd-title">
-            Organizational Leadership
-          </div>
+        <div class="phd-number">Ph.D.</div>
+        <div class="cascade-title phd-title">
+          Organizational Leadership
         </div>
       </div>
-
       <div class="phd-divider"></div>
-
       <div class="phd-bullets">
         <div>✓ Peer-Reviewed Research</div>
-        <div>✓ Validated Leadership Frameworks</div>
-        <div>✓ Doctoral-Level Analysis</div>
+        <div>✓ Validated Frameworks</div>
       </div>
-
     </div>
 
   </div>
