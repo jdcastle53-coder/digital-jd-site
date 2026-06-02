@@ -1725,47 +1725,33 @@ iframe {
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
-          <!-- Reflection dome gradient - bright spot at top -->
-          <radialGradient id="reflectionGradient" cx="50%" cy="0%" r="80%" fx="50%" fy="0%">
-            <stop offset="0%" style="stop-color:rgba(200,245,255,0.7)"/>
-            <stop offset="15%" style="stop-color:rgba(100,220,255,0.4)"/>
-            <stop offset="40%" style="stop-color:rgba(0,180,255,0.2)"/>
-            <stop offset="70%" style="stop-color:rgba(0,150,220,0.08)"/>
-            <stop offset="100%" style="stop-color:rgba(0,120,180,0)"/>
+          <!-- Reflection gradient - subtle glow below arc -->
+          <radialGradient id="reflectionGradient" cx="50%" cy="0%" r="100%" fx="50%" fy="0%">
+            <stop offset="0%" style="stop-color:rgba(0,180,255,0.25)"/>
+            <stop offset="30%" style="stop-color:rgba(0,150,220,0.12)"/>
+            <stop offset="60%" style="stop-color:rgba(0,120,180,0.05)"/>
+            <stop offset="100%" style="stop-color:rgba(0,100,160,0)"/>
           </radialGradient>
         </defs>
         
-        <!-- Main arc path - 10% more bow (320 -> 352) -->
-        <path d="M -100,30 Q 800,352 1700,30" 
+        <!-- Main arc path - smile shape, brightest at center -->
+        <path d="M -100,50 Q 800,340 1700,50" 
               fill="none" 
               stroke="url(#arcGradient)" 
-              stroke-width="5"
+              stroke-width="4"
               filter="url(#arcGlow)"/>
         
-        <!-- Thicker glow layer at center - creates taper effect -->
-        <path d="M 200,80 Q 800,340 1400,80" 
+        <!-- Subtle glow layer behind main arc -->
+        <path d="M -100,50 Q 800,340 1700,50" 
               fill="none" 
-              stroke="rgba(150,235,255,0.6)" 
-              stroke-width="12"
-              stroke-linecap="round"
+              stroke="rgba(0,180,255,0.3)" 
+              stroke-width="20"
               filter="url(#arcGlow)"/>
         
-        <!-- Extra inner bright line -->
-        <path d="M 400,120 Q 800,320 1200,120" 
-              fill="none" 
-              stroke="rgba(220,250,255,0.8)" 
-              stroke-width="3"
-              filter="url(#arcGlow)"/>
-        
-        <!-- Reflection dome - moved up, bright spot ON the surface -->
-        <ellipse cx="800" cy="340" rx="500" ry="120" 
+        <!-- Subtle reflection glow below arc - very faint -->
+        <ellipse cx="800" cy="380" rx="400" ry="60" 
                  fill="url(#reflectionGradient)"
-                 filter="url(#domeGlow)"/>
-        
-        <!-- Bright highlight spot on top of dome surface -->
-        <ellipse cx="800" cy="330" rx="120" ry="25" 
-                 fill="rgba(200,250,255,0.5)"
-                 filter="url(#domeGlow)"/>
+                 opacity="0.4"/>
       </svg>
     </div>
     
