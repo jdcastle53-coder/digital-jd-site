@@ -190,35 +190,14 @@
       height: 350px;
     }
 
-    /* Bright center glow at bottom of arc */
+    /* Bright center glow - now handled in SVG */
     .hero-arc-center-glow {
-      position: absolute;
-      bottom: 160px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 300px;
-      height: 100px;
-      background: radial-gradient(ellipse at center,
-        rgba(255,255,255,0.9) 0%,
-        rgba(0,230,255,0.8) 20%,
-        rgba(0,200,255,0.5) 40%,
-        rgba(0,180,255,0.2) 60%,
-        transparent 80%);
-      filter: blur(8px);
+      display: none;
     }
 
-    /* Reflection dome below arc */
+    /* Reflection dome below arc - now handled in SVG */
     .hero-reflection-dome {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 1000px;
-      height: 160px;
-      background: 
-        radial-gradient(ellipse 100% 100% at 50% 0%, rgba(0,200,255,0.25) 0%, rgba(0,180,255,0.15) 30%, transparent 60%),
-        radial-gradient(ellipse 60% 80% at 50% 30%, rgba(0,160,255,0.1) 0%, transparent 50%);
-      filter: blur(5px);
+      display: none;
     }
 
     /* Hide old elements */
@@ -1708,21 +1687,29 @@ iframe {
     
     <!-- SVG Arc - Smile Shape -->
     <div class="hero-arc-container">
-      <svg class="hero-arc-svg" viewBox="0 0 1600 350" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+      <svg class="hero-arc-svg" viewBox="0 0 1600 400" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
         <defs>
-          <!-- Gradient for arc glow - brightest at center -->
+          <!-- Gradient for arc stroke - vibrant electric blue with white, tapering width simulated by opacity -->
           <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:rgba(0,150,200,0.3)"/>
-            <stop offset="30%" style="stop-color:rgba(0,200,255,0.7)"/>
+            <stop offset="0%" style="stop-color:rgba(0,160,255,0.4)"/>
+            <stop offset="20%" style="stop-color:rgba(0,200,255,0.8)"/>
+            <stop offset="40%" style="stop-color:rgba(100,220,255,0.95)"/>
+            <stop offset="50%" style="stop-color:rgba(220,250,255,1)"/>
+            <stop offset="60%" style="stop-color:rgba(100,220,255,0.95)"/>
+            <stop offset="80%" style="stop-color:rgba(0,200,255,0.8)"/>
+            <stop offset="100%" style="stop-color:rgba(0,160,255,0.4)"/>
+          </linearGradient>
+          <!-- Stroke width gradient - thicker at center -->
+          <linearGradient id="arcWidthGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:rgba(0,180,255,0.2)"/>
             <stop offset="50%" style="stop-color:rgba(150,240,255,1)"/>
-            <stop offset="70%" style="stop-color:rgba(0,200,255,0.7)"/>
-            <stop offset="100%" style="stop-color:rgba(0,150,200,0.3)"/>
+            <stop offset="100%" style="stop-color:rgba(0,180,255,0.2)"/>
           </linearGradient>
           <!-- Glow filter -->
           <filter id="arcGlow" x="-50%" y="-100%" width="200%" height="300%">
-            <feGaussianBlur stdDeviation="8" result="blur1"/>
-            <feGaussianBlur stdDeviation="20" result="blur2"/>
-            <feGaussianBlur stdDeviation="40" result="blur3"/>
+            <feGaussianBlur stdDeviation="6" result="blur1"/>
+            <feGaussianBlur stdDeviation="15" result="blur2"/>
+            <feGaussianBlur stdDeviation="35" result="blur3"/>
             <feMerge>
               <feMergeNode in="blur3"/>
               <feMergeNode in="blur2"/>
@@ -1730,49 +1717,56 @@ iframe {
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
-          <!-- Center bright spot filter -->
-          <filter id="centerGlow" x="-100%" y="-100%" width="300%" height="300%">
-            <feGaussianBlur stdDeviation="15" result="blur"/>
+          <!-- Bright spot glow for reflection on dome -->
+          <filter id="domeGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="12" result="blur"/>
             <feMerge>
               <feMergeNode in="blur"/>
               <feMergeNode in="SourceGraphic"/>
             </feMerge>
           </filter>
-          <!-- Reflection gradient -->
-          <radialGradient id="reflectionGradient" cx="50%" cy="0%" r="70%">
-            <stop offset="0%" style="stop-color:rgba(0,200,255,0.3)"/>
-            <stop offset="40%" style="stop-color:rgba(0,180,255,0.15)"/>
-            <stop offset="100%" style="stop-color:rgba(0,160,255,0)"/>
+          <!-- Reflection dome gradient - bright spot at top -->
+          <radialGradient id="reflectionGradient" cx="50%" cy="0%" r="80%" fx="50%" fy="0%">
+            <stop offset="0%" style="stop-color:rgba(200,245,255,0.7)"/>
+            <stop offset="15%" style="stop-color:rgba(100,220,255,0.4)"/>
+            <stop offset="40%" style="stop-color:rgba(0,180,255,0.2)"/>
+            <stop offset="70%" style="stop-color:rgba(0,150,220,0.08)"/>
+            <stop offset="100%" style="stop-color:rgba(0,120,180,0)"/>
           </radialGradient>
         </defs>
         
-        <!-- Main arc path - smile shape curving DOWN at center -->
-        <path d="M -100,50 Q 800,320 1700,50" 
+        <!-- Main arc path - 10% more bow (320 -> 352) -->
+        <path d="M -100,30 Q 800,352 1700,30" 
               fill="none" 
               stroke="url(#arcGradient)" 
-              stroke-width="4"
+              stroke-width="5"
               filter="url(#arcGlow)"/>
         
-        <!-- Extra glow layer -->
-        <path d="M -100,50 Q 800,320 1700,50" 
+        <!-- Thicker glow layer at center - creates taper effect -->
+        <path d="M 200,80 Q 800,340 1400,80" 
               fill="none" 
-              stroke="rgba(0,200,255,0.5)" 
-              stroke-width="20"
-              filter="url(#arcGlow)"
-              opacity="0.5"/>
+              stroke="rgba(150,235,255,0.6)" 
+              stroke-width="12"
+              stroke-linecap="round"
+              filter="url(#arcGlow)"/>
         
-        <!-- Bright center spot -->
-        <ellipse cx="800" cy="280" rx="80" ry="30" 
-                 fill="rgba(200,250,255,0.9)" 
-                 filter="url(#centerGlow)"/>
+        <!-- Extra inner bright line -->
+        <path d="M 400,120 Q 800,320 1200,120" 
+              fill="none" 
+              stroke="rgba(220,250,255,0.8)" 
+              stroke-width="3"
+              filter="url(#arcGlow)"/>
         
-        <!-- Reflection dome below -->
-        <ellipse cx="800" cy="380" rx="400" ry="100" 
+        <!-- Reflection dome - moved up, bright spot ON the surface -->
+        <ellipse cx="800" cy="340" rx="500" ry="120" 
                  fill="url(#reflectionGradient)"
-                 opacity="0.8"/>
+                 filter="url(#domeGlow)"/>
+        
+        <!-- Bright highlight spot on top of dome surface -->
+        <ellipse cx="800" cy="330" rx="120" ry="25" 
+                 fill="rgba(200,250,255,0.5)"
+                 filter="url(#domeGlow)"/>
       </svg>
-      <div class="hero-arc-center-glow"></div>
-      <div class="hero-reflection-dome"></div>
     </div>
     
     <div class="hero-content">
