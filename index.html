@@ -167,113 +167,63 @@
     }
 
     /* ========================================
-       PLANET ARC - SMILE SHAPE (∪)
-       Arc curves DOWN in center, UP at edges
-       Brightest glow at bottom center
-       Reflection dome below the arc
+       PLANET ARC - SVG-BASED SMILE SHAPE
        ======================================== */
     
-    .hero-arc {
+    .hero-arc-container {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      height: 450px;
+      height: 400px;
       pointer-events: none;
-      overflow: hidden;
+      overflow: visible;
     }
 
-    /* Main arc line - TOP edge of circle positioned below = smile shape */
-    .hero-arc::before {
-      content: '';
+    .hero-arc-svg {
       position: absolute;
-      top: 150px;
+      bottom: 50px;
       left: 50%;
       transform: translateX(-50%);
-      width: 3500px;
-      height: 1800px;
-      border-radius: 50%;
-      background: transparent;
-      border-top: 4px solid rgba(0,210,255,1);
-      box-shadow: 
-        /* Glow radiates UPWARD from arc */
-        0 -2px 6px rgba(0,230,255,1),
-        0 -5px 15px rgba(0,210,255,0.95),
-        0 -10px 35px rgba(0,190,255,0.8),
-        0 -20px 70px rgba(0,170,255,0.6),
-        0 -35px 120px rgba(0,150,255,0.4),
-        0 -60px 200px rgba(0,130,220,0.25);
+      width: 150%;
+      min-width: 1600px;
+      height: 350px;
     }
 
-    /* Bright center hotspot - intense glow at lowest point of arc */
-    .hero-arc-center {
+    /* Bright center glow at bottom of arc */
+    .hero-arc-center-glow {
       position: absolute;
-      bottom: 250px;
+      bottom: 160px;
       left: 50%;
       transform: translateX(-50%);
-      width: 400px;
-      height: 150px;
-      background: radial-gradient(ellipse at center, 
-        rgba(0,230,255,0.5) 0%, 
-        rgba(0,200,255,0.3) 30%, 
-        rgba(0,180,255,0.1) 60%,
-        transparent 100%);
-      filter: blur(10px);
+      width: 300px;
+      height: 100px;
+      background: radial-gradient(ellipse at center,
+        rgba(255,255,255,0.9) 0%,
+        rgba(0,230,255,0.8) 20%,
+        rgba(0,200,255,0.5) 40%,
+        rgba(0,180,255,0.2) 60%,
+        transparent 80%);
+      filter: blur(8px);
     }
 
-    /* Reflection dome - light hitting spherical surface below arc */
-    .hero-arc::after {
-      content: '';
+    /* Reflection dome below arc */
+    .hero-reflection-dome {
       position: absolute;
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 1400px;
-      height: 250px;
+      width: 1000px;
+      height: 160px;
       background: 
-        /* Top highlight on dome */
-        radial-gradient(ellipse 100% 80% at 50% 0%, rgba(0,200,255,0.18) 0%, transparent 50%),
-        /* Mid reflection */
-        radial-gradient(ellipse 70% 60% at 50% 20%, rgba(0,180,255,0.12) 0%, transparent 60%),
-        /* Subtle ambient */
-        radial-gradient(ellipse 50% 40% at 50% 40%, rgba(0,160,220,0.06) 0%, transparent 70%);
+        radial-gradient(ellipse 100% 100% at 50% 0%, rgba(0,200,255,0.25) 0%, rgba(0,180,255,0.15) 30%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 50% 30%, rgba(0,160,255,0.1) 0%, transparent 50%);
+      filter: blur(5px);
     }
 
-    /* Reflection dome surface highlight */
-    .hero-reflection {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 800px;
-      height: 120px;
-      background: radial-gradient(ellipse at 50% 0%,
-        rgba(0,210,255,0.12) 0%,
-        rgba(0,180,255,0.06) 40%,
-        transparent 70%);
-      border-radius: 50%;
-    }
-
-    /* Flare lines extending from arc center */
-    .hero-flares {
-      position: absolute;
-      bottom: 260px;
-      left: 0;
-      right: 0;
-      height: 4px;
-      pointer-events: none;
-      background: linear-gradient(90deg,
-        transparent 0%,
-        transparent 20%,
-        rgba(0,180,255,0.03) 30%,
-        rgba(0,200,255,0.15) 42%,
-        rgba(0,220,255,0.5) 48%,
-        rgba(0,240,255,0.9) 50%,
-        rgba(0,220,255,0.5) 52%,
-        rgba(0,200,255,0.15) 58%,
-        rgba(0,180,255,0.03) 70%,
-        transparent 80%,
-        transparent 100%);
+    /* Hide old elements */
+    .hero-arc, .hero-arc-center, .hero-reflection, .hero-flares {
+      display: none;
     }
 
     @keyframes slowZoom {
@@ -1755,10 +1705,76 @@ iframe {
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
     <div class="hero-grid-lines"></div>
-    <div class="hero-arc"></div>
-    <div class="hero-arc-center"></div>
-    <div class="hero-reflection"></div>
-    <div class="hero-flares"></div>
+    
+    <!-- SVG Arc - Smile Shape -->
+    <div class="hero-arc-container">
+      <svg class="hero-arc-svg" viewBox="0 0 1600 350" preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Gradient for arc glow - brightest at center -->
+          <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color:rgba(0,150,200,0.3)"/>
+            <stop offset="30%" style="stop-color:rgba(0,200,255,0.7)"/>
+            <stop offset="50%" style="stop-color:rgba(150,240,255,1)"/>
+            <stop offset="70%" style="stop-color:rgba(0,200,255,0.7)"/>
+            <stop offset="100%" style="stop-color:rgba(0,150,200,0.3)"/>
+          </linearGradient>
+          <!-- Glow filter -->
+          <filter id="arcGlow" x="-50%" y="-100%" width="200%" height="300%">
+            <feGaussianBlur stdDeviation="8" result="blur1"/>
+            <feGaussianBlur stdDeviation="20" result="blur2"/>
+            <feGaussianBlur stdDeviation="40" result="blur3"/>
+            <feMerge>
+              <feMergeNode in="blur3"/>
+              <feMergeNode in="blur2"/>
+              <feMergeNode in="blur1"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <!-- Center bright spot filter -->
+          <filter id="centerGlow" x="-100%" y="-100%" width="300%" height="300%">
+            <feGaussianBlur stdDeviation="15" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <!-- Reflection gradient -->
+          <radialGradient id="reflectionGradient" cx="50%" cy="0%" r="70%">
+            <stop offset="0%" style="stop-color:rgba(0,200,255,0.3)"/>
+            <stop offset="40%" style="stop-color:rgba(0,180,255,0.15)"/>
+            <stop offset="100%" style="stop-color:rgba(0,160,255,0)"/>
+          </radialGradient>
+        </defs>
+        
+        <!-- Main arc path - smile shape curving DOWN at center -->
+        <path d="M -100,50 Q 800,320 1700,50" 
+              fill="none" 
+              stroke="url(#arcGradient)" 
+              stroke-width="4"
+              filter="url(#arcGlow)"/>
+        
+        <!-- Extra glow layer -->
+        <path d="M -100,50 Q 800,320 1700,50" 
+              fill="none" 
+              stroke="rgba(0,200,255,0.5)" 
+              stroke-width="20"
+              filter="url(#arcGlow)"
+              opacity="0.5"/>
+        
+        <!-- Bright center spot -->
+        <ellipse cx="800" cy="280" rx="80" ry="30" 
+                 fill="rgba(200,250,255,0.9)" 
+                 filter="url(#centerGlow)"/>
+        
+        <!-- Reflection dome below -->
+        <ellipse cx="800" cy="380" rx="400" ry="100" 
+                 fill="url(#reflectionGradient)"
+                 opacity="0.8"/>
+      </svg>
+      <div class="hero-arc-center-glow"></div>
+      <div class="hero-reflection-dome"></div>
+    </div>
+    
     <div class="hero-content">
       <h1 class="hero-title" style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:400;margin-bottom:1rem;color:#fff;">The Way Executives <span class="accent">"Think"</span> Has Changed.</h1>
       <div class="hero-tagline-divider" style="margin-bottom:1rem;">
