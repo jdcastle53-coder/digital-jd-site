@@ -140,12 +140,12 @@
 
     #hero {
       position: relative;
-      min-height: auto;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       overflow: hidden;
-      background: linear-gradient(180deg, #030810 0%, #051020 50%, #0a1a35 100%);
+      background: linear-gradient(180deg, #030810 0%, #051020 30%, #071428 60%, #0a1a35 100%);
     }
 
     .hero-bg {
@@ -205,52 +205,6 @@
       display: none;
     }
 
-    /* ========================================
-       MIDDLE VISUAL SECTION - 3D Curves
-       ======================================== */
-    .hero-middle-section {
-      position: relative;
-      background: linear-gradient(180deg, #0a1a35 0%, #061428 50%, #040c18 100%);
-      padding: 0;
-      margin-top: -1px;
-      overflow: hidden;
-    }
-
-    .middle-visual-container {
-      position: relative;
-      width: 100%;
-      min-height: 400px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .middle-curves-svg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-
-    .middle-text-content {
-      position: relative;
-      z-index: 10;
-      max-width: 800px;
-      padding: 4rem 2rem;
-      text-align: center;
-    }
-
-    .middle-paragraph {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.1rem, 2vw, 1.35rem);
-      line-height: 1.85;
-      color: rgba(255, 255, 255, 0.9);
-      letter-spacing: 0.01em;
-      text-shadow: 0 2px 20px rgba(0,0,0,0.5);
-    }
-
     @keyframes slowZoom {
       from { transform: scale(1.04); }
       to { transform: scale(1.10); }
@@ -268,7 +222,7 @@
       margin: 0 auto;
       padding: 0 2rem;
       padding-top: 6rem;
-      padding-bottom: 2rem;
+      padding-bottom: 14rem;
       text-align: center;
     }
 
@@ -1820,112 +1774,14 @@ iframe {
       <div class="hero-tagline-divider" style="margin-bottom:1rem;">
         <span class="hero-tagline-diamond">◆</span>
       </div>
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.2rem,5.5vw,4rem);font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#00d4ff;text-shadow:0 0 30px rgba(0,212,255,0.6),0 0 60px rgba(0,180,255,0.3);margin-bottom:0.2rem;">EXECUTIVE CLARITY</div>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.2rem,5.5vw,4rem);font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#c9a84c;margin-bottom:0.2rem;">EXECUTIVE CLARITY</div>
       <div class="hero-tagline-divider" style="margin-top:0;margin-bottom:0.8rem;gap:1rem;">
         <span style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(0.9rem,1.8vw,1.2rem);letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.85);">ON DEMAND</span>
       </div>
       <div class="hero-tagline-divider" style="margin-top:0;margin-bottom:1.8rem;">
         <span class="hero-tagline-diamond">◆</span>
       </div>
-    </div>
-  </section>
-  
-  <!-- Middle Visual Section - 3D Curves with Text -->
-  <section class="hero-middle-section">
-    <div class="middle-visual-container">
-      <!-- SVG Background with flowing curves -->
-      <svg class="middle-curves-svg" viewBox="0 0 1600 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <!-- Flowing curve gradients -->
-          <linearGradient id="curve1Gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:rgba(0,100,180,0)"/>
-            <stop offset="30%" style="stop-color:rgba(0,180,255,0.4)"/>
-            <stop offset="50%" style="stop-color:rgba(100,220,255,0.8)"/>
-            <stop offset="70%" style="stop-color:rgba(0,180,255,0.4)"/>
-            <stop offset="100%" style="stop-color:rgba(0,100,180,0)"/>
-          </linearGradient>
-          <linearGradient id="curve2Gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:rgba(0,80,150,0)"/>
-            <stop offset="40%" style="stop-color:rgba(0,150,220,0.3)"/>
-            <stop offset="50%" style="stop-color:rgba(80,200,255,0.6)"/>
-            <stop offset="60%" style="stop-color:rgba(0,150,220,0.3)"/>
-            <stop offset="100%" style="stop-color:rgba(0,80,150,0)"/>
-          </linearGradient>
-          <linearGradient id="curve3Gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" style="stop-color:rgba(0,60,120,0)"/>
-            <stop offset="35%" style="stop-color:rgba(0,120,180,0.2)"/>
-            <stop offset="50%" style="stop-color:rgba(60,180,240,0.5)"/>
-            <stop offset="65%" style="stop-color:rgba(0,120,180,0.2)"/>
-            <stop offset="100%" style="stop-color:rgba(0,60,120,0)"/>
-          </linearGradient>
-          <!-- Glow filter -->
-          <filter id="curveGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="4" result="blur1"/>
-            <feGaussianBlur stdDeviation="10" result="blur2"/>
-            <feGaussianBlur stdDeviation="20" result="blur3"/>
-            <feMerge>
-              <feMergeNode in="blur3"/>
-              <feMergeNode in="blur2"/>
-              <feMergeNode in="blur1"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
-          </filter>
-          <!-- Central orb gradient -->
-          <radialGradient id="orbGradient" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" style="stop-color:rgba(150,230,255,0.4)"/>
-            <stop offset="40%" style="stop-color:rgba(0,180,255,0.2)"/>
-            <stop offset="100%" style="stop-color:rgba(0,120,200,0)"/>
-          </radialGradient>
-          <!-- Bottom reflection -->
-          <radialGradient id="bottomReflection" cx="50%" cy="0%" r="80%">
-            <stop offset="0%" style="stop-color:rgba(0,180,255,0.15)"/>
-            <stop offset="50%" style="stop-color:rgba(0,150,220,0.08)"/>
-            <stop offset="100%" style="stop-color:rgba(0,100,180,0)"/>
-          </radialGradient>
-        </defs>
-        
-        <!-- Top flowing curve - main arc -->
-        <path d="M -100,80 Q 400,20 800,100 Q 1200,180 1700,60" 
-              fill="none" 
-              stroke="url(#curve1Gradient)" 
-              stroke-width="3"
-              filter="url(#curveGlow)"/>
-        
-        <!-- Second curve - slightly below -->
-        <path d="M -100,140 Q 500,80 800,160 Q 1100,240 1700,120" 
-              fill="none" 
-              stroke="url(#curve2Gradient)" 
-              stroke-width="2"
-              filter="url(#curveGlow)"/>
-        
-        <!-- Third curve - lower arc -->
-        <path d="M -100,200 Q 600,280 800,220 Q 1000,160 1700,240" 
-              fill="none" 
-              stroke="url(#curve3Gradient)" 
-              stroke-width="2"
-              filter="url(#curveGlow)"/>
-              
-        <!-- Bottom smile arc - bright -->
-        <path d="M -100,400 Q 800,500 1700,400" 
-              fill="none" 
-              stroke="url(#curve1Gradient)" 
-              stroke-width="4"
-              filter="url(#curveGlow)"/>
-        
-        <!-- Central orb/sphere glow -->
-        <ellipse cx="800" cy="280" rx="200" ry="150" fill="url(#orbGradient)" filter="url(#curveGlow)"/>
-        
-        <!-- Bottom reflection area -->
-        <ellipse cx="800" cy="480" rx="600" ry="80" fill="url(#bottomReflection)"/>
-        
-        <!-- Bright center point -->
-        <ellipse cx="800" cy="470" rx="80" ry="15" fill="rgba(150,230,255,0.3)" filter="url(#curveGlow)"/>
-      </svg>
-      
-      <!-- Text Content Overlay -->
-      <div class="middle-text-content">
-        <p class="middle-paragraph">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and decisive guidance.</p>
-      </div>
+      <p class="hero-descriptor" style="max-width:720px;font-size:1.05rem;line-height:1.7;margin:0 auto;">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and decisive guidance.</p>
     </div>
   </section>
 
