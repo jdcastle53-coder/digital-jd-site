@@ -166,10 +166,10 @@
       background: transparent;
     }
 
-    /* Planet Arc Effect */
+    /* Planet Arc Effect - Flipped (curves upward) */
     .hero-arc {
       position: absolute;
-      bottom: 0;
+      bottom: 80px;
       left: 50%;
       transform: translateX(-50%);
       width: 200%;
@@ -180,32 +180,32 @@
     .hero-arc::before {
       content: '';
       position: absolute;
-      bottom: -400px;
+      top: 200px;
       left: 50%;
       transform: translateX(-50%);
-      width: 2400px;
-      height: 800px;
+      width: 2800px;
+      height: 1000px;
       border-radius: 50%;
       background: transparent;
       box-shadow: 
-        0 -2px 80px rgba(0,180,216,0.5),
-        0 -4px 120px rgba(0,180,216,0.35),
-        0 -8px 200px rgba(0,140,200,0.25),
-        inset 0 20px 80px rgba(0,180,216,0.15);
-      border-top: 3px solid rgba(0,200,240,0.8);
+        0 2px 100px rgba(0,200,255,0.7),
+        0 4px 150px rgba(0,180,216,0.5),
+        0 8px 250px rgba(0,160,220,0.35),
+        inset 0 -30px 100px rgba(0,180,216,0.2);
+      border-bottom: 4px solid rgba(0,220,255,0.9);
     }
 
-    /* Reflection glow at bottom */
+    /* Reflection below the arc (like light hitting a surface) */
     .hero-arc::after {
       content: '';
       position: absolute;
-      bottom: -450px;
+      top: 320px;
       left: 50%;
       transform: translateX(-50%);
-      width: 2400px;
-      height: 500px;
-      border-radius: 50%;
-      background: radial-gradient(ellipse at center top, rgba(0,180,216,0.12) 0%, transparent 70%);
+      width: 1800px;
+      height: 400px;
+      background: radial-gradient(ellipse at center top, rgba(0,180,216,0.25) 0%, rgba(0,160,200,0.1) 40%, transparent 70%);
+      filter: blur(20px);
     }
 
     @keyframes slowZoom {
@@ -1655,7 +1655,6 @@ iframe {
     <a href="#" class="nav-logo">
       <div class="nav-logo-left">
         <img src="digital-jd-logo.png" alt="Digital JD" />
-        <span class="nav-logo-name">Digital JD</span>
       </div>
       <div class="nav-brand-stack" aria-label="Intelligent Leadership System">
         <div class="nav-brand-line">Intelligent</div>
@@ -1689,16 +1688,15 @@ iframe {
     <div class="hero-grid-lines"></div>
     <div class="hero-arc"></div>
     <div class="hero-content">
-      <div class="hero-eyebrow">Leadership Intelligence System</div>
-      <h1 class="hero-title">The Way Executives <span class="accent">"Think"</span> Has Changed.</h1>
+      <h1 class="hero-title" style="font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:400;margin-bottom:1.2rem;">The Way Executives <span class="accent">"Think"</span> Has Changed.</h1>
       <div class="hero-tagline-divider">
         <span class="hero-tagline-diamond">◆</span>
       </div>
-      <div class="hero-tagline" style="margin-bottom:0.5rem;">Executive Clarity</div>
+      <div class="hero-main-headline" style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.5rem,6vw,4.5rem);font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#c9a84c;margin-bottom:0.3rem;">Executive Clarity</div>
       <div class="hero-tagline-divider" style="margin-top:0;">
-        <span style="font-size:0.9rem;letter-spacing:0.3em;">ON DEMAND</span>
+        <span style="font-size:1.1rem;letter-spacing:0.35em;color:rgba(240,244,248,0.9);">ON DEMAND</span>
       </div>
-      <div class="hero-tagline-divider" style="margin-top:-0.5rem;margin-bottom:2rem;">
+      <div class="hero-tagline-divider" style="margin-top:-0.3rem;margin-bottom:2rem;">
         <span class="hero-tagline-diamond">◆</span>
       </div>
       <p class="hero-descriptor">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and decisive guidance.</p>
