@@ -140,12 +140,12 @@
 
     #hero {
       position: relative;
-      min-height: 100vh;
+      min-height: 90vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       overflow: hidden;
-      background: linear-gradient(180deg, #040810 0%, #06101c 40%, #081428 70%, #0a1a32 100%);
+      background: linear-gradient(180deg, #030810 0%, #051020 30%, #071428 60%, #0a1a35 100%);
     }
 
     .hero-bg {
@@ -166,46 +166,81 @@
       background: transparent;
     }
 
-    /* Planet Arc Effect - Flipped (curves upward) */
+    /* Planet Arc Effect - Concave (curves downward like planet horizon) */
     .hero-arc {
       position: absolute;
-      bottom: 80px;
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 200%;
-      height: 600px;
+      width: 100%;
+      height: 350px;
       pointer-events: none;
+      overflow: visible;
     }
 
+    /* Main arc - the bright curved line */
     .hero-arc::before {
       content: '';
       position: absolute;
-      top: 200px;
+      bottom: -1200px;
       left: 50%;
       transform: translateX(-50%);
-      width: 2800px;
-      height: 1000px;
+      width: 3000px;
+      height: 1400px;
       border-radius: 50%;
       background: transparent;
+      border-top: 3px solid rgba(0,180,255,1);
       box-shadow: 
-        0 2px 100px rgba(0,200,255,0.7),
-        0 4px 150px rgba(0,180,216,0.5),
-        0 8px 250px rgba(0,160,220,0.35),
-        inset 0 -30px 100px rgba(0,180,216,0.2);
-      border-bottom: 4px solid rgba(0,220,255,0.9);
+        0 -2px 8px rgba(0,200,255,1),
+        0 -4px 20px rgba(0,180,255,0.9),
+        0 -8px 40px rgba(0,160,255,0.7),
+        0 -15px 80px rgba(0,140,255,0.5),
+        0 -25px 120px rgba(0,120,200,0.4),
+        0 -40px 180px rgba(0,100,180,0.25);
     }
 
-    /* Reflection below the arc (like light hitting a surface) */
+    /* Reflection/glow below the arc */
     .hero-arc::after {
       content: '';
       position: absolute;
-      top: 320px;
+      bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 1800px;
-      height: 400px;
-      background: radial-gradient(ellipse at center top, rgba(0,180,216,0.25) 0%, rgba(0,160,200,0.1) 40%, transparent 70%);
-      filter: blur(20px);
+      width: 100%;
+      height: 120px;
+      background: 
+        radial-gradient(ellipse 80% 100% at 50% 0%, rgba(0,180,255,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 50% 10%, rgba(0,160,220,0.1) 0%, transparent 50%);
+    }
+
+    /* Flare lines container */
+    .hero-flares {
+      position: absolute;
+      bottom: 180px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 100px;
+      pointer-events: none;
+    }
+
+    /* Individual flare lines radiating from arc center */
+    .hero-flares::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 2px;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0,180,255,0.1) 20%, 
+        rgba(0,200,255,0.4) 45%, 
+        rgba(0,220,255,0.8) 50%, 
+        rgba(0,200,255,0.4) 55%, 
+        rgba(0,180,255,0.1) 80%, 
+        transparent 100%);
     }
 
     @keyframes slowZoom {
@@ -221,10 +256,11 @@
     .hero-content {
       position: relative;
       z-index: 10;
-      max-width: 1100px;
+      max-width: 900px;
       margin: 0 auto;
-      padding: 0 4rem;
-      padding-top: 8rem;
+      padding: 0 2rem;
+      padding-top: 6rem;
+      padding-bottom: 14rem;
       text-align: center;
     }
 
@@ -291,9 +327,9 @@
     .hero-tagline-divider::before,
     .hero-tagline-divider::after {
       content: '';
-      width: 60px;
+      width: 80px;
       height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      background: linear-gradient(90deg, transparent, rgba(201,168,76,0.7), transparent);
     }
 
     .hero-tagline-diamond {
@@ -1687,31 +1723,20 @@ iframe {
     <div class="hero-overlay"></div>
     <div class="hero-grid-lines"></div>
     <div class="hero-arc"></div>
+    <div class="hero-flares"></div>
     <div class="hero-content">
-      <h1 class="hero-title" style="font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:400;margin-bottom:1.2rem;">The Way Executives <span class="accent">"Think"</span> Has Changed.</h1>
-      <div class="hero-tagline-divider">
+      <h1 class="hero-title" style="font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:400;margin-bottom:1rem;color:#fff;">The Way Executives <span class="accent">"Think"</span> Has Changed.</h1>
+      <div class="hero-tagline-divider" style="margin-bottom:1rem;">
         <span class="hero-tagline-diamond">◆</span>
       </div>
-      <div class="hero-main-headline" style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.5rem,6vw,4.5rem);font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#c9a84c;margin-bottom:0.3rem;">Executive Clarity</div>
-      <div class="hero-tagline-divider" style="margin-top:0;">
-        <span style="font-size:1.1rem;letter-spacing:0.35em;color:rgba(240,244,248,0.9);">ON DEMAND</span>
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(2.2rem,5.5vw,4rem);font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#c9a84c;margin-bottom:0.2rem;">EXECUTIVE CLARITY</div>
+      <div class="hero-tagline-divider" style="margin-top:0;margin-bottom:0.8rem;gap:1rem;">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:clamp(0.9rem,1.8vw,1.2rem);letter-spacing:0.3em;text-transform:uppercase;color:rgba(255,255,255,0.85);">ON DEMAND</span>
       </div>
-      <div class="hero-tagline-divider" style="margin-top:-0.3rem;margin-bottom:2rem;">
+      <div class="hero-tagline-divider" style="margin-top:0;margin-bottom:1.8rem;">
         <span class="hero-tagline-diamond">◆</span>
       </div>
-      <p class="hero-descriptor">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and decisive guidance.</p>
-      <p class="hero-bridge">Your 7-day Executive Sprint is complimentary. No card. No commitment.</p>
-     <div class="hero-cta-group">
-    <button class="btn-primary" onclick="openModal()" style="animation:btnPulse 2.5s ease-in-out infinite;">
-        <span>Your Sprint Starts Now →</span>
-    </button>
-
-    <a href="#what" class="btn-ghost">Learn the system</a>
-</div>
-
-<p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#c9a84c;margin-top:1rem;">
-    No card. No contract. No commitment. Just clarity.
-</p>
+      <p class="hero-descriptor" style="max-width:720px;font-size:1.05rem;line-height:1.7;margin-bottom:0;">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and decisive guidance.</p>
     </div>
   </section>
 
