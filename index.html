@@ -145,38 +145,72 @@
       flex-direction: column;
       justify-content: center;
       overflow: hidden;
+      background: linear-gradient(180deg, #040810 0%, #06101c 40%, #081428 70%, #0a1a32 100%);
     }
 
     .hero-bg {
       position: absolute;
       inset: 0;
-      background-image: url('https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1800&q=80');
-      background-size: cover;
-      background-position: center top;
-      filter: brightness(0.12) saturate(0.4);
-      transform: scale(1.04);
-      animation: slowZoom 20s ease-in-out infinite alternate;
-    }
-
-    @keyframes slowZoom {
-      from { transform: scale(1.04); }
-      to { transform: scale(1.10); }
+      background: transparent;
     }
 
     .hero-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(4,6,8,0.85) 0%, rgba(7,13,26,0.6) 50%, rgba(4,6,8,0.92) 100%);
+      background: transparent;
     }
 
     .hero-grid-lines {
       position: absolute;
       inset: 0;
-      background-image:
-        linear-gradient(rgba(0,180,216,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,180,216,0.04) 1px, transparent 1px);
-      background-size: 80px 80px;
-      animation: gridPulse 8s ease-in-out infinite;
+      background: transparent;
+    }
+
+    /* Planet Arc Effect */
+    .hero-arc {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 200%;
+      height: 600px;
+      pointer-events: none;
+    }
+
+    .hero-arc::before {
+      content: '';
+      position: absolute;
+      bottom: -400px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2400px;
+      height: 800px;
+      border-radius: 50%;
+      background: transparent;
+      box-shadow: 
+        0 -2px 80px rgba(0,180,216,0.5),
+        0 -4px 120px rgba(0,180,216,0.35),
+        0 -8px 200px rgba(0,140,200,0.25),
+        inset 0 20px 80px rgba(0,180,216,0.15);
+      border-top: 3px solid rgba(0,200,240,0.8);
+    }
+
+    /* Reflection glow at bottom */
+    .hero-arc::after {
+      content: '';
+      position: absolute;
+      bottom: -450px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2400px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center top, rgba(0,180,216,0.12) 0%, transparent 70%);
+    }
+
+    @keyframes slowZoom {
+      from { transform: scale(1.04); }
+      to { transform: scale(1.10); }
     }
 
     @keyframes gridPulse {
@@ -191,6 +225,7 @@
       margin: 0 auto;
       padding: 0 4rem;
       padding-top: 8rem;
+      text-align: center;
     }
 
     .hero-eyebrow {
@@ -202,7 +237,7 @@
       margin-bottom: 1.8rem;
       opacity: 0;
       animation: fadeUp 0.8s ease forwards 0.3s;
-      text-align: right;
+      text-align: center;
       width: 100%;
       display: none;
     }
@@ -235,12 +270,43 @@
       animation: fadeUp 0.9s ease forwards 0.7s;
     }
 
+    .hero-tagline-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.65s;
+    }
+
+    .hero-tagline-divider span {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(1rem, 2vw, 1.3rem);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .hero-tagline-divider::before,
+    .hero-tagline-divider::after {
+      content: '';
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    .hero-tagline-diamond {
+      color: var(--gold);
+      font-size: 0.6rem;
+    }
+
     .hero-descriptor {
-      max-width: 560px;
+      max-width: 680px;
+      margin: 0 auto 1.8rem;
       font-size: 1.15rem;
       line-height: 1.75;
       color: var(--white-dim);
-      margin-bottom: 1.8rem;
       opacity: 0;
       animation: fadeUp 0.9s ease forwards 0.9s;
     }
@@ -254,11 +320,14 @@
       opacity: 0;
       animation: fadeUp 0.9s ease forwards 1.05s;
       max-width: 560px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
     .hero-cta-group {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 1.5rem;
       flex-wrap: wrap;
       opacity: 0;
@@ -356,9 +425,23 @@
 
     .stat-item:last-child { border-right: none; }
 .executive-cascade-wrapper{
-padding:20px 0 40px;
-background:#04070d;
+padding:0;
+background: linear-gradient(180deg, #0a1a32 0%, #081428 20%, #04070d 100%);
 overflow:hidden;
+margin-top: -1px;
+position: relative;
+}
+
+.executive-cascade-wrapper::before {
+content: '';
+position: absolute;
+top: 0;
+left: 50%;
+transform: translateX(-50%);
+width: 2400px;
+height: 300px;
+background: radial-gradient(ellipse at center top, rgba(0,180,216,0.08) 0%, transparent 70%);
+pointer-events: none;
 }
 
 .executive-cascade{
@@ -369,57 +452,62 @@ display:flex;
 flex-wrap:wrap;
 justify-content:center;
 gap:20px;
-padding:0 20px;
+padding:40px 20px 60px;
+position: relative;
+z-index: 1;
 }
 
 /* MASTER CARD STYLE */
 
 .cascade-card{
 position:relative;
-border-radius:18px;
+border-radius:12px;
 overflow:hidden;
 background:
-radial-gradient(circle at top right, rgba(0,180,255,.12), transparent 45%),
-linear-gradient(180deg,#07111f 0%,#030811 100%);
-border:2px solid rgba(0,180,255,.9);
+linear-gradient(180deg, rgba(10,26,50,0.9) 0%, rgba(4,7,13,0.95) 100%);
+border:1px solid rgba(0,180,255,.25);
 box-shadow:
-0 0 10px rgba(0,180,255,.95),
-0 0 28px rgba(0,180,255,.45),
-inset 0 0 30px rgba(0,180,255,.05);
+0 4px 30px rgba(0,0,0,0.4),
+0 0 20px rgba(0,180,255,.1),
+inset 0 1px 0 rgba(255,255,255,0.05);
+backdrop-filter: blur(10px);
+transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* BLUE LIGHT CONNECTOR DOTS */
+.cascade-card:hover {
+transform: translateY(-4px);
+box-shadow:
+0 8px 40px rgba(0,0,0,0.5),
+0 0 30px rgba(0,180,255,.2),
+inset 0 1px 0 rgba(255,255,255,0.08);
+}
 
-.cascade-card::after{
+/* Top glow accent */
+.cascade-card::before {
 content:'';
 position:absolute;
-width:18px;
-height:18px;
-border-radius:50%;
-background:#33d6ff;
-box-shadow:
-0 0 12px #33d6ff,
-0 0 26px #33d6ff;
+top: 0;
+left: 50%;
+transform: translateX(-50%);
+width: 60%;
+height: 1px;
+background: linear-gradient(90deg, transparent, rgba(0,180,255,0.6), transparent);
+}
+
+/* BLUE LIGHT CONNECTOR DOTS - disabled */
+
+.cascade-card::after{
+display: none;
 }
 
 /* CARD 1 */
 
 .cascade-five{
 width:260px;
-min-height:200px;
+min-height:220px;
 padding:24px 20px 24px 20px;
 margin:0;
 z-index:4;
-}
-
-.cascade-five::before{
-content:'🏛';
-position:absolute;
-left:50%;
-top:20px;
-transform:translateX(-50%);
-font-size:40px;
-filter:drop-shadow(0 0 10px #00bfff);
 }
 
 .cascade-five::after{
@@ -430,20 +518,10 @@ display:none;
 
 .cascade-seven{
 width:260px;
-min-height:200px;
+min-height:220px;
 padding:24px 20px 24px 20px;
 margin:0;
 z-index:3;
-}
-
-.cascade-seven::before{
-content:'📅';
-position:absolute;
-left:50%;
-top:20px;
-transform:translateX(-50%);
-font-size:40px;
-filter:drop-shadow(0 0 10px #00bfff);
 }
 
 .cascade-seven::after{
@@ -454,20 +532,10 @@ display:none;
 
 .cascade-three{
 width:260px;
-min-height:200px;
+min-height:220px;
 padding:24px 20px 24px 20px;
 margin:0;
 z-index:2;
-}
-
-.cascade-three::before{
-content:'🎯';
-position:absolute;
-left:50%;
-top:20px;
-transform:translateX(-50%);
-font-size:40px;
-filter:drop-shadow(0 0 10px #00bfff);
 }
 
 .cascade-three::after{
@@ -478,69 +546,103 @@ display:none;
 
 .cascade-phd{
 width:260px;
-min-height:200px;
+min-height:220px;
 padding:24px 20px 24px 20px;
 margin:0;
 z-index:1;
 
-border:2px solid #f0c24f;
+border:1px solid rgba(201,168,76,0.4);
 
 background:
-radial-gradient(circle at center, rgba(255,195,0,.30), transparent 60%),
-linear-gradient(180deg,#2a1a05 0%, #090806 100%);
+linear-gradient(180deg, rgba(30,24,10,0.9) 0%, rgba(8,6,4,0.95) 100%);
 
 box-shadow:
-0 0 12px rgba(255,210,90,.95),
-0 0 34px rgba(255,190,0,.38),
-inset 0 0 40px rgba(255,210,90,.06);
+0 4px 30px rgba(0,0,0,0.4),
+0 0 20px rgba(201,168,76,.15),
+inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.cascade-phd::before {
+content:'';
+position:absolute;
+top: 0;
+left: 50%;
+transform: translateX(-50%);
+width: 60%;
+height: 1px;
+background: linear-gradient(90deg, transparent, rgba(201,168,76,0.6), transparent);
 }
 
 .cascade-phd::after{
 display:none;
 }
 
+/* CARD ICONS */
+.cascade-icon {
+display: flex;
+justify-content: center;
+margin-bottom: 12px;
+}
+
+.cascade-icon svg {
+width: 40px;
+height: 40px;
+stroke: #00c8ff;
+stroke-width: 1.5;
+fill: none;
+filter: drop-shadow(0 0 8px rgba(0,200,255,0.5));
+}
+
+.cascade-phd .cascade-icon svg {
+stroke: #c9a84c;
+filter: drop-shadow(0 0 8px rgba(201,168,76,0.5));
+}
+
 /* TYPOGRAPHY */
 
 .cascade-number{
 font-family:'Cormorant Garamond',serif;
-font-size:48px;
-line-height:.9;
+font-size:32px;
+line-height:1;
 color:#00c8ff;
-text-shadow:0 0 14px rgba(0,200,255,.7);
-margin-top:50px;
-margin-bottom:8px;
+text-shadow:0 0 14px rgba(0,200,255,.5);
+margin-top:6px;
+margin-bottom:6px;
 text-align:center;
+font-weight:600;
 }
 
 .phd-number{
 font-family:'Cormorant Garamond',serif;
-font-size:48px;
-line-height:.9;
-color:#ffe08c;
-text-shadow:0 0 14px rgba(255,220,120,.5);
+font-size:32px;
+line-height:1;
+color:#c9a84c;
+text-shadow:0 0 14px rgba(201,168,76,.5);
 text-align:center;
+font-weight:600;
+margin-bottom:6px;
 }
 
 .cascade-title{
 font-family:'Barlow Condensed',sans-serif;
-font-size:14px;
-line-height:1.25;
-letter-spacing:.08em;
+font-size:11px;
+line-height:1.35;
+letter-spacing:.1em;
 text-transform:uppercase;
-color:#ffffff;
-font-weight:700;
+color:rgba(255,255,255,0.9);
+font-weight:600;
 text-align:center;
 }
 
 .cascade-subtitle{
-margin-top:10px;
+margin-top:8px;
 font-family:'Barlow Condensed',sans-serif;
-font-size:12px;
-line-height:1.35;
+font-size:11px;
+line-height:1.4;
 letter-spacing:.06em;
 text-transform:uppercase;
-color:#e0af2e;
-font-weight:700;
+color:#c9a84c;
+font-weight:600;
 text-align:center;
 }
 
@@ -555,46 +657,58 @@ text-align:center;
 }
 
 .cascade-list{
-margin-top:10px;
+margin-top:8px;
 text-align:center;
 }
 
 .cascade-list div{
-margin-top:6px;
+margin-top:4px;
 font-family:'Barlow Condensed',sans-serif;
-font-size:12px;
+font-size:11px;
 letter-spacing:.05em;
-color:#e0af2e;
+color:#c9a84c;
 text-transform:uppercase;
-font-weight:700;
+font-weight:600;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:6px;
+}
+
+.cascade-list div::before {
+content:'';
+width:4px;
+height:4px;
+border-radius:50%;
+background:#00c8ff;
 }
 
 .phd-top{
 display:flex;
 flex-direction:column;
 align-items:center;
-gap:8px;
-margin-top:10px;
+gap:4px;
+margin-top:0;
 }
 
 .phd-icon{
 font-size:40px;
-filter:drop-shadow(0 0 10px rgba(255,210,90,.5));
+filter:drop-shadow(0 0 10px rgba(201,168,76,.5));
 }
 
 .phd-title{
-color:#ffffff;
-margin-top:4px;
+color:rgba(255,255,255,0.9);
+margin-top:2px;
 }
 
 .phd-divider{
-height:2px;
-margin:12px 0;
-background:linear-gradient(90deg,transparent,#f0c24f,transparent);
+height:1px;
+margin:10px 0;
+background:linear-gradient(90deg,transparent,rgba(201,168,76,0.5),transparent);
 }
 
 .phd-bullets div{
-margin-top:6px;
+margin-top:4px;
 color:#ffffff;
 font-size:11px;
 line-height:1.45;
@@ -609,11 +723,11 @@ text-align:center;
 flex-direction:column;
 align-items:center;
 gap:15px;
-padding:0 10px;
+padding:20px 15px 40px;
 }
 
 .cascade-card{
-border-radius:16px;
+border-radius:10px;
 }
 
 .cascade-five,
@@ -622,53 +736,45 @@ border-radius:16px;
 .cascade-phd{
 width:90%;
 max-width:300px;
-min-height:180px;
-padding:24px 20px;
+min-height:auto;
+padding:20px;
 margin:0;
 }
 
-.cascade-five::before,
-.cascade-seven::before,
-.cascade-three::before{
-left:50%;
-top:15px;
-transform:translateX(-50%);
-font-size:36px;
+.cascade-icon svg {
+width: 32px;
+height: 32px;
 }
 
 .cascade-number{
-font-size:42px;
-margin-top:45px;
+font-size:28px;
+margin-top:4px;
 }
 
 .phd-number{
-font-size:42px;
+font-size:28px;
 }
 
 .cascade-title{
-font-size:13px;
-line-height:1.25;
+font-size:10px;
+line-height:1.3;
 }
 
 .cascade-subtitle{
-font-size:11px;
+font-size:10px;
 line-height:1.35;
 }
 
 .cascade-free{
-font-size:27px;
+font-size:24px;
 }
 
 .cascade-list div{
-font-size:12px;
-}
-
-.phd-icon{
-font-size:42px;
+font-size:10px;
 }
 
 .phd-bullets div{
-font-size:12px;
+font-size:10px;
 }
 }
 
@@ -1581,11 +1687,21 @@ iframe {
     <div class="hero-bg"></div>
     <div class="hero-overlay"></div>
     <div class="hero-grid-lines"></div>
+    <div class="hero-arc"></div>
     <div class="hero-content">
       <div class="hero-eyebrow">Leadership Intelligence System</div>
-      <h1 class="hero-title">The Way<br>Executives <span class="accent">Think</span><br>Has Changed.</h1>
-      <div class="hero-tagline">Executive Clarity &nbsp;:&nbsp; On Demand</div>
-      <p class="hero-descriptor">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and executable decisions when it matters most.</p>
+      <h1 class="hero-title">The Way Executives <span class="accent">"Think"</span> Has Changed.</h1>
+      <div class="hero-tagline-divider">
+        <span class="hero-tagline-diamond">◆</span>
+      </div>
+      <div class="hero-tagline" style="margin-bottom:0.5rem;">Executive Clarity</div>
+      <div class="hero-tagline-divider" style="margin-top:0;">
+        <span style="font-size:0.9rem;letter-spacing:0.3em;">ON DEMAND</span>
+      </div>
+      <div class="hero-tagline-divider" style="margin-top:-0.5rem;margin-bottom:2rem;">
+        <span class="hero-tagline-diamond">◆</span>
+      </div>
+      <p class="hero-descriptor">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and decisive guidance.</p>
       <p class="hero-bridge">Your 7-day Executive Sprint is complimentary. No card. No commitment.</p>
      <div class="hero-cta-group">
     <button class="btn-primary" onclick="openModal()" style="animation:btnPulse 2.5s ease-in-out infinite;">
@@ -1606,59 +1722,86 @@ iframe {
   <div class="executive-cascade">
 
     <div class="cascade-card cascade-five">
-      <div class="cascade-number">5</div>
+      <div class="cascade-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="8" />
+          <circle cx="12" cy="12" r="3" />
+          <line x1="12" y1="4" x2="12" y2="1" />
+          <line x1="12" y1="23" x2="12" y2="20" />
+          <line x1="4" y1="12" x2="1" y2="12" />
+          <line x1="23" y1="12" x2="20" y2="12" />
+        </svg>
+      </div>
+      <div class="cascade-number">5 Central</div>
 
       <div class="cascade-title">
         Core Operating Principles
       </div>
 
       <div class="cascade-subtitle">
-        Built from Decades of Leadership Research
+        +37 Developmental<br>Operating Dimensions
       </div>
     </div>
 
     <div class="cascade-card cascade-seven">
-      <div class="cascade-number">7</div>
+      <div class="cascade-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="4" width="18" height="16" rx="2" />
+          <line x1="3" y1="10" x2="21" y2="10" />
+          <line x1="8" y1="4" x2="8" y2="10" />
+          <line x1="16" y1="4" x2="16" y2="10" />
+          <rect x="6" y="13" width="3" height="2" />
+          <rect x="10.5" y="13" width="3" height="2" />
+          <rect x="15" y="13" width="3" height="2" />
+        </svg>
+      </div>
+      <div class="cascade-number">7 Days</div>
 
       <div class="cascade-title">
-        Days – Full System Access
+        Free Full System Access
       </div>
 
-      <div class="cascade-free">
-        FREE
-      </div>
-
-      <div class="cascade-subtitle">
-        No Card Required
+      <div class="cascade-subtitle" style="margin-top:8px;font-size:11px;color:rgba(255,255,255,0.7);font-weight:400;">
+        Experience the complete system<br>with zero commitment.
       </div>
     </div>
 
     <div class="cascade-card cascade-three">
-      <div class="cascade-number">3</div>
+      <div class="cascade-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 7h16M4 12h16M4 17h16" />
+          <path d="M12 3L17 7L12 11" transform="translate(2, 0)" />
+        </svg>
+      </div>
+      <div class="cascade-number">3 Strategic</div>
 
       <div class="cascade-title">
-        Output Dimensions Per Decision
+        Decision Outputs
       </div>
 
       <div class="cascade-list">
-        <div>Situational Analysis</div>
-        <div>Strategic Comments</div>
-        <div>Executive Recommendations</div>
+        <div>Situational Insight</div>
+        <div>Internal Perspective</div>
+        <div>Path Forward</div>
       </div>
     </div>
 
     <div class="cascade-card cascade-phd">
-      <div class="phd-top">
-        <div class="phd-icon">🎓</div>
-        <div class="phd-number">Ph.D.</div>
-        <div class="cascade-title phd-title">
-          Organizational Leadership
-        </div>
+      <div class="cascade-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3L2 8L12 13L22 8L12 3Z" />
+          <path d="M2 8v8l10 5l10-5V8" />
+          <line x1="22" y1="8" x2="22" y2="16" />
+          <path d="M20 18h4M22 16v4" />
+        </svg>
+      </div>
+      <div class="phd-number">Ph.D.</div>
+      <div class="cascade-title phd-title">
+        Organizational Leadership<br>Foundation
       </div>
       <div class="phd-divider"></div>
       <div class="phd-bullets">
-        <div>✓ Peer-Reviewed Research</div>
-        <div>✓ Validated Frameworks</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.75);line-height:1.5;">Built on decades of research in leadership, communication, and organizational performance.</div>
       </div>
     </div>
 
