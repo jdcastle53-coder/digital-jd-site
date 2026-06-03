@@ -138,198 +138,131 @@
       color: var(--black) !important;
     }
 
-    /* ===== HERO SECTION ===== */
-    .dj-hero {
-      min-height: calc(100vh - 135px);
-      background:
-        radial-gradient(circle at 50% 63%, rgba(0,140,255,.18), transparent 26%),
-        linear-gradient(180deg, #020710 0%, #02040a 100%);
-      color: white;
+    #hero {
       position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       overflow: hidden;
     }
 
-    .dj-hero::before {
-      content: "";
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1800&q=80');
+      background-size: cover;
+      background-position: center top;
+      filter: brightness(0.12) saturate(0.4);
+      transform: scale(1.04);
+      animation: slowZoom 20s ease-in-out infinite alternate;
+    }
+
+    @keyframes slowZoom {
+      from { transform: scale(1.04); }
+      to { transform: scale(1.10); }
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(4,6,8,0.85) 0%, rgba(7,13,26,0.6) 50%, rgba(4,6,8,0.92) 100%);
+    }
+
+    .hero-grid-lines {
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(0,170,255,.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,170,255,.05) 1px, transparent 1px);
-      background-size: 96px 96px;
+        linear-gradient(rgba(0,180,216,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,180,216,0.04) 1px, transparent 1px);
+      background-size: 80px 80px;
+      animation: gridPulse 8s ease-in-out infinite;
     }
 
-    .dj-hero-content {
+    @keyframes gridPulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+
+    .hero-content {
       position: relative;
-      z-index: 2;
-      text-align: center;
-      padding: 46px 5vw 58px;
+      z-index: 10;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 4rem;
+      padding-top: 8rem;
     }
 
-    .dj-headline {
-      font-family: Georgia, serif;
-      font-size: clamp(34px, 4vw, 56px);
-      font-weight: 400;
-      margin: 0;
+    .hero-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.4rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.3s;
+      text-align: right;
+      width: 100%;
+      display: none;
     }
 
-    .dj-headline em {
-      color: #13a8ff;
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.2rem, 6vw, 5.8rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      margin-bottom: 0.4rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.5s;
+    }
+
+    .hero-title .accent {
+      color: var(--cyan-bright);
+      font-weight: 700;
       font-style: italic;
     }
 
-    .dj-gold-line,
-    .dj-subline {
+    .hero-tagline {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 2.4rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.7s;
+    }
+
+    .hero-descriptor {
+      max-width: 560px;
+      font-size: 1.15rem;
+      line-height: 1.75;
+      color: var(--white-dim);
+      margin-bottom: 1.8rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.9s;
+    }
+
+    .hero-bridge {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--gold);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 1.05s;
+      max-width: 560px;
+    }
+
+    .hero-cta-group {
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 18px;
-      color: #f4b419;
-      margin: 26px 0 20px;
-    }
-
-    .dj-gold-line span,
-    .dj-subline span {
-      width: 250px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, #aa7a08, transparent);
-    }
-
-    .dj-title {
-      font-family: Georgia, serif;
-      font-size: clamp(38px, 5.1vw, 66px);
-      font-weight: 500;
-      letter-spacing: 17px;
-      color: #1aaeff;
-      margin: 0;
-      text-shadow: 0 0 14px #048cff, 0 0 28px #006dff;
-    }
-
-    .dj-subline {
-      margin-top: 8px;
-    }
-
-    .dj-subline strong {
-      color: #f5b51a;
-      font-size: 29px;
-      letter-spacing: 7px;
-    }
-
-    .dj-copy {
-      max-width: 640px;
-      margin: 28px auto 0;
-      font-family: Arial, sans-serif;
-      font-size: 17px;
-      line-height: 1.55;
-      color: #edf2f8;
-    }
-
-    .dj-arc {
-      width: 132vw;
-      height: 250px;
-      margin-left: -21vw;
-      margin-top: -5px;
-      border-bottom: 5px solid #0aa7ff;
-      border-radius: 0 0 50% 50%;
-      box-shadow:
-        0 0 18px #00aaff,
-        0 0 50px rgba(0,132,255,.9),
-        inset 0 -35px 60px rgba(0,120,255,.28);
-    }
-
-    .dj-card-row {
-      max-width: 1180px;
-      margin: 34px auto 0;
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      border: 1px solid #009dff;
-      border-radius: 14px;
-      background: rgba(0, 10, 22, .74);
-      box-shadow: inset 0 0 28px rgba(0,160,255,.18);
-      overflow: hidden;
-    }
-
-    .dj-card {
-      min-height: 205px;
-      padding: 27px 22px;
-      border-right: 1px solid rgba(255,176,28,.32);
-      font-family: Arial, sans-serif;
-    }
-
-    .dj-card:last-child {
-      border-right: none;
-    }
-
-    .dj-icon {
-      color: #08aaff;
-      font-size: 34px;
-      margin-bottom: 14px;
-    }
-
-    .dj-card h3 {
-      color: #f5b51a;
-      font-size: 31px;
-      letter-spacing: 3px;
-      margin: 0;
-    }
-
-    .dj-card h3.phd {
-      font-family: Georgia, serif;
-      font-size: 40px;
-      letter-spacing: 1px;
-    }
-
-    .dj-card h4 {
-      margin: 5px 0 0;
-      font-size: 13px;
-      letter-spacing: 1.7px;
-      color: white;
-    }
-
-    .dj-small-line {
-      color: #f5b51a;
-      margin: 11px 0;
-    }
-
-    .dj-card p {
-      font-size: 15px;
-      line-height: 1.5;
-      margin: 0;
-    }
-
-    .dj-card .blue,
-    .dj-card li {
-      color: #09aaff;
-      font-weight: 700;
-      letter-spacing: 1.3px;
-    }
-
-    .dj-card ul {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      text-align: left;
-      display: inline-block;
-      line-height: 1.9;
-    }
-
-    @media (max-width: 900px) {
-      .dj-card-row {
-        grid-template-columns: 1fr;
-      }
-
-      .dj-card {
-        border-right: none;
-        border-bottom: 1px solid rgba(255,176,28,.32);
-      }
-
-      .dj-title {
-        letter-spacing: 8px;
-      }
-
-      .dj-arc {
-        height: 180px;
-      }
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 1.1s;
     }
 
     .btn-primary {
@@ -433,9 +366,9 @@ width:100%;
 max-width:1200px;
 margin:0 auto;
 display:flex;
-flex-wrap:nowrap;
+flex-wrap:wrap;
 justify-content:center;
-gap:16px;
+gap:20px;
 padding:0 20px;
 }
 
@@ -472,9 +405,9 @@ box-shadow:
 /* CARD 1 */
 
 .cascade-five{
-width:220px;
-min-height:180px;
-padding:20px 16px;
+width:260px;
+min-height:200px;
+padding:24px 20px 24px 20px;
 margin:0;
 z-index:4;
 }
@@ -483,9 +416,9 @@ z-index:4;
 content:'🏛';
 position:absolute;
 left:50%;
-top:16px;
+top:20px;
 transform:translateX(-50%);
-font-size:32px;
+font-size:40px;
 filter:drop-shadow(0 0 10px #00bfff);
 }
 
@@ -496,9 +429,9 @@ display:none;
 /* CARD 2 */
 
 .cascade-seven{
-width:220px;
-min-height:180px;
-padding:20px 16px;
+width:260px;
+min-height:200px;
+padding:24px 20px 24px 20px;
 margin:0;
 z-index:3;
 }
@@ -507,9 +440,9 @@ z-index:3;
 content:'📅';
 position:absolute;
 left:50%;
-top:16px;
+top:20px;
 transform:translateX(-50%);
-font-size:32px;
+font-size:40px;
 filter:drop-shadow(0 0 10px #00bfff);
 }
 
@@ -520,9 +453,9 @@ display:none;
 /* CARD 3 */
 
 .cascade-three{
-width:220px;
-min-height:180px;
-padding:20px 16px;
+width:260px;
+min-height:200px;
+padding:24px 20px 24px 20px;
 margin:0;
 z-index:2;
 }
@@ -531,9 +464,9 @@ z-index:2;
 content:'🎯';
 position:absolute;
 left:50%;
-top:16px;
+top:20px;
 transform:translateX(-50%);
-font-size:32px;
+font-size:40px;
 filter:drop-shadow(0 0 10px #00bfff);
 }
 
@@ -544,9 +477,9 @@ display:none;
 /* PHD GOLD CARD */
 
 .cascade-phd{
-width:220px;
-min-height:180px;
-padding:20px 16px;
+width:260px;
+min-height:200px;
+padding:24px 20px 24px 20px;
 margin:0;
 z-index:1;
 
@@ -570,18 +503,18 @@ display:none;
 
 .cascade-number{
 font-family:'Cormorant Garamond',serif;
-font-size:40px;
+font-size:48px;
 line-height:.9;
 color:#00c8ff;
 text-shadow:0 0 14px rgba(0,200,255,.7);
-margin-top:42px;
-margin-bottom:6px;
+margin-top:50px;
+margin-bottom:8px;
 text-align:center;
 }
 
 .phd-number{
 font-family:'Cormorant Garamond',serif;
-font-size:40px;
+font-size:48px;
 line-height:.9;
 color:#ffe08c;
 text-shadow:0 0 14px rgba(255,220,120,.5);
@@ -590,7 +523,7 @@ text-align:center;
 
 .cascade-title{
 font-family:'Barlow Condensed',sans-serif;
-font-size:12px;
+font-size:14px;
 line-height:1.25;
 letter-spacing:.08em;
 text-transform:uppercase;
@@ -600,9 +533,9 @@ text-align:center;
 }
 
 .cascade-subtitle{
-margin-top:8px;
+margin-top:10px;
 font-family:'Barlow Condensed',sans-serif;
-font-size:11px;
+font-size:12px;
 line-height:1.35;
 letter-spacing:.06em;
 text-transform:uppercase;
@@ -612,9 +545,9 @@ text-align:center;
 }
 
 .cascade-free{
-margin-top:8px;
+margin-top:10px;
 font-family:'Barlow Condensed',sans-serif;
-font-size:24px;
+font-size:28px;
 line-height:1;
 color:#f0c24f;
 font-weight:700;
@@ -622,14 +555,14 @@ text-align:center;
 }
 
 .cascade-list{
-margin-top:8px;
+margin-top:10px;
 text-align:center;
 }
 
 .cascade-list div{
-margin-top:4px;
+margin-top:6px;
 font-family:'Barlow Condensed',sans-serif;
-font-size:11px;
+font-size:12px;
 letter-spacing:.05em;
 color:#e0af2e;
 text-transform:uppercase;
@@ -640,30 +573,30 @@ font-weight:700;
 display:flex;
 flex-direction:column;
 align-items:center;
-gap:6px;
-margin-top:8px;
+gap:8px;
+margin-top:10px;
 }
 
 .phd-icon{
-font-size:32px;
+font-size:40px;
 filter:drop-shadow(0 0 10px rgba(255,210,90,.5));
 }
 
 .phd-title{
 color:#ffffff;
-margin-top:2px;
+margin-top:4px;
 }
 
 .phd-divider{
 height:2px;
-margin:10px 0;
+margin:12px 0;
 background:linear-gradient(90deg,transparent,#f0c24f,transparent);
 }
 
 .phd-bullets div{
-margin-top:4px;
+margin-top:6px;
 color:#ffffff;
-font-size:10px;
+font-size:11px;
 line-height:1.45;
 text-align:center;
 }
@@ -671,62 +604,12 @@ text-align:center;
 /* MOBILE */
 
 @media(max-width:768px){
+
 .executive-cascade{
-flex-wrap:wrap;
-gap:16px;
-}
-
-.cascade-five,
-.cascade-seven,
-.cascade-three,
-.cascade-phd{
-width:45%;
-max-width:180px;
-min-height:160px;
-padding:18px 14px;
-margin:0;
-}
-
-.cascade-five::before,
-.cascade-seven::before,
-.cascade-three::before{
-top:12px;
-font-size:28px;
-}
-
-.cascade-number{
-font-size:36px;
-margin-top:38px;
-}
-
-.phd-number{
-font-size:36px;
-}
-
-.cascade-title{
-font-size:11px;
-line-height:1.25;
-}
-
-.cascade-subtitle{
-font-size:10px;
-}
-
-.cascade-free{
-font-size:20px;
-}
-
-.cascade-list div{
-font-size:10px;
-}
-
-.phd-icon{
-font-size:28px;
-}
-
-.phd-bullets div{
-font-size:9px;
-}
+flex-direction:column;
+align-items:center;
+gap:15px;
+padding:0 10px;
 }
 
 .cascade-card{
@@ -1694,29 +1577,29 @@ iframe {
     </ul>
   </nav>
 
-<section class="dj-hero">
-  <div class="dj-hero-content">
-    <h1 class="dj-headline">The Way Executives <em>"Think"</em> Has Changed.</h1>
-    
-    <div class="dj-gold-line">
-      <span></span>
-      <span style="width:auto;">&#9670;</span>
-      <span></span>
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-grid-lines"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Leadership Intelligence System</div>
+      <h1 class="hero-title">The Way<br>Executives <span class="accent">Think</span><br>Has Changed.</h1>
+      <div class="hero-tagline">Executive Clarity &nbsp;:&nbsp; On Demand</div>
+      <p class="hero-descriptor">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and executable decisions when it matters most.</p>
+      <p class="hero-bridge">Your 7-day Executive Sprint is complimentary. No card. No commitment.</p>
+     <div class="hero-cta-group">
+    <button class="btn-primary" onclick="openModal()" style="animation:btnPulse 2.5s ease-in-out infinite;">
+        <span>Your Sprint Starts Now →</span>
+    </button>
+
+    <a href="#what" class="btn-ghost">Learn the system</a>
+</div>
+
+<p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#c9a84c;margin-top:1rem;">
+    No card. No contract. No commitment. Just clarity.
+</p>
     </div>
-    
-    <h2 class="dj-title">EXECUTIVE CLARITY</h2>
-    
-    <div class="dj-subline">
-      <span></span>
-      <strong>ON DEMAND</strong>
-      <span></span>
-    </div>
-    
-    <p class="dj-copy">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and decisive guidance.</p>
-    
-    <div class="dj-arc"></div>
-  </div>
-</section>
+  </section>
 
 <div class="stats-bar executive-cascade-wrapper">
 
