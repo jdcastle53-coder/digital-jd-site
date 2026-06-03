@@ -433,9 +433,9 @@ width:100%;
 max-width:1200px;
 margin:0 auto;
 display:flex;
-flex-wrap:wrap;
+flex-wrap:nowrap;
 justify-content:center;
-gap:20px;
+gap:16px;
 padding:0 20px;
 }
 
@@ -472,9 +472,9 @@ box-shadow:
 /* CARD 1 */
 
 .cascade-five{
-width:260px;
-min-height:200px;
-padding:24px 20px 24px 20px;
+width:220px;
+min-height:180px;
+padding:20px 16px;
 margin:0;
 z-index:4;
 }
@@ -483,9 +483,9 @@ z-index:4;
 content:'🏛';
 position:absolute;
 left:50%;
-top:20px;
+top:16px;
 transform:translateX(-50%);
-font-size:40px;
+font-size:32px;
 filter:drop-shadow(0 0 10px #00bfff);
 }
 
@@ -496,9 +496,9 @@ display:none;
 /* CARD 2 */
 
 .cascade-seven{
-width:260px;
-min-height:200px;
-padding:24px 20px 24px 20px;
+width:220px;
+min-height:180px;
+padding:20px 16px;
 margin:0;
 z-index:3;
 }
@@ -507,9 +507,9 @@ z-index:3;
 content:'📅';
 position:absolute;
 left:50%;
-top:20px;
+top:16px;
 transform:translateX(-50%);
-font-size:40px;
+font-size:32px;
 filter:drop-shadow(0 0 10px #00bfff);
 }
 
@@ -520,9 +520,9 @@ display:none;
 /* CARD 3 */
 
 .cascade-three{
-width:260px;
-min-height:200px;
-padding:24px 20px 24px 20px;
+width:220px;
+min-height:180px;
+padding:20px 16px;
 margin:0;
 z-index:2;
 }
@@ -531,9 +531,9 @@ z-index:2;
 content:'🎯';
 position:absolute;
 left:50%;
-top:20px;
+top:16px;
 transform:translateX(-50%);
-font-size:40px;
+font-size:32px;
 filter:drop-shadow(0 0 10px #00bfff);
 }
 
@@ -544,9 +544,9 @@ display:none;
 /* PHD GOLD CARD */
 
 .cascade-phd{
-width:260px;
-min-height:200px;
-padding:24px 20px 24px 20px;
+width:220px;
+min-height:180px;
+padding:20px 16px;
 margin:0;
 z-index:1;
 
@@ -570,18 +570,18 @@ display:none;
 
 .cascade-number{
 font-family:'Cormorant Garamond',serif;
-font-size:48px;
+font-size:40px;
 line-height:.9;
 color:#00c8ff;
 text-shadow:0 0 14px rgba(0,200,255,.7);
-margin-top:50px;
-margin-bottom:8px;
+margin-top:42px;
+margin-bottom:6px;
 text-align:center;
 }
 
 .phd-number{
 font-family:'Cormorant Garamond',serif;
-font-size:48px;
+font-size:40px;
 line-height:.9;
 color:#ffe08c;
 text-shadow:0 0 14px rgba(255,220,120,.5);
@@ -590,7 +590,7 @@ text-align:center;
 
 .cascade-title{
 font-family:'Barlow Condensed',sans-serif;
-font-size:14px;
+font-size:12px;
 line-height:1.25;
 letter-spacing:.08em;
 text-transform:uppercase;
@@ -600,9 +600,9 @@ text-align:center;
 }
 
 .cascade-subtitle{
-margin-top:10px;
+margin-top:8px;
 font-family:'Barlow Condensed',sans-serif;
-font-size:12px;
+font-size:11px;
 line-height:1.35;
 letter-spacing:.06em;
 text-transform:uppercase;
@@ -612,9 +612,9 @@ text-align:center;
 }
 
 .cascade-free{
-margin-top:10px;
+margin-top:8px;
 font-family:'Barlow Condensed',sans-serif;
-font-size:28px;
+font-size:24px;
 line-height:1;
 color:#f0c24f;
 font-weight:700;
@@ -622,14 +622,14 @@ text-align:center;
 }
 
 .cascade-list{
-margin-top:10px;
+margin-top:8px;
 text-align:center;
 }
 
 .cascade-list div{
-margin-top:6px;
+margin-top:4px;
 font-family:'Barlow Condensed',sans-serif;
-font-size:12px;
+font-size:11px;
 letter-spacing:.05em;
 color:#e0af2e;
 text-transform:uppercase;
@@ -640,30 +640,30 @@ font-weight:700;
 display:flex;
 flex-direction:column;
 align-items:center;
-gap:8px;
-margin-top:10px;
+gap:6px;
+margin-top:8px;
 }
 
 .phd-icon{
-font-size:40px;
+font-size:32px;
 filter:drop-shadow(0 0 10px rgba(255,210,90,.5));
 }
 
 .phd-title{
 color:#ffffff;
-margin-top:4px;
+margin-top:2px;
 }
 
 .phd-divider{
 height:2px;
-margin:12px 0;
+margin:10px 0;
 background:linear-gradient(90deg,transparent,#f0c24f,transparent);
 }
 
 .phd-bullets div{
-margin-top:6px;
+margin-top:4px;
 color:#ffffff;
-font-size:11px;
+font-size:10px;
 line-height:1.45;
 text-align:center;
 }
@@ -671,12 +671,62 @@ text-align:center;
 /* MOBILE */
 
 @media(max-width:768px){
-
 .executive-cascade{
-flex-direction:column;
-align-items:center;
-gap:15px;
-padding:0 10px;
+flex-wrap:wrap;
+gap:16px;
+}
+
+.cascade-five,
+.cascade-seven,
+.cascade-three,
+.cascade-phd{
+width:45%;
+max-width:180px;
+min-height:160px;
+padding:18px 14px;
+margin:0;
+}
+
+.cascade-five::before,
+.cascade-seven::before,
+.cascade-three::before{
+top:12px;
+font-size:28px;
+}
+
+.cascade-number{
+font-size:36px;
+margin-top:38px;
+}
+
+.phd-number{
+font-size:36px;
+}
+
+.cascade-title{
+font-size:11px;
+line-height:1.25;
+}
+
+.cascade-subtitle{
+font-size:10px;
+}
+
+.cascade-free{
+font-size:20px;
+}
+
+.cascade-list div{
+font-size:10px;
+}
+
+.phd-icon{
+font-size:28px;
+}
+
+.phd-bullets div{
+font-size:9px;
+}
 }
 
 .cascade-card{
