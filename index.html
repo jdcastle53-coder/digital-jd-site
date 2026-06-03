@@ -139,105 +139,196 @@
     }
 
     /* ===== HERO SECTION ===== */
-    .hero {
-      min-height: calc(100vh - 140px);
+    .dj-hero {
+      min-height: calc(100vh - 135px);
       background:
-        radial-gradient(circle at 50% 62%, rgba(0,145,255,.35), transparent 20%),
-        radial-gradient(circle at 50% 95%, rgba(0,150,255,.25), transparent 22%),
-        linear-gradient(180deg, #020914 0%, #01040b 100%);
+        radial-gradient(circle at 50% 63%, rgba(0,140,255,.18), transparent 26%),
+        linear-gradient(180deg, #020710 0%, #02040a 100%);
       color: white;
-      overflow: hidden;
       position: relative;
-      font-family: Georgia, serif;
+      overflow: hidden;
     }
 
-    .hero::before {
+    .dj-hero::before {
       content: "";
       position: absolute;
       inset: 0;
       background-image:
-        linear-gradient(rgba(0,157,255,.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,157,255,.05) 1px, transparent 1px);
+        linear-gradient(rgba(0,170,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,170,255,.05) 1px, transparent 1px);
       background-size: 96px 96px;
     }
 
-    .heroInner {
+    .dj-hero-content {
       position: relative;
       z-index: 2;
       text-align: center;
-      padding: 45px 7vw 70px;
+      padding: 46px 5vw 58px;
     }
 
-    .hero h1 {
-      font-size: clamp(38px, 4vw, 62px);
+    .dj-headline {
+      font-family: Georgia, serif;
+      font-size: clamp(34px, 4vw, 56px);
       font-weight: 400;
-      letter-spacing: -1px;
       margin: 0;
     }
 
-    .hero h1 em {
-      color: #12a8ff;
+    .dj-headline em {
+      color: #13a8ff;
       font-style: italic;
     }
 
-    .goldRule,
-    .goldSub {
+    .dj-gold-line,
+    .dj-subline {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 18px;
-      color: #f5b918;
-      margin: 28px auto 22px;
+      color: #f4b419;
+      margin: 26px 0 20px;
     }
 
-    .goldRule span,
-    .goldSub span {
-      width: 260px;
+    .dj-gold-line span,
+    .dj-subline span {
+      width: 250px;
       height: 1px;
-      background: linear-gradient(90deg, transparent, #b8860b, transparent);
+      background: linear-gradient(90deg, transparent, #aa7a08, transparent);
     }
 
-    .hero h2 {
+    .dj-title {
       font-family: Georgia, serif;
-      color: #14aaff;
-      font-size: clamp(42px, 5vw, 76px);
-      letter-spacing: 18px;
+      font-size: clamp(38px, 5.1vw, 66px);
       font-weight: 500;
+      letter-spacing: 17px;
+      color: #1aaeff;
       margin: 0;
-      text-shadow: 0 0 18px #008cff, 0 0 36px #0077ff;
+      text-shadow: 0 0 14px #048cff, 0 0 28px #006dff;
     }
 
-    .goldSub {
-      margin-top: 12px;
+    .dj-subline {
+      margin-top: 8px;
     }
 
-    .goldSub strong {
-      color: #f5b918;
-      font-size: 30px;
+    .dj-subline strong {
+      color: #f5b51a;
+      font-size: 29px;
       letter-spacing: 7px;
     }
 
-    .intro {
-      max-width: 650px;
-      margin: 32px auto 0;
+    .dj-copy {
+      max-width: 640px;
+      margin: 28px auto 0;
       font-family: Arial, sans-serif;
-      font-size: 18px;
-      line-height: 1.65;
-      color: #e8edf5;
+      font-size: 17px;
+      line-height: 1.55;
+      color: #edf2f8;
     }
 
-    .horizon {
-      height: 230px;
-      margin: -20px auto 0;
-      border-bottom: 5px solid #0aa8ff;
+    .dj-arc {
+      width: 132vw;
+      height: 250px;
+      margin-left: -21vw;
+      margin-top: -5px;
+      border-bottom: 5px solid #0aa7ff;
       border-radius: 0 0 50% 50%;
-      box-shadow: 0 0 18px #00aaff, 0 0 48px #008cff;
-      transform: scaleX(1.3);
+      box-shadow:
+        0 0 18px #00aaff,
+        0 0 50px rgba(0,132,255,.9),
+        inset 0 -35px 60px rgba(0,120,255,.28);
+    }
+
+    .dj-card-row {
+      max-width: 1180px;
+      margin: 34px auto 0;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border: 1px solid #009dff;
+      border-radius: 14px;
+      background: rgba(0, 10, 22, .74);
+      box-shadow: inset 0 0 28px rgba(0,160,255,.18);
+      overflow: hidden;
+    }
+
+    .dj-card {
+      min-height: 205px;
+      padding: 27px 22px;
+      border-right: 1px solid rgba(255,176,28,.32);
+      font-family: Arial, sans-serif;
+    }
+
+    .dj-card:last-child {
+      border-right: none;
+    }
+
+    .dj-icon {
+      color: #08aaff;
+      font-size: 34px;
+      margin-bottom: 14px;
+    }
+
+    .dj-card h3 {
+      color: #f5b51a;
+      font-size: 31px;
+      letter-spacing: 3px;
+      margin: 0;
+    }
+
+    .dj-card h3.phd {
+      font-family: Georgia, serif;
+      font-size: 40px;
+      letter-spacing: 1px;
+    }
+
+    .dj-card h4 {
+      margin: 5px 0 0;
+      font-size: 13px;
+      letter-spacing: 1.7px;
+      color: white;
+    }
+
+    .dj-small-line {
+      color: #f5b51a;
+      margin: 11px 0;
+    }
+
+    .dj-card p {
+      font-size: 15px;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .dj-card .blue,
+    .dj-card li {
+      color: #09aaff;
+      font-weight: 700;
+      letter-spacing: 1.3px;
+    }
+
+    .dj-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+      display: inline-block;
+      line-height: 1.9;
     }
 
     @media (max-width: 900px) {
-      .hero h2 {
+      .dj-card-row {
+        grid-template-columns: 1fr;
+      }
+
+      .dj-card {
+        border-right: none;
+        border-bottom: 1px solid rgba(255,176,28,.32);
+      }
+
+      .dj-title {
         letter-spacing: 8px;
+      }
+
+      .dj-arc {
+        height: 180px;
       }
     }
 
@@ -1553,27 +1644,27 @@ iframe {
     </ul>
   </nav>
 
-<section class="hero">
-  <div class="heroInner">
-    <h1>The Way Executives <em>"Think"</em> Has Changed.</h1>
+<section class="dj-hero">
+  <div class="dj-hero-content">
+    <h1 class="dj-headline">The Way Executives <em>"Think"</em> Has Changed.</h1>
     
-    <div class="goldRule">
+    <div class="dj-gold-line">
       <span></span>
       <span style="width:auto;">&#9670;</span>
       <span></span>
     </div>
     
-    <h2>EXECUTIVE CLARITY</h2>
+    <h2 class="dj-title">EXECUTIVE CLARITY</h2>
     
-    <div class="goldSub">
+    <div class="dj-subline">
       <span></span>
       <strong>ON DEMAND</strong>
       <span></span>
     </div>
     
-    <p class="intro">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and decisive guidance.</p>
+    <p class="dj-copy">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and decisive guidance.</p>
     
-    <div class="horizon"></div>
+    <div class="dj-arc"></div>
   </div>
 </section>
 
