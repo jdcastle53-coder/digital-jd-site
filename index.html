@@ -138,6 +138,7 @@
       color: var(--black) !important;
     }
 
+    /* ===== BOLD HERO SECTION ===== */
     #hero {
       position: relative;
       min-height: 100vh;
@@ -145,115 +146,155 @@
       flex-direction: column;
       justify-content: center;
       overflow: hidden;
+      background: var(--black);
     }
 
     .hero-bg {
       position: absolute;
       inset: 0;
-      background-image: url('https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=1800&q=80');
-      background-size: cover;
-      background-position: center top;
-      filter: brightness(0.12) saturate(0.4);
-      transform: scale(1.04);
-      animation: slowZoom 20s ease-in-out infinite alternate;
-    }
-
-    @keyframes slowZoom {
-      from { transform: scale(1.04); }
-      to { transform: scale(1.10); }
+      background: var(--black);
     }
 
     .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, rgba(4,6,8,0.85) 0%, rgba(7,13,26,0.6) 50%, rgba(4,6,8,0.92) 100%);
+      display: none;
     }
 
     .hero-grid-lines {
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(rgba(0,180,216,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0,180,216,0.04) 1px, transparent 1px);
-      background-size: 80px 80px;
-      animation: gridPulse 8s ease-in-out infinite;
-    }
-
-    @keyframes gridPulse {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
+      display: none;
     }
 
     .hero-content {
       position: relative;
       z-index: 10;
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 4rem;
-      padding-top: 8rem;
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+      padding-top: 120px;
+      display: flex;
+      flex-direction: column;
+      min-height: calc(100vh - 120px);
     }
 
     .hero-eyebrow {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: 1.4rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--cyan);
-      margin-bottom: 1.8rem;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.3s;
-      text-align: right;
-      width: 100%;
       display: none;
     }
 
-    .hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(3.2rem, 6vw, 5.8rem);
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -0.01em;
-      margin-bottom: 0.4rem;
-      opacity: 0;
-      animation: fadeUp 0.9s ease forwards 0.5s;
-    }
-
-    .hero-title .accent {
-      color: var(--cyan-bright);
-      font-weight: 700;
-      font-style: italic;
-    }
-
-    .hero-tagline {
+    /* Massive headline that dominates */
+    .hero-mega-headline {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(1rem, 2vw, 1.4rem);
-      letter-spacing: 0.2em;
+      font-size: clamp(4rem, 18vw, 16rem);
+      font-weight: 700;
+      line-height: 0.85;
+      letter-spacing: -0.03em;
       text-transform: uppercase;
-      color: var(--gold);
-      margin-bottom: 2.4rem;
+      color: var(--white);
+      margin: 0;
+      padding: 0 2rem;
       opacity: 0;
-      animation: fadeUp 0.9s ease forwards 0.7s;
+      animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+    }
+
+    .hero-mega-headline .line-executive {
+      display: block;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-mega-headline .line-clarity {
+      display: block;
+      color: var(--cyan-bright);
+      text-shadow: 0 0 80px rgba(0,229,255,0.5), 0 0 120px rgba(0,229,255,0.3);
+      position: relative;
+    }
+
+    .hero-mega-headline .line-clarity::after {
+      content: '';
+      position: absolute;
+      bottom: 0.1em;
+      left: 2rem;
+      right: 2rem;
+      height: 4px;
+      background: var(--cyan-bright);
+      box-shadow: 0 0 30px var(--cyan-bright), 0 0 60px var(--cyan);
+      animation: glowPulse 2s ease-in-out infinite;
+    }
+
+    .hero-mega-headline .line-on-demand {
+      display: block;
+      font-size: 0.55em;
+      color: var(--gold);
+      letter-spacing: 0.1em;
+      margin-top: 0.15em;
+    }
+
+    @keyframes slideIn {
+      from { 
+        opacity: 0; 
+        transform: translateY(60px); 
+      }
+      to { 
+        opacity: 1; 
+        transform: translateY(0); 
+      }
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { 
+        opacity: 1;
+        box-shadow: 0 0 30px var(--cyan-bright), 0 0 60px var(--cyan);
+      }
+      50% { 
+        opacity: 0.7;
+        box-shadow: 0 0 50px var(--cyan-bright), 0 0 100px var(--cyan);
+      }
+    }
+
+    /* Hero bottom section with descriptor and CTA */
+    .hero-bottom {
+      margin-top: auto;
+      padding: 3rem 4rem 4rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+      align-items: end;
+      border-top: 1px solid rgba(0,180,216,0.15);
+      background: linear-gradient(to top, rgba(7,13,26,0.9), transparent);
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.6s;
+    }
+
+    .hero-descriptor-block {
+      max-width: 600px;
     }
 
     .hero-descriptor {
-      max-width: 560px;
-      font-size: 1.15rem;
-      line-height: 1.75;
+      max-width: 100%;
+      font-size: 1.1rem;
+      line-height: 1.7;
       color: var(--white-dim);
-      margin-bottom: 1.8rem;
-      opacity: 0;
-      animation: fadeUp 0.9s ease forwards 0.9s;
+      margin-bottom: 0;
+      opacity: 1;
+      animation: none;
     }
 
     .hero-bridge {
       font-family: 'Cormorant Garamond', serif;
       font-style: italic;
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       color: var(--gold);
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: fadeUp 0.9s ease forwards 1.05s;
-      max-width: 560px;
+      margin-bottom: 0;
+      margin-top: 1rem;
+      opacity: 1;
+      animation: none;
+      max-width: 100%;
+    }
+
+    .hero-cta-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
     }
 
     .hero-cta-group {
@@ -261,8 +302,66 @@
       align-items: center;
       gap: 1.5rem;
       flex-wrap: wrap;
-      opacity: 0;
-      animation: fadeUp 0.9s ease forwards 1.1s;
+      opacity: 1;
+      animation: none;
+    }
+
+    /* Vertical accent line */
+    .hero-accent-line {
+      position: absolute;
+      right: 8%;
+      top: 20%;
+      bottom: 35%;
+      width: 3px;
+      background: linear-gradient(to bottom, transparent, var(--cyan), var(--cyan-bright), var(--cyan), transparent);
+      opacity: 0.4;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+      .hero-mega-headline {
+        font-size: clamp(3rem, 14vw, 10rem);
+      }
+      .hero-bottom {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+        padding: 2rem;
+      }
+      .hero-cta-block {
+        align-items: flex-start;
+      }
+      .hero-accent-line {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .hero-content {
+        padding-top: 100px;
+      }
+      .hero-mega-headline {
+        font-size: clamp(2.5rem, 16vw, 6rem);
+        padding: 0 1rem;
+      }
+      .hero-mega-headline .line-clarity::after {
+        left: 1rem;
+        right: 1rem;
+        height: 3px;
+      }
+      .hero-bottom {
+        padding: 1.5rem 1rem 2rem;
+      }
+      .hero-descriptor {
+        font-size: 1rem;
+      }
+    }
+
+    .hero-title {
+      display: none;
+    }
+
+    .hero-tagline {
+      display: none;
     }
 
     .btn-primary {
@@ -1577,29 +1676,33 @@ iframe {
     </ul>
   </nav>
 
-  <section id="hero">
-    <div class="hero-bg"></div>
-    <div class="hero-overlay"></div>
-    <div class="hero-grid-lines"></div>
-    <div class="hero-content">
-      <div class="hero-eyebrow">Leadership Intelligence System</div>
-      <h1 class="hero-title">The Way<br>Executives <span class="accent">Think</span><br>Has Changed.</h1>
-      <div class="hero-tagline">Executive Clarity &nbsp;:&nbsp; On Demand</div>
-      <p class="hero-descriptor">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and executable decisions when it matters most.</p>
-      <p class="hero-bridge">Your 7-day Executive Sprint is complimentary. No card. No commitment.</p>
-     <div class="hero-cta-group">
-    <button class="btn-primary" onclick="openModal()" style="animation:btnPulse 2.5s ease-in-out infinite;">
-        <span>Your Sprint Starts Now →</span>
-    </button>
-
-    <a href="#what" class="btn-ghost">Learn the system</a>
-</div>
-
-<p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#c9a84c;margin-top:1rem;">
-    No card. No contract. No commitment. Just clarity.
-</p>
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-accent-line"></div>
+  <div class="hero-content">
+    <h1 class="hero-mega-headline">
+      <span class="line-executive">Executive</span>
+      <span class="line-clarity">Clarity</span>
+      <span class="line-on-demand">On Demand</span>
+    </h1>
+    
+    <div class="hero-bottom">
+      <div class="hero-descriptor-block">
+        <p class="hero-descriptor">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and executable decisions when it matters most.</p>
+        <p class="hero-bridge">No card. No contract. No commitment. Just clarity.</p>
+      </div>
+      
+      <div class="hero-cta-block">
+        <div class="hero-cta-group">
+          <button class="btn-primary" onclick="openModal()" style="animation:btnPulse 2.5s ease-in-out infinite;">
+            <span>Start Your Free 7-Day Sprint →</span>
+          </button>
+        </div>
+        <a href="#what" class="btn-ghost">Learn the system</a>
+      </div>
     </div>
-  </section>
+  </div>
+</section>
 
 <div class="stats-bar executive-cascade-wrapper">
 
