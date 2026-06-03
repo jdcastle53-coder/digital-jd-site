@@ -138,233 +138,106 @@
       color: var(--black) !important;
     }
 
-    /* ===== HERO SECTION - EXACT MATCH ===== */
-    #hero {
-      position: relative;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
+    /* ===== HERO SECTION ===== */
+    .hero {
+      min-height: calc(100vh - 140px);
+      background:
+        radial-gradient(circle at 50% 62%, rgba(0,145,255,.35), transparent 20%),
+        radial-gradient(circle at 50% 95%, rgba(0,150,255,.25), transparent 22%),
+        linear-gradient(180deg, #020914 0%, #01040b 100%);
+      color: white;
       overflow: hidden;
-      background: linear-gradient(to bottom, #030810 0%, #0a1832 50%, #081428 100%);
-      padding-top: 140px;
-      text-align: center;
-    }
-
-    .hero-bg {
-      display: none;
-    }
-
-    .hero-overlay {
-      display: none;
-    }
-
-    .hero-grid-lines {
-      display: none;
-    }
-
-    .hero-accent-line {
-      display: none;
-    }
-
-    .hero-content {
       position: relative;
-      z-index: 10;
-      width: 100%;
-      max-width: 900px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      font-family: Georgia, serif;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,157,255,.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,157,255,.05) 1px, transparent 1px);
+      background-size: 96px 96px;
+    }
+
+    .heroInner {
+      position: relative;
+      z-index: 2;
       text-align: center;
+      padding: 45px 7vw 70px;
     }
 
-    /* Main headline: The Way Executives "Think" Has Changed. - SMALLER */
-    .hero-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.1rem, 2vw, 1.6rem);
+    .hero h1 {
+      font-size: clamp(38px, 4vw, 62px);
       font-weight: 400;
-      line-height: 1.15;
-      color: var(--white);
-      margin-bottom: 1.5rem;
-      opacity: 0;
-      animation: fadeUp 0.9s ease forwards 0.3s;
-      white-space: nowrap;
+      letter-spacing: -1px;
+      margin: 0;
     }
 
-    .hero-title .accent {
-      color: #00c8ff;
+    .hero h1 em {
+      color: #12a8ff;
       font-style: italic;
     }
 
-    /* Gold divider line with diamond */
-    .hero-gold-divider {
+    .goldRule,
+    .goldSub {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0;
-      margin-bottom: 1rem;
-      width: 100%;
-      max-width: 700px;
-      opacity: 0;
-      animation: fadeUp 0.9s ease forwards 0.5s;
+      gap: 18px;
+      color: #f5b918;
+      margin: 28px auto 22px;
     }
 
-    .hero-gold-divider .line {
-      flex: 1;
-      height: 2px;
-      background: linear-gradient(to right, transparent, #d4a520, transparent);
+    .goldRule span,
+    .goldSub span {
+      width: 260px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #b8860b, transparent);
     }
 
-    .hero-gold-divider .diamond {
-      width: 12px;
-      height: 12px;
-      background: #d4a520;
-      transform: rotate(45deg);
-      margin: 0 0.5rem;
-      flex-shrink: 0;
+    .hero h2 {
+      font-family: Georgia, serif;
+      color: #14aaff;
+      font-size: clamp(42px, 5vw, 76px);
+      letter-spacing: 18px;
+      font-weight: 500;
+      margin: 0;
+      text-shadow: 0 0 18px #008cff, 0 0 36px #0077ff;
     }
 
-    /* EXECUTIVE CLARITY text - MUCH BIGGER, GOLD, BOLD */
-    .hero-executive-clarity {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(4rem, 12vw, 9rem);
-      font-weight: 700;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #ffc107;
-      text-shadow: 0 0 40px rgba(255, 193, 7, 0.5), 0 2px 4px rgba(0,0,0,0.3);
-      margin-bottom: 0;
-      line-height: 0.95;
-      opacity: 0;
-      animation: fadeUp 0.9s ease forwards 0.6s;
+    .goldSub {
+      margin-top: 12px;
     }
 
-    /* ON DEMAND with side lines - BIGGER, GOLD */
-    .hero-on-demand-row {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1.5rem;
-      margin-bottom: 1.5rem;
-      width: 100%;
-      max-width: 700px;
-      opacity: 0;
-      animation: fadeUp 0.9s ease forwards 0.7s;
+    .goldSub strong {
+      color: #f5b918;
+      font-size: 30px;
+      letter-spacing: 7px;
     }
 
-    .hero-on-demand-row .side-line {
-      flex: 1;
-      height: 2px;
-      background: linear-gradient(to right, transparent, #d4a520);
+    .intro {
+      max-width: 650px;
+      margin: 32px auto 0;
+      font-family: Arial, sans-serif;
+      font-size: 18px;
+      line-height: 1.65;
+      color: #e8edf5;
     }
 
-    .hero-on-demand-row .side-line:last-child {
-      background: linear-gradient(to left, transparent, #d4a520);
+    .horizon {
+      height: 230px;
+      margin: -20px auto 0;
+      border-bottom: 5px solid #0aa8ff;
+      border-radius: 0 0 50% 50%;
+      box-shadow: 0 0 18px #00aaff, 0 0 48px #008cff;
+      transform: scaleX(1.3);
     }
 
-    .hero-on-demand {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(2rem, 5vw, 4rem);
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: #ffc107;
-      text-shadow: 0 0 30px rgba(255, 193, 7, 0.4);
-      white-space: nowrap;
-    }
-
-    /* Bottom diamond */
-    .hero-bottom-diamond {
-      width: 10px;
-      height: 10px;
-      background: var(--gold);
-      transform: rotate(45deg);
-      margin-bottom: 2rem;
-      opacity: 0;
-      animation: fadeUp 0.9s ease forwards 0.8s;
-    }
-
-    /* Descriptor paragraph */
-    .hero-descriptor {
-      max-width: 700px;
-      font-family: 'Barlow', sans-serif;
-      font-size: 1.05rem;
-      line-height: 1.8;
-      color: var(--white);
-      margin-bottom: 0;
-      text-align: center;
-      opacity: 0;
-      animation: fadeUp 0.9s ease forwards 0.9s;
-    }
-
-    /* Curved blue glow arc at bottom */
-    .hero-glow-arc {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 120%;
-      height: 200px;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .hero-glow-arc::before {
-      content: '';
-      position: absolute;
-      bottom: -150px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 140%;
-      height: 300px;
-      border-radius: 50% 50% 0 0;
-      background: transparent;
-      box-shadow: 
-        0 0 60px 2px rgba(0, 150, 255, 0.6),
-        0 0 120px 4px rgba(0, 120, 220, 0.4),
-        0 0 180px 6px rgba(0, 100, 200, 0.2);
-      border-top: 2px solid rgba(0, 180, 255, 0.8);
-    }
-
-    /* Hide old elements */
-    .hero-eyebrow,
-    .hero-tagline,
-    .hero-bridge,
-    .hero-mega-headline,
-    .hero-bottom,
-    .hero-cta-block,
-    .hero-cta-group {
-      display: none !important;
-    }
-
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      #hero {
-        padding-top: 120px;
-      }
-      .hero-content {
-        padding: 0 1.5rem;
-      }
-      .hero-gold-divider,
-      .hero-on-demand-row {
-        max-width: 90%;
-      }
-      .hero-descriptor {
-        font-size: 1rem;
+    @media (max-width: 900px) {
+      .hero h2 {
+        letter-spacing: 8px;
       }
     }
 
@@ -1680,30 +1553,28 @@ iframe {
     </ul>
   </nav>
 
-<section id="hero">
-  <div class="hero-content">
-    <h1 class="hero-title">The Way Executives <span class="accent">"Think"</span> Has Changed.</h1>
+<section class="hero">
+  <div class="heroInner">
+    <h1>The Way Executives <em>"Think"</em> Has Changed.</h1>
     
-    <div class="hero-gold-divider">
-      <div class="line"></div>
-      <div class="diamond"></div>
-      <div class="line"></div>
+    <div class="goldRule">
+      <span></span>
+      <span style="width:auto;">&#9670;</span>
+      <span></span>
     </div>
     
-    <div class="hero-executive-clarity">Executive Clarity</div>
+    <h2>EXECUTIVE CLARITY</h2>
     
-    <div class="hero-on-demand-row">
-      <div class="side-line"></div>
-      <div class="hero-on-demand">On Demand</div>
-      <div class="side-line"></div>
+    <div class="goldSub">
+      <span></span>
+      <strong>ON DEMAND</strong>
+      <span></span>
     </div>
     
-    <div class="hero-bottom-diamond"></div>
+    <p class="intro">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and decisive guidance.</p>
     
-    <p class="hero-descriptor">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and decisive guidance.</p>
+    <div class="horizon"></div>
   </div>
-  
-  <div class="hero-glow-arc"></div>
 </section>
 
 <div class="stats-bar executive-cascade-wrapper">
