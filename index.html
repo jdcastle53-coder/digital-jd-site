@@ -138,21 +138,22 @@
       color: var(--black) !important;
     }
 
-    /* ===== BOLD HERO SECTION ===== */
+    /* ===== HERO SECTION - EXACT MATCH ===== */
     #hero {
       position: relative;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-start;
+      align-items: center;
       overflow: hidden;
-      background: var(--black);
+      background: linear-gradient(to bottom, #030810 0%, #0a1832 50%, #081428 100%);
+      padding-top: 140px;
+      text-align: center;
     }
 
     .hero-bg {
-      position: absolute;
-      inset: 0;
-      background: var(--black);
+      display: none;
     }
 
     .hero-overlay {
@@ -163,205 +164,205 @@
       display: none;
     }
 
+    .hero-accent-line {
+      display: none;
+    }
+
     .hero-content {
       position: relative;
       z-index: 10;
       width: 100%;
-      max-width: 100%;
-      margin: 0;
-      padding: 0;
-      padding-top: 120px;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 2rem;
       display: flex;
       flex-direction: column;
-      min-height: calc(100vh - 120px);
+      align-items: center;
+      text-align: center;
     }
 
-    .hero-eyebrow {
-      display: none;
-    }
-
-    /* Massive headline that dominates */
-    .hero-mega-headline {
-      font-family: 'Barlow Condensed', sans-serif;
-      font-size: clamp(4rem, 18vw, 16rem);
-      font-weight: 700;
-      line-height: 0.85;
-      letter-spacing: -0.03em;
-      text-transform: uppercase;
+    /* Main headline: The Way Executives "Think" Has Changed. */
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.2rem, 4.5vw, 3.8rem);
+      font-weight: 400;
+      line-height: 1.15;
       color: var(--white);
-      margin: 0;
-      padding: 0 2rem;
+      margin-bottom: 1.5rem;
       opacity: 0;
-      animation: slideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards 0.2s;
+      animation: fadeUp 0.9s ease forwards 0.3s;
     }
 
-    .hero-mega-headline .line-executive {
-      display: block;
-      position: relative;
-      overflow: hidden;
+    .hero-title .accent {
+      color: #3ba6d9;
+      font-style: italic;
     }
 
-    .hero-mega-headline .line-clarity {
-      display: block;
-      color: var(--cyan-bright);
-      text-shadow: 0 0 80px rgba(0,229,255,0.5), 0 0 120px rgba(0,229,255,0.3);
-      position: relative;
+    /* Gold divider line with diamond */
+    .hero-gold-divider {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 1.8rem;
+      width: 100%;
+      max-width: 500px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.5s;
     }
 
-    .hero-mega-headline .line-clarity::after {
-      content: '';
-      position: absolute;
-      bottom: 0.1em;
-      left: 2rem;
-      right: 2rem;
-      height: 4px;
-      background: var(--cyan-bright);
-      box-shadow: 0 0 30px var(--cyan-bright), 0 0 60px var(--cyan);
-      animation: glowPulse 2s ease-in-out infinite;
+    .hero-gold-divider .line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
     }
 
-    .hero-mega-headline .line-on-demand {
-      display: block;
-      font-size: 0.55em;
-      color: var(--gold);
-      letter-spacing: 0.1em;
-      margin-top: 0.15em;
+    .hero-gold-divider .diamond {
+      width: 10px;
+      height: 10px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      margin: 0 0.5rem;
+      flex-shrink: 0;
     }
 
-    @keyframes slideIn {
-      from { 
-        opacity: 0; 
-        transform: translateY(60px); 
-      }
-      to { 
-        opacity: 1; 
-        transform: translateY(0); 
-      }
-    }
-
-    @keyframes glowPulse {
-      0%, 100% { 
-        opacity: 1;
-        box-shadow: 0 0 30px var(--cyan-bright), 0 0 60px var(--cyan);
-      }
-      50% { 
-        opacity: 0.7;
-        box-shadow: 0 0 50px var(--cyan-bright), 0 0 100px var(--cyan);
-      }
-    }
-
-    /* Hero bottom section with descriptor and CTA */
-    .hero-bottom {
-      margin-top: auto;
-      padding: 3rem 4rem 4rem;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 4rem;
-      align-items: end;
-      border-top: 1px solid rgba(0,180,216,0.15);
-      background: linear-gradient(to top, rgba(7,13,26,0.9), transparent);
+    /* EXECUTIVE CLARITY text */
+    .hero-executive-clarity {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #3ba6d9;
+      margin-bottom: 0.3rem;
+      line-height: 1;
       opacity: 0;
       animation: fadeUp 0.9s ease forwards 0.6s;
     }
 
-    .hero-descriptor-block {
-      max-width: 600px;
-    }
-
-    .hero-descriptor {
-      max-width: 100%;
-      font-size: 1.1rem;
-      line-height: 1.7;
-      color: var(--white-dim);
-      margin-bottom: 0;
-      opacity: 1;
-      animation: none;
-    }
-
-    .hero-bridge {
-      font-family: 'Cormorant Garamond', serif;
-      font-style: italic;
-      font-size: 1.1rem;
-      color: var(--gold);
-      margin-bottom: 0;
-      margin-top: 1rem;
-      opacity: 1;
-      animation: none;
-      max-width: 100%;
-    }
-
-    .hero-cta-block {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 1rem;
-    }
-
-    .hero-cta-group {
+    /* ON DEMAND with side lines */
+    .hero-on-demand-row {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-      opacity: 1;
-      animation: none;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 0.8rem;
+      width: 100%;
+      max-width: 450px;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.7s;
     }
 
-    /* Vertical accent line */
-    .hero-accent-line {
+    .hero-on-demand-row .side-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold));
+    }
+
+    .hero-on-demand-row .side-line:last-child {
+      background: linear-gradient(to left, transparent, var(--gold));
+    }
+
+    .hero-on-demand {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: clamp(1.4rem, 3vw, 2.2rem);
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      white-space: nowrap;
+    }
+
+    /* Bottom diamond */
+    .hero-bottom-diamond {
+      width: 10px;
+      height: 10px;
+      background: var(--gold);
+      transform: rotate(45deg);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.8s;
+    }
+
+    /* Descriptor paragraph */
+    .hero-descriptor {
+      max-width: 700px;
+      font-family: 'Barlow', sans-serif;
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: var(--white);
+      margin-bottom: 0;
+      text-align: center;
+      opacity: 0;
+      animation: fadeUp 0.9s ease forwards 0.9s;
+    }
+
+    /* Curved blue glow arc at bottom */
+    .hero-glow-arc {
       position: absolute;
-      right: 8%;
-      top: 20%;
-      bottom: 35%;
-      width: 3px;
-      background: linear-gradient(to bottom, transparent, var(--cyan), var(--cyan-bright), var(--cyan), transparent);
-      opacity: 0.4;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 120%;
+      height: 200px;
+      pointer-events: none;
+      overflow: hidden;
     }
 
-    /* Responsive adjustments */
-    @media (max-width: 1024px) {
-      .hero-mega-headline {
-        font-size: clamp(3rem, 14vw, 10rem);
+    .hero-glow-arc::before {
+      content: '';
+      position: absolute;
+      bottom: -150px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 140%;
+      height: 300px;
+      border-radius: 50% 50% 0 0;
+      background: transparent;
+      box-shadow: 
+        0 0 60px 2px rgba(0, 150, 255, 0.6),
+        0 0 120px 4px rgba(0, 120, 220, 0.4),
+        0 0 180px 6px rgba(0, 100, 200, 0.2);
+      border-top: 2px solid rgba(0, 180, 255, 0.8);
+    }
+
+    /* Hide old elements */
+    .hero-eyebrow,
+    .hero-tagline,
+    .hero-bridge,
+    .hero-mega-headline,
+    .hero-bottom,
+    .hero-cta-block,
+    .hero-cta-group {
+      display: none !important;
+    }
+
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
       }
-      .hero-bottom {
-        grid-template-columns: 1fr;
-        gap: 2rem;
-        padding: 2rem;
-      }
-      .hero-cta-block {
-        align-items: flex-start;
-      }
-      .hero-accent-line {
-        display: none;
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
 
-    @media (max-width: 640px) {
+    /* Responsive */
+    @media (max-width: 768px) {
+      #hero {
+        padding-top: 120px;
+      }
       .hero-content {
-        padding-top: 100px;
+        padding: 0 1.5rem;
       }
-      .hero-mega-headline {
-        font-size: clamp(2.5rem, 16vw, 6rem);
-        padding: 0 1rem;
-      }
-      .hero-mega-headline .line-clarity::after {
-        left: 1rem;
-        right: 1rem;
-        height: 3px;
-      }
-      .hero-bottom {
-        padding: 1.5rem 1rem 2rem;
+      .hero-gold-divider,
+      .hero-on-demand-row {
+        max-width: 90%;
       }
       .hero-descriptor {
         font-size: 1rem;
       }
-    }
-
-    .hero-title {
-      display: none;
-    }
-
-    .hero-tagline {
-      display: none;
     }
 
     .btn-primary {
@@ -1677,31 +1678,29 @@ iframe {
   </nav>
 
 <section id="hero">
-  <div class="hero-bg"></div>
-  <div class="hero-accent-line"></div>
   <div class="hero-content">
-    <h1 class="hero-mega-headline">
-      <span class="line-executive">Executive</span>
-      <span class="line-clarity">Clarity</span>
-      <span class="line-on-demand">On Demand</span>
-    </h1>
+    <h1 class="hero-title">The Way Executives <span class="accent">"Think"</span> Has Changed.</h1>
     
-    <div class="hero-bottom">
-      <div class="hero-descriptor-block">
-        <p class="hero-descriptor">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and executable decisions when it matters most.</p>
-        <p class="hero-bridge">No card. No contract. No commitment. Just clarity.</p>
-      </div>
-      
-      <div class="hero-cta-block">
-        <div class="hero-cta-group">
-          <button class="btn-primary" onclick="openModal()" style="animation:btnPulse 2.5s ease-in-out infinite;">
-            <span>Start Your Free 7-Day Sprint →</span>
-          </button>
-        </div>
-        <a href="#what" class="btn-ghost">Learn the system</a>
-      </div>
+    <div class="hero-gold-divider">
+      <div class="line"></div>
+      <div class="diamond"></div>
+      <div class="line"></div>
     </div>
+    
+    <div class="hero-executive-clarity">Executive Clarity</div>
+    
+    <div class="hero-on-demand-row">
+      <div class="side-line"></div>
+      <div class="hero-on-demand">On Demand</div>
+      <div class="side-line"></div>
+    </div>
+    
+    <div class="hero-bottom-diamond"></div>
+    
+    <p class="hero-descriptor">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and decisive guidance.</p>
   </div>
+  
+  <div class="hero-glow-arc"></div>
 </section>
 
 <div class="stats-bar executive-cascade-wrapper">
