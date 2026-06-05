@@ -1573,6 +1573,16 @@ iframe {
   Login
 </a>
 </li>
+      <li id="manage-sub-nav" style="display:none;">
+        <a class="nav-cta" href="#" onclick="openStripePortal(); return false;" style="background:linear-gradient(135deg,#c9a84c,#8f6a16);font-weight:600;">
+          Manage
+        </a>
+      </li>
+      <li id="signout-nav" style="display:none;">
+        <a class="nav-cta" href="#" onclick="signOut(); return false;" style="background:transparent;border:1px solid #c9a84c;color:#c9a84c;">
+          Sign Out
+        </a>
+      </li>
     </ul>
   </nav>
 
@@ -2031,6 +2041,53 @@ async function forgotPassword() {
 
   alert('Password reset email sent. Check your inbox.');
 }
+
+// Sign out function
+async function signOut() {
+  const { error } = await window.supabaseClient.auth.signOut();
+  if (error) {
+    alert('Error signing out: ' + error.message);
+    return;
+  }
+  localStorage.removeItem('login_email');
+  localStorage.removeItem('login_name');
+  updateNavForAuthState(false);
+  alert('You have been signed out.');
+  window.location.href = '/';
+}
+
+// Open Stripe Customer Portal for subscription management
+function openStripePortal() {
+  // Redirect to Stripe Customer Portal
+  // Note: This URL should be your Stripe Customer Portal link
+  // You can get this from Stripe Dashboard > Settings > Billing > Customer Portal
+  window.open('https://billing.stripe.com/p/login/00g5mQ9bF1Oy0OQfYY', '_blank');
+}
+
+// Check authentication state and update nav
+async function checkAuthAndUpdateNav() {
+  const { data: { session } } = await window.supabaseClient.auth.getSession();
+  updateNavForAuthState(!!session);
+}
+
+function updateNavForAuthState(isLoggedIn) {
+  const loginNav = document.querySelector('a[href="https://digitaljd.org/jd-demo.php"]');
+  const manageNav = document.getElementById('manage-sub-nav');
+  const signoutNav = document.getElementById('signout-nav');
+  
+  if (isLoggedIn) {
+    if (loginNav) loginNav.parentElement.style.display = 'none';
+    if (manageNav) manageNav.style.display = 'block';
+    if (signoutNav) signoutNav.style.display = 'block';
+  } else {
+    if (loginNav) loginNav.parentElement.style.display = 'block';
+    if (manageNav) manageNav.style.display = 'none';
+    if (signoutNav) signoutNav.style.display = 'none';
+  }
+}
+
+// Check auth state on page load
+document.addEventListener('DOMContentLoaded', checkAuthAndUpdateNav);
   </script>
        <div id="loginModal" class="modal-overlay">
   <div class="modal">
