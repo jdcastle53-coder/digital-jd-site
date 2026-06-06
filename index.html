@@ -2059,9 +2059,8 @@ async function signOut() {
 // Open Stripe Customer Portal for subscription management
 function openStripePortal() {
   // Redirect to Stripe Customer Portal
-  // Note: This URL should be your Stripe Customer Portal link
-  // You can get this from Stripe Dashboard > Settings > Billing > Customer Portal
-  window.open('https://billing.stripe.com/p/login/00g5mQ9bF1Oy0OQfYY', '_blank');
+  // Customers can update payment methods, switch plans, view invoices, and cancel
+  window.open('https://billing.stripe.com/p/login/3cI14mgxr1au4ks2bRdEs00', '_blank');
 }
 
 // Check authentication state and update nav
