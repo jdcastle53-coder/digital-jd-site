@@ -2,7 +2,7 @@
   const AUTH_ENABLED = true;
   const SUPABASE_URL = "https://hiejaayyeprfnrrukbam.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZWphYXl5ZXByZm5ycnVrYmFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5NDI3OTAsImV4cCI6MjA4NjUxODc5MH0._gOINPPuGvuXMpEm_qv_cSkwemt7wvFl6QDADknq4Bg";
-  const TRIAL_HOURS = 24;
+  const TRIAL_HOURS = 24 * 7; // 7-day Executive Sprint
   const SIGNIN_URL = "signin.html";
   const RENEW_URL = "expired.html";
 
