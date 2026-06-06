@@ -1546,7 +1546,13 @@ iframe {
     line-height: 1.8 !important;
   }
 }
-  </style>
+  
+    /* Scoped fix: ensure contact modal stacks vertically regardless of conflicting global .modal rules */
+    #contactModal.modal-overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
+    #contactModal .modal { position: relative; inset: auto; display: block; flex-direction: column; max-width: 480px; width: 90%; background: var(--deep); }
+    #contactModal .modal-form { display: block; }
+    #contactModal .modal-form .btn-primary { width: 100%; box-sizing: border-box; margin-bottom: 0.8rem; clip-path: none; }
+</style>
 </head>
 <body>
   <nav>
@@ -1912,7 +1918,7 @@ iframe {
 
 <footer>
   <div class="footer-text">© 2025 Digital JD &nbsp;·&nbsp; digitaljd.org<br><span style="font-size:0.55rem;letter-spacing:0.1em;">Leadership Intelligence System — Not a coaching product</span></div>
-  <div class="footer-links"><a href="/privacy.html" style="color:#d4af37;">Privacy</a><a href="/terms.html" style="color:#d4af37;">Terms</a><a href="/contact.html" style="color:#d4af37;">Contact</a></div>
+  <div class="footer-links"><a href="/privacy.html" style="color:#d4af37;">Privacy</a><a href="/terms.html" style="color:#d4af37;">Terms</a><a href="#" onclick="openContactModal(); return false;" style="color:#d4af37;">Contact</a></div>
 </footer>
 
   <div class="modal-overlay" id="sprintModal">
@@ -1936,6 +1942,20 @@ iframe {
     </div>
   </div>
 
+  <div class="modal-overlay" id="contactModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeContactModal()">&times;</button>
+      <div class="modal-eyebrow">Get In Touch</div>
+      <h2>Contact Dr. JD Castle</h2>
+      <p class="modal-sub">Choose how you'd like to connect. Send a message directly, or book a live video call.</p>
+      <div class="modal-form">
+        <a href="mailto:drjd@digitaljd.org?subject=Inquiry%20from%20Digital%20JD" class="btn-primary" style="display:block;text-align:center;text-decoration:none;"><span>Send an Email &rarr;</span></a>
+        <a href="https://calendly.com/jdcastle" target="_blank" rel="noopener" class="btn-primary" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#d4af37,#8f6a16);"><span>Schedule a Video Call &rarr;</span></a>
+      </div>
+      <p class="modal-note">Email goes directly to drjd@digitaljd.org &middot; Video calls are booked via Calendly.</p>
+    </div>
+  </div>
+
   <script>
     function openModal() {
       document.getElementById('sprintModal').classList.add('open');
@@ -1944,6 +1964,16 @@ iframe {
 
    function closeModal() {
   document.getElementById('sprintModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function openContactModal() {
+  document.getElementById('contactModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeContactModal() {
+  document.getElementById('contactModal').classList.remove('open');
   document.body.style.overflow = '';
 }
 
