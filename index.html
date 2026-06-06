@@ -2012,11 +2012,11 @@ if (error) {
   return;
 }
 
-alert('Account created. Please check your email to confirm your account before logging in.');
-  localStorage.setItem('login_email', email);
+localStorage.setItem('login_email', email);
   localStorage.setItem('login_name', name);
 
-  alert('Check your email and click the secure login link to continue.');
+  closeModal();
+  alert('Account created. Check your email and click the secure confirmation link to activate your account, then log in.');
 }
 
     document.addEventListener('keydown', function(e) {
@@ -2068,6 +2068,11 @@ async function checkAuthAndUpdateNav() {
   const { data: { session } } = await window.supabaseClient.auth.getSession();
   updateNavForAuthState(!!session);
 }
+
+// React to login/logout in real time so the nav is always accurate
+window.supabaseClient.auth.onAuthStateChange(function (event, session) {
+  updateNavForAuthState(!!session);
+});
 
 function updateNavForAuthState(isLoggedIn) {
   const loginNav = document.querySelector('a[href="https://digitaljd.org/jd-demo.php"]');

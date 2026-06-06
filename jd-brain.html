@@ -10,10 +10,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
   <script>
-const supabase = window.supabase.createClient(
-  "https://hiejaayyeprfnrrukbam.supabase.co",
-  "sb_publishable_rds2HjpM6PVVgQVoJ5W8Dg_URB-vraV"
-);
+// Reuse the single shared Supabase client created in auth.js
+// to avoid multiple-client session conflicts.
+const supabase = window.Auth.client;
 </script>
   
   <style>
