@@ -826,10 +826,12 @@ font-size:12px;
 
     .sprint-phase-label {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.65rem;
+      font-size: 0.78rem;
       letter-spacing: 0.2em;
       text-transform: uppercase;
-      color: var(--cyan);
+      color: #2fd4f5;
+      text-shadow: 0 0 10px rgba(0,180,216,0.5);
+      font-weight: 600;
       margin-bottom: 0.4rem;
     }
 
@@ -881,9 +883,9 @@ font-size:12px;
       background: var(--cyan);
       color: var(--black);
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.6rem;
+      font-size: 0.78rem;
       letter-spacing: 0.2em;
-      padding: 0.2rem 0.8rem;
+      padding: 0.32rem 1.1rem;
       font-weight: 700;
     }
 
@@ -1010,11 +1012,16 @@ font-size:12px;
       flex-shrink: 0;
     }
 
-    footer {
-      background: var(--black);
-      border-top: 1px solid rgba(0,180,216,0.1);
-      padding: 3rem 0;
-    }
+footer {
+  background: var(--black);
+  border-top: 1px solid rgba(0,180,216,0.1);
+  padding: 3rem 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  }
 
     .footer-inner {
       max-width: 1100px;
@@ -1032,26 +1039,27 @@ font-size:12px;
     }
 
     .footer-text {
-   padding: 40px 20px;
+   padding: 0;
   font-family: 'Barlow Condensed', sans-serif;
-  font-size: 0.65rem;
+  font-size: 1.3rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
   color: #d4af37;
-  text-align: center;
+  text-align: right;
 }
 
     .footer-links {
       display: flex;
-      gap: 1.5rem;
+      gap: 2.5rem;
     }
 
     .footer-links a {
       font-family: 'Barlow Condensed', sans-serif;
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
+      font-size: 1rem;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
-      color: rgba(240,244,248,0.3);
+      color: rgba(212,175,55,0.85);
+      font-weight: 600;
       text-decoration: none;
       transition: color 0.2s;
     }
@@ -1475,15 +1483,23 @@ iframe {
     white-space: normal !important;
   }
 
-  footer {
-    text-align: center !important;
+footer {
+  text-align: center !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  }
+  
+  .footer-text {
+  text-align: center !important;
+  order: 2;
   }
 
   .footer-links {
-    justify-content: center !important;
-    flex-wrap: wrap !important;
+  order: 1;
+  justify-content: center !important;
+  flex-wrap: wrap !important;
   }
-}
+  }
 
 @media (max-width: 430px) {
   .stats-inner {
@@ -1568,7 +1584,7 @@ iframe {
       <li><a href="#tiers">Access Tiers</a></li>
       <li style="text-align:center;">
         <a href="#sprint" class="nav-cta" style="font-weight:700;">Start Sprint</a>
-        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.82rem;letter-spacing:0.08em;color:#c9a84c;line-height:1.9;margin-top:0.6rem;">
+        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;font-weight:700;letter-spacing:0.08em;color:#d4af37;line-height:1.9;margin-top:0.6rem;">
           No Commitment<br>No Credit Card<br>No Contract
         </div>
       </li>
@@ -1748,12 +1764,12 @@ iframe {
               <p>Complete access to JD Brain — full analytical depth, no usage caps, no feature restrictions. <em style="color:var(--gold);">Most executives make their decision here.</em></p>
             </div>
             <div class="sprint-phase dim">
-              <div class="sprint-phase-label">Day 7 — Your Moment of Clarity</div>
+              <div class="sprint-phase-label" style="color:#4fdcff;opacity:1;">Day 7 — Your Moment of Clarity</div>
               <h3>Still Waiting?</h3>
               <p>You've seen what's possible. Executives who upgrade here never look back. Those who don't stay connected through JD Lite — a capable version that handles everyday leadership situations well, while reserving the deeper analysis and complex decision frameworks for the full system.</p>
             </div>
             <div class="sprint-phase dim">
-              <div class="sprint-phase-label">The Final Day</div>
+              <div class="sprint-phase-label" style="color:#4fdcff;opacity:1;font-size:0.94rem;">The Final Day</div>
               <h3>The System Goes Quiet.</h3>
               <p>Thirty days of JD Lite ends here. The system goes quiet. What you do next is your decision — but you already know what works.</p>
             </div>
@@ -1911,8 +1927,8 @@ iframe {
   </section>
 
 <footer>
-  <div class="footer-text">© 2025 Digital JD &nbsp;·&nbsp; digitaljd.org<br><span style="font-size:0.55rem;letter-spacing:0.1em;">Leadership Intelligence System — Not a coaching product</span></div>
-  <div class="footer-links"><a href="/privacy.html" style="color:#d4af37;">Privacy</a><a href="/terms.html" style="color:#d4af37;">Terms</a><a href="#" onclick="openContactModal(); return false;" style="color:#d4af37;">Contact</a></div>
+  <div class="footer-links"><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="#" onclick="openContactModal(); return false;">Contact</a></div>
+  <div class="footer-text">© 2025 Digital JD &nbsp;·&nbsp; digitaljd.org<br><span style="font-size:0.78rem;letter-spacing:0.1em;">Leadership Intelligence System — Not a coaching product</span></div>
 </footer>
 
   <div class="modal-overlay" id="sprintModal">
