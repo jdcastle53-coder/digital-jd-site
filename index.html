@@ -1546,13 +1546,7 @@ iframe {
     line-height: 1.8 !important;
   }
 }
-  
-    /* Scoped fix: ensure contact modal stacks vertically regardless of conflicting global .modal rules */
-    #contactModal.modal-overlay { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; }
-    #contactModal .modal { position: relative; inset: auto; display: block; flex-direction: column; max-width: 480px; width: 90%; background: var(--deep); }
-    #contactModal .modal-form { display: block; }
-    #contactModal .modal-form .btn-primary { width: 100%; box-sizing: border-box; margin-bottom: 0.8rem; clip-path: none; }
-</style>
+  </style>
 </head>
 <body>
   <nav>
@@ -1943,16 +1937,16 @@ iframe {
   </div>
 
   <div class="modal-overlay" id="contactModal">
-    <div class="modal">
-      <button class="modal-close" onclick="closeContactModal()">&times;</button>
+    <div class="modal" style="position:relative;inset:auto;display:block;max-width:480px;width:90%;background:var(--deep);">
+      <button class="modal-close" onclick="closeContactModal()">×</button>
       <div class="modal-eyebrow">Get In Touch</div>
       <h2>Contact Dr. JD Castle</h2>
-      <p class="modal-sub">Choose how you'd like to connect. Send a message directly, or book a live video call.</p>
-      <div class="modal-form">
-        <a href="mailto:drjd@digitaljd.org?subject=Inquiry%20from%20Digital%20JD" class="btn-primary" style="display:block;text-align:center;text-decoration:none;"><span>Send an Email &rarr;</span></a>
-        <a href="https://calendly.com/jdcastle" target="_blank" rel="noopener" class="btn-primary" style="display:block;text-align:center;text-decoration:none;background:linear-gradient(135deg,#d4af37,#8f6a16);"><span>Schedule a Video Call &rarr;</span></a>
+      <p class="modal-sub">Choose how you'd like to connect — send a message directly, or book a live video call.</p>
+      <div class="modal-form" style="display:block;">
+        <a href="mailto:drjd@digitaljd.org?subject=Inquiry%20from%20Digital%20JD" class="btn-primary" style="display:block;width:100%;box-sizing:border-box;text-align:center;text-decoration:none;margin-bottom:0.8rem;clip-path:none;"><span>Send an Email →</span></a>
+        <a href="https://calendly.com/jdcastle" target="_blank" rel="noopener" class="btn-primary" style="display:block;width:100%;box-sizing:border-box;text-align:center;text-decoration:none;clip-path:none;background:linear-gradient(135deg,#d4af37,#8f6a16);"><span>Schedule a Video Call →</span></a>
       </div>
-      <p class="modal-note">Email goes directly to drjd@digitaljd.org &middot; Video calls are booked via Calendly.</p>
+      <p class="modal-note">Email goes directly to drjd@digitaljd.org · Video calls are booked via Calendly.</p>
     </div>
   </div>
 
