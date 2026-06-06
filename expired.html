@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     :root {
       --ink: #0b3b66;
@@ -23,6 +24,20 @@
                   var(--clay);
     }
     .title-font { font-family: "Newsreader", Georgia, serif; }
+
+    .star-btn {
+      font-size: 2.5rem;
+      line-height: 1;
+      color: #d8cdbd;
+      cursor: pointer;
+      transition: color 0.15s, transform 0.15s;
+      background: none;
+      border: none;
+      padding: 0 0.15rem;
+    }
+    .star-btn:hover { transform: scale(1.12); }
+    .star-btn.is-active { color: #f5b301; }
+    .fb-hidden { display: none; }
   </style>
 </head>
 <body class="min-h-screen text-slate-900">
@@ -38,6 +53,158 @@
 
       <p class="mt-6 text-sm text-slate-500">If you already renewed, sign out and sign back in to refresh your access.</p>
     </div>
+
+    <div id="feedbackCard" class="bg-white/85 backdrop-blur rounded-3xl p-10 shadow-xl border border-white mt-8">
+      <div id="fbAsk">
+        <h2 class="title-font text-2xl md:text-3xl text-[var(--ink)] font-semibold">How was your 7-day Executive Sprint?</h2>
+        <p class="mt-2 text-slate-600">Your honest rating helps Dr. JD Castle make Digital JD better. It takes a few seconds.</p>
+        <div id="starRow" class="mt-5 flex items-center" role="radiogroup" aria-label="Rate your sprint experience from 1 to 5 stars">
+          <button type="button" class="star-btn" data-value="1" aria-label="1 star">&#9733;</button>
+          <button type="button" class="star-btn" data-value="2" aria-label="2 stars">&#9733;</button>
+          <button type="button" class="star-btn" data-value="3" aria-label="3 stars">&#9733;</button>
+          <button type="button" class="star-btn" data-value="4" aria-label="4 stars">&#9733;</button>
+          <button type="button" class="star-btn" data-value="5" aria-label="5 stars">&#9733;</button>
+        </div>
+
+        <div id="fbComment" class="fb-hidden mt-6">
+          <label for="fbCommentText" class="block font-semibold text-[var(--ink)]" id="fbCommentLabel">What would have made your experience better?</label>
+          <p class="text-sm text-slate-500 mt-1">This goes straight to Dr. Castle privately so he can make it right.</p>
+          <textarea id="fbCommentText" rows="4" class="mt-3 w-full rounded-xl border border-slate-300 p-3 focus:outline-none focus:ring-2 focus:ring-[var(--ink)]" placeholder="Tell us in your own words..."></textarea>
+          <input id="fbEmail" type="email" class="mt-3 w-full rounded-xl border border-slate-300 p-3 focus:outline-none focus:ring-2 focus:ring-[var(--ink)]" placeholder="Your email (optional, so we can follow up)" />
+        </div>
+
+        <div class="mt-6 flex flex-col sm:flex-row gap-4">
+          <button id="fbSubmit" type="button" disabled class="inline-flex items-center justify-center rounded-xl bg-[var(--ink)] text-white px-6 py-3 font-semibold hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed">Submit rating</button>
+        </div>
+        <p id="fbError" class="fb-hidden mt-3 text-sm text-red-600"></p>
+      </div>
+
+      <div id="fbThanks" class="fb-hidden text-center py-4">
+        <div class="text-5xl mb-3" aria-hidden="true">&#10003;</div>
+        <h2 class="title-font text-2xl md:text-3xl text-[var(--ink)] font-semibold" id="fbThanksTitle">Thank you for your feedback</h2>
+        <p class="mt-2 text-slate-600" id="fbThanksMsg">We appreciate you taking the time.</p>
+        <div id="fbTestimonial" class="fb-hidden mt-5">
+          <a href="mailto:drjd@digitaljd.org?subject=My%20Digital%20JD%20Testimonial" class="inline-flex items-center justify-center rounded-xl border border-[var(--ink)] text-[var(--ink)] px-6 py-3 font-semibold hover:bg-white">Share a testimonial</a>
+        </div>
+      </div>
+    </div>
   </main>
+
+  <script src="auth.js"></script>
+  <script>
+    (function () {
+      var SUPABASE_URL = "https://hiejaayyeprfnrrukbam.supabase.co";
+      var SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZWphYXl5ZXByZm5ycnVrYmFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5NDI3OTAsImV4cCI6MjA4NjUxODc5MH0._gOINPPuGvuXMpEm_qv_cSkwemt7wvFl6QDADknq4Bg";
+      var OWNER_EMAIL = "drjd@digitaljd.org";
+
+      var client = (window.supabase && window.supabase.createClient)
+        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY)
+        : null;
+
+      var selected = 0;
+      var stars = Array.prototype.slice.call(document.querySelectorAll("#starRow .star-btn"));
+      var commentWrap = document.getElementById("fbComment");
+      var commentLabel = document.getElementById("fbCommentLabel");
+      var commentText = document.getElementById("fbCommentText");
+      var emailInput = document.getElementById("fbEmail");
+      var submitBtn = document.getElementById("fbSubmit");
+      var errorEl = document.getElementById("fbError");
+      var askEl = document.getElementById("fbAsk");
+      var thanksEl = document.getElementById("fbThanks");
+      var thanksMsg = document.getElementById("fbThanksMsg");
+      var thanksTitle = document.getElementById("fbThanksTitle");
+      var testimonialEl = document.getElementById("fbTestimonial");
+
+      function paint(value) {
+        stars.forEach(function (s) {
+          var v = parseInt(s.getAttribute("data-value"), 10);
+          s.classList.toggle("is-active", v <= value);
+        });
+      }
+
+      stars.forEach(function (s) {
+        var v = parseInt(s.getAttribute("data-value"), 10);
+        s.addEventListener("mouseenter", function () { paint(v); });
+        s.addEventListener("click", function () {
+          selected = v;
+          paint(v);
+          submitBtn.disabled = false;
+          if (v < 3) {
+            commentLabel.textContent = "What would have made your experience better?";
+            commentWrap.classList.remove("fb-hidden");
+          } else {
+            commentLabel.textContent = "Anything you'd like to add? (optional)";
+            commentWrap.classList.remove("fb-hidden");
+          }
+        });
+      });
+
+      document.getElementById("starRow").addEventListener("mouseleave", function () {
+        paint(selected);
+      });
+
+      submitBtn.addEventListener("click", async function () {
+        if (!selected) return;
+        errorEl.classList.add("fb-hidden");
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Sending...";
+
+        var comment = (commentText.value || "").trim();
+        var email = (emailInput.value || "").trim();
+
+        var userId = null;
+        try {
+          if (client) {
+            var sessionRes = await client.auth.getSession();
+            if (sessionRes && sessionRes.data && sessionRes.data.session && sessionRes.data.session.user) {
+              userId = sessionRes.data.session.user.id;
+              if (!email) email = sessionRes.data.session.user.email || "";
+            }
+          }
+        } catch (e) { /* not signed in; fine */ }
+
+        var ok = false;
+        try {
+          if (client) {
+            var insertRes = await client.from("sprint_feedback").insert({
+              rating: selected,
+              comment: comment || null,
+              email: email || null,
+              user_id: userId
+            });
+            ok = !insertRes.error;
+            if (insertRes.error) console.log("[v0] feedback insert error:", insertRes.error.message);
+          }
+        } catch (e) {
+          console.log("[v0] feedback insert exception:", e && e.message);
+        }
+
+        // For low scores, also route the comment to the owner privately via email.
+        if (selected < 3 && comment) {
+          var subject = encodeURIComponent("Digital JD Sprint Feedback (" + selected + "-star)");
+          var body = encodeURIComponent(
+            "Rating: " + selected + "/5\n" +
+            "From: " + (email || "anonymous") + "\n\n" +
+            "Comment:\n" + comment
+          );
+          window.location.href = "mailto:" + OWNER_EMAIL + "?subject=" + subject + "&body=" + body;
+        }
+
+        // Show thank-you regardless of network result so the user isn't blocked.
+        askEl.classList.add("fb-hidden");
+        thanksEl.classList.remove("fb-hidden");
+        if (selected >= 4) {
+          thanksTitle.textContent = "Thank you — we're glad it helped!";
+          thanksMsg.textContent = "Would you be willing to share a few words about your experience?";
+          testimonialEl.classList.remove("fb-hidden");
+        } else if (selected === 3) {
+          thanksMsg.textContent = "Thank you — your feedback helps us improve.";
+        } else {
+          thanksTitle.textContent = "Thank you — we hear you.";
+          thanksMsg.textContent = "Dr. Castle will personally review your note. If you left your email, expect a reply.";
+        }
+      });
+    })();
+  </script>
 </body>
 </html>
