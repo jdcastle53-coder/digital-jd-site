@@ -17,6 +17,11 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/jd-access.php';
 
+// Load config.php if present — this is where OPENAI_API_KEY is defined on the server.
+if (file_exists(__DIR__ . '/config.php')) {
+    require_once __DIR__ . '/config.php';
+}
+
 /* =========================================================
    BASIC SETTINGS
 ========================================================= */
