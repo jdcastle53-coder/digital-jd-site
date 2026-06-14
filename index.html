@@ -1980,12 +1980,43 @@ function closeLoginModal() {
   document.getElementById('loginModal').classList.remove('open');
   document.body.style.overflow = '';
 }
+// Branded message box — replaces the browser's default alert() pop-up
+function showJDMessage(message, type) {
+  type = type || 'info';
+  // Remove any existing message box first
+  var existing = document.getElementById('jdMessageOverlay');
+  if (existing) existing.remove();
+
+  var accent = type === 'error' ? '#e07a5f'
+             : type === 'success' ? '#c9a84c'
+             : '#c9a84c';
+
+  var overlay = document.createElement('div');
+  overlay.id = 'jdMessageOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(4,6,8,0.72);backdrop-filter:blur(4px);padding:1.5rem;';
+
+  var box = document.createElement('div');
+  box.style.cssText = 'max-width:420px;width:100%;background:linear-gradient(150deg,#0e1626,#0a0f1c);border:1px solid rgba(201,168,76,0.45);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,0.5);padding:1.75rem 1.75rem 1.5rem;text-align:center;';
+
+  box.innerHTML =
+    '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.7rem;letter-spacing:0.28em;text-transform:uppercase;color:' + accent + ';font-weight:700;margin-bottom:0.75rem;">Digital JD</div>' +
+    '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.25rem;line-height:1.5;color:#f0f4f8;margin-bottom:1.4rem;">' + message + '</div>' +
+    '<button id="jdMessageOk" style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.95rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:#040608;background:linear-gradient(135deg,#d4af37,#8f6a16);border:none;border-radius:10px;padding:0.65rem 2.5rem;cursor:pointer;">OK</button>';
+
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  function dismiss() { overlay.remove(); }
+  document.getElementById('jdMessageOk').addEventListener('click', dismiss);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) dismiss(); });
+}
+
 async function submitLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value;
 
   if (!email || !password) {
-    alert('Please enter your email and password.');
+    showJDMessage('Please enter your email and password.', 'error');
     return;
   }
 
@@ -1995,7 +2026,13 @@ async function submitLogin() {
   });
 
   if (error) {
-    alert(error.message);
+    var loginMsg = error.message;
+    if (/confirm/i.test(loginMsg)) {
+      loginMsg = 'Please confirm your email first. Check your inbox for the secure activation link, then log in.';
+    } else if (/invalid login/i.test(loginMsg)) {
+      loginMsg = 'That email or password is incorrect. Please try again.';
+    }
+    showJDMessage(loginMsg, 'error');
     return;
   }
 document.getElementById('loginModal').classList.remove('open');
@@ -2013,15 +2050,20 @@ document.body.style.overflow = '';
   const email = document.getElementById('sprintEmail').value.trim();
 
   if (!name || !email) {
-    alert('Please enter your name and email.');
+    showJDMessage('Please enter your name and email.', 'error');
     return;
   }
 
 const password = document.getElementById('sprintPassword').value.trim();
 const confirmPassword = document.getElementById('sprintConfirmPassword').value.trim();
 
+if (!password) {
+  showJDMessage('Please choose a password to create your account.', 'error');
+  return;
+}
+
 if (password !== confirmPassword) {
-  alert('Passwords do not match.');
+  showJDMessage('Those passwords do not match. Please re-enter them.', 'error');
   return;
 }
 
@@ -2036,7 +2078,14 @@ const { data, error } = await window.supabaseClient.auth.signUp({
 });
 
 if (error) {
-  alert(error.message);
+  showJDMessage(error.message, 'error');
+  return;
+}
+
+// Supabase returns an empty identities array when the email is already registered.
+if (data && data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+  closeModal();
+  showJDMessage('This email is already registered. Please log in instead — or use Forgot Password if you need to reset it.', 'info');
   return;
 }
 
@@ -2044,7 +2093,7 @@ localStorage.setItem('login_email', email);
   localStorage.setItem('login_name', name);
 
   closeModal();
-  alert('Account created. Check your email and click the secure confirmation link to activate your account, then log in.');
+  showJDMessage('Welcome to Digital JD. Your account has been created — check your email and click the secure confirmation link to activate it, then log in to begin your Executive Sprint.', 'success');
 }
 
     document.addEventListener('keydown', function(e) {
@@ -2054,7 +2103,7 @@ async function forgotPassword() {
   const email = document.getElementById('loginEmail').value.trim();
 
   if (!email) {
-    alert('Enter your email first, then click Forgot Password.');
+    showJDMessage('Enter your email in the field above first, then click Forgot Password.', 'error');
     return;
   }
 
@@ -2063,24 +2112,23 @@ async function forgotPassword() {
   });
 
   if (error) {
-    alert(error.message);
+    showJDMessage(error.message, 'error');
     return;
   }
 
-  alert('Password reset email sent. Check your inbox.');
+  showJDMessage('Password reset email sent. Check your inbox for the secure link.', 'success');
 }
 
 // Sign out function
 async function signOut() {
   const { error } = await window.supabaseClient.auth.signOut();
   if (error) {
-    alert('Error signing out: ' + error.message);
+    showJDMessage('There was a problem signing out: ' + error.message, 'error');
     return;
   }
   localStorage.removeItem('login_email');
   localStorage.removeItem('login_name');
   updateNavForAuthState(false);
-  alert('You have been signed out.');
   window.location.href = '/';
 }
 
