@@ -38,6 +38,30 @@ async function run() {
     .toFile(path.join(ROOT, "public/digitaljd-qr-logo.png"))
 
   console.log("Wrote public/digitaljd-qr-logo.png")
+
+  // 4. Bordered variant for business cards: add a white quiet-zone margin
+  //    around the code plus a thin navy border line as a clean cut-guide.
+  const PAD = 90 // white quiet zone so phone cameras lock on reliably
+  const TOTAL = QR_SIZE + PAD * 2
+  const STROKE = 6
+  const half = STROKE / 2
+  const borderLine = Buffer.from(
+    `<svg width="${TOTAL}" height="${TOTAL}">
+       <rect x="${half}" y="${half}" width="${TOTAL - STROKE}" height="${TOTAL - STROKE}"
+             rx="36" ry="36" fill="none" stroke="#07101f" stroke-width="${STROKE}"/>
+     </svg>`,
+  )
+  await sharp({
+    create: { width: TOTAL, height: TOTAL, channels: 4, background: "#ffffff" },
+  })
+    .composite([
+      { input: path.join(ROOT, "public/digitaljd-qr-logo.png"), top: PAD, left: PAD },
+      { input: borderLine, top: 0, left: 0 },
+    ])
+    .png()
+    .toFile(path.join(ROOT, "public/digitaljd-qr-logo-bordered.png"))
+
+  console.log("Wrote public/digitaljd-qr-logo-bordered.png")
 }
 
 run().catch((e) => {
