@@ -1789,8 +1789,14 @@ document.addEventListener('DOMContentLoaded', function () {
     return `
       <div style="font-size:18px; font-weight:700; color:#f6d36b; margin-bottom:4px;">Your free access has ended</div>
       <div style="font-size:13px; color:#d7dcec; margin-bottom:12px;">Subscribe to continue using Digital JD. You can reactivate instantly at any time.</div>
-      <button onclick="window.location.href='${SPRINT_UPGRADE_URL}'" style="padding:10px 18px; border:none; border-radius:10px; font-weight:700; background:#d4af37; color:#0b1223; cursor:pointer;">Subscribe Now</button>
+      <button onclick="window.location.href='${SPRINT_UPGRADE_URL}'" style="padding:10px 18px; border:none; border-radius:10px; font-weight:700; background:#d4af37; color:#0b1223; cursor:pointer;">Subscribe to Continue</button>
     `;
+  }
+
+  // Update the sidebar CTA button text/label for the current stage.
+  function setSidebarCta(label) {
+    const cta = document.querySelector('.cta-btn.full-btn');
+    if (cta) cta.innerText = label;
   }
 
   function applySprintStage(createdAtIso, systemStatus) {
@@ -1805,35 +1811,27 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const dayMs = 24 * 60 * 60 * 1000;
-    let daysSince = Math.floor((Date.now() - created) / dayMs);
-
-    // ---- TEMPORARY TESTING OVERRIDE (remove before public launch) ----
-    // Add ?simday=N to the URL to preview a stage, e.g.
-    //   ?simday=2  -> Sprint (5 days left)
-    //   ?simday=10 -> Essential
-    //   ?simday=40 -> Locked
-    const simDay = new URLSearchParams(window.location.search).get('simday');
-    if (simDay !== null && !isNaN(parseInt(simDay, 10))) {
-      daysSince = parseInt(simDay, 10);
-      console.log('[v0] Sprint simulation active — treating account as day', daysSince);
-    }
+    const daysSince = Math.floor((Date.now() - created) / dayMs);
 
     if (daysSince < SPRINT_LEN_DAYS) {
       const daysLeft = SPRINT_LEN_DAYS - daysSince;
       if (systemStatus) systemStatus.innerText = `Executive Sprint — Day ${daysSince + 1} of 7`;
       sprintEnableInput();
       if (micBtn) micBtn.style.display = '';
+      setSidebarCta('Get on board with Digital JD');
       showSprintBanner(sprintBannerHtml(daysLeft));
     } else if (daysSince < ESSENTIAL_END_DAY) {
       const daysLeft = ESSENTIAL_END_DAY - daysSince;
       if (systemStatus) systemStatus.innerText = `Essential Plan — ${daysLeft} days left`;
       sprintEnableInput();
       if (micBtn) micBtn.style.display = 'none'; // reduced features
+      setSidebarCta('Get on board with Digital JD');
       showSprintBanner(essentialBannerHtml(daysLeft));
     } else {
       if (systemStatus) systemStatus.innerText = 'Access Locked';
       if (micBtn) micBtn.style.display = 'none';
       sprintLockInput('Your free access has ended. Subscribe to continue using Digital JD.');
+      setSidebarCta('Subscribe to Continue');
       showSprintBanner(lockedBannerHtml());
     }
   }
