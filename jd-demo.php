@@ -841,14 +841,9 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
 <div class="action-column">
     <button id="sendBtn" class="send-btn">Get Insight</button>
 
-    <button class="cta-btn sprint-btn"
-        onclick="window.location.href='https://digitaljd.org/#sprint'">
-        Try Executive Sprint
-    </button>
-
     <button class="cta-btn full-btn"
        onclick="window.location.href='https://digitaljd.org/#pricing'">
-        Get Full Digital JD
+        Get on board with Digital JD
     </button>
 </div>
           </div>
