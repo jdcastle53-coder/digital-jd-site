@@ -18,20 +18,16 @@ async function run() {
     .png()
     .toBuffer()
 
-  // 2. Thin white ring + dark navy badge behind the head. Error-correction
+  // 2. Solid white badge behind the head (no navy fill). Error-correction
   //    level H tolerates ~30% coverage; this badge stays well under that.
-  const whiteRing = Buffer.from(
+  const whiteBadge = Buffer.from(
     `<svg width="${QR_SIZE}" height="${QR_SIZE}"><circle cx="${C}" cy="${C}" r="186" fill="#ffffff"/></svg>`,
-  )
-  const navyBadge = Buffer.from(
-    `<svg width="${QR_SIZE}" height="${QR_SIZE}"><circle cx="${C}" cy="${C}" r="178" fill="#07101f"/></svg>`,
   )
 
   // 3. Layer everything onto the QR.
   await sharp(path.join(ROOT, "public/digitaljd-qr.png"))
     .composite([
-      { input: whiteRing },
-      { input: navyBadge },
+      { input: whiteBadge },
       { input: head, top: Math.round(C - HEAD_H / 2), left: Math.round(C - HEAD_W / 2) },
     ])
     .png()
