@@ -11,7 +11,7 @@ QRCode.toFile(
     errorCorrectionLevel: "H", // high error correction - survives logos/print smudges
     type: "png",
     width: 1200, // large for crisp printing
-    margin: 4,
+    margin: 2, // minimal quiet zone so you can place your own border on a business card
     color: {
       dark: "#0b1223", // your deep navy
       light: "#ffffff", // white background for max scan contrast

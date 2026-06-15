@@ -10,18 +10,21 @@ const C = QR_SIZE / 2
 
 async function run() {
   // 1. Crop just the head out of the logo (exclude the "Digital JD" wordmark).
+  const HEAD_W = 330
+  const HEAD_H = 323
   const head = await sharp(path.join(ROOT, "digital-jd-logo.png"))
     .extract({ left: 58, top: 12, width: 478, height: 468 })
-    .resize(250, 245, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
+    .resize(HEAD_W, HEAD_H, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png()
     .toBuffer()
 
-  // 2. White ring (quiet zone) + dark navy badge behind the head.
+  // 2. Thin white ring + dark navy badge behind the head. Error-correction
+  //    level H tolerates ~30% coverage; this badge stays well under that.
   const whiteRing = Buffer.from(
-    `<svg width="${QR_SIZE}" height="${QR_SIZE}"><circle cx="${C}" cy="${C}" r="178" fill="#ffffff"/></svg>`,
+    `<svg width="${QR_SIZE}" height="${QR_SIZE}"><circle cx="${C}" cy="${C}" r="186" fill="#ffffff"/></svg>`,
   )
   const navyBadge = Buffer.from(
-    `<svg width="${QR_SIZE}" height="${QR_SIZE}"><circle cx="${C}" cy="${C}" r="158" fill="#07101f"/></svg>`,
+    `<svg width="${QR_SIZE}" height="${QR_SIZE}"><circle cx="${C}" cy="${C}" r="178" fill="#07101f"/></svg>`,
   )
 
   // 3. Layer everything onto the QR.
@@ -29,7 +32,7 @@ async function run() {
     .composite([
       { input: whiteRing },
       { input: navyBadge },
-      { input: head, top: Math.round(C - 122), left: Math.round(C - 125) },
+      { input: head, top: Math.round(C - HEAD_H / 2), left: Math.round(C - HEAD_W / 2) },
     ])
     .png()
     .toFile(path.join(ROOT, "public/digitaljd-qr-logo.png"))
