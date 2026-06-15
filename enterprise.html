@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digital JD Enterprise — Leadership Intelligence for Your Whole Organization</title>
+  <meta name="description" content="Digital JD Enterprise gives every manager, director, and executive the same on-demand leadership intelligence — with monthly leadership sessions with Dr. JD Castle. Built for HR and organizational leadership." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #040608;
+      --navy: #070d1a;
+      --deep: #0a1628;
+      --cyan: #00b4d8;
+      --cyan-bright: #00e5ff;
+      --white: #f0f4f8;
+      --white-dim: rgba(240,244,248,0.85);
+      --white-faint: rgba(240,244,248,0.08);
+      --gold: #d4af37;
+      --gold-soft: #f4d06f;
+      --gold-dim: rgba(212,175,55,0.2);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background:
+        radial-gradient(1200px 600px at 70% -10%, rgba(0,180,216,0.08), transparent 60%),
+        radial-gradient(900px 500px at 10% 10%, rgba(212,175,55,0.06), transparent 55%),
+        var(--black);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    /* ---------- Nav ---------- */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.85rem 2rem;
+      background: linear-gradient(to bottom, rgba(4,6,8,0.96), rgba(4,6,8,0.6));
+      -webkit-backdrop-filter: blur(6px);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(212,175,55,0.15);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-logo img { width: 56px; height: 56px; object-fit: contain; display: block; }
+    .nav-logo-name {
+      color: var(--gold);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 15px; font-weight: 700; letter-spacing: 0.02em;
+    }
+    .nav-back {
+      font-family: 'Barlow Condensed', sans-serif;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      font-size: 0.8rem; color: var(--gold);
+      text-decoration: none; border: 1px solid rgba(212,175,55,0.5);
+      padding: 0.5rem 1.1rem; border-radius: 8px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    .nav-back:hover { background: var(--gold); color: #0b1223; }
+
+    /* ---------- Layout ---------- */
+    .wrap { max-width: 920px; margin: 0 auto; padding: 0 1.5rem; }
+
+    /* ---------- Hero ---------- */
+    .hero { text-align: center; padding: 4rem 0 2.5rem; }
+    .eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      text-transform: uppercase; letter-spacing: 0.22em;
+      font-size: 0.82rem; color: var(--gold); margin-bottom: 1.25rem;
+    }
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700; line-height: 1.1;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      color: var(--white); margin-bottom: 1.25rem; text-wrap: balance;
+    }
+    .hero h1 .accent { color: var(--gold-soft); }
+    .hero p.sub {
+      font-size: clamp(1rem, 2.2vw, 1.2rem);
+      color: var(--white-dim); line-height: 1.6;
+      max-width: 680px; margin: 0 auto; font-weight: 300; text-wrap: pretty;
+    }
+
+    /* ---------- Dr. JD Castle highlight ---------- */
+    .jd-highlight {
+      margin: 2.5rem auto 0;
+      max-width: 760px;
+      border: 1px solid rgba(212,175,55,0.55);
+      border-radius: 16px;
+      background: linear-gradient(145deg, rgba(45,32,8,0.55), rgba(10,18,35,0.85));
+      box-shadow: 0 14px 40px rgba(0,0,0,0.35), inset 0 0 40px rgba(212,175,55,0.06);
+      padding: 1.5rem 1.75rem;
+      display: flex; align-items: center; gap: 1.25rem;
+      text-align: left;
+    }
+    .jd-highlight .badge {
+      flex-shrink: 0;
+      font-family: 'Barlow Condensed', sans-serif;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      font-size: 0.7rem; color: #0b1223; font-weight: 700;
+      background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+      padding: 0.45rem 0.8rem; border-radius: 999px; white-space: nowrap;
+    }
+    .jd-highlight .jd-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.4rem; font-weight: 600; color: var(--gold-soft);
+      line-height: 1.25; margin-bottom: 0.25rem;
+    }
+    .jd-highlight .jd-desc { font-size: 0.95rem; color: var(--white-dim); line-height: 1.5; }
+
+    /* ---------- Accordion ---------- */
+    .sections { margin: 3rem 0 1rem; }
+    .sections-intro {
+      text-align: center; font-family: 'Barlow Condensed', sans-serif;
+      text-transform: uppercase; letter-spacing: 0.16em;
+      font-size: 0.8rem; color: var(--white-dim); margin-bottom: 1.5rem;
+    }
+    .accordion-item {
+      border: 1px solid rgba(212,175,55,0.28);
+      border-radius: 14px;
+      background: rgba(7,13,26,0.72);
+      margin-bottom: 1rem;
+      overflow: hidden;
+      transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+    .accordion-item.open {
+      border-color: rgba(212,175,55,0.7);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    .accordion-header {
+      width: 100%; cursor: pointer; border: none; background: transparent;
+      color: var(--white); text-align: left;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+      padding: 1.4rem 1.5rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.2rem, 3vw, 1.55rem); font-weight: 600;
+    }
+    .accordion-header .num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.9rem; color: var(--gold); letter-spacing: 0.1em;
+      margin-right: 0.85rem;
+    }
+    .accordion-header .label { flex: 1; line-height: 1.2; }
+    .accordion-header .icon {
+      flex-shrink: 0; width: 28px; height: 28px; position: relative;
+      border: 1px solid rgba(212,175,55,0.6); border-radius: 50%;
+    }
+    .accordion-header .icon::before,
+    .accordion-header .icon::after {
+      content: ""; position: absolute; background: var(--gold);
+      top: 50%; left: 50%; transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+    .accordion-header .icon::before { width: 12px; height: 2px; transform: translate(-50%, -50%); }
+    .accordion-header .icon::after { width: 2px; height: 12px; transform: translate(-50%, -50%); }
+    .accordion-item.open .icon::after { transform: translate(-50%, -50%) rotate(90deg); opacity: 0; }
+    .accordion-body {
+      max-height: 0; overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    .accordion-body-inner { padding: 0 1.5rem 1.6rem; }
+    .accordion-body ul { list-style: none; }
+    .accordion-body li {
+      position: relative; padding-left: 1.6rem; margin-bottom: 0.9rem;
+      font-size: 1rem; line-height: 1.55; color: var(--white-dim);
+    }
+    .accordion-body li::before {
+      content: ""; position: absolute; left: 0; top: 0.55em;
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--gold); box-shadow: 0 0 8px rgba(212,175,55,0.6);
+    }
+    .accordion-body li strong { color: var(--white); font-weight: 600; }
+
+    /* ---------- Close / CTA ---------- */
+    .cta {
+      text-align: center; margin: 3rem auto 4rem; max-width: 720px;
+      border: 1px solid rgba(212,175,55,0.4); border-radius: 20px;
+      background: linear-gradient(145deg, rgba(45,32,8,0.45), rgba(10,18,35,0.85));
+      padding: 2.75rem 1.75rem; box-shadow: 0 18px 50px rgba(0,0,0,0.4);
+    }
+    .cta h2 {
+      font-family: 'Cormorant Garamond', serif; font-weight: 700;
+      font-size: clamp(1.6rem, 4vw, 2.4rem); color: var(--gold-soft);
+      line-height: 1.2; margin-bottom: 1rem; text-wrap: balance;
+    }
+    .cta p { color: var(--white-dim); line-height: 1.6; font-size: 1.05rem; margin-bottom: 1.75rem; }
+    .cta-btn {
+      display: inline-block; text-decoration: none;
+      background: linear-gradient(135deg, var(--gold-soft), #8f6a16);
+      color: #ffffff; font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.98rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; padding: 1rem 2.25rem; border-radius: 12px;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.25);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 16px 32px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.25); }
+
+    /* ---------- Footer ---------- */
+    footer {
+      text-align: center; padding: 2.25rem 1.5rem; border-top: 1px solid rgba(212,175,55,0.15);
+    }
+    .footer-text { color: var(--white-dim); font-size: 0.8rem; line-height: 1.7; }
+    .footer-links { margin-top: 0.75rem; display: flex; gap: 1.25rem; justify-content: center; }
+    .footer-links a { color: var(--gold); text-decoration: none; font-size: 0.8rem; }
+
+    @media (max-width: 640px) {
+      nav { padding: 0.7rem 1rem; }
+      .nav-logo-name { display: none; }
+      .jd-highlight { flex-direction: column; text-align: center; align-items: center; }
+      .hero { padding: 2.5rem 0 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="/index.html" class="nav-logo">
+      <img src="digital-jd-logo.png" alt="Digital JD" />
+      <span class="nav-logo-name">Digital JD</span>
+    </a>
+    <a href="/index.html#tiers" class="nav-back">← Back to Plans</a>
+  </nav>
+
+  <main class="wrap">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="eyebrow">For HR, Executive Teams &amp; Organizational Leadership</div>
+      <h1>Build a Culture of <span class="accent">Decisive Leadership</span> — Across Your Whole Organization</h1>
+      <p class="sub">Digital JD Enterprise gives every manager, director, and executive the same on-demand leadership intelligence — so your people think more clearly, communicate with alignment, and make better decisions under pressure. Consistently. Org-wide.</p>
+
+      <!-- Dr. JD Castle highlight -->
+      <div class="jd-highlight">
+        <span class="badge">Personal Access</span>
+        <div>
+          <div class="jd-title">Monthly Leadership Sessions with Dr. JD Castle</div>
+          <div class="jd-desc">Beyond the platform, your leaders meet directly with Dr. JD Castle each month — a personal touchpoint to work through real challenges, sharpen strategy, and keep your leadership culture aligned at the highest level.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Accordion sections -->
+    <section class="sections">
+      <div class="sections-intro">Explore what Enterprise delivers — tap each section</div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">
+          <span><span class="num">01</span><span class="label">Why organizations bring in Digital JD</span></span>
+          <span class="icon" aria-hidden="true"></span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <ul>
+              <li><strong>Consistency across every manager.</strong> One shared standard for how leaders communicate, decide, and handle conflict — instead of dozens of managers improvising in dozens of different ways.</li>
+              <li><strong>Faster, calmer decisions under pressure.</strong> Your people get a structured thinking partner the moment a hard situation hits — not days later in a scheduled coaching session.</li>
+              <li><strong>Leadership development that actually scales.</strong> Reach every level of the organization, not just the few who get sent to executive coaching.</li>
+              <li><strong>Retention through capability.</strong> People stay where they're growing. Give managers real support and you reduce the friction that drives good people out.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">
+          <span><span class="num">02</span><span class="label">Built for the way organizations actually work</span></span>
+          <span class="icon" aria-hidden="true"></span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <ul>
+              <li><strong>Department and leadership-team deployment</strong> — rolled out to the groups that need it, at the pace that fits.</li>
+              <li><strong>Executive communication alignment systems</strong> — so leaders speak with a consistent, intentional voice.</li>
+              <li><strong>HR and organizational leadership integration</strong> — woven into how your people are developed and supported.</li>
+              <li><strong>Custom strategic frameworks and onboarding</strong> — tailored to your culture, not a generic template.</li>
+              <li><strong>Centralized rollout with support at every level</strong> — from front-line managers to the executive suite.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <button class="accordion-header" aria-expanded="false">
+          <span><span class="num">03</span><span class="label">Why HR leads this initiative</span></span>
+          <span class="icon" aria-hidden="true"></span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">
+            <ul>
+              <li><strong>Positions HR as the driver</strong> of a measurable, organization-wide leadership-capability initiative.</li>
+              <li><strong>One predictable agreement</strong> instead of scattered individual subscriptions to track and manage.</li>
+              <li><strong>A consistent leadership language</strong> that supports performance reviews, onboarding, and succession planning.</li>
+              <li><strong>Simple to bring to executive leadership</strong> for approval — with a clear, defensible ROI story.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Close / CTA -->
+    <section class="cta">
+      <h2>Let's design the right rollout for your organization.</h2>
+      <p>Every organization is different. We'll map Digital JD to your structure, your leadership goals, and your HR priorities — then build a deployment plan that fits.</p>
+      <a class="cta-btn" href="https://calendly.com/jdcastle" target="_blank" rel="noopener">Let's Have a Dialogue →</a>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="footer-text">© 2025 Digital JD &nbsp;·&nbsp; digitaljd.org<br><span style="font-size:0.7rem;letter-spacing:0.1em;">Leadership Intelligence System — Not a coaching product</span></div>
+    <div class="footer-links">
+      <a href="/privacy.html">Privacy</a>
+      <a href="/terms.html">Terms</a>
+      <a href="/index.html">Home</a>
+    </div>
+  </footer>
+
+  <script>
+    document.querySelectorAll('.accordion-header').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var item = btn.closest('.accordion-item');
+        var body = item.querySelector('.accordion-body');
+        var isOpen = item.classList.contains('open');
+
+        // Close all
+        document.querySelectorAll('.accordion-item').forEach(function (other) {
+          other.classList.remove('open');
+          other.querySelector('.accordion-body').style.maxHeight = null;
+          other.querySelector('.accordion-header').setAttribute('aria-expanded', 'false');
+        });
+
+        // Open this one if it was closed
+        if (!isOpen) {
+          item.classList.add('open');
+          body.style.maxHeight = body.scrollHeight + 'px';
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
