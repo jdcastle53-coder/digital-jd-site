@@ -10,18 +10,19 @@ const C = QR_SIZE / 2
 
 async function run() {
   // 1. Crop just the head out of the logo (exclude the "Digital JD" wordmark).
-  const HEAD_W = 330
-  const HEAD_H = 323
+  const HEAD_W = 400
+  const HEAD_H = 392
   const head = await sharp(path.join(ROOT, "digital-jd-logo.png"))
     .extract({ left: 58, top: 12, width: 478, height: 468 })
     .resize(HEAD_W, HEAD_H, { fit: "contain", background: { r: 0, g: 0, b: 0, alpha: 0 } })
     .png()
     .toBuffer()
 
-  // 2. Solid white badge behind the head (no navy fill). Error-correction
-  //    level H tolerates ~30% coverage; this badge stays well under that.
+  // 2. Solid white badge behind the head (no navy fill). Sized to give the
+  //    larger head a clean white surround. Error-correction level H tolerates
+  //    ~30% coverage; this badge stays well under that.
   const whiteBadge = Buffer.from(
-    `<svg width="${QR_SIZE}" height="${QR_SIZE}"><circle cx="${C}" cy="${C}" r="186" fill="#ffffff"/></svg>`,
+    `<svg width="${QR_SIZE}" height="${QR_SIZE}"><circle cx="${C}" cy="${C}" r="220" fill="#ffffff"/></svg>`,
   )
 
   // 3. Layer everything onto the QR.
