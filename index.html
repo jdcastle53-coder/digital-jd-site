@@ -2071,6 +2071,9 @@ const { data, error } = await window.supabaseClient.auth.signUp({
   email: email,
   password: password,
   options: {
+    // After the user clicks the confirmation link in their email,
+    // send them straight into the Digital JD Pro app (not the home page).
+    emailRedirectTo: 'https://digitaljd.org/jd-demo.php',
     data: {
       name: name
     }
