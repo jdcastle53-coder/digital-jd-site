@@ -1789,7 +1789,8 @@ document.addEventListener('DOMContentLoaded', function () {
     return `
       <div style="font-size:18px; font-weight:700; color:#f6d36b; margin-bottom:4px;">Your free access has ended</div>
       <div style="font-size:13px; color:#d7dcec; margin-bottom:12px;">Subscribe to continue using Digital JD. You can reactivate instantly at any time.</div>
-      <button onclick="window.location.href='${SPRINT_UPGRADE_URL}'" style="padding:10px 18px; border:none; border-radius:10px; font-weight:700; background:#d4af37; color:#0b1223; cursor:pointer;">Subscribe to Continue</button>
+      <button onclick="window.location.href='${SPRINT_UPGRADE_URL}'" style="padding:10px 18px; border:none; border-radius:10px; font-weight:700; background:#d4af37; color:#0b1223; cursor:pointer;">Subscribe Now</button>
+      <div style="font-size:12px; color:#aab2c8; margin-top:10px;">Want this for your team? HR can help bring Digital JD to your organization.</div>
     `;
   }
 
@@ -1831,7 +1832,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (systemStatus) systemStatus.innerText = 'Access Locked';
       if (micBtn) micBtn.style.display = 'none';
       sprintLockInput('Your free access has ended. Subscribe to continue using Digital JD.');
-      setSidebarCta('Subscribe to Continue');
+      setSidebarCta('Subscribe Now');
       showSprintBanner(lockedBannerHtml());
     }
   }
