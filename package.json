@@ -8,7 +8,9 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
-    "qrcode": "^1.5.4"
+    "jsqr": "^1.4.0",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.35.1"
   },
   "engines": {
     "node": ">=18"
