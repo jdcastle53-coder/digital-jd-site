@@ -1800,6 +1800,12 @@ document.addEventListener('DOMContentLoaded', function () {
     if (cta) cta.innerText = label;
   }
 
+  // Show or hide the entire input area (prompt, textarea, helper, sidebar buttons).
+  function setComposerVisible(visible) {
+    const composer = document.querySelector('.composer');
+    if (composer) composer.style.display = visible ? '' : 'none';
+  }
+
   function applySprintStage(createdAtIso, systemStatus) {
     const micBtn = document.getElementById('micBtn');
     const created = new Date(createdAtIso).getTime();
@@ -1828,6 +1834,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (daysSince < SPRINT_LEN_DAYS) {
       const daysLeft = SPRINT_LEN_DAYS - daysSince;
       if (systemStatus) systemStatus.innerText = `Executive Sprint — Day ${daysSince + 1} of 7`;
+      setComposerVisible(true);
       sprintEnableInput();
       if (micBtn) micBtn.style.display = '';
       setSidebarCta('Get on board with Digital JD');
@@ -1835,15 +1842,15 @@ document.addEventListener('DOMContentLoaded', function () {
     } else if (daysSince < ESSENTIAL_END_DAY) {
       const daysLeft = ESSENTIAL_END_DAY - daysSince;
       if (systemStatus) systemStatus.innerText = `Essential Plan — ${daysLeft} days left`;
+      setComposerVisible(true);
       sprintEnableInput();
       if (micBtn) micBtn.style.display = 'none'; // reduced features
       setSidebarCta('Get on board with Digital JD');
       showSprintBanner(essentialBannerHtml(daysLeft));
     } else {
+      // Locked: hide the entire input area so only the banner shows.
       if (systemStatus) systemStatus.innerText = 'Access Locked';
-      if (micBtn) micBtn.style.display = 'none';
-      sprintLockInput('Your free access has ended. Subscribe to continue using Digital JD.');
-      setSidebarCta('Subscribe Now');
+      setComposerVisible(false);
       showSprintBanner(lockedBannerHtml());
     }
   }
