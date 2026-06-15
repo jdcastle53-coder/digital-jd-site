@@ -1812,7 +1812,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     const dayMs = 24 * 60 * 60 * 1000;
-    const daysSince = Math.floor((Date.now() - created) / dayMs);
+    let daysSince = Math.floor((Date.now() - created) / dayMs);
+
+    // ---- TEMPORARY TESTING OVERRIDE (remove before public launch) ----
+    // Add ?simday=N to the URL to preview a stage, e.g.
+    //   ?simday=2  -> Sprint (5 days left)
+    //   ?simday=10 -> Essential
+    //   ?simday=40 -> Locked
+    const simDay = new URLSearchParams(window.location.search).get('simday');
+    if (simDay !== null && !isNaN(parseInt(simDay, 10))) {
+      daysSince = parseInt(simDay, 10);
+      console.log('[v0] Sprint simulation active — treating account as day', daysSince);
+    }
 
     if (daysSince < SPRINT_LEN_DAYS) {
       const daysLeft = SPRINT_LEN_DAYS - daysSince;
