@@ -139,6 +139,29 @@
       color: var(--black) !important;
     }
 
+    /* Gold pill button copied from the Executive Sprint banner ("Manage Subscription"). */
+    .manage-btn {
+      display: inline-block;
+      border: 1px solid rgba(201,168,76,0.75);
+      border-radius: 999px;
+      background: transparent;
+      color: #c9a84c !important;
+      padding: 0.45rem 1.3rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .manage-btn:hover {
+      background: rgba(201,168,76,0.12);
+      box-shadow: 0 0 14px rgba(201,168,76,0.18);
+      color: #c9a84c !important;
+    }
+
     #hero {
       position: relative;
       min-height: 100vh;
@@ -1578,8 +1601,8 @@ iframe {
 </a>
 </li>
       <li id="manage-sub-nav" style="display:none;">
-        <a class="nav-cta" href="#" onclick="openStripePortal(); return false;" style="background:linear-gradient(135deg,#c9a84c,#8f6a16);font-weight:600;">
-          Manage
+        <a class="manage-btn" href="#" onclick="openStripePortal(); return false;">
+          Manage Subscription
         </a>
       </li>
       <li id="signout-nav" style="display:none;">
