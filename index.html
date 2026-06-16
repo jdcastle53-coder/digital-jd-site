@@ -49,7 +49,6 @@
       justify-content: space-between;
       padding: 1rem 4rem;
       background: linear-gradient(to bottom, rgba(4,6,8,0.95), transparent);
-      -webkit-backdrop-filter: blur(4px);
       backdrop-filter: blur(4px);
     }
 
@@ -142,7 +141,6 @@
     #hero {
       position: relative;
       min-height: 100vh;
-      min-height: 100svh;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -339,7 +337,6 @@
       background: rgba(7,13,26,0.85);
       border-top: 1px solid rgba(0,180,216,0.15);
       border-bottom: 1px solid rgba(0,180,216,0.08);
-      -webkit-backdrop-filter: blur(12px);
       backdrop-filter: blur(12px);
     }
 
@@ -932,20 +929,20 @@ font-size:12px;
       border-top: 1px solid rgba(0,180,216,0.08);
     }
 
-.tiers-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1rem;
-  margin-top: 3.5rem;
-  }
+    .tiers-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 3.5rem;
+    }
 
-.tier-card {
-  background: var(--navy);
-  border: 1px solid rgba(240,244,248,0.07);
-  padding: 2rem 1.5rem;
-  position: relative;
-  transition: border-color 0.3s, transform 0.3s;
-  }
+    .tier-card {
+      background: var(--navy);
+      border: 1px solid rgba(240,244,248,0.07);
+      padding: 2.5rem 2rem;
+      position: relative;
+      transition: border-color 0.3s, transform 0.3s;
+    }
 .tier-card:hover {
   transform: translateY(-4px);
 }
@@ -1062,7 +1059,6 @@ font-size:12px;
       position: fixed;
       inset: 0;
       background: rgba(4,6,8,0.92);
-      -webkit-backdrop-filter: blur(8px);
       backdrop-filter: blur(8px);
       z-index: 1000;
       display: flex;
@@ -1553,6 +1549,7 @@ iframe {
     <a href="#" class="nav-logo">
       <div class="nav-logo-left">
         <img src="digital-jd-logo.png" alt="Digital JD" />
+        <span class="nav-logo-name">Digital JD</span>
       </div>
       <div class="nav-brand-stack" aria-label="Intelligent Leadership System">
         <div class="nav-brand-line">Intelligent</div>
@@ -1577,16 +1574,6 @@ iframe {
   Login
 </a>
 </li>
-      <li id="manage-sub-nav" style="display:none;">
-        <a class="nav-cta" href="#" onclick="openStripePortal(); return false;" style="background:linear-gradient(135deg,#c9a84c,#8f6a16);font-weight:600;">
-          Manage
-        </a>
-      </li>
-      <li id="signout-nav" style="display:none;">
-        <a class="nav-cta" href="#" onclick="signOut(); return false;" style="background:transparent;border:1px solid #c9a84c;color:#c9a84c;">
-          Sign Out
-        </a>
-      </li>
     </ul>
   </nav>
 
@@ -1898,7 +1885,7 @@ iframe {
 
     <div style="margin-top:1.25rem; padding:4px; border:2px solid #d4af37; border-radius:12px;">
       <div style="border:1px solid #d4af37; border-radius:10px;">
-        <a class="tier-btn tier-btn-pro" href="https://calendly.com/jdcastle" target="_blank"
+        <a class="tier-btn tier-btn-pro" href="/contact.html"
            style="display:block;text-align:center;background:linear-gradient(135deg,#d4af37,#8f6a16);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.95rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2);">
           Let's Have a Dialogue
         </a>
@@ -1912,7 +1899,7 @@ iframe {
 
 <footer>
   <div class="footer-text">© 2025 Digital JD &nbsp;·&nbsp; digitaljd.org<br><span style="font-size:0.55rem;letter-spacing:0.1em;">Leadership Intelligence System — Not a coaching product</span></div>
-  <div class="footer-links"><a href="/privacy.html" style="color:#d4af37;">Privacy</a><a href="/terms.html" style="color:#d4af37;">Terms</a><a href="#" onclick="openContactModal(); return false;" style="color:#d4af37;">Contact</a></div>
+  <div class="footer-links"><a href="/privacy.html" style="color:#d4af37;">Privacy</a><a href="/terms.html" style="color:#d4af37;">Terms</a><a href="/contact.html" style="color:#d4af37;">Contact</a></div>
 </footer>
 
   <div class="modal-overlay" id="sprintModal">
@@ -1936,20 +1923,6 @@ iframe {
     </div>
   </div>
 
-  <div class="modal-overlay" id="contactModal">
-    <div class="modal" style="position:relative;inset:auto;display:block;max-width:480px;width:90%;background:var(--deep);">
-      <button class="modal-close" onclick="closeContactModal()">×</button>
-      <div class="modal-eyebrow">Get In Touch</div>
-      <h2>Contact Dr. JD Castle</h2>
-      <p class="modal-sub">Choose how you'd like to connect — send a message directly, or book a live video call.</p>
-      <div class="modal-form" style="display:block;">
-        <a href="mailto:drjd@digitaljd.org?subject=Inquiry%20from%20Digital%20JD" class="btn-primary" style="display:block;width:100%;box-sizing:border-box;text-align:center;text-decoration:none;margin-bottom:0.8rem;clip-path:none;"><span>Send an Email →</span></a>
-        <a href="https://calendly.com/jdcastle" target="_blank" rel="noopener" class="btn-primary" style="display:block;width:100%;box-sizing:border-box;text-align:center;text-decoration:none;clip-path:none;background:linear-gradient(135deg,#d4af37,#8f6a16);"><span>Schedule a Video Call →</span></a>
-      </div>
-      <p class="modal-note">Email goes directly to drjd@digitaljd.org · Video calls are booked via Calendly.</p>
-    </div>
-  </div>
-
   <script>
     function openModal() {
       document.getElementById('sprintModal').classList.add('open');
@@ -1958,16 +1931,6 @@ iframe {
 
    function closeModal() {
   document.getElementById('sprintModal').classList.remove('open');
-  document.body.style.overflow = '';
-}
-
-function openContactModal() {
-  document.getElementById('contactModal').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeContactModal() {
-  document.getElementById('contactModal').classList.remove('open');
   document.body.style.overflow = '';
 }
 
@@ -2040,11 +2003,11 @@ if (error) {
   return;
 }
 
-localStorage.setItem('login_email', email);
+alert('Account created. Please check your email to confirm your account before logging in.');
+  localStorage.setItem('login_email', email);
   localStorage.setItem('login_name', name);
 
-  closeModal();
-  alert('Account created. Check your email and click the secure confirmation link to activate your account, then log in.');
+  alert('Check your email and click the secure login link to continue.');
 }
 
     document.addEventListener('keydown', function(e) {
@@ -2069,57 +2032,6 @@ async function forgotPassword() {
 
   alert('Password reset email sent. Check your inbox.');
 }
-
-// Sign out function
-async function signOut() {
-  const { error } = await window.supabaseClient.auth.signOut();
-  if (error) {
-    alert('Error signing out: ' + error.message);
-    return;
-  }
-  localStorage.removeItem('login_email');
-  localStorage.removeItem('login_name');
-  updateNavForAuthState(false);
-  alert('You have been signed out.');
-  window.location.href = '/';
-}
-
-// Open Stripe Customer Portal for subscription management
-function openStripePortal() {
-  // Redirect to Stripe Customer Portal
-  // Customers can update payment methods, switch plans, view invoices, and cancel
-  window.open('https://billing.stripe.com/p/login/3cI14mgxr1au4ks2bRdEs00', '_blank');
-}
-
-// Check authentication state and update nav
-async function checkAuthAndUpdateNav() {
-  const { data: { session } } = await window.supabaseClient.auth.getSession();
-  updateNavForAuthState(!!session);
-}
-
-// React to login/logout in real time so the nav is always accurate
-window.supabaseClient.auth.onAuthStateChange(function (event, session) {
-  updateNavForAuthState(!!session);
-});
-
-function updateNavForAuthState(isLoggedIn) {
-  const loginNav = document.querySelector('a[href="https://digitaljd.org/jd-demo.php"]');
-  const manageNav = document.getElementById('manage-sub-nav');
-  const signoutNav = document.getElementById('signout-nav');
-  
-  if (isLoggedIn) {
-    if (loginNav) loginNav.parentElement.style.display = 'none';
-    if (manageNav) manageNav.style.display = 'block';
-    if (signoutNav) signoutNav.style.display = 'block';
-  } else {
-    if (loginNav) loginNav.parentElement.style.display = 'block';
-    if (manageNav) manageNav.style.display = 'none';
-    if (signoutNav) signoutNav.style.display = 'none';
-  }
-}
-
-// Check auth state on page load
-document.addEventListener('DOMContentLoaded', checkAuthAndUpdateNav);
   </script>
        <div id="loginModal" class="modal-overlay">
   <div class="modal">

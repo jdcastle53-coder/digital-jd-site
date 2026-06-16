@@ -10,14 +10,15 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
   <script>
-// Reuse the single shared Supabase client created in auth.js
-// to avoid multiple-client session conflicts.
-const supabase = window.Auth.client;
+const supabase = window.supabase.createClient(
+  "https://hiejaayyeprfnrrukbam.supabase.co",
+  "sb_publishable_rds2HjpM6PVVgQVoJ5W8Dg_URB-vraV"
+);
 </script>
   
   <style>
     :root { --accent-blue: rgba(11,59,102,0.95); }
-    .glass { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); background: rgba(255,255,255,0.75); }
+    .glass { backdrop-filter: blur(10px); background: rgba(255,255,255,0.75); }
     .shadow-soft { box-shadow: 0 10px 30px rgba(0,0,0,.08); }
     .gradient { background: linear-gradient(135deg,#0ea5e9,#6366f1,#22c55e); }
     .chat-container{
