@@ -1637,6 +1637,26 @@ function stopDictationIfRunning() {
 let recognition;
 let isListening = false;
 
+// Keep the mic button and isListening flag in sync with the engine's real
+// state. These run whenever recognition actually starts or stops.
+function setMicListening() {
+  isListening = true;
+  const b = document.getElementById('micBtn');
+  if (b) {
+    b.innerText = '■ Stop';
+    b.style.background = '#7f1d1d';
+  }
+}
+
+function setMicIdle() {
+  isListening = false;
+  const b = document.getElementById('micBtn');
+  if (b) {
+    b.innerText = '🎙️ Dictate';
+    b.style.background = '#0b1223';
+  }
+}
+
 if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   recognition = new SpeechRecognition();
@@ -1645,6 +1665,12 @@ if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
   recognition.lang = 'en-US';
 
   var finalTranscript = '';
+
+  // Drive the button from the engine's own events so the UI never gets out of
+  // sync (the old code assumed start/stop always worked, which caused the
+  // "click does nothing" bug when the engine ended on its own after a pause).
+  recognition.onstart = setMicListening;
+  recognition.onend = setMicIdle;
 
 recognition.onresult = function(event) {
   let interimTranscript = '';
@@ -1666,7 +1692,10 @@ recognition.onresult = function(event) {
 };
 
   recognition.onerror = function(event) {
-    console.log('Speech recognition error:', event.error);
+    console.log('[v0] Speech recognition error:', event.error);
+    // onend fires right after an error and resets the button, but reset here
+    // too so the UI is never left stuck on "Stop".
+    setMicIdle();
   };
 }
 
@@ -1679,15 +1708,20 @@ if (micBtn) {
     }
 
     if (!isListening) {
-      recognition.start();
-      isListening = true;
-      micBtn.innerText = '■ Stop';
-      micBtn.style.background = '#7f1d1d';
+      try {
+        recognition.start(); // onstart flips the button to "Stop"
+      } catch (err) {
+        // start() throws if the engine is mid-shutdown; force it clean so the
+        // next click works instead of silently doing nothing.
+        console.log('[v0] recognition.start() failed, resetting:', err.message);
+        try { recognition.stop(); } catch (e) {}
+        setMicIdle();
+      }
     } else {
-      recognition.stop();
-      isListening = false;
-      micBtn.innerText = '🎙️ Dictate';
-      micBtn.style.background = '#0b1223';
+      try {
+        recognition.stop(); // onend flips the button back to "Dictate"
+      } catch (e) {}
+      setMicIdle();
     }
   });
 }
