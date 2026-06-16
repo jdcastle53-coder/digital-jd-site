@@ -1595,9 +1595,9 @@ iframe {
           No Commitment<br>No Credit Card<br>No Contract
         </div>
       </li>
-      <li>
-<a class="nav-cta" href="https://digitaljd.org/jd-demo.php">
-  Login
+      <li id="login-nav">
+<a class="nav-cta" href="#" onclick="openLoginModal(); return false;">
+  Sign In
 </a>
 </li>
       <li id="manage-sub-nav" style="display:none;">
@@ -2195,16 +2195,16 @@ window.supabaseClient.auth.onAuthStateChange(function (event, session) {
 });
 
 function updateNavForAuthState(isLoggedIn) {
-  const loginNav = document.querySelector('a[href="https://digitaljd.org/jd-demo.php"]');
+  const loginNav = document.getElementById('login-nav');
   const manageNav = document.getElementById('manage-sub-nav');
   const signoutNav = document.getElementById('signout-nav');
   
   if (isLoggedIn) {
-    if (loginNav) loginNav.parentElement.style.display = 'none';
+    if (loginNav) loginNav.style.display = 'none';
     if (manageNav) manageNav.style.display = 'block';
     if (signoutNav) signoutNav.style.display = 'block';
   } else {
-    if (loginNav) loginNav.parentElement.style.display = 'block';
+    if (loginNav) loginNav.style.display = 'block';
     if (manageNav) manageNav.style.display = 'none';
     if (signoutNav) signoutNav.style.display = 'none';
   }
@@ -2214,19 +2214,21 @@ function updateNavForAuthState(isLoggedIn) {
 document.addEventListener('DOMContentLoaded', checkAuthAndUpdateNav);
   </script>
        <div id="loginModal" class="modal-overlay">
-  <div class="modal">
-    <button id="closeLoginModal" class="modal-close">&times;</button>
+  <div class="modal" style="position:relative;inset:auto;display:block;max-width:480px;width:90%;background:var(--deep);padding:3rem;">
+    <button id="closeLoginModal" class="modal-close" onclick="closeLoginModal()">&times;</button>
 
+    <div class="modal-eyebrow">Member Access</div>
     <h2>Welcome Back</h2>
-    <p>Log in to continue your Digital JD session.</p>
+    <p class="modal-sub">Log in to continue your Digital JD session.</p>
 
-    <input type="email" id="loginEmail" placeholder="Email" />
-    <input type="password" id="loginPassword" placeholder="Password" />
-    <button type="button" onclick="forgotPassword()" style="background:none;border:none;color:#f6d36b;margin-top:10px;cursor:pointer;">
-  Forgot Password?
-</button>
-
-  <button id="submitLoginBtn" onclick="submitLogin()">Login</button>
+    <div class="modal-form">
+      <input type="email" id="loginEmail" placeholder="Email" />
+      <input type="password" id="loginPassword" placeholder="Password" />
+      <button id="submitLoginBtn" class="btn-primary" onclick="submitLogin()">Login</button>
+      <button type="button" onclick="forgotPassword()" style="background:none;border:none;color:#f6d36b;margin-top:14px;cursor:pointer;width:100%;font-family:'Barlow Condensed',sans-serif;letter-spacing:0.08em;text-transform:uppercase;font-size:0.7rem;">
+        Forgot Password?
+      </button>
+    </div>
   </div>
 </div>
  
