@@ -1259,52 +1259,6 @@ font-size:12px;
   display: none;
 }
 
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.65);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.modal-content {
-  background: #111827;
-  color: white;
-  padding: 32px;
-  border-radius: 16px;
-  width: 100%;
-  max-width: 420px;
-  position: relative;
-}
-
-.modal-content input {
-  width: 100%;
-  margin: 10px 0;
-  padding: 14px;
-  border-radius: 8px;
-  border: 1px solid #374151;
-}
-
-.modal-content button {
-  width: 100%;
-  margin-top: 14px;
-  padding: 14px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-}
-
-.modal-close {
-  position: absolute;
-  top: 10px;
-  right: 14px;
-  width: auto !important;
-  background: transparent;
-  color: white;
-  font-size: 28px;
-}
 /* ================================
    MOBILE RESPONSIVE RESCUE PATCH
    Digital JD Launch Fix
@@ -2003,11 +1957,19 @@ if (error) {
   return;
 }
 
-alert('Account created. Please check your email to confirm your account before logging in.');
   localStorage.setItem('login_email', email);
   localStorage.setItem('login_name', name);
 
-  alert('Check your email and click the secure login link to continue.');
+  // Show the branded blue/gold success panel instead of plain browser pop-ups
+  const modal = document.getElementById('sprintModal');
+  document.getElementById('modalFormWrap').style.display = 'none';
+  const heading = modal.querySelector('h2');
+  if (heading) heading.style.display = 'none';
+  const sub = modal.querySelector('.modal-sub');
+  if (sub) sub.style.display = 'none';
+  const note = modal.querySelector('.modal-note');
+  if (note) note.style.display = 'none';
+  document.getElementById('modalSuccess').style.display = 'block';
 }
 
     document.addEventListener('keydown', function(e) {
