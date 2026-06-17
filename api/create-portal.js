@@ -5,9 +5,10 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const stripeKey = process.env.STRIPE_SECRET_KEY;
+  // Live secret key is stored under STRIPE_ACCESS_TOKEN; fall back to STRIPE_SECRET_KEY
+  const stripeKey = process.env.STRIPE_ACCESS_TOKEN || process.env.STRIPE_SECRET_KEY;
   if (!stripeKey) {
-    console.error("[CREATE-PORTAL] STRIPE_SECRET_KEY not set");
+    console.error("[CREATE-PORTAL] No Stripe secret key set");
     return res.status(500).json({ error: "Server configuration error" });
   }
 
