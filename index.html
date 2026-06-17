@@ -2093,6 +2093,17 @@ async function startCheckout(tier, evt) {
     filter:drop-shadow(0 0 6px rgba(255,210,90,.6));
   }
   .founding-pill strong{ color:#ffffff; font-weight:700; }
+
+  /* On phones the card is narrow: lift the pill fully above the card so it
+     never overlaps the "Most Popular" tag, and add clearance above. */
+  @media (max-width: 640px){
+    #proFoundingCard{ margin-top:2.5rem; }
+    .founding-pill{
+      top:-34px;
+      font-size:0.72rem;
+      padding:0.45rem 0.9rem;
+    }
+  }
 </style>
 
 <script>
