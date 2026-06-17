@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Founding Member Badge — Live Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0a0f1a;
+    --gold:#d4af37;
+    --gold-line:#f0c24f;
+    --gold-bright:#ffe08c;
+    --blue:#38bdf8;
+    --white-dim:rgba(240,244,248,0.6);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:#04070d;
+    color:#f0f4f8;
+    font-family:'Barlow',sans-serif;
+    min-height:100vh;
+    padding:40px 20px 80px;
+  }
+  .intro{
+    max-width:760px;
+    margin:0 auto 40px;
+    text-align:center;
+  }
+  .intro h1{
+    font-family:'Cormorant Garamond',serif;
+    font-weight:600;
+    font-size:2.2rem;
+    margin:0 0 0.6rem;
+    color:#f0f4f8;
+  }
+  .intro p{
+    color:rgba(240,244,248,0.7);
+    line-height:1.6;
+    font-size:1rem;
+    margin:0 auto 1.6rem;
+    max-width:620px;
+  }
+  .demo-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:0.5rem;
+    background:linear-gradient(135deg,#38bdf8,#2563eb);
+    color:#fff;
+    border:none;
+    cursor:pointer;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:1rem;
+    font-weight:600;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    padding:0.85rem 1.6rem;
+    border-radius:10px;
+    box-shadow:0 6px 16px rgba(0,0,0,0.3);
+    transition:transform 0.15s ease;
+  }
+  .demo-btn:hover{ transform:translateY(-2px); }
+  .demo-hint{
+    margin-top:0.8rem;
+    font-size:0.85rem;
+    color:rgba(240,244,248,0.5);
+    font-style:italic;
+  }
+
+  /* ---- PRICING CARDS (matching the REAL site borders) ---- */
+  .tiers{
+    display:flex;
+    gap:1.5rem;
+    justify-content:center;
+    align-items:stretch;
+    flex-wrap:wrap;
+    max-width:1100px;
+    margin:0 auto;
+  }
+  .tier-card{
+    width:300px;
+    background:var(--navy);
+    border-radius:14px;
+    padding:2.4rem 1.8rem 2rem;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+  /* Essentials = blue 3px (real site) */
+  .tier-card.essentials{ border:3px solid #38bdf8; }
+  /* Pro = white 3px, "Most Popular" (real site) */
+  .tier-card.featured{
+    border:3px solid #ffffff;
+    background:linear-gradient(135deg, rgba(212,175,55,0.08), var(--navy));
+    overflow:visible;
+  }
+  /* Executive = gold 3px + gold ring (real site) */
+  .tier-card.executive{
+    border:3px solid #d4af37;
+    box-shadow:0 0 0 1px #d4af37;
+  }
+  .tier-featured-tag{
+    position:absolute;
+    top:-12px;
+    right:18px;
+    background:#ffffff;
+    color:#0a0f1a;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:0.65rem;
+    font-weight:700;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    padding:0.25rem 0.7rem;
+    border-radius:4px;
+  }
+  .tier-name{
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:0.85rem;
+    letter-spacing:0.22em;
+    text-transform:uppercase;
+    color:var(--blue);
+    font-weight:700;
+    margin-bottom:0.8rem;
+  }
+  .tier-card.executive .tier-name{ color:var(--gold); }
+  .tier-price{
+    font-family:'Cormorant Garamond',serif;
+    font-size:3rem;
+    font-weight:600;
+    line-height:1;
+    margin-bottom:0.3rem;
+  }
+  .tier-price span{ font-size:1rem; color:rgba(240,244,248,0.6); }
+  .tier-desc{
+    color:rgba(240,244,248,0.65);
+    font-size:0.92rem;
+    line-height:1.6;
+    margin:1rem 0 1.8rem;
+    flex-grow:1;
+  }
+  .tier-btn{
+    display:block;
+    text-align:center;
+    background:linear-gradient(135deg,#38bdf8,#2563eb);
+    color:#fff;
+    text-decoration:none;
+    font-family:Arial, Helvetica, sans-serif;
+    font-size:0.95rem;
+    font-weight:500;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    padding:0.9rem 1rem;
+    border-radius:10px;
+    box-shadow:0 6px 14px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
+  }
+
+  /* ---- FOUNDING MEMBER GOLD PILL (gold border only) ---- */
+  .founding-pill{
+    position:absolute;
+    top:-18px;
+    left:50%;
+    transform:translateX(-50%) translateY(10px);
+    z-index:5;
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+    white-space:nowrap;
+
+    /* PhD/Executive gold tone, GOLD border only */
+    border:1.5px solid var(--gold-line);
+    background:
+      radial-gradient(circle at center, rgba(255,195,0,.30), transparent 70%),
+      linear-gradient(180deg,#2a1a05 0%, #090806 100%);
+    box-shadow:
+      0 0 12px rgba(255,210,90,.55),
+      0 0 26px rgba(255,190,0,.30),
+      0 4px 10px rgba(0,0,0,0.4);
+
+    padding:0.5rem 1.1rem;
+    border-radius:999px;
+
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:0.8rem;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+    text-shadow:0 0 10px rgba(255,220,120,.4);
+
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.7s ease, transform 0.7s cubic-bezier(0.22,1,0.36,1);
+  }
+  .founding-pill.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+    pointer-events:auto;
+  }
+  .founding-pill .star{
+    color:var(--gold-line);
+    font-size:0.9rem;
+    filter:drop-shadow(0 0 6px rgba(255,210,90,.6));
+  }
+  .founding-pill strong{ color:#fff; font-weight:700; }
+</style>
+</head>
+<body>
+
+  <div class="intro">
+    <h1>Founding Member Badge — Live Preview</h1>
+    <p>Borders now match your real site exactly: Essentials blue, Pro white ("Most Popular"), Executive gold. The only new element is the gold pill — and it now has a gold border only, no blue trim. Click below to watch it appear over the top border of the Pro card.</p>
+    <button class="demo-btn" onclick="triggerBadge()">&#9654; Show me how it appears</button>
+    <div class="demo-hint">(On the live site this fires automatically 5 seconds after the pricing section is viewed.)</div>
+  </div>
+
+  <div class="tiers">
+    <div class="tier-card essentials">
+      <div class="tier-name">Digital JD Essentials</div>
+      <div class="tier-price">$49<span>/mo</span></div>
+      <div class="tier-desc">Core executive clarity, on demand. Structured situational analysis whenever you need it.</div>
+      <a class="tier-btn" href="#">Get Essentials</a>
+    </div>
+
+    <div class="tier-card featured">
+      <div class="tier-featured-tag">Most Popular</div>
+      <div class="founding-pill" id="foundingPill">
+        <span class="star">&#9733;</span>
+        First 50 members &mdash; <strong>Lifetime $99</strong>
+      </div>
+      <div class="tier-name">Digital JD Pro</div>
+      <div class="tier-price">$149<span>/mo</span></div>
+      <div class="tier-desc">The complete thinking system. Full strategic insight and executive recommendations on every decision.</div>
+      <a class="tier-btn" href="#">Get Pro</a>
+    </div>
+
+    <div class="tier-card executive">
+      <div class="tier-name">Digital JD Executive</div>
+      <div class="tier-price">$399<span>/mo</span></div>
+      <div class="tier-desc">Priority access and the full executive suite for leaders operating at the highest level.</div>
+      <a class="tier-btn" href="#">Get Executive</a>
+    </div>
+  </div>
+
+  <script>
+    function triggerBadge(){
+      var pill = document.getElementById('foundingPill');
+      pill.classList.remove('show');
+      void pill.offsetWidth; /* force reflow so it can replay */
+      setTimeout(function(){ pill.classList.add('show'); }, 150);
+    }
+  </script>
+
+</body>
+</html>

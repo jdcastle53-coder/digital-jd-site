@@ -929,12 +929,12 @@ font-size:12px;
       border-top: 1px solid rgba(0,180,216,0.08);
     }
 
-    .tiers-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5rem;
-      margin-top: 3.5rem;
-    }
+  .tiers-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+  margin-top: 3.5rem;
+  }
 
     .tier-card {
       background: var(--navy);
@@ -1737,7 +1737,7 @@ iframe {
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $490 / year <span style="color:#d4af37;font-style:italic;">(save $98)</span></div>
           </div>
       <div style="margin-top:1.25rem;">
-  <a class="tier-btn tier-btn-lite" href="https://buy.stripe.com/00w9ASftn1aueZ6eYDdEs02"
+  <a class="tier-btn tier-btn-lite" href="#" onclick="startCheckout('essentials', event)"
      style="display:block;text-align:center;
      background:linear-gradient(135deg,#38bdf8,#2563eb);
      color:#ffffff;
@@ -1756,8 +1756,12 @@ iframe {
 </div>
         </div>
 
-       <div class="tier-card featured" style="border:3px solid #ffffff;">
+       <div class="tier-card featured" id="proFoundingCard" style="border:3px solid #ffffff;overflow:visible;">
           <div class="tier-featured-tag">Most Popular</div>
+          <div class="founding-pill" id="foundingPill">
+            <span class="founding-star">&#9733;</span>
+            First 50 members &mdash; <strong>Lifetime $99</strong>
+          </div>
          <div class="tier-name">Professional Tier</div>
 <div class="tier-title">Digital JD Pro</div>
           <ul class="tier-items">
@@ -1772,7 +1776,7 @@ iframe {
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $1490 / year <span style="color:#d4af37;font-style:italic;">(save $298)</span></div>
           </div>
       <div style="margin-top:1.25rem;">
-  <a class="tier-btn tier-btn-core" href="https://buy.stripe.com/fZu4gychbbP84kseYDdEs01"
+  <a class="tier-btn tier-btn-core" href="#" onclick="startCheckout('pro', event)"
      style="display:block;text-align:center;
      background:linear-gradient(135deg,#38bdf8,#2563eb);
      color:#ffffff;
@@ -1811,7 +1815,7 @@ iframe {
 
     <div style="margin-top:1.25rem; padding:4px; border:2px solid #d4af37; border-radius:12px;">
       <div style="border:1px solid #d4af37; border-radius:10px;">
-        <a class="tier-btn tier-btn-pro" href="https://buy.stripe.com/3cI14mgxr1au4ks2bRdEs00"
+        <a class="tier-btn tier-btn-pro" href="#" onclick="startCheckout('executive', event)"
            style="display:block;text-align:center;background:linear-gradient(135deg,#38bdf8,#2563eb);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.95rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2);">
           Enter Executive Tier
         </a>
@@ -2012,5 +2016,115 @@ async function forgotPassword() {
   </div>
 </div>
  
+<script>
+async function startCheckout(tier, evt) {
+  if (evt) evt.preventDefault();
+
+  // Try to pass the signed-in user's email so the subscription binds to their account
+  let email;
+  try {
+    if (window.Auth && window.Auth.client) {
+      const { data } = await window.Auth.client.auth.getSession();
+      email = data && data.session && data.session.user ? data.session.user.email : undefined;
+    }
+  } catch (e) {
+    // Not signed in — Stripe will collect the email at checkout
+  }
+
+  try {
+    const res = await fetch("/api/create-checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tier, email }),
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert(data.error || "Could not start checkout. Please try again.");
+    }
+  } catch (e) {
+    alert("Could not start checkout. Please try again.");
+  }
+}
+</script>
+
+<style>
+  /* ---- FOUNDING MEMBER GOLD PILL (Pro card only) ---- */
+  .founding-pill{
+    position:absolute;
+    top:-18px;
+    left:50%;
+    transform:translateX(-50%) translateY(10px);
+    z-index:5;
+    display:flex;
+    align-items:center;
+    gap:0.5rem;
+    white-space:nowrap;
+    border:1.5px solid #f0c24f;
+    background:
+      radial-gradient(circle at center, rgba(255,195,0,.30), transparent 70%),
+      linear-gradient(180deg,#2a1a05 0%, #090806 100%);
+    box-shadow:
+      0 0 12px rgba(255,210,90,.55),
+      0 0 26px rgba(255,190,0,.30),
+      0 4px 10px rgba(0,0,0,0.4);
+    padding:0.5rem 1.1rem;
+    border-radius:999px;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:0.8rem;
+    font-weight:700;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    color:#ffe08c;
+    text-shadow:0 0 10px rgba(255,220,120,.4);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.7s ease, transform 0.7s cubic-bezier(0.22,1,0.36,1);
+  }
+  .founding-pill.show{
+    opacity:1;
+    transform:translateX(-50%) translateY(0);
+    pointer-events:auto;
+  }
+  .founding-pill .founding-star{
+    color:#f0c24f;
+    font-size:0.9rem;
+    filter:drop-shadow(0 0 6px rgba(255,210,90,.6));
+  }
+  .founding-pill strong{ color:#ffffff; font-weight:700; }
+
+  /* On phones the card is narrow: lift the pill fully above the card so it
+     never overlaps the "Most Popular" tag, and add clearance above. */
+  @media (max-width: 640px){
+    #proFoundingCard{ margin-top:2.5rem; }
+    .founding-pill{
+      top:-34px;
+      font-size:0.72rem;
+      padding:0.45rem 0.9rem;
+    }
+  }
+</style>
+
+<script>
+  // Show the Founding Member pill 5 seconds after the Pro card is scrolled into view; it then stays.
+  (function(){
+    var card = document.getElementById('proFoundingCard');
+    var pill = document.getElementById('foundingPill');
+    if (!card || !pill) return;
+    var armed = false;
+    var observer = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if (entry.isIntersecting && !armed) {
+          armed = true;
+          setTimeout(function(){ pill.classList.add('show'); }, 5000);
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    observer.observe(card);
+  })();
+</script>
+
 </body>
 </html>
