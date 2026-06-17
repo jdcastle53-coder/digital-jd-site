@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Digital JD - Live Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Try Digital JD free. Ask any leadership question and get a Situational Analysis, JD's Comment, and an Action Plan instantly. No sign-up required." />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root { --accent-blue: #0b3b66; }
+    .gradient { background: linear-gradient(135deg,#0ea5e9,#6366f1,#22c55e); }
+    .shadow-soft { box-shadow: 0 10px 30px rgba(0,0,0,.08); }
+    .result-card {
+      border: 1px solid #e2e8f0;
+      border-left: 4px solid var(--accent-blue);
+      border-radius: 12px;
+      background: #ffffff;
+      padding: 1rem 1.25rem;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.05);
+    }
+    .result-card h4 {
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--accent-blue);
+      margin-bottom: 0.4rem;
+    }
+    .result-card p { color: #334155; line-height: 1.6; white-space: pre-wrap; }
+    .typing-dot { animation: blink 1.2s infinite both; }
+    .typing-dot:nth-child(2){ animation-delay: .2s; }
+    .typing-dot:nth-child(3){ animation-delay: .4s; }
+    @keyframes blink { 0%,80%,100%{opacity:.2} 40%{opacity:1} }
+    .mic-active { background:#dc2626 !important; color:#fff !important; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white/95 backdrop-blur border-b border-slate-200">
+    <div class="max-w-3xl mx-auto px-4 py-4 flex items-center justify-between">
+      <a href="/" class="flex items-center gap-2">
+        <img src="../images/ai-jd-logo.png" alt="Digital JD logo" class="w-12 h-12 rounded-xl" onerror="this.style.display='none'" />
+        <span class="font-semibold tracking-tight">Digital JD</span>
+      </a>
+      <a href="/" class="text-sm text-slate-600 hover:text-slate-900">Back to site</a>
+    </div>
+  </header>
+
+  <main class="max-w-3xl mx-auto px-4 py-8">
+    <div class="text-center mb-8">
+      <span class="inline-block text-xs font-semibold tracking-wide uppercase text-[var(--accent-blue)] bg-blue-50 rounded-full px-3 py-1 mb-3">Free Live Demo</span>
+      <h1 class="text-3xl md:text-4xl font-bold text-balance mb-3">Ask Digital JD anything</h1>
+      <p class="text-slate-600 text-pretty max-w-xl mx-auto leading-relaxed">Describe a leadership challenge and get a structured response: a Situational Analysis, JD&apos;s Comment, and a clear Action Plan. No sign-up required.</p>
+    </div>
+
+    <!-- Input -->
+    <div class="bg-white rounded-2xl shadow-soft border border-slate-200 p-5 mb-6">
+      <label for="questionInput" class="block text-sm font-medium text-slate-700 mb-2">Your question</label>
+      <textarea
+        id="questionInput"
+        rows="4"
+        class="w-full p-3 border border-slate-300 rounded-lg resize-y focus:ring-2 focus:ring-blue-500 focus:border-transparent leading-relaxed"
+        placeholder="e.g., How do I handle a conflict between two senior executives who both report to me?"></textarea>
+
+      <div class="flex flex-col sm:flex-row gap-3 mt-3">
+        <button
+          id="micButton"
+          type="button"
+          onclick="toggleDictation()"
+          class="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 text-slate-700 px-4 py-3 text-sm font-medium hover:bg-slate-100">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 10v2a7 7 0 01-14 0v-2M12 19v4M8 23h8"></path></svg>
+          <span id="micLabel">Dictate</span>
+        </button>
+        <button
+          id="askButton"
+          type="button"
+          onclick="askDigitalJD()"
+          class="flex-1 inline-flex items-center justify-center bg-[var(--accent-blue)] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
+          Get Digital JD&apos;s Insight
+        </button>
+      </div>
+      <p id="micHint" class="text-xs text-slate-400 mt-2 hidden">Listening... tap Dictate again to stop.</p>
+    </div>
+
+    <!-- Results -->
+    <div id="resultsArea" class="space-y-4 hidden">
+      <div class="result-card" id="cardSituational">
+        <h4>Situational Analysis</h4>
+        <p id="textSituational"></p>
+      </div>
+      <div class="result-card" id="cardComment">
+        <h4>JD&apos;s Comment</h4>
+        <p id="textComment"></p>
+      </div>
+      <div class="result-card" id="cardAction">
+        <h4>Action Plan</h4>
+        <p id="textAction"></p>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div id="loadingArea" class="hidden text-center py-8">
+      <div class="inline-flex items-center gap-1 text-[var(--accent-blue)]">
+        <span class="typing-dot w-2.5 h-2.5 rounded-full bg-current"></span>
+        <span class="typing-dot w-2.5 h-2.5 rounded-full bg-current"></span>
+        <span class="typing-dot w-2.5 h-2.5 rounded-full bg-current"></span>
+      </div>
+      <p class="text-slate-500 text-sm mt-3">Digital JD is thinking...</p>
+    </div>
+
+    <!-- Error -->
+    <div id="errorArea" class="hidden bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm"></div>
+
+    <!-- CTA -->
+    <div class="mt-10 text-center border-t border-slate-200 pt-8">
+      <p class="text-slate-600 mb-3">Want the full experience with saved history and the Executive Sprint?</p>
+      <a href="/#pricing" class="inline-flex items-center rounded-xl bg-slate-900 text-white px-6 py-3 text-sm font-semibold shadow-soft hover:bg-black">See Access Tiers</a>
+    </div>
+  </main>
+
+  <script>
+    // ---- Dictation (Web Speech API) ----
+    let recognition = null;
+    let listening = false;
+
+    function setupRecognition() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) return null;
+      const r = new SR();
+      r.continuous = true;
+      r.interimResults = true;
+      r.lang = 'en-US';
+
+      const textarea = document.getElementById('questionInput');
+      let baseText = '';
+
+      r.onstart = () => { baseText = textarea.value ? textarea.value.trim() + ' ' : ''; };
+      r.onresult = (event) => {
+        let finalText = '';
+        let interimText = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const t = event.results[i][0].transcript;
+          if (event.results[i].isFinal) finalText += t + ' ';
+          else interimText += t;
+        }
+        if (finalText) baseText += finalText;
+        // Show committed text + current interim guess, replacing (not stacking) interim.
+        textarea.value = (baseText + interimText).replace(/\s+/g, ' ').trimStart();
+      };
+      r.onerror = () => stopDictation();
+      r.onend = () => { if (listening) { try { r.start(); } catch (e) {} } };
+      return r;
+    }
+
+    function toggleDictation() {
+      if (!recognition) recognition = setupRecognition();
+      if (!recognition) {
+        alert('Your browser does not support built-in dictation. Please type your question, or use your keyboard microphone.');
+        return;
+      }
+      if (listening) { stopDictation(); } else { startDictation(); }
+    }
+
+    function startDictation() {
+      try {
+        recognition.start();
+        listening = true;
+        document.getElementById('micButton').classList.add('mic-active');
+        document.getElementById('micLabel').textContent = 'Stop';
+        document.getElementById('micHint').classList.remove('hidden');
+      } catch (e) {}
+    }
+
+    function stopDictation() {
+      listening = false;
+      try { recognition && recognition.stop(); } catch (e) {}
+      document.getElementById('micButton').classList.remove('mic-active');
+      document.getElementById('micLabel').textContent = 'Dictate';
+      document.getElementById('micHint').classList.add('hidden');
+    }
+
+    // ---- Ask Digital JD ----
+    async function askDigitalJD() {
+      const question = document.getElementById('questionInput').value.trim();
+      const errorArea = document.getElementById('errorArea');
+      const resultsArea = document.getElementById('resultsArea');
+      const loadingArea = document.getElementById('loadingArea');
+      const askButton = document.getElementById('askButton');
+
+      errorArea.classList.add('hidden');
+      if (!question) {
+        errorArea.textContent = 'Please enter a question first.';
+        errorArea.classList.remove('hidden');
+        return;
+      }
+      if (listening) stopDictation();
+
+      resultsArea.classList.add('hidden');
+      loadingArea.classList.remove('hidden');
+      askButton.disabled = true;
+
+      // Ask the model to return three clearly-labeled sections so we can box them.
+      const formatted =
+        question +
+        "\n\nRespond in exactly three sections, each starting with these exact headers on their own line:\n" +
+        "Situational Analysis:\nJD's Comment:\nAction Plan:";
+
+      try {
+        const response = await fetch('/api/jd-brain-gateway', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: formatted })
+        });
+        const data = await response.json();
+        if (!response.ok || !data.reply) {
+          throw new Error(data.error || 'No response received.');
+        }
+        renderReply(data.reply);
+      } catch (e) {
+        errorArea.textContent = 'Sorry, something went wrong: ' + e.message + ' Please try again.';
+        errorArea.classList.remove('hidden');
+      } finally {
+        loadingArea.classList.add('hidden');
+        askButton.disabled = false;
+      }
+    }
+
+    function extractSection(text, label, nextLabels) {
+      const startRe = new RegExp(label + '\\s*:?', 'i');
+      const startMatch = text.match(startRe);
+      if (!startMatch) return null;
+      let rest = text.slice(startMatch.index + startMatch[0].length);
+      let cut = rest.length;
+      nextLabels.forEach(function (nl) {
+        const m = rest.match(new RegExp(nl + '\\s*:?', 'i'));
+        if (m && m.index < cut) cut = m.index;
+      });
+      return rest.slice(0, cut).replace(/^[\s\-*:]+/, '').trim();
+    }
+
+    function renderReply(reply) {
+      const sit = extractSection(reply, 'Situational Analysis', ["JD'?s Comment", 'Action Plan']);
+      const com = extractSection(reply, "JD'?s Comment", ['Action Plan', 'Situational Analysis']);
+      const act = extractSection(reply, 'Action Plan', ["JD'?s Comment", 'Situational Analysis']);
+
+      const resultsArea = document.getElementById('resultsArea');
+      const cardComment = document.getElementById('cardComment');
+      const cardAction = document.getElementById('cardAction');
+
+      if (sit || com || act) {
+        document.getElementById('textSituational').textContent = sit || reply;
+        document.querySelector('#cardSituational h4').textContent = 'Situational Analysis';
+        cardComment.style.display = com ? '' : 'none';
+        cardAction.style.display = act ? '' : 'none';
+        if (com) document.getElementById('textComment').textContent = com;
+        if (act) document.getElementById('textAction').textContent = act;
+      } else {
+        // Fallback: no headers detected, show full reply in the first card.
+        document.querySelector('#cardSituational h4').textContent = "Digital JD's Response";
+        document.getElementById('textSituational').textContent = reply;
+        cardComment.style.display = 'none';
+        cardAction.style.display = 'none';
+      }
+      resultsArea.classList.remove('hidden');
+      resultsArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Submit with Cmd/Ctrl+Enter
+    document.getElementById('questionInput').addEventListener('keydown', function (e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') askDigitalJD();
+    });
+  </script>
+</body>
+</html>
