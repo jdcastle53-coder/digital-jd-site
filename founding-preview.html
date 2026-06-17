@@ -9,9 +9,11 @@
 <style>
   :root{
     --navy:#0a0f1a;
-    --gold:#f0c24f;
+    --gold:#d4af37;
+    --gold-line:#f0c24f;
     --gold-bright:#ffe08c;
-    --blue:#00b4d8;
+    --blue:#38bdf8;
+    --white-dim:rgba(240,244,248,0.6);
   }
   *{box-sizing:border-box;}
   body{
@@ -67,7 +69,7 @@
     font-style:italic;
   }
 
-  /* ---- PRICING CARDS ---- */
+  /* ---- PRICING CARDS (matching the REAL site borders) ---- */
   .tiers{
     display:flex;
     gap:1.5rem;
@@ -79,26 +81,39 @@
   }
   .tier-card{
     width:300px;
-    background:linear-gradient(135deg, rgba(240,244,248,0.045), var(--navy));
-    border:1px solid rgba(240,244,248,0.14);
-    border-radius:6px;
+    background:var(--navy);
+    border-radius:14px;
     padding:2.4rem 1.8rem 2rem;
     display:flex;
     flex-direction:column;
     position:relative;
   }
-  /* Pro = double gold border, exactly like the real site */
-  .tier-card.pro-tier{
-    border:2px solid var(--gold);
+  /* Essentials = blue 3px (real site) */
+  .tier-card.essentials{ border:3px solid #38bdf8; }
+  /* Pro = white 3px, "Most Popular" (real site) */
+  .tier-card.featured{
+    border:3px solid #ffffff;
+    background:linear-gradient(135deg, rgba(212,175,55,0.08), var(--navy));
     overflow:visible;
   }
-  .tier-card.pro-tier::before{
-    content:'';
+  /* Executive = gold 3px + gold ring (real site) */
+  .tier-card.executive{
+    border:3px solid #d4af37;
+    box-shadow:0 0 0 1px #d4af37;
+  }
+  .tier-featured-tag{
     position:absolute;
-    inset:-6px;
-    border:1px solid var(--gold);
-    border-radius:8px;
-    pointer-events:none;
+    top:-12px;
+    right:18px;
+    background:#ffffff;
+    color:#0a0f1a;
+    font-family:'Barlow Condensed',sans-serif;
+    font-size:0.65rem;
+    font-weight:700;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    padding:0.25rem 0.7rem;
+    border-radius:4px;
   }
   .tier-name{
     font-family:'Barlow Condensed',sans-serif;
@@ -109,7 +124,7 @@
     font-weight:700;
     margin-bottom:0.8rem;
   }
-  .tier-card.pro-tier .tier-name{ color:var(--gold); }
+  .tier-card.executive .tier-name{ color:var(--gold); }
   .tier-price{
     font-family:'Cormorant Garamond',serif;
     font-size:3rem;
@@ -141,7 +156,7 @@
     box-shadow:0 6px 14px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
   }
 
-  /* ---- FOUNDING MEMBER GOLD PILL ---- */
+  /* ---- FOUNDING MEMBER GOLD PILL (gold border only) ---- */
   .founding-pill{
     position:absolute;
     top:-18px;
@@ -153,8 +168,8 @@
     gap:0.5rem;
     white-space:nowrap;
 
-    /* PhD gold tone + blue trim */
-    border:1.5px solid var(--blue);
+    /* PhD/Executive gold tone, GOLD border only */
+    border:1.5px solid var(--gold-line);
     background:
       radial-gradient(circle at center, rgba(255,195,0,.30), transparent 70%),
       linear-gradient(180deg,#2a1a05 0%, #090806 100%);
@@ -184,7 +199,7 @@
     pointer-events:auto;
   }
   .founding-pill .star{
-    color:var(--gold);
+    color:var(--gold-line);
     font-size:0.9rem;
     filter:drop-shadow(0 0 6px rgba(255,210,90,.6));
   }
@@ -195,20 +210,21 @@
 
   <div class="intro">
     <h1>Founding Member Badge — Live Preview</h1>
-    <p>This is the floating gold pill in your Ph.D. / Executive gold tone with a blue trim. Click the button to watch it appear over the top border of the Digital JD Pro card, exactly as it will after 5 seconds on the real page.</p>
+    <p>Borders now match your real site exactly: Essentials blue, Pro white ("Most Popular"), Executive gold. The only new element is the gold pill — and it now has a gold border only, no blue trim. Click below to watch it appear over the top border of the Pro card.</p>
     <button class="demo-btn" onclick="triggerBadge()">&#9654; Show me how it appears</button>
     <div class="demo-hint">(On the live site this fires automatically 5 seconds after the pricing section is viewed.)</div>
   </div>
 
   <div class="tiers">
-    <div class="tier-card">
+    <div class="tier-card essentials">
       <div class="tier-name">Digital JD Essentials</div>
       <div class="tier-price">$49<span>/mo</span></div>
       <div class="tier-desc">Core executive clarity, on demand. Structured situational analysis whenever you need it.</div>
       <a class="tier-btn" href="#">Get Essentials</a>
     </div>
 
-    <div class="tier-card pro-tier">
+    <div class="tier-card featured">
+      <div class="tier-featured-tag">Most Popular</div>
       <div class="founding-pill" id="foundingPill">
         <span class="star">&#9733;</span>
         First 50 members &mdash; <strong>Lifetime $99</strong>
@@ -219,7 +235,7 @@
       <a class="tier-btn" href="#">Get Pro</a>
     </div>
 
-    <div class="tier-card">
+    <div class="tier-card executive">
       <div class="tier-name">Digital JD Executive</div>
       <div class="tier-price">$399<span>/mo</span></div>
       <div class="tier-desc">Priority access and the full executive suite for leaders operating at the highest level.</div>
