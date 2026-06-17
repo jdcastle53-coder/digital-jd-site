@@ -1737,7 +1737,7 @@ iframe {
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $490 / year <span style="color:#d4af37;font-style:italic;">(save $98)</span></div>
           </div>
       <div style="margin-top:1.25rem;">
-  <a class="tier-btn tier-btn-lite" href="https://buy.stripe.com/00w9ASftn1aueZ6eYDdEs02"
+  <a class="tier-btn tier-btn-lite" href="#" onclick="startCheckout('essentials', event)"
      style="display:block;text-align:center;
      background:linear-gradient(135deg,#38bdf8,#2563eb);
      color:#ffffff;
@@ -1772,7 +1772,7 @@ iframe {
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $1490 / year <span style="color:#d4af37;font-style:italic;">(save $298)</span></div>
           </div>
       <div style="margin-top:1.25rem;">
-  <a class="tier-btn tier-btn-core" href="https://buy.stripe.com/fZu4gychbbP84kseYDdEs01"
+  <a class="tier-btn tier-btn-core" href="#" onclick="startCheckout('pro', event)"
      style="display:block;text-align:center;
      background:linear-gradient(135deg,#38bdf8,#2563eb);
      color:#ffffff;
@@ -1811,7 +1811,7 @@ iframe {
 
     <div style="margin-top:1.25rem; padding:4px; border:2px solid #d4af37; border-radius:12px;">
       <div style="border:1px solid #d4af37; border-radius:10px;">
-        <a class="tier-btn tier-btn-pro" href="https://buy.stripe.com/3cI14mgxr1au4ks2bRdEs00"
+        <a class="tier-btn tier-btn-pro" href="#" onclick="startCheckout('executive', event)"
            style="display:block;text-align:center;background:linear-gradient(135deg,#38bdf8,#2563eb);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.95rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2);">
           Enter Executive Tier
         </a>
@@ -2012,5 +2012,38 @@ async function forgotPassword() {
   </div>
 </div>
  
+<script>
+async function startCheckout(tier, evt) {
+  if (evt) evt.preventDefault();
+
+  // Try to pass the signed-in user's email so the subscription binds to their account
+  let email;
+  try {
+    if (window.Auth && window.Auth.client) {
+      const { data } = await window.Auth.client.auth.getSession();
+      email = data && data.session && data.session.user ? data.session.user.email : undefined;
+    }
+  } catch (e) {
+    // Not signed in — Stripe will collect the email at checkout
+  }
+
+  try {
+    const res = await fetch("/api/create-checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ tier, email }),
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      alert(data.error || "Could not start checkout. Please try again.");
+    }
+  } catch (e) {
+    alert("Could not start checkout. Please try again.");
+  }
+}
+</script>
+
 </body>
 </html>

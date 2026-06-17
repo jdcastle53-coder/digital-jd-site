@@ -122,6 +122,9 @@ cursor:pointer;
           </svg>
           Fullscreen
         </button>
+        <button id="manageSubscriptionButton" class="hidden md:inline-flex items-center rounded-lg border border-slate-200 text-slate-700 px-3 py-2 text-sm hover:bg-slate-100">
+          Manage Subscription
+        </button>
         <button id="signOutButton" class="hidden md:inline-flex items-center rounded-lg border border-slate-200 text-slate-700 px-3 py-2 text-sm hover:bg-slate-100">
           Sign out
         </button>
@@ -216,7 +219,48 @@ cursor:pointer;
       if (signOutButton && window.Auth && window.Auth.enabled) {
         signOutButton.addEventListener('click', () => window.Auth.signOut());
       }
+
+      const manageSubscriptionButton = document.getElementById('manageSubscriptionButton');
+      if (manageSubscriptionButton) {
+        manageSubscriptionButton.addEventListener('click', openBillingPortal);
+      }
     });
+
+    async function openBillingPortal() {
+      const btn = document.getElementById('manageSubscriptionButton');
+      const original = btn ? btn.textContent : '';
+      if (btn) { btn.disabled = true; btn.textContent = 'Opening...'; }
+
+      let email;
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        email = user ? user.email : undefined;
+      } catch (e) {}
+
+      if (!email) {
+        alert('Please sign in to manage your subscription.');
+        if (btn) { btn.disabled = false; btn.textContent = original; }
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/create-portal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert(data.error || 'Could not open the billing portal.');
+        }
+      } catch (e) {
+        alert('Could not open the billing portal. Please try again.');
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = original; }
+      }
+    }
 
     function hideLoading() {
       document.getElementById('loadingOverlay').style.display = 'none';
