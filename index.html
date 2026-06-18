@@ -707,6 +707,49 @@ font-size:12px;
       border-top: 1px solid rgba(0,180,216,0.08);
     }
 
+    .clarity-slogan {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1.75rem;
+      margin-top: 3rem;
+      margin-bottom: -2.5rem;
+    }
+
+    .clarity-rule {
+      height: 1px;
+      width: clamp(2rem, 12vw, 9rem);
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+      flex-shrink: 0;
+    }
+
+    .clarity-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(1.9rem, 4.5vw, 3.4rem);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      line-height: 1.1;
+      text-align: center;
+      color: var(--gold);
+      text-shadow: 0 0 24px rgba(201,168,76,0.28);
+      white-space: nowrap;
+    }
+
+    .clarity-text em {
+      font-style: italic;
+      font-weight: 400;
+      color: #f0c24f;
+    }
+
+    .clarity-colon {
+      color: #f0c24f;
+    }
+
+    @media (max-width: 640px) {
+      .clarity-slogan { gap: 0.9rem; margin-top: 4rem; }
+      .clarity-text { white-space: normal; }
+    }
+
     .what-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -1647,7 +1690,7 @@ iframe {
       </div>
 
       <div style="background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.02));border:1px solid rgba(201,168,76,0.25);padding:2.5rem;max-width:800px;margin:0 auto;text-align:right;">
-        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;font-weight:300;color:#f0f4f8;line-height:1.4;margin-bottom:1rem;">"The difference between advice and intelligence is whether it was built for you — or built for everyone."</div>
+          <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;font-weight:300;color:#f0f4f8;line-height:1.4;margin-bottom:1rem;">"Valuable advice is validated information processed through wisdom and applied for your specific situation."</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:#c9a84c;">— Dr. JD Castle</div>
       </div>
     </div>
@@ -1671,6 +1714,12 @@ iframe {
           <div class="principle-item"><div class="principle-num">04</div><div class="principle-text"><strong>Human Dynamics</strong><p>Emotion, perception, and relationship capital — the variables no spreadsheet captures.</p></div></div>
           <div class="principle-item"><div class="principle-num">05</div><div class="principle-text"><strong>Practical Execution</strong><p>Real-world application. Every output is built to be used, not filed.</p></div></div>
         </div>
+      </div>
+
+      <div class="clarity-slogan">
+        <span class="clarity-rule"></span>
+        <p class="clarity-text">Executive Clarity<span class="clarity-colon">:</span> <em>On Demand</em></p>
+        <span class="clarity-rule"></span>
       </div>
     </div>
   </section>
