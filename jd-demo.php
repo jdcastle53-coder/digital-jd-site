@@ -279,21 +279,21 @@ $trialTokenSafe = $trialAllowed ? ($trialAccess['token'] ?? '') : '';
     }
 
     .quick-answer-btn {
-      border: none;
+      border: 1px solid rgba(201, 168, 76, 0.65);
       border-radius: 12px;
       padding: 11px 15px;
-      background: linear-gradient(180deg, #1d4ed8, #1e40af);
-      color: #ffffff;
+      background: rgba(201, 168, 76, 0.08);
+      color: #c9a84c;
       font-weight: 700;
       font-size: 14px;
       cursor: pointer;
-      transition: transform 0.15s ease, opacity 0.15s ease;
+      transition: transform 0.15s ease, background 0.15s ease;
       box-shadow: 0 8px 18px rgba(0,0,0,0.25);
     }
 
     .quick-answer-btn:hover {
       transform: translateY(-1px);
-      opacity: 0.97;
+      background: rgba(201, 168, 76, 0.16);
     }
 
     .quick-answer-btn:disabled {
@@ -637,8 +637,8 @@ $trialTokenSafe = $trialAllowed ? ($trialAccess['token'] ?? '') : '';
 
     textarea {
       width: 100%;
-      min-height: 72px;
-      max-height: 180px;
+      min-height: 160px;
+      max-height: 340px;
       resize: vertical;
       border-radius: 16px;
      border: 2px solid rgba(212, 175, 55, 0.55);
@@ -864,14 +864,14 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .full-btn {
-    border: 1px solid rgba(255,255,255,0.14);
-    background: linear-gradient(180deg, #8fb2ff, #5d6cff);
-    color: #ffffff;
-    box-shadow: 0 12px 24px rgba(38, 62, 160, 0.28), inset 0 1px 0 rgba(255,255,255,0.18);
+    border: 1px solid rgba(201, 168, 76, 0.7);
+    background: rgba(201, 168, 76, 0.10);
+    color: #d4af37;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.26), inset 0 1px 0 rgba(255,255,255,0.06);
 }
     .full-btn:hover {
-    background: linear-gradient(180deg, #a3c0ff, #6f7cff);
-    box-shadow: 0 14px 28px rgba(38, 62, 160, 0.34), inset 0 1px 0 rgba(255,255,255,0.22);
+    background: rgba(201, 168, 76, 0.18);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255,255,255,0.08);
 }
 .manage-btn {
   border: 1px solid rgba(201,168,76,0.75);
@@ -1313,7 +1313,7 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
   if (isBusy) return;
 
   userInput.value = '';
-  userInput.style.height = '72px';
+      userInput.style.height = '160px';
 
   await sendFinalToBrain(true);
 });
@@ -1379,7 +1379,7 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
   chatOutput.innerHTML = '';
   userInput.value = '';
-  userInput.style.height = '72px';
+  userInput.style.height = '160px';
 
   stopDictationIfRunning();
 
@@ -1403,7 +1403,7 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
        chatOutput.innerHTML = '';
 userInput.value = '';
-userInput.style.height = '72px';
+userInput.style.height = '160px';
 if (recognition && isListening) {
   recognition.stop();
 }
@@ -1590,11 +1590,11 @@ if (!questions.length) {
           </div>
 
           <button type="button" id="enhancedAnalysisBtn" class="enhanced-submit-btn">
-            ✨ Get Enhanced Analysis
+            Get Enhanced Analysis
           </button>
 
           <div class="enhanced-privacy-note">
-            🔒 Your responses are private and used only to provide you with better guidance.
+            Your responses are private and used only to provide you with better guidance.
           </div>
         </div>
       `;
@@ -1930,7 +1930,7 @@ function stopDictationIfRunning() {
       scrollBubbleToTop(renderedUser.row);
 
       userInput.value = '';
-      userInput.style.height = '72px';
+      userInput.style.height = '160px';
 
       if (intakeState.continuationMode) {
         sendContinuationToBrain(text);
@@ -1974,8 +1974,8 @@ recognition.onresult = function(event) {
 
   const input = document.getElementById('userInput');
   input.value = (finalText + interimText).replace(/\s+/g, ' ').trimStart();
-  input.style.height = '72px';
-  input.style.height = Math.min(input.scrollHeight, 180) + 'px';
+  input.style.height = '160px';
+  input.style.height = Math.min(input.scrollHeight, 340) + 'px';
 };
 
     recognition.onresult = function(event) {
@@ -1994,8 +1994,8 @@ recognition.onresult = function(event) {
     }
     const input = document.getElementById('userInput');
     input.value = (committedTranscript + ' ' + interim).replace(/\s+/g, ' ').trimStart();
-    input.style.height = '72px';
-    input.style.height = Math.min(input.scrollHeight, 180) + 'px';
+    input.style.height = '160px';
+    input.style.height = Math.min(input.scrollHeight, 340) + 'px';
   };
 
   recognition.onend = function() {
@@ -2039,8 +2039,8 @@ if (micBtn) {
 });
 
     userInput.addEventListener('input', function () {
-      this.style.height = '72px';
-      this.style.height = Math.min(this.scrollHeight, 180) + 'px';
+      this.style.height = '160px';
+      this.style.height = Math.min(this.scrollHeight, 340) + 'px';
     });
 
     renderTrialBannerFromDays(7);
