@@ -49,6 +49,7 @@
       justify-content: space-between;
       padding: 1rem 4rem;
       background: linear-gradient(to bottom, rgba(4,6,8,0.95), transparent);
+      -webkit-backdrop-filter: blur(4px);
       backdrop-filter: blur(4px);
     }
 
@@ -138,9 +139,33 @@
       color: var(--black) !important;
     }
 
+    /* Gold pill button copied from the Executive Sprint banner ("Manage Subscription"). */
+    .manage-btn {
+      display: inline-block;
+      border: 1px solid rgba(201,168,76,0.75);
+      border-radius: 999px;
+      background: transparent;
+      color: #c9a84c !important;
+      padding: 0.45rem 1.3rem;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .manage-btn:hover {
+      background: rgba(201,168,76,0.12);
+      box-shadow: 0 0 14px rgba(201,168,76,0.18);
+      color: #c9a84c !important;
+    }
+
     #hero {
       position: relative;
       min-height: 100vh;
+      min-height: 100svh;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -337,6 +362,7 @@
       background: rgba(7,13,26,0.85);
       border-top: 1px solid rgba(0,180,216,0.15);
       border-bottom: 1px solid rgba(0,180,216,0.08);
+      -webkit-backdrop-filter: blur(12px);
       backdrop-filter: blur(12px);
     }
 
@@ -707,49 +733,6 @@ font-size:12px;
       border-top: 1px solid rgba(0,180,216,0.08);
     }
 
-    .clarity-slogan {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1.75rem;
-      margin-top: 3rem;
-      margin-bottom: -2.5rem;
-    }
-
-    .clarity-rule {
-      height: 1px;
-      width: clamp(2rem, 12vw, 9rem);
-      background: linear-gradient(to right, transparent, var(--gold), transparent);
-      flex-shrink: 0;
-    }
-
-    .clarity-text {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: clamp(1.9rem, 4.5vw, 3.4rem);
-      font-weight: 600;
-      letter-spacing: 0.04em;
-      line-height: 1.1;
-      text-align: center;
-      color: var(--gold);
-      text-shadow: 0 0 24px rgba(201,168,76,0.28);
-      white-space: nowrap;
-    }
-
-    .clarity-text em {
-      font-style: italic;
-      font-weight: 400;
-      color: #f0c24f;
-    }
-
-    .clarity-colon {
-      color: #f0c24f;
-    }
-
-    @media (max-width: 640px) {
-      .clarity-slogan { gap: 0.9rem; margin-top: 4rem; }
-      .clarity-text { white-space: normal; }
-    }
-
     .what-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -972,20 +955,20 @@ font-size:12px;
       border-top: 1px solid rgba(0,180,216,0.08);
     }
 
-  .tiers-grid {
+.tiers-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  gap: 1rem;
   margin-top: 3.5rem;
   }
 
-    .tier-card {
-      background: var(--navy);
-      border: 1px solid rgba(240,244,248,0.07);
-      padding: 2.5rem 2rem;
-      position: relative;
-      transition: border-color 0.3s, transform 0.3s;
-    }
+.tier-card {
+  background: var(--navy);
+  border: 1px solid rgba(240,244,248,0.07);
+  padding: 2rem 1.5rem;
+  position: relative;
+  transition: border-color 0.3s, transform 0.3s;
+  }
 .tier-card:hover {
   transform: translateY(-4px);
 }
@@ -1102,6 +1085,7 @@ font-size:12px;
       position: fixed;
       inset: 0;
       background: rgba(4,6,8,0.92);
+      -webkit-backdrop-filter: blur(8px);
       backdrop-filter: blur(8px);
       z-index: 1000;
       display: flex;
@@ -1302,6 +1286,52 @@ font-size:12px;
   display: none;
 }
 
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.modal-content {
+  background: #111827;
+  color: white;
+  padding: 32px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  position: relative;
+}
+
+.modal-content input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 14px;
+  border-radius: 8px;
+  border: 1px solid #374151;
+}
+
+.modal-content button {
+  width: 100%;
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.modal-close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  width: auto !important;
+  background: transparent;
+  color: white;
+  font-size: 28px;
+}
 /* ================================
    MOBILE RESPONSIVE RESCUE PATCH
    Digital JD Launch Fix
@@ -1539,14 +1569,36 @@ iframe {
     line-height: 1.8 !important;
   }
 }
-  </style>
+
+  /* ---- FOUNDING MEMBER GOLD PILL (Pro card only) ---- */
+  .founding-pill{
+    position:absolute; top:-18px; left:50%;
+    transform:translateX(-50%) translateY(10px);
+    z-index:5; display:flex; align-items:center; gap:0.5rem;
+    white-space:nowrap; border:1.5px solid #f0c24f;
+    background:radial-gradient(circle at center, rgba(255,195,0,.30), transparent 70%),linear-gradient(180deg,#2a1a05 0%, #090806 100%);
+    box-shadow:0 0 12px rgba(255,210,90,.55),0 0 26px rgba(255,190,0,.30),0 4px 10px rgba(0,0,0,0.4);
+    padding:0.5rem 1.1rem; border-radius:999px;
+    font-family:'Barlow Condensed',sans-serif; font-size:0.8rem; font-weight:700;
+    letter-spacing:0.08em; text-transform:uppercase; color:#ffe08c;
+    text-shadow:0 0 10px rgba(255,220,120,.4);
+    opacity:0; pointer-events:none;
+    transition:opacity 0.7s ease, transform 0.7s cubic-bezier(0.22,1,0.36,1);
+  }
+  .founding-pill.show{ opacity:1; transform:translateX(-50%) translateY(0); pointer-events:auto; }
+  .founding-pill .founding-star{ color:#f0c24f; font-size:0.9rem; filter:drop-shadow(0 0 6px rgba(255,210,90,.6)); }
+  .founding-pill strong{ color:#ffffff; font-weight:700; }
+  @media (max-width: 640px){
+    #proFoundingCard{ margin-top:2.5rem; }
+    .founding-pill{ top:-34px; font-size:0.72rem; padding:0.45rem 0.9rem; }
+  }
+</style>
 </head>
 <body>
   <nav>
     <a href="#" class="nav-logo">
       <div class="nav-logo-left">
         <img src="digital-jd-logo.png" alt="Digital JD" />
-        <span class="nav-logo-name">Digital JD</span>
       </div>
       <div class="nav-brand-stack" aria-label="Intelligent Leadership System">
         <div class="nav-brand-line">Intelligent</div>
@@ -1571,8 +1623,18 @@ iframe {
   Login
 </a>
 </li>
+      <li id="manage-sub-nav" style="display:none;">
+        <a class="manage-btn" href="#" onclick="openStripePortal(); return false;">
+          Manage Subscription
+        </a>
+      </li>
+      <li id="signout-nav" style="display:none;">
+        <a class="nav-cta" href="#" onclick="signOut(); return false;" style="background:transparent;border:1px solid #c9a84c;color:#c9a84c;">
+          Sign Out
+        </a>
+      </li>
     </ul>
-  </nav>
+  <a class="mobile-login" href="https://digitaljd.org/jd-demo.php">Login</a></nav>
 
   <section id="hero">
     <div class="hero-bg"></div>
@@ -1690,7 +1752,7 @@ iframe {
       </div>
 
       <div style="background:linear-gradient(135deg,rgba(201,168,76,0.08),rgba(201,168,76,0.02));border:1px solid rgba(201,168,76,0.25);padding:2.5rem;max-width:800px;margin:0 auto;text-align:right;">
-          <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;font-weight:300;color:#f0f4f8;line-height:1.4;margin-bottom:1rem;">"Valuable advice is validated information processed through wisdom and applied for your specific situation."</div>
+        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;font-weight:300;color:#f0f4f8;line-height:1.4;margin-bottom:1rem;">"Valuable advice is validated information processed through wisdom and applied for your specific situation."</div>
         <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:#c9a84c;">— Dr. JD Castle</div>
       </div>
     </div>
@@ -1715,12 +1777,20 @@ iframe {
           <div class="principle-item"><div class="principle-num">05</div><div class="principle-text"><strong>Practical Execution</strong><p>Real-world application. Every output is built to be used, not filed.</p></div></div>
         </div>
       </div>
-
-      <div class="clarity-slogan">
-        <span class="clarity-rule"></span>
-        <p class="clarity-text">Executive Clarity<span class="clarity-colon">:</span> <em>On Demand</em></p>
-        <span class="clarity-rule"></span>
-      </div>
+      <style>
+  .jd-mbreak { display: none; }
+  @media (max-width: 640px) {
+    .jd-mbreak { display: block; }
+    .jd-slogan-rule { display: none; }
+    .jd-slogan-text { white-space: normal !important; font-size: 2.4rem !important; line-height: 1.2 !important; }
+    .jd-slogan-wrap { gap: 0 !important; margin-top: 2rem !important; }
+  }
+</style>
+<div class="jd-slogan-wrap" style="display:flex;align-items:center;justify-content:center;gap:1.75rem;margin-top:3rem;margin-bottom:-1rem;">
+  <span class="jd-slogan-rule" style="height:1px;width:clamp(2rem,12vw,9rem);background:linear-gradient(to right,transparent,#c9a84c,transparent);flex-shrink:0;"></span>
+  <p class="jd-slogan-text" style="font-family:'Cormorant Garamond',serif;font-size:clamp(1.9rem,4.5vw,3.4rem);font-weight:600;letter-spacing:0.04em;line-height:1.1;text-align:center;color:#c9a84c;text-shadow:0 0 24px rgba(201,168,76,0.28);margin:0;white-space:nowrap;">Executive<br class="jd-mbreak">Clarity<span style="color:#f0c24f;">:</span><br class="jd-mbreak"> <em style="font-style:italic;font-weight:400;color:#f0c24f;">On Demand</em></p>
+  <span class="jd-slogan-rule" style="height:1px;width:clamp(2rem,12vw,9rem);background:linear-gradient(to right,transparent,#c9a84c,transparent);flex-shrink:0;"></span>
+</div>
     </div>
   </section>
 
@@ -1767,7 +1837,7 @@ iframe {
     </div>
   </section>
 
-<section id="pricing">
+<section id="pricing" style="margin-top:-6rem;">
     <div class="section-inner">
       <div class="section-label">Access Structure</div>
       <h2 class="section-heading">Built for <em>Sustained</em><br>Executive Performance.</h2>
@@ -1786,7 +1856,7 @@ iframe {
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $490 / year <span style="color:#d4af37;font-style:italic;">(save $98)</span></div>
           </div>
       <div style="margin-top:1.25rem;">
-  <a class="tier-btn tier-btn-lite" href="#" onclick="startCheckout('essentials', event)"
+  <a class="tier-btn tier-btn-lite" href="https://buy.stripe.com/00w9ASftn1aueZ6eYDdEs02"
      style="display:block;text-align:center;
      background:linear-gradient(135deg,#38bdf8,#2563eb);
      color:#ffffff;
@@ -1802,15 +1872,25 @@ iframe {
                 inset 0 1px 0 rgba(255,255,255,0.15);">
   Get Essentials
   </a>
+  <div style="margin-top:0.75rem;text-align:center;">
+    <a href="/enterprise.html" style="display:inline-block;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;color:#d4af37;text-decoration:none;background:transparent;border:1px solid rgba(212,175,55,0.55);border-radius:9px;padding:0.5rem 1.1rem;line-height:1.3;">
+      <span style="display:block;font-size:0.62rem;letter-spacing:0.14em;color:var(--white-dim);">Leading a team?</span>
+      <span style="display:block;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;">Explore Enterprise →</span>
+    </a>
+  </div>
 </div>
         </div>
 
-       <div class="tier-card featured" id="proFoundingCard" style="border:3px solid #ffffff;overflow:visible;">
-          <div class="tier-featured-tag">Most Popular</div>
-          <div class="founding-pill" id="foundingPill">
-            <span class="founding-star">&#9733;</span>
-            First 50 members &mdash; <strong>Lifetime $99</strong>
-          </div>
+      <div class="tier-card featured" id="proFoundingCard" style="border:3px solid #ffffff;overflow:visible;">
+    <div class="tier-featured-tag">Most Popular</div>
+    <div class="founding-pill" id="foundingPill">
+      <span class="founding-star">&#9733;</span>
+      First 50 members &mdash; <strong>Lifetime $99</strong>
+    </div>
+    <div class="founding-pill" id="foundingPill">
+      <span class="founding-star">&#9733;</span>
+      First 50 members &mdash; <strong>Lifetime $99</strong>
+    </div>
          <div class="tier-name">Professional Tier</div>
 <div class="tier-title">Digital JD Pro</div>
           <ul class="tier-items">
@@ -1825,7 +1905,7 @@ iframe {
             <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $1490 / year <span style="color:#d4af37;font-style:italic;">(save $298)</span></div>
           </div>
       <div style="margin-top:1.25rem;">
-  <a class="tier-btn tier-btn-core" href="#" onclick="startCheckout('pro', event)"
+  <a class="tier-btn tier-btn-core" href="https://buy.stripe.com/fZu4gychbbP84kseYDdEs01"
      style="display:block;text-align:center;
      background:linear-gradient(135deg,#38bdf8,#2563eb);
      color:#ffffff;
@@ -1842,6 +1922,12 @@ iframe {
                 inset 0 1px 0 rgba(255,255,255,0.15);">
     Get Digital JD Pro
   </a>
+  <div style="margin-top:0.75rem;text-align:center;">
+    <a href="/enterprise.html" style="display:inline-block;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;color:#d4af37;text-decoration:none;background:transparent;border:1px solid rgba(212,175,55,0.55);border-radius:9px;padding:0.5rem 1.1rem;line-height:1.3;">
+      <span style="display:block;font-size:0.62rem;letter-spacing:0.14em;color:var(--white-dim);">Leading a team?</span>
+      <span style="display:block;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;">Explore Enterprise →</span>
+    </a>
+  </div>
 </div>
         </div>
 
@@ -1864,16 +1950,22 @@ iframe {
 
     <div style="margin-top:1.25rem; padding:4px; border:2px solid #d4af37; border-radius:12px;">
       <div style="border:1px solid #d4af37; border-radius:10px;">
-        <a class="tier-btn tier-btn-pro" href="#" onclick="startCheckout('executive', event)"
+        <a class="tier-btn tier-btn-pro" href="https://buy.stripe.com/3cI14mgxr1au4ks2bRdEs00"
            style="display:block;text-align:center;background:linear-gradient(135deg,#38bdf8,#2563eb);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.95rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2);">
           Enter Executive Tier
         </a>
       </div>
     </div>
+    <div style="margin-top:0.75rem;text-align:center;">
+      <a href="/enterprise.html" style="display:inline-block;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;color:#d4af37;text-decoration:none;background:transparent;border:1px solid rgba(212,175,55,0.55);border-radius:9px;padding:0.5rem 1.1rem;line-height:1.3;">
+      <span style="display:block;font-size:0.62rem;letter-spacing:0.14em;color:var(--white-dim);">Leading a team?</span>
+      <span style="display:block;font-size:0.82rem;font-weight:600;letter-spacing:0.1em;">Explore Enterprise →</span>
+    </a>
+    </div>
   </div>
 </div>
 
-<div class="tier-card enterprise-tier" style="border:3px solid #d4af37;background:linear-gradient(145deg,rgba(45,32,8,0.96),rgba(18,12,3,0.98));box-shadow:0 0 30px rgba(212,175,55,0.28), inset 0 0 40px rgba(212,175,55,0.08);">
+<div id="enterprise" class="tier-card enterprise-tier" style="scroll-margin-top:90px;border:3px solid #d4af37;background:linear-gradient(145deg,rgba(45,32,8,0.96),rgba(18,12,3,0.98));box-shadow:0 0 30px rgba(212,175,55,0.28), inset 0 0 40px rgba(212,175,55,0.08);">
   <div class="tier-name" style="color:#f4d06f;">Enterprise Tier</div>
   <div class="tier-title" style="color:#e0b84f;">Digital JD Enterprise</div>
 
@@ -1892,9 +1984,9 @@ iframe {
 
     <div style="margin-top:1.25rem; padding:4px; border:2px solid #d4af37; border-radius:12px;">
       <div style="border:1px solid #d4af37; border-radius:10px;">
-        <a class="tier-btn tier-btn-pro" href="/contact.html"
+        <a class="tier-btn tier-btn-pro" href="/enterprise.html"
            style="display:block;text-align:center;background:linear-gradient(135deg,#d4af37,#8f6a16);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.95rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2);">
-          Let's Have a Dialogue
+          Take a Deeper Dive
         </a>
       </div>
     </div>
@@ -1930,6 +2022,20 @@ iframe {
     </div>
   </div>
 
+  <div class="modal-overlay" id="contactModal">
+    <div class="modal" style="position:relative;inset:auto;display:block;max-width:480px;width:90%;background:var(--deep);">
+      <button class="modal-close" onclick="closeContactModal()">×</button>
+      <div class="modal-eyebrow">Get In Touch</div>
+      <h2>Contact Dr. JD Castle</h2>
+      <p class="modal-sub">Choose how you'd like to connect — send a message directly, or book a live video call.</p>
+      <div class="modal-form" style="display:block;">
+        <a href="mailto:drjd@digitaljd.org?subject=Inquiry%20from%20Digital%20JD" class="btn-primary" style="display:block;width:100%;box-sizing:border-box;text-align:center;text-decoration:none;margin-bottom:0.8rem;clip-path:none;"><span>Send an Email →</span></a>
+        <a href="https://calendly.com/jdcastle" target="_blank" rel="noopener" class="btn-primary" style="display:block;width:100%;box-sizing:border-box;text-align:center;text-decoration:none;clip-path:none;background:linear-gradient(135deg,#d4af37,#8f6a16);"><span>Schedule a Video Call →</span></a>
+      </div>
+      <p class="modal-note">Email goes directly to drjd@digitaljd.org · Video calls are booked via Calendly.</p>
+    </div>
+  </div>
+
   <script>
     function openModal() {
       document.getElementById('sprintModal').classList.add('open');
@@ -1938,6 +2044,16 @@ iframe {
 
    function closeModal() {
   document.getElementById('sprintModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function openContactModal() {
+  document.getElementById('contactModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeContactModal() {
+  document.getElementById('contactModal').classList.remove('open');
   document.body.style.overflow = '';
 }
 
@@ -1950,12 +2066,43 @@ function closeLoginModal() {
   document.getElementById('loginModal').classList.remove('open');
   document.body.style.overflow = '';
 }
+// Branded message box — replaces the browser's default alert() pop-up
+function showJDMessage(message, type) {
+  type = type || 'info';
+  // Remove any existing message box first
+  var existing = document.getElementById('jdMessageOverlay');
+  if (existing) existing.remove();
+
+  var accent = type === 'error' ? '#e07a5f'
+             : type === 'success' ? '#c9a84c'
+             : '#c9a84c';
+
+  var overlay = document.createElement('div');
+  overlay.id = 'jdMessageOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:rgba(4,6,8,0.72);backdrop-filter:blur(4px);padding:1.5rem;';
+
+  var box = document.createElement('div');
+  box.style.cssText = 'max-width:420px;width:100%;background:linear-gradient(150deg,#0e1626,#0a0f1c);border:1px solid rgba(201,168,76,0.45);border-radius:18px;box-shadow:0 24px 60px rgba(0,0,0,0.5);padding:1.75rem 1.75rem 1.5rem;text-align:center;';
+
+  box.innerHTML =
+    '<div style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.7rem;letter-spacing:0.28em;text-transform:uppercase;color:' + accent + ';font-weight:700;margin-bottom:0.75rem;">Digital JD</div>' +
+    '<div style="font-family:\'Cormorant Garamond\',serif;font-size:1.25rem;line-height:1.5;color:#f0f4f8;margin-bottom:1.4rem;">' + message + '</div>' +
+    '<button id="jdMessageOk" style="font-family:\'Barlow Condensed\',sans-serif;font-size:0.95rem;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;color:#040608;background:linear-gradient(135deg,#d4af37,#8f6a16);border:none;border-radius:10px;padding:0.65rem 2.5rem;cursor:pointer;">OK</button>';
+
+  overlay.appendChild(box);
+  document.body.appendChild(overlay);
+
+  function dismiss() { overlay.remove(); }
+  document.getElementById('jdMessageOk').addEventListener('click', dismiss);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) dismiss(); });
+}
+
 async function submitLogin() {
   const email = document.getElementById('loginEmail').value.trim();
   const password = document.getElementById('loginPassword').value;
 
   if (!email || !password) {
-    alert('Please enter your email and password.');
+    showJDMessage('Please enter your email and password.', 'error');
     return;
   }
 
@@ -1965,7 +2112,13 @@ async function submitLogin() {
   });
 
   if (error) {
-    alert(error.message);
+    var loginMsg = error.message;
+    if (/confirm/i.test(loginMsg)) {
+      loginMsg = 'Please confirm your email first. Check your inbox for the secure activation link, then log in.';
+    } else if (/invalid login/i.test(loginMsg)) {
+      loginMsg = 'That email or password is incorrect. Please try again.';
+    }
+    showJDMessage(loginMsg, 'error');
     return;
   }
 document.getElementById('loginModal').classList.remove('open');
@@ -1983,15 +2136,20 @@ document.body.style.overflow = '';
   const email = document.getElementById('sprintEmail').value.trim();
 
   if (!name || !email) {
-    alert('Please enter your name and email.');
+    showJDMessage('Please enter your name and email.', 'error');
     return;
   }
 
 const password = document.getElementById('sprintPassword').value.trim();
 const confirmPassword = document.getElementById('sprintConfirmPassword').value.trim();
 
+if (!password) {
+  showJDMessage('Please choose a password to create your account.', 'error');
+  return;
+}
+
 if (password !== confirmPassword) {
-  alert('Passwords do not match.');
+  showJDMessage('Those passwords do not match. Please re-enter them.', 'error');
   return;
 }
 
@@ -1999,6 +2157,9 @@ const { data, error } = await window.supabaseClient.auth.signUp({
   email: email,
   password: password,
   options: {
+    // After the user clicks the confirmation link in their email,
+    // send them straight into the Digital JD Pro app (not the home page).
+    emailRedirectTo: 'https://digitaljd.org/jd-demo.php',
     data: {
       name: name
     }
@@ -2006,23 +2167,22 @@ const { data, error } = await window.supabaseClient.auth.signUp({
 });
 
 if (error) {
-  alert(error.message);
+  showJDMessage(error.message, 'error');
   return;
 }
 
-  localStorage.setItem('login_email', email);
+// Supabase returns an empty identities array when the email is already registered.
+if (data && data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+  closeModal();
+  showJDMessage('This email is already registered. Please log in instead — or use Forgot Password if you need to reset it.', 'info');
+  return;
+}
+
+localStorage.setItem('login_email', email);
   localStorage.setItem('login_name', name);
 
-  // Show the branded blue/gold success panel instead of plain browser pop-ups
-  const modal = document.getElementById('sprintModal');
-  document.getElementById('modalFormWrap').style.display = 'none';
-  const heading = modal.querySelector('h2');
-  if (heading) heading.style.display = 'none';
-  const sub = modal.querySelector('.modal-sub');
-  if (sub) sub.style.display = 'none';
-  const note = modal.querySelector('.modal-note');
-  if (note) note.style.display = 'none';
-  document.getElementById('modalSuccess').style.display = 'block';
+  closeModal();
+  showJDMessage('Welcome to Digital JD. Your account has been created — check your email and click the secure confirmation link to activate it, then log in to begin your Executive Sprint.', 'success');
 }
 
     document.addEventListener('keydown', function(e) {
@@ -2032,7 +2192,7 @@ async function forgotPassword() {
   const email = document.getElementById('loginEmail').value.trim();
 
   if (!email) {
-    alert('Enter your email first, then click Forgot Password.');
+    showJDMessage('Enter your email in the field above first, then click Forgot Password.', 'error');
     return;
   }
 
@@ -2041,12 +2201,59 @@ async function forgotPassword() {
   });
 
   if (error) {
-    alert(error.message);
+    showJDMessage(error.message, 'error');
     return;
   }
 
-  alert('Password reset email sent. Check your inbox.');
+  showJDMessage('Password reset email sent. Check your inbox for the secure link.', 'success');
 }
+
+// Sign out function
+async function signOut() {
+  const { error } = await window.supabaseClient.auth.signOut();
+  if (error) {
+    showJDMessage('There was a problem signing out: ' + error.message, 'error');
+    return;
+  }
+  localStorage.removeItem('login_email');
+  localStorage.removeItem('login_name');
+  updateNavForAuthState(false);
+  window.location.href = '/';
+}
+
+// Open Stripe Customer Portal for subscription management
+function openStripePortal() {
+  // Redirect to Stripe Customer Portal
+  // Customers can update payment methods, switch plans, view invoices, and cancel
+  window.open('https://billing.stripe.com/p/login/3cI14mgxr1au4ks2bRdEs00', '_blank');
+}
+
+// Check authentication state and update nav
+async function checkAuthAndUpdateNav() {
+  const { data: { session } } = await window.supabaseClient.auth.getSession();
+  updateNavForAuthState(!!session);
+}
+
+// React to login/logout in real time so the nav is always accurate
+window.supabaseClient.auth.onAuthStateChange(function (event, session) {
+  updateNavForAuthState(!!session);
+});
+
+function updateNavForAuthState(isLoggedIn) {
+  // The public homepage is always a clean "front door": it ALWAYS shows Login,
+  // and never shows Manage Subscription / Sign Out — regardless of session state.
+  // Logged-in controls live inside the demo/sprint pages, not here.
+  const loginNav = document.querySelector('a[href="https://digitaljd.org/jd-demo.php"]');
+  const manageNav = document.getElementById('manage-sub-nav');
+  const signoutNav = document.getElementById('signout-nav');
+
+  if (loginNav) loginNav.parentElement.style.display = 'block';
+  if (manageNav) manageNav.style.display = 'none';
+  if (signoutNav) signoutNav.style.display = 'none';
+}
+
+// Check auth state on page load
+document.addEventListener('DOMContentLoaded', checkAuthAndUpdateNav);
   </script>
        <div id="loginModal" class="modal-overlay">
   <div class="modal">
@@ -2066,97 +2273,6 @@ async function forgotPassword() {
 </div>
  
 <script>
-async function startCheckout(tier, evt) {
-  if (evt) evt.preventDefault();
-
-  // Try to pass the signed-in user's email so the subscription binds to their account
-  let email;
-  try {
-    if (window.Auth && window.Auth.client) {
-      const { data } = await window.Auth.client.auth.getSession();
-      email = data && data.session && data.session.user ? data.session.user.email : undefined;
-    }
-  } catch (e) {
-    // Not signed in — Stripe will collect the email at checkout
-  }
-
-  try {
-    const res = await fetch("/api/create-checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ tier, email }),
-    });
-    const data = await res.json();
-    if (data.url) {
-      window.location.href = data.url;
-    } else {
-      alert(data.error || "Could not start checkout. Please try again.");
-    }
-  } catch (e) {
-    alert("Could not start checkout. Please try again.");
-  }
-}
-</script>
-
-<style>
-  /* ---- FOUNDING MEMBER GOLD PILL (Pro card only) ---- */
-  .founding-pill{
-    position:absolute;
-    top:-18px;
-    left:50%;
-    transform:translateX(-50%) translateY(10px);
-    z-index:5;
-    display:flex;
-    align-items:center;
-    gap:0.5rem;
-    white-space:nowrap;
-    border:1.5px solid #f0c24f;
-    background:
-      radial-gradient(circle at center, rgba(255,195,0,.30), transparent 70%),
-      linear-gradient(180deg,#2a1a05 0%, #090806 100%);
-    box-shadow:
-      0 0 12px rgba(255,210,90,.55),
-      0 0 26px rgba(255,190,0,.30),
-      0 4px 10px rgba(0,0,0,0.4);
-    padding:0.5rem 1.1rem;
-    border-radius:999px;
-    font-family:'Barlow Condensed',sans-serif;
-    font-size:0.8rem;
-    font-weight:700;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    color:#ffe08c;
-    text-shadow:0 0 10px rgba(255,220,120,.4);
-    opacity:0;
-    pointer-events:none;
-    transition:opacity 0.7s ease, transform 0.7s cubic-bezier(0.22,1,0.36,1);
-  }
-  .founding-pill.show{
-    opacity:1;
-    transform:translateX(-50%) translateY(0);
-    pointer-events:auto;
-  }
-  .founding-pill .founding-star{
-    color:#f0c24f;
-    font-size:0.9rem;
-    filter:drop-shadow(0 0 6px rgba(255,210,90,.6));
-  }
-  .founding-pill strong{ color:#ffffff; font-weight:700; }
-
-  /* On phones the card is narrow: lift the pill fully above the card so it
-     never overlaps the "Most Popular" tag, and add clearance above. */
-  @media (max-width: 640px){
-    #proFoundingCard{ margin-top:2.5rem; }
-    .founding-pill{
-      top:-34px;
-      font-size:0.72rem;
-      padding:0.45rem 0.9rem;
-    }
-  }
-</style>
-
-<script>
-  // Show the Founding Member pill 5 seconds after the Pro card is scrolled into view; it then stays.
   (function(){
     var card = document.getElementById('proFoundingCard');
     var pill = document.getElementById('foundingPill');
@@ -2174,6 +2290,26 @@ async function startCheckout(tier, evt) {
     observer.observe(card);
   })();
 </script>
-
+<style>
+  .mobile-login { display: none; }
+  @media (max-width: 600px) {
+    .mobile-login {
+      display: inline-block;
+      margin-top: 0.8rem;
+      background: transparent;
+      border: 1px solid #c9a84c;
+      color: #c9a84c;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.5rem 1.1rem;
+      border-radius: 8px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+  }
+</style>
 </body>
 </html>
