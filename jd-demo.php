@@ -938,6 +938,12 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
     margin-top: 0.75rem;
     padding: 0.75rem 1rem;
   }
+
+  /* On phones, cancel the negative top margin so the login box sits
+     BELOW the header instead of overlapping the brand text. */
+  .auth-box {
+    margin-top: 0 !important;
+  }
 }
   </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
