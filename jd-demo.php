@@ -1061,6 +1061,7 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
     text-align:center;
   "></div>
 </div>
+             <div id="situationInputGroup">
              <div class="input-prompt">
                 Describe your situation — the more detail you provide, the sharper the insight.
               </div>
@@ -1084,6 +1085,7 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
               
               <div class="helper" id="helperText">
                 Digital JD will begin by asking a few clarifying questions unless you choose Quick Answer.
+              </div>
               </div>
               
             </div>
@@ -1381,6 +1383,10 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
   userInput.value = '';
   userInput.style.height = '160px';
 
+  // Bring back the situation box for the next fresh situation.
+  const situationInputGroupClose = document.getElementById('situationInputGroup');
+  if (situationInputGroupClose) situationInputGroupClose.style.display = '';
+
   stopDictationIfRunning();
 
   const rendered = createMessage(
@@ -1404,6 +1410,11 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
        chatOutput.innerHTML = '';
 userInput.value = '';
 userInput.style.height = '160px';
+
+// Bring back the situation box for the next fresh situation.
+const situationInputGroupNew = document.getElementById('situationInputGroup');
+if (situationInputGroupNew) situationInputGroupNew.style.display = '';
+
 if (recognition && isListening) {
   recognition.stop();
 }
@@ -1543,6 +1554,11 @@ if (!questions.length) {
       intakeState.clarifyingQuestions = questions;
       intakeState.awaitingClarification = true;
       intakeState.continuationMode = false;
+
+      // Hide the original "Describe your situation" box once the Enhanced Analysis
+      // panel appears — the client now answers inside the question boxes instead.
+      const situationInputGroup = document.getElementById('situationInputGroup');
+      if (situationInputGroup) situationInputGroup.style.display = 'none';
 
       const questionFields = questions.map((q, index) => {
         const cleanQuestion = escapeHtml(q).replace(/^\d+\.\s*/, '');
