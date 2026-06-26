@@ -1367,6 +1367,12 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
         intakeState.awaitingClarification = false;
         intakeState.continuationMode = true;
 
+        // Bring back the input box so the user can actually type their continuation.
+        const situationInputGroupContinue = document.getElementById('situationInputGroup');
+        if (situationInputGroupContinue) situationInputGroupContinue.style.display = '';
+        userInput.value = '';
+        userInput.focus();
+
         const rendered = createMessage(
           'system',
           'Continue this situation. Tell me what part you want to work on next, what changed, or what decision you need to make now.'
