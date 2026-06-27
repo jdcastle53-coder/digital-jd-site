@@ -255,10 +255,16 @@ $trialTokenSafe = $trialAllowed ? ($trialAccess['token'] ?? '') : '';
 
     .jd-paragraph:last-child { margin-bottom: 0; }
 
-    .jd-list {
-      margin: 8px 0 0 0;
-      padding-left: 24px;
-    }
+ .jd-list {
+  margin: 8px 0 12px 0;
+  padding-left: 24px;
+  }
+  .jd-list-ul {
+  list-style: disc;
+  }
+  .jd-list-ol {
+  list-style: decimal;
+  }
 
     .jd-list li {
       margin: 8px 0;
@@ -1245,38 +1251,38 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
         html += `<div class="jd-section-title">${escapeHtml(title)}</div>`;
 
         let listItems = [];
-        let paragraphBuffer = [];
-
-        function flushParagraphBuffer() {
-          if (paragraphBuffer.length > 0) {
-            html += `<p class="jd-paragraph">${formatInline(paragraphBuffer.join(' '))}</p>`;
-            paragraphBuffer = [];
-          }
-        }
+        let listTag = null;
 
         function flushListItems() {
           if (listItems.length > 0) {
-            html += '<ol class="jd-list">';
+            const tag = listTag === 'ol' ? 'ol' : 'ul';
+            html += `<${tag} class="jd-list jd-list-${tag}">`;
             listItems.forEach(item => {
               html += `<li>${formatInline(item)}</li>`;
             });
-            html += '</ol>';
+            html += `</${tag}>`;
             listItems = [];
+            listTag = null;
           }
         }
 
         lines.forEach(line => {
           const numberedMatch = line.match(/^\d+\.\s+(.*)$/);
+          const bulletMatch = line.match(/^[-*•]\s+(.*)$/);
           if (numberedMatch) {
-            flushParagraphBuffer();
+            if (listTag && listTag !== 'ol') flushListItems();
+            listTag = 'ol';
             listItems.push(numberedMatch[1].trim());
+          } else if (bulletMatch) {
+            if (listTag && listTag !== 'ul') flushListItems();
+            listTag = 'ul';
+            listItems.push(bulletMatch[1].trim());
           } else {
             flushListItems();
-            paragraphBuffer.push(line);
+            html += `<p class="jd-paragraph">${formatInline(line)}</p>`;
           }
         });
 
-        flushParagraphBuffer();
         flushListItems();
 
         html += `</div>`;
