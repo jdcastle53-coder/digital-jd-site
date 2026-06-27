@@ -272,6 +272,24 @@ $trialTokenSafe = $trialAllowed ? ($trialAccess['token'] ?? '') : '';
       line-height: 1.7;
     }
 
+    .jd-outline {
+      margin: 6px 0;
+    }
+    .jd-outline-0 {
+      margin-left: 0;
+    }
+    .jd-outline-1 {
+      margin-left: 1.75rem;
+    }
+    .jd-outline-2 {
+      margin-left: 3.5rem;
+    }
+    .jd-bullet-dot {
+      display: inline-block;
+      margin-right: 8px;
+      color: var(--gold, #c9a84c);
+    }
+
     .jd-list strong,
     .jd-paragraph strong {
       color: #ffffff;
@@ -1250,40 +1268,36 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
         html += `<div class="jd-section">`;
         html += `<div class="jd-section-title">${escapeHtml(title)}</div>`;
 
-        let listItems = [];
-        let listTag = null;
-
-        function flushListItems() {
-          if (listItems.length > 0) {
-            const tag = listTag === 'ol' ? 'ol' : 'ul';
-            html += `<${tag} class="jd-list jd-list-${tag}">`;
-            listItems.forEach(item => {
-              html += `<li>${formatInline(item)}</li>`;
-            });
-            html += `</${tag}>`;
-            listItems = [];
-            listTag = null;
-          }
-        }
+        const romanSet = new Set(['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX']);
+        let sawOutline = false;
 
         lines.forEach(line => {
-          const numberedMatch = line.match(/^\d+\.\s+(.*)$/);
+          const markerMatch = line.match(/^([A-Za-z]+|\d+)[\.\)]\s+(.*)$/);
           const bulletMatch = line.match(/^[-*•]\s+(.*)$/);
-          if (numberedMatch) {
-            if (listTag && listTag !== 'ol') flushListItems();
-            listTag = 'ol';
-            listItems.push(numberedMatch[1].trim());
+
+          if (markerMatch) {
+            const marker = markerMatch[1];
+            const rest = markerMatch[2].trim();
+            let level;
+            if (marker === marker.toUpperCase() && romanSet.has(marker)) {
+              level = 0;
+              sawOutline = true;
+            } else if (/^[A-Z]$/.test(marker)) {
+              level = 1;
+              sawOutline = true;
+            } else if (/^\d+$/.test(marker)) {
+              level = sawOutline ? 2 : 0;
+            } else {
+              level = sawOutline ? 2 : 0;
+            }
+            html += `<p class="jd-paragraph jd-outline jd-outline-${level}">${formatInline(marker + '. ' + rest)}</p>`;
           } else if (bulletMatch) {
-            if (listTag && listTag !== 'ul') flushListItems();
-            listTag = 'ul';
-            listItems.push(bulletMatch[1].trim());
+            const level = sawOutline ? 2 : 1;
+            html += `<p class="jd-paragraph jd-outline jd-outline-${level}"><span class="jd-bullet-dot">&bull;</span>${formatInline(bulletMatch[1].trim())}</p>`;
           } else {
-            flushListItems();
             html += `<p class="jd-paragraph">${formatInline(line)}</p>`;
           }
         });
-
-        flushListItems();
 
         html += `</div>`;
       });
