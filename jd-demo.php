@@ -332,10 +332,10 @@ $trialTokenSafe = $trialAllowed ? ($trialAccess['token'] ?? '') : '';
       align-items: center;
       gap: 14px;
       color: #f0f4f8;
-      font-size: clamp(34px, 5vw, 58px);
+      font-size: clamp(24px, 2.4vw, 34px);
       font-weight: 800;
-      line-height: 1.02;
-      letter-spacing: -0.03em;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
     }
 
     .enhanced-icon {
@@ -504,7 +504,7 @@ $trialTokenSafe = $trialAllowed ? ($trialAccess['token'] ?? '') : '';
       }
 
       .enhanced-heading {
-        font-size: clamp(30px, 8vw, 42px);
+        font-size: clamp(22px, 6vw, 30px);
       }
 
       .enhanced-subtitle {
