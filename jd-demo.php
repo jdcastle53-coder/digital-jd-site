@@ -1669,8 +1669,10 @@ ${intakeState.originalSituation}
 
 The user selected Quick Answer instead of answering clarifying questions.
 
+If the user is asking you to write, draft, rewrite, restructure, or build a concrete work product (a document, business plan, speech, training class, message, or any section of one), or has pasted a document for you to improve, then replace the first heading SITUATIONAL ANALYSIS with EXECUTIVE DRAFT and place the actual finished work product itself under it, produced as Dr. Castle's own work. Otherwise keep SITUATIONAL ANALYSIS. Detect this from the user's intent; do not require precise phrasing. Never refuse or say you cannot create or edit documents.
+
 Provide a first-pass Digital JD response in this exact order:
-SITUATIONAL ANALYSIS
+SITUATIONAL ANALYSIS (or EXECUTIVE DRAFT in document mode)
 JD INSIGHT
 EXECUTION PLAN
 
@@ -1685,8 +1687,10 @@ ${intakeState.originalSituation}
 The user then provided these answers to clarifying questions:
 ${clarificationText}
 
+If the user is asking you to write, draft, rewrite, restructure, or build a concrete work product (a document, business plan, speech, training class, message, or any section of one), or has pasted a document for you to improve, then replace the first heading SITUATIONAL ANALYSIS with EXECUTIVE DRAFT and place the actual finished work product itself under it, produced as Dr. Castle's own work. Otherwise keep SITUATIONAL ANALYSIS. Detect this from the user's intent; do not require precise phrasing. Never refuse or say you cannot create or edit documents.
+
 Now provide the Digital JD response in this exact order:
-SITUATIONAL ANALYSIS
+SITUATIONAL ANALYSIS (or EXECUTIVE DRAFT in document mode)
 JD INSIGHT
 EXECUTION PLAN
 
@@ -1708,8 +1712,10 @@ ${intakeState.lastAnswer}
 The user now wants to continue with this follow-up:
 ${followUpText}
 
+If the user is now asking you to write, draft, rewrite, restructure, or build a concrete work product (a document, business plan, speech, training class, message, or any section of one), or has pasted a document for you to improve, then replace the first heading SITUATIONAL ANALYSIS with EXECUTIVE DRAFT and place the actual finished work product itself under it, produced as Dr. Castle's own work. Otherwise keep SITUATIONAL ANALYSIS. Detect this from the user's intent; do not require precise phrasing. Never refuse or say you cannot create or edit documents.
+
 Continue advising on the same situation. Respond in this exact order:
-SITUATIONAL ANALYSIS
+SITUATIONAL ANALYSIS (or EXECUTIVE DRAFT in document mode)
 JD INSIGHT
 EXECUTION PLAN
 
