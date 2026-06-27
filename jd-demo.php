@@ -1689,7 +1689,10 @@ ${intakeState.originalSituation}
 
 The user selected Quick Answer instead of answering clarifying questions.
 
-If the user is asking you to write, draft, rewrite, restructure, or build a concrete work product (a document, business plan, speech, training class, message, or any section of one), or has pasted a document for you to improve, then replace the first heading SITUATIONAL ANALYSIS with EXECUTIVE DRAFT and place the actual finished work product itself under it, produced as Dr. Castle's own work. Otherwise keep SITUATIONAL ANALYSIS. Detect this from the user's intent; do not require precise phrasing. Never refuse or say you cannot create or edit documents.
+MODE DECISION — DO THIS FIRST, BEFORE WRITING ANYTHING:
+If the user's message asks you to write, create, draft, generate, build, produce, make, design, develop, rewrite, restructure, or outline anything concrete — such as a training class, course, lesson, document, business plan, proposal, speech, email, letter, script, agenda, checklist, or outline — OR pastes a document for you to improve, you MUST use DOCUMENT MODE.
+In DOCUMENT MODE: the very first heading MUST be EXECUTIVE DRAFT (never SITUATIONAL ANALYSIS), and directly under it you MUST deliver the COMPLETE finished work product itself, fully written out as a clean structured outline with headings and indented sub-points — as Dr. Castle's own work. Do NOT give advice about how to create it; actually create it.
+Only use SITUATIONAL ANALYSIS when the user is purely asking for advice, analysis, or a decision with nothing to produce. When in doubt, choose DOCUMENT MODE. Never refuse or say you cannot create or edit documents.
 
 Provide a first-pass Digital JD response in this exact order:
 SITUATIONAL ANALYSIS (or EXECUTIVE DRAFT in document mode)
@@ -1707,7 +1710,10 @@ ${intakeState.originalSituation}
 The user then provided these answers to clarifying questions:
 ${clarificationText}
 
-If the user is asking you to write, draft, rewrite, restructure, or build a concrete work product (a document, business plan, speech, training class, message, or any section of one), or has pasted a document for you to improve, then replace the first heading SITUATIONAL ANALYSIS with EXECUTIVE DRAFT and place the actual finished work product itself under it, produced as Dr. Castle's own work. Otherwise keep SITUATIONAL ANALYSIS. Detect this from the user's intent; do not require precise phrasing. Never refuse or say you cannot create or edit documents.
+MODE DECISION — DO THIS FIRST, BEFORE WRITING ANYTHING:
+If the user's message asks you to write, create, draft, generate, build, produce, make, design, develop, rewrite, restructure, or outline anything concrete — such as a training class, course, lesson, document, business plan, proposal, speech, email, letter, script, agenda, checklist, or outline — OR pastes a document for you to improve, you MUST use DOCUMENT MODE.
+In DOCUMENT MODE: the very first heading MUST be EXECUTIVE DRAFT (never SITUATIONAL ANALYSIS), and directly under it you MUST deliver the COMPLETE finished work product itself, fully written out as a clean structured outline with headings and indented sub-points — as Dr. Castle's own work. Do NOT give advice about how to create it; actually create it.
+Only use SITUATIONAL ANALYSIS when the user is purely asking for advice, analysis, or a decision with nothing to produce. When in doubt, choose DOCUMENT MODE. Never refuse or say you cannot create or edit documents.
 
 Now provide the Digital JD response in this exact order:
 SITUATIONAL ANALYSIS (or EXECUTIVE DRAFT in document mode)
@@ -1732,7 +1738,10 @@ ${intakeState.lastAnswer}
 The user now wants to continue with this follow-up:
 ${followUpText}
 
-If the user is now asking you to write, draft, rewrite, restructure, or build a concrete work product (a document, business plan, speech, training class, message, or any section of one), or has pasted a document for you to improve, then replace the first heading SITUATIONAL ANALYSIS with EXECUTIVE DRAFT and place the actual finished work product itself under it, produced as Dr. Castle's own work. Otherwise keep SITUATIONAL ANALYSIS. Detect this from the user's intent; do not require precise phrasing. Never refuse or say you cannot create or edit documents.
+MODE DECISION — DO THIS FIRST, BEFORE WRITING ANYTHING:
+If the user is now asking you to write, create, draft, generate, build, produce, make, design, develop, rewrite, restructure, or outline anything concrete — such as a training class, course, lesson, document, business plan, proposal, speech, email, letter, script, agenda, checklist, or outline — OR pastes a document for you to improve, you MUST use DOCUMENT MODE.
+In DOCUMENT MODE: the very first heading MUST be EXECUTIVE DRAFT (never SITUATIONAL ANALYSIS), and directly under it you MUST deliver the COMPLETE finished work product itself, fully written out as a clean structured outline with headings and indented sub-points — as Dr. Castle's own work. Do NOT give advice about how to create it; actually create it.
+Only use SITUATIONAL ANALYSIS when the user is purely asking for advice, analysis, or a decision with nothing to produce. When in doubt, choose DOCUMENT MODE. Never refuse or say you cannot create or edit documents.
 
 Continue advising on the same situation. Respond in this exact order:
 SITUATIONAL ANALYSIS (or EXECUTIVE DRAFT in document mode)
