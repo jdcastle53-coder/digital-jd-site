@@ -279,10 +279,13 @@ $trialTokenSafe = $trialAllowed ? ($trialAccess['token'] ?? '') : '';
       margin-left: 0;
     }
     .jd-outline-1 {
-      margin-left: 1.75rem;
+      margin-left: 2rem;
     }
     .jd-outline-2 {
-      margin-left: 3.5rem;
+      margin-left: 4rem;
+    }
+    .jd-outline-3 {
+      margin-left: 6rem;
     }
     .jd-bullet-dot {
       display: inline-block;
@@ -1363,6 +1366,7 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
         const romanSet = new Set(['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX']);
         let sawOutline = false;
+        let lastMarkerLevel = 0;
 
         lines.forEach(line => {
           const markerMatch = line.match(/^([A-Za-z]+|\d+)[\.\)]\s+(.*)$/);
@@ -1383,9 +1387,10 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
             } else {
               level = sawOutline ? 2 : 0;
             }
+            lastMarkerLevel = level;
             html += `<p class="jd-paragraph jd-outline jd-outline-${level}">${formatInline(marker + '. ' + rest)}</p>`;
           } else if (bulletMatch) {
-            const level = sawOutline ? 2 : 1;
+            const level = Math.min(lastMarkerLevel + 1, 3);
             html += `<p class="jd-paragraph jd-outline jd-outline-${level}"><span class="jd-bullet-dot">&bull;</span>${formatInline(bulletMatch[1].trim())}</p>`;
           } else {
             html += `<p class="jd-paragraph">${formatInline(line)}</p>`;
