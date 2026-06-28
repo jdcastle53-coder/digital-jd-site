@@ -290,6 +290,45 @@ $trialTokenSafe = $trialAllowed ? ($trialAccess['token'] ?? '') : '';
       color: var(--gold, #c9a84c);
     }
 
+    .mode-fork {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .mode-btn {
+      flex: 1 1 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(212,175,55,0.35);
+      background: #0b1223;
+      color: #c9d4e0;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .mode-btn:hover {
+      border-color: rgba(212,175,55,0.7);
+    }
+    .mode-btn-active {
+      border-color: #d4af37;
+      background: #14233f;
+      box-shadow: 0 0 0 1px #d4af37 inset;
+    }
+    .mode-btn-title {
+      font-weight: 800;
+      font-size: 15px;
+      color: #f6d36b;
+    }
+    .mode-btn-sub {
+      font-size: 12px;
+      color: #9fb0c3;
+    }
+
     .jd-list strong,
     .jd-paragraph strong {
       color: #ffffff;
@@ -1092,7 +1131,17 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
   "></div>
 </div>
              <div id="situationInputGroup">
-             <div class="input-prompt">
+             <div class="mode-fork" role="tablist" aria-label="Choose how Digital JD helps you">
+               <button type="button" id="modeAdvisorBtn" class="mode-btn mode-btn-active" role="tab" aria-selected="true" onclick="setMode('advisor')">
+                 <span class="mode-btn-title">Executive Advisor</span>
+                 <span class="mode-btn-sub">Talk through a leadership situation</span>
+               </button>
+               <button type="button" id="modeWorkshopBtn" class="mode-btn" role="tab" aria-selected="false" onclick="setMode('workshop')">
+                 <span class="mode-btn-title">Executive Content Workshop</span>
+                 <span class="mode-btn-sub">Build a document, class, or plan</span>
+               </button>
+             </div>
+             <div class="input-prompt" id="inputPrompt">
                 Describe your situation — the more detail you provide, the sharper the insight.
               </div>
               
@@ -1154,8 +1203,40 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
       clarifyingQuestions: [],
       awaitingClarification: false,
       continuationMode: false,
-      lastAnswer: ''
+      lastAnswer: '',
+      mode: 'advisor'
     };
+
+    function setMode(mode) {
+      intakeState.mode = mode;
+      const advisorBtn = document.getElementById('modeAdvisorBtn');
+      const workshopBtn = document.getElementById('modeWorkshopBtn');
+      const inputPrompt = document.getElementById('inputPrompt');
+      const userInputEl = document.getElementById('userInput');
+      if (advisorBtn && workshopBtn) {
+        const advisorActive = mode === 'advisor';
+        advisorBtn.classList.toggle('mode-btn-active', advisorActive);
+        workshopBtn.classList.toggle('mode-btn-active', !advisorActive);
+        advisorBtn.setAttribute('aria-selected', advisorActive ? 'true' : 'false');
+        workshopBtn.setAttribute('aria-selected', advisorActive ? 'false' : 'true');
+      }
+      if (inputPrompt && userInputEl) {
+        if (mode === 'workshop') {
+          inputPrompt.textContent = 'Describe what you want built — a class, document, plan, or speech. The more detail, the sharper the result.';
+          userInputEl.placeholder = 'Describe the document, training class, plan, or content you want Digital JD to build.';
+        } else {
+          inputPrompt.textContent = 'Describe your situation — the more detail you provide, the sharper the insight.';
+          userInputEl.placeholder = 'Describe the leadership, communication, decision, or execution situation you want to work through.';
+        }
+      }
+    }
+
+    function modeDirective() {
+      if (intakeState.mode === 'workshop') {
+        return `YOU ARE IN CONTENT WORKSHOP MODE. The user has explicitly chosen to have you BUILD something. The very first heading MUST be EXECUTIVE DRAFT (never SITUATIONAL ANALYSIS). Directly under it, deliver the COMPLETE finished work product itself — fully written out as a clean structured outline with headings and indented sub-points — as Dr. Castle's own work. Do NOT give advice about how to create it; actually create it. Never refuse or say you cannot create or edit documents.`;
+      }
+      return `YOU ARE IN EXECUTIVE ADVISOR MODE. The very first heading MUST be SITUATIONAL ANALYSIS. Provide advice, analysis, and a clear decision path — do not produce a full document.`;
+    }
 
     function setBusy(state, statusText = 'Analyzing...') {
       isBusy = state;
@@ -1437,7 +1518,8 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
           clarifyingQuestions: [],
           awaitingClarification: false,
           continuationMode: false,
-          lastAnswer: ''
+          lastAnswer: '',
+          mode: intakeState.mode
         };
 
        chatOutput.innerHTML = '';
@@ -1689,10 +1771,7 @@ ${intakeState.originalSituation}
 
 The user selected Quick Answer instead of answering clarifying questions.
 
-MODE DECISION — DO THIS FIRST, BEFORE WRITING ANYTHING:
-If the user's message asks you to write, create, draft, generate, build, produce, make, design, develop, rewrite, restructure, or outline anything concrete — such as a training class, course, lesson, document, business plan, proposal, speech, email, letter, script, agenda, checklist, or outline — OR pastes a document for you to improve, you MUST use DOCUMENT MODE.
-In DOCUMENT MODE: the very first heading MUST be EXECUTIVE DRAFT (never SITUATIONAL ANALYSIS), and directly under it you MUST deliver the COMPLETE finished work product itself, fully written out as a clean structured outline with headings and indented sub-points — as Dr. Castle's own work. Do NOT give advice about how to create it; actually create it.
-Only use SITUATIONAL ANALYSIS when the user is purely asking for advice, analysis, or a decision with nothing to produce. When in doubt, choose DOCUMENT MODE. Never refuse or say you cannot create or edit documents.
+${modeDirective()}
 
 Provide a first-pass Digital JD response in this exact order:
 SITUATIONAL ANALYSIS (or EXECUTIVE DRAFT in document mode)
@@ -1710,10 +1789,7 @@ ${intakeState.originalSituation}
 The user then provided these answers to clarifying questions:
 ${clarificationText}
 
-MODE DECISION — DO THIS FIRST, BEFORE WRITING ANYTHING:
-If the user's message asks you to write, create, draft, generate, build, produce, make, design, develop, rewrite, restructure, or outline anything concrete — such as a training class, course, lesson, document, business plan, proposal, speech, email, letter, script, agenda, checklist, or outline — OR pastes a document for you to improve, you MUST use DOCUMENT MODE.
-In DOCUMENT MODE: the very first heading MUST be EXECUTIVE DRAFT (never SITUATIONAL ANALYSIS), and directly under it you MUST deliver the COMPLETE finished work product itself, fully written out as a clean structured outline with headings and indented sub-points — as Dr. Castle's own work. Do NOT give advice about how to create it; actually create it.
-Only use SITUATIONAL ANALYSIS when the user is purely asking for advice, analysis, or a decision with nothing to produce. When in doubt, choose DOCUMENT MODE. Never refuse or say you cannot create or edit documents.
+${modeDirective()}
 
 Now provide the Digital JD response in this exact order:
 SITUATIONAL ANALYSIS (or EXECUTIVE DRAFT in document mode)
@@ -1738,10 +1814,7 @@ ${intakeState.lastAnswer}
 The user now wants to continue with this follow-up:
 ${followUpText}
 
-MODE DECISION — DO THIS FIRST, BEFORE WRITING ANYTHING:
-If the user is now asking you to write, create, draft, generate, build, produce, make, design, develop, rewrite, restructure, or outline anything concrete — such as a training class, course, lesson, document, business plan, proposal, speech, email, letter, script, agenda, checklist, or outline — OR pastes a document for you to improve, you MUST use DOCUMENT MODE.
-In DOCUMENT MODE: the very first heading MUST be EXECUTIVE DRAFT (never SITUATIONAL ANALYSIS), and directly under it you MUST deliver the COMPLETE finished work product itself, fully written out as a clean structured outline with headings and indented sub-points — as Dr. Castle's own work. Do NOT give advice about how to create it; actually create it.
-Only use SITUATIONAL ANALYSIS when the user is purely asking for advice, analysis, or a decision with nothing to produce. When in doubt, choose DOCUMENT MODE. Never refuse or say you cannot create or edit documents.
+${modeDirective()}
 
 Continue advising on the same situation. Respond in this exact order:
 SITUATIONAL ANALYSIS (or EXECUTIVE DRAFT in document mode)
