@@ -616,24 +616,24 @@ $trialTokenSafe = $trialAllowed ? ($trialAccess['token'] ?? '') : '';
     }
 
     .post-answer-actions {
-      display: flex;
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
       gap: 10px;
       margin-top: 14px;
       width: 100%;
-      max-width: 360px;
+      max-width: 620px;
     }
 
     .post-answer-btn {
       width: 100%;
-      padding: 14px 16px;
-      border-radius: 14px;
+      padding: 10px 14px;
+      border-radius: 12px;
       border: none;
       font-weight: 700;
-      font-size: 15px;
+      font-size: 14px;
       cursor: pointer;
       transition: transform 0.15s ease, opacity 0.15s ease;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.24);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.22);
       text-align: left;
     }
 
@@ -650,38 +650,42 @@ $trialTokenSafe = $trialAllowed ? ($trialAccess['token'] ?? '') : '';
 
     .post-answer-btn-title {
       display: block;
-      font-size: 18px;
+      font-size: 14px;
       line-height: 1.2;
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
     }
 
     .post-answer-btn-subtext {
       display: block;
-      font-size: 12px;
-      line-height: 1.45;
+      font-size: 11px;
+      line-height: 1.35;
       font-weight: 400;
-      opacity: 0.92;
+      opacity: 0.9;
     }
 
     .btn-continue {
       background: linear-gradient(180deg, var(--blue-1), #1e40af);
       color: #ffffff;
+      border: 1px solid #d4af37;
     }
 
     .btn-close {
       background: linear-gradient(180deg, var(--blue-2), #1e3a8a);
       color: #ffffff;
+      border: 1px solid #d4af37;
     }
 
     .btn-new {
       background: linear-gradient(180deg, var(--blue-3), #0b2f70);
       color: #ffffff;
+      border: 1px solid #d4af37;
     }
 
     .btn-handoff {
       background: linear-gradient(180deg, #d4af37, #b8932f);
       color: #14233f;
+      border: 1px solid #1e40af;
     }
     .btn-handoff .post-answer-btn-subtext {
       color: #2a3a16;
@@ -1617,7 +1621,7 @@ scrollBubbleToTop(rendered.row);
             <div class="signal-ring r2"></div>
             <div class="signal-ring r3"></div>
           </div>
-          <div class="thinking-label">Digital JD is analyzing your situation...</div>
+          <div class="thinking-label">${intakeState.mode === 'workshop' ? 'Digital JD is building your content...' : 'Digital JD is analyzing your situation...'}</div>
         </div>
       `;
 
@@ -1975,7 +1979,7 @@ function stopDictationIfRunning() {
   }
 }
     async function sendFinalToBrain(useQuickAnswer, clarificationText = '') { stopDictationIfRunning();
-      setBusy(true, useQuickAnswer ? 'Generating quick answer...' : 'Analyzing...');
+      setBusy(true, useQuickAnswer ? 'Generating quick answer...' : (intakeState.mode === 'workshop' ? 'Building your content...' : 'Analyzing...'));
       removeTransientControls();
       showThinkingIndicator();
 
