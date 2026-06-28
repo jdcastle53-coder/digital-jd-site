@@ -679,6 +679,14 @@ $trialTokenSafe = $trialAllowed ? ($trialAccess['token'] ?? '') : '';
       color: #ffffff;
     }
 
+    .btn-handoff {
+      background: linear-gradient(180deg, #d4af37, #b8932f);
+      color: #14233f;
+    }
+    .btn-handoff .post-answer-btn-subtext {
+      color: #2a3a16;
+    }
+
 .composer {
     border-top: 1px solid var(--border);
     padding: 6px 16px 8px;
@@ -1131,7 +1139,7 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
   "></div>
 </div>
              <div id="situationInputGroup">
-             <div class="mode-fork" role="tablist" aria-label="Choose how Digital JD helps you">
+             <div class="mode-fork" id="modeFork" role="tablist" aria-label="Choose how Digital JD helps you">
                <button type="button" id="modeAdvisorBtn" class="mode-btn mode-btn-active" role="tab" aria-selected="true" onclick="setMode('advisor')">
                  <span class="mode-btn-title">Executive Advisor</span>
                  <span class="mode-btn-sub">Talk through a leadership situation</span>
@@ -1437,10 +1445,22 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
       const actions = document.createElement('div');
       actions.className = 'post-answer-actions';
+
+      const handoffTitle = intakeState.mode === 'workshop'
+        ? 'Switch to Executive Advisor'
+        : 'Build Content From This';
+      const handoffSub = intakeState.mode === 'workshop'
+        ? 'Talk through a decision or situation, carrying this work along.'
+        : 'Turn this into a document, class, plan, or script.';
+
       actions.innerHTML = `
         <button class="post-answer-btn btn-continue" data-action="continue">
           <span class="post-answer-btn-title">Continue This Situation</span>
           <span class="post-answer-btn-subtext">Keep working on this same issue and go deeper.</span>
+        </button>
+        <button class="post-answer-btn btn-handoff" data-action="handoff">
+          <span class="post-answer-btn-title">${handoffTitle}</span>
+          <span class="post-answer-btn-subtext">${handoffSub}</span>
         </button>
         <button class="post-answer-btn btn-close" data-action="close">
           <span class="post-answer-btn-title">Close This Situation</span>
@@ -1472,6 +1492,8 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
         // Bring back the input box so the user can actually type their continuation.
         const situationInputGroupContinue = document.getElementById('situationInputGroup');
         if (situationInputGroupContinue) situationInputGroupContinue.style.display = '';
+        const forkContinue = document.getElementById('modeFork');
+        if (forkContinue) forkContinue.style.display = 'none';
         userInput.value = '';
         userInput.focus();
 
@@ -1479,6 +1501,29 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
           'system',
           'Continue this situation. Tell me what part you want to work on next, what changed, or what decision you need to make now.'
         );
+        scrollBubbleToTop(rendered.row);
+        return;
+      }
+
+      if (action === 'handoff') {
+        // Cross over to the other mode at the decision point, carrying the thread along.
+        const goingToWorkshop = intakeState.mode !== 'workshop';
+        setMode(goingToWorkshop ? 'workshop' : 'advisor');
+
+        intakeState.awaitingClarification = false;
+        intakeState.continuationMode = true;
+
+        const situationInputGroupHandoff = document.getElementById('situationInputGroup');
+        if (situationInputGroupHandoff) situationInputGroupHandoff.style.display = '';
+        const forkHandoff = document.getElementById('modeFork');
+        if (forkHandoff) forkHandoff.style.display = 'none';
+        userInput.value = '';
+        userInput.focus();
+
+        const handoffMsg = goingToWorkshop
+          ? 'Switched to the Executive Content Workshop, carrying this conversation along. Tell me what to build — a document, training class, plan, email, or script — and I will produce it.'
+          : 'Switched to the Executive Advisor, carrying this work along. Tell me what you want to think through or decide.';
+        const rendered = createMessage('system', handoffMsg);
         scrollBubbleToTop(rendered.row);
         return;
       }
@@ -1500,6 +1545,8 @@ transition: border-color 0.2s ease, box-shadow 0.2s ease;
   // Bring back the situation box for the next fresh situation.
   const situationInputGroupClose = document.getElementById('situationInputGroup');
   if (situationInputGroupClose) situationInputGroupClose.style.display = '';
+  const forkClose = document.getElementById('modeFork');
+  if (forkClose) forkClose.style.display = 'flex';
 
   stopDictationIfRunning();
 
@@ -1529,6 +1576,8 @@ userInput.style.height = '160px';
 // Bring back the situation box for the next fresh situation.
 const situationInputGroupNew = document.getElementById('situationInputGroup');
 if (situationInputGroupNew) situationInputGroupNew.style.display = '';
+const forkNew = document.getElementById('modeFork');
+if (forkNew) forkNew.style.display = 'flex';
 
 if (recognition && isListening) {
   recognition.stop();
