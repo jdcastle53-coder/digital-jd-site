@@ -1,0 +1,144 @@
+<!--
+  ============================================================
+  DIGITAL JD PROMO CARD  —  paste this whole block into Comcastle
+  ------------------------------------------------------------
+  WHERE TO PASTE:
+    • WordPress  : Appearance > Widgets > add a "Custom HTML" block
+                   to the Footer, OR a footer/header code area.
+    • Site builder (Bluehost/Weebly/Wix): add an "Embed Code" /
+                   "Custom HTML" element to the page footer.
+    • Plain HTML : paste right before the closing </body> tag.
+  It is fully self-contained — no other files needed.
+  ============================================================
+-->
+<div id="djd-promo" role="dialog" aria-label="Discover Digital JD" aria-live="polite">
+  <button id="djd-promo-close" type="button" aria-label="Close">&times;</button>
+  <div class="djd-promo-kicker">EXECUTIVE CLARITY</div>
+  <div class="djd-promo-title">Meet Digital&nbsp;JD</div>
+  <p class="djd-promo-text">
+    Think sharper. Decide faster. Lead with confidence. Experience the
+    intelligent leadership system built from Dr.&nbsp;Castle&apos;s expertise.
+  </p>
+  <a class="djd-promo-btn" href="https://DigitalJD.org" target="_blank" rel="noopener">
+    Explore Digital&nbsp;JD &rarr;
+  </a>
+</div>
+
+<style>
+  #djd-promo {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    z-index: 99999;
+    width: 340px;
+    max-width: calc(100vw - 32px);
+    box-sizing: border-box;
+    padding: 22px 22px 24px;
+    border-radius: 16px;
+    border: 1px solid rgba(212,175,55,0.55);
+    background: linear-gradient(160deg, #0c1426 0%, #0a1020 100%);
+    box-shadow: 0 18px 48px rgba(0,0,0,0.55);
+    color: #e7eef7;
+    font-family: Georgia, "Times New Roman", serif;
+    transform: translateY(140%);
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.16,0.84,0.44,1), opacity 0.5s ease;
+  }
+  #djd-promo.djd-show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  #djd-promo-close {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #8aa0b8;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    padding: 4px;
+  }
+  #djd-promo-close:hover { color: #f6d36b; }
+  .djd-promo-kicker {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    letter-spacing: 2.5px;
+    font-weight: 700;
+    color: #d4af37;
+    margin-bottom: 6px;
+  }
+  .djd-promo-title {
+    font-size: 26px;
+    font-weight: 700;
+    color: #f6d36b;
+    margin: 0 0 8px;
+    line-height: 1.15;
+  }
+  .djd-promo-text {
+    font-size: 14px;
+    line-height: 1.55;
+    color: #c6d2e0;
+    margin: 0 0 18px;
+  }
+  .djd-promo-btn {
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+    padding: 12px 16px;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #e6c558, #c79a2e);
+    color: #14233f;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    text-decoration: none;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .djd-promo-btn:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+  }
+  @media (max-width: 480px) {
+    #djd-promo { right: 12px; bottom: 12px; width: auto; left: 12px; }
+  }
+</style>
+
+<script>
+  (function () {
+    var KEY = "djd_promo_seen";
+    // Once per visit: skip if already shown this browsing session.
+    try { if (sessionStorage.getItem(KEY)) return; } catch (e) {}
+
+    function init() {
+      var card = document.getElementById("djd-promo");
+      var closeBtn = document.getElementById("djd-promo-close");
+      if (!card) return;
+
+      // Slide in after a few seconds.
+      setTimeout(function () { card.classList.add("djd-show"); }, 4000);
+
+      function dismiss() {
+        card.classList.remove("djd-show");
+        try { sessionStorage.setItem(KEY, "1"); } catch (e) {}
+        setTimeout(function () {
+          if (card && card.parentNode) card.parentNode.removeChild(card);
+        }, 600);
+      }
+      if (closeBtn) closeBtn.addEventListener("click", dismiss);
+      // Mark as seen when they click through, too.
+      var link = card.querySelector(".djd-promo-btn");
+      if (link) link.addEventListener("click", function () {
+        try { sessionStorage.setItem(KEY, "1"); } catch (e) {}
+      });
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else {
+      init();
+    }
+  })();
+</script>
