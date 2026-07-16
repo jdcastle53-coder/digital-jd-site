@@ -37,11 +37,11 @@ These were confirmed by reading the current code. They shape the plan.
   (`buy.stripe.com/...`). `api/create-checkout.js` exists but is **NOT wired**.
 - **Live billing management = hardcoded Stripe billing-portal link** in
   `index.html`. `api/create-portal.js` exists but is **NOT wired**.
-- **Tier vocabulary mismatch (UNRESOLVED — see Step 11):** live gating
-  (`jd-demo.php`) and live Payment Links use **`lite` / `core` / `pro`**. The
-  target canonical set is **`essentials` / `pro` / `founding` / `executive`**
-  (matches the unused `create-checkout.js`). This MUST be reconciled by
-  verification before any tier change.
+- **Tier vocabulary (DEFERRED to post-migration Phase 14):** live gating
+  (`jd-demo.php`) and live Payment Links use **`lite` / `core` / `pro`**. A
+  different set (`essentials` / `pro` / `founding` / `executive`) appears in the
+  unused `create-checkout.js`. **Stripe and tiers stay frozen during migration**
+  (Step 11); the restructure happens only after migration completes (Phase 14).
 - **AI brain parity gap:** `api/jd-brain-gateway.js` is currently a thin stub
   (single model call, minimal prompt) — **not** a port of the sophisticated
   `jd-brain.php`. Full parity is Step 8.
@@ -289,34 +289,35 @@ verified.
 
 ---
 
-## Step 11 — Preserve the existing Stripe purchase flow
+## Step 11 — Keep Stripe fully static (freeze payments during migration)
 
-**Objective:** Do not disturb payments during migration.
+**Objective:** Stripe functionality stays **exactly as it is today** for the
+entire migration. **No tier work of any kind happens during Steps 0–12.** The
+tier restructure is deferred to a dedicated post-migration phase (Phase 14).
 
 **Actions**
 - Keep current Stripe Payment Links **unchanged**.
+- Keep the current hardcoded billing-portal link **unchanged**.
+- Keep the current live tier vocabulary (**`lite` / `core` / `pro`**) and all
+  existing gating **unchanged**.
 - **Do NOT wire `api/create-checkout.js`.**
-- Do NOT redesign subscription synchronization yet.
-- Preserve purchase buttons and return paths; confirm Payment Links functional.
+- **Do NOT wire `api/create-portal.js`.**
+- **Do NOT** rename, add, remove, or remap any tier.
+- **Do NOT** redesign Stripe→Supabase subscription synchronization.
+- Only permitted change: repointing a purchase/return URL if a route it targets
+  physically moves — the underlying Stripe products/prices/links stay identical.
 - Verify no Bluehost server-side Stripe dependency remains.
 
-**Tier reconciliation (VERIFY-FIRST — flagged conflict)**
-- Target canonical tiers: **`essentials` / `pro` / `founding` / `executive`.**
-- **VERIFIED CONFLICT:** live gating + live Payment Links currently use
-  **`lite` / `core` / `pro`.** Before ANY tier change, verify the live
-  entitlement writer (the Stripe→Supabase path) and confirm what `plan_tier`
-  values production actually stores. **Do not rename/replace tiers until this
-  is verified**, or production access could break.
-- The improved Stripe→Supabase entitlement process is a **post-migration
-  phase**.
+**Deferred to Phase 14 (post-migration):** the tier vocabulary reconciliation
+(live `lite`/`core`/`pro` → new structure) and the improved Stripe→Supabase
+entitlement process. Nothing about tiers is decided or changed until then.
 
 **Verification gate**
-- [ ] Payment Links confirmed working; buttons/return paths intact.
-- [ ] Live `plan_tier` values documented from `...bam`.
-- [ ] Tier reconciliation decision made WITH verified data.
+- [ ] Payment Links + portal link confirmed working; buttons/return paths intact.
+- [ ] No tier, product, price, or entitlement logic was modified.
 - [ ] Human approves.
 
-**Rollback:** No change to Stripe = inherently safe; revert any button edits.
+**Rollback:** No change to Stripe = inherently safe; revert any URL edit.
 
 ---
 
@@ -351,11 +352,31 @@ static hosting is the interim host until this phase runs.
 
 ---
 
+## Phase 14 (DEFERRED, POST-MIGRATION) — Stripe tier restructure
+
+Out of scope until the migration (Steps 0–12) is complete and signed off. Only
+after Bluehost is static-only and all functionality runs on Vercel do we touch
+tiers. When resumed:
+
+- Verify the live entitlement writer (Stripe→Supabase path) and document the
+  actual `plan_tier` values production stores (currently `lite`/`core`/`pro`).
+- Define the new canonical tier structure to accurately reflect the intended
+  offering.
+- Migrate/remap Stripe products, prices, and Payment Links (or wire
+  `api/create-checkout.js` / `api/create-portal.js`) to the new structure.
+- Update app gating to the new tiers and redesign Stripe→Supabase entitlement
+  sync — all verified against production data before cutover.
+
+**Nothing about tiers is decided or changed until this phase.**
+
+---
+
 ## Open items requiring your decision
 
 1. **Production Supabase connection:** you must connect `...bam`
    (`hiejaayyeprfnrrukbam`) to v0/Vercel tooling (Step 2). v0 cannot self-connect.
-2. **Tier vocabulary:** confirm the reconciliation approach at Step 11 once live
-   `plan_tier` values are verified.
-3. **`enterprise.html`:** confirm whether it exists live (referenced by
+2. **`enterprise.html`:** confirm whether it exists live (referenced by
    `index.html`/`contact.html` but absent from the repo).
+
+> Note: tier vocabulary is intentionally **not** an open item during migration.
+> It is fully deferred to Phase 14.
