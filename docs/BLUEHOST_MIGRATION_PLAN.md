@@ -46,17 +46,24 @@
 
 Legend: `[ ]` = not started · `[~]` = in progress · `[x]` = done + verified.
 
-### [ ] Step 0 — Retrieve Bluehost-only files
+### [x] Step 0 — Retrieve Bluehost-only files
 Pull the live PHP source (`jd-access.php`, live `jd-brain.php`,
 `reset-password.php`, and possibly `enterprise.html`) off Bluehost and diff the
 live files against the repo's `jd-demo.php`.
 **Verify:** all live PHP files are captured into an offline archive and their
 behavior is documented before anything is changed.
+**DONE 2026-07-27:** `jd-brain.php` (617), `jd-access.php` (211),
+`reset-password.php` (100) archived to `docs/bluehost-archive/`. Findings +
+diff vs stub recorded in `docs/PHP_TO_VERCEL_PARITY.md`.
+**STILL OUTSTANDING:** `enterprise.html` was not provided.
 
-### [ ] Step 1 — PHP→Vercel feature-parity spec
+### [~] Step 1 — PHP→Vercel feature-parity spec
 Write down exactly what the PHP app does (inputs, outputs, auth checks, access
 gates, AI calls) so Vercel can replicate it feature-for-feature.
 **Verify:** every PHP behavior maps to a planned Vercel route/function.
+**IN PROGRESS:** brain request/response contract, two-mode behavior, research
+grounding, and trial-gating captured in `docs/PHP_TO_VERCEL_PARITY.md`. Next:
+map each behavior to a concrete Vercel route/function.
 
 ### [ ] Step 2 — Verify Vercel/Supabase production config
 Confirm production Vercel + Supabase settings and connect the "bam" production
