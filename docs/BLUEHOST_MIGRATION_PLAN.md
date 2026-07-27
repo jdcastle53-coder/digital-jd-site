@@ -37,8 +37,10 @@
   `jd-brain.php`. Real parity is Step 8.
 - **Stripe:** live checkout = hardcoded Payment Links; `create-checkout.js` and
   `create-portal.js` exist but are NOT wired. No Stripe→Supabase webhook exists.
-- **enterprise.html:** referenced by `index.html`/`contact.html` but ABSENT from
-  the repo.
+- **enterprise.html:** referenced by `index.html`/`contact.html`. Live copy now
+  archived at `docs/bluehost-archive/enterprise.html`, but still ABSENT from the
+  deployed repo root — must be restored/ported during the route work (Step 4/10).
+  It is presentation-only (accordion + Calendly CTA); no auth/Stripe/Supabase.
 
 ---
 
@@ -53,9 +55,10 @@ live files against the repo's `jd-demo.php`.
 **Verify:** all live PHP files are captured into an offline archive and their
 behavior is documented before anything is changed.
 **DONE 2026-07-27:** `jd-brain.php` (617), `jd-access.php` (211),
-`reset-password.php` (100) archived to `docs/bluehost-archive/`. Findings +
-diff vs stub recorded in `docs/PHP_TO_VERCEL_PARITY.md`.
-**STILL OUTSTANDING:** `enterprise.html` was not provided.
+`reset-password.php` (100), and `enterprise.html` (352) archived to
+`docs/bluehost-archive/`. Findings + diff vs stub recorded in
+`docs/PHP_TO_VERCEL_PARITY.md`. Step 0 fully closed — all four Bluehost-only
+files captured.
 
 ### [~] Step 1 — PHP→Vercel feature-parity spec
 Write down exactly what the PHP app does (inputs, outputs, auth checks, access
