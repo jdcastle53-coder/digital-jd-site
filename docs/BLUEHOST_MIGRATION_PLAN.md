@@ -133,9 +133,16 @@ L2040). Also catalogued broken placeholder links (dead Stripe link + `#` /
 ordering defined: don't edit the 3 links until Steps 6/7/8 targets work; keep
 PHP live until Step 12; change in one verified commit.
 
-### [ ] Step 5 — Initial Supabase logging
+### [~] Step 5 — Initial Supabase logging  (DESIGN done; live verify BLOCKED)
 Add baseline event logging in Supabase (deeper Phase-2 logging deferred).
 **Verify:** core auth/access/AI events are logged in the prod project.
+**STATUS 2026-07-27:** DESIGN complete in `docs/LOGGING_PLAN.md`, grounded in the
+gateway's existing structured logger (dual-write to `application_logs` with
+level/action/request_id/user_id/etc.). LIVE portion BLOCKED: sandbox env still
+resolves to `waevqqrqelloacoxywqq` (rechecked 2026-07-27, not yet re-synced to
+BAM), so cannot confirm real tables or resolve the `application_logs` vs
+`messages` discrepancy yet. Re-run the BAM read once the sandbox env re-syncs
+(or next session), then finish + flip to [x].
 
 ### [ ] Step 6 — Consolidate auth into Supabase Auth
 Move all authentication into Supabase Auth and replace `reset-password.php`.
