@@ -72,10 +72,32 @@ concentrated in Step 6 (auth), Step 7 (trials), Step 8 (brain IP), plus a Step 4
 cutover of three outbound `jd-demo.php`/`reset-password.php` links in
 `index.html` (L1570, L1974, L2040).
 
-### [ ] Step 2 — Verify Vercel/Supabase production config
+### [~] Step 2 — Verify Vercel/Supabase production config  (BLOCKED — awaiting user connect)
 Confirm production Vercel + Supabase settings and connect the "bam" production
 project to v0.
 **Verify:** v0 is connected to `hiejaayyeprfnrrukbam`; prod schema introspectable.
+
+**STATUS 2026-07-27 — BLOCKED, decision recorded.**
+- CONFIRMED mismatch: v0 integration points at `waevqqrqelloacoxywqq`; live code
+  (`auth.js` L3/L23, `index.html` L6/L7, `jd-brain.html` L13/L14,
+  archived `reset-password.php`) uses production `hiejaayyeprfnrrukbam`.
+- DECISION (user): connect the REAL prod project `hiejaayyeprfnrrukbam` to v0.
+  Keep waevqqrqelloacoxywqq out of the migration. This is a user-only action
+  (Supabase auth required) — v0 cannot self-connect.
+- Integration schema introspection currently ERRORS — recheck after reconnect.
+
+**User action required (connect "bam"):**
+  1. Project Settings (top-right) → Integrations/Connections → Supabase.
+  2. Disconnect `waevqqrqelloacoxywqq`, connect `hiejaayyeprfnrrukbam` ("bam").
+  3. Confirm env vars now resolve to the bam host.
+
+**v0 verification checklist to run AFTER reconnect (the Step 2 gate):**
+  - [ ] `SUPABASE_URL` host resolves to `hiejaayyeprfnrrukbam.supabase.co`.
+  - [ ] Integration schema introspects without error.
+  - [ ] Confirm expected prod tables exist (auth users, `messages` logging
+        table used by `jd-brain.html`); record actual schema snapshot.
+  - [ ] Confirm no accidental writes were made to `waevqqrqelloacoxywqq`.
+  - [ ] Then flip this step to [x] and record the schema snapshot.
 
 ### [ ] Step 3 — Documentation & coding standards
 Establish the coding + documentation standards the ported code must follow.
