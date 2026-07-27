@@ -60,13 +60,17 @@ behavior is documented before anything is changed.
 `docs/PHP_TO_VERCEL_PARITY.md`. Step 0 fully closed — all four Bluehost-only
 files captured.
 
-### [~] Step 1 — PHP→Vercel feature-parity spec
+### [x] Step 1 — PHP→Vercel feature-parity spec
 Write down exactly what the PHP app does (inputs, outputs, auth checks, access
 gates, AI calls) so Vercel can replicate it feature-for-feature.
 **Verify:** every PHP behavior maps to a planned Vercel route/function.
-**IN PROGRESS:** brain request/response contract, two-mode behavior, research
-grounding, and trial-gating captured in `docs/PHP_TO_VERCEL_PARITY.md`. Next:
-map each behavior to a concrete Vercel route/function.
+**DONE 2026-07-27:** full route/behavior map in `docs/PHP_TO_VERCEL_PARITY.md`
+(verified against current `api/` + root `*.html`). Every Bluehost behavior maps
+to a concrete Vercel route. Findings: app shell (`jd-brain.html`) + billing
+portal already wired; `signin.html` present (verify); substantive work is
+concentrated in Step 6 (auth), Step 7 (trials), Step 8 (brain IP), plus a Step 4
+cutover of three outbound `jd-demo.php`/`reset-password.php` links in
+`index.html` (L1570, L1974, L2040).
 
 ### [ ] Step 2 — Verify Vercel/Supabase production config
 Confirm production Vercel + Supabase settings and connect the "bam" production

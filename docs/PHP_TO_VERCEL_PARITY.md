@@ -13,7 +13,9 @@ Source of truth for the port: `docs/bluehost-archive/` (live Bluehost files, ver
 | `jd-access.php` | 211 | 7-day trial-token gating. |
 | `reset-password.php` | 100 | Supabase password reset (HTML+JS, minimal PHP). |
 
-`enterprise.html` was NOT provided and is not in the repo — still outstanding.
+`enterprise.html` recovered + archived at `docs/bluehost-archive/enterprise.html`
+(presentation-only: accordion + Calendly CTA, no auth/Stripe/Supabase). Still
+absent from the deployed repo root — restore during Step 4/10 route work.
 
 ---
 
@@ -62,5 +64,35 @@ Reads (JSON body, with fallbacks): `message | prompt | input | query`, plus
 
 1. **`jd-trials.json` flat-file** → must move to Supabase before the brain is ported (no persistent disk on Vercel).
 2. **Stub gateway has zero IP** → Step 8 is a near-full rewrite, not a tweak.
-3. **`enterprise.html` still missing.**
+3. **`enterprise.html`** recovered but not yet served from the Vercel repo root.
 4. **Hardcoded Supabase creds** in reset-password → move to env vars during port.
+
+---
+
+## STEP 1 DELIVERABLE — Route/behavior map (Bluehost → Vercel)
+
+Verified against the current repo (`api/`, root `*.html`) on 2026-07-27.
+Legend: [EXISTS] wired today · [STUB] present but hollow · [TODO] not built.
+
+| Bluehost behavior (source) | Target Vercel route | State today | Migration step |
+|---|---|---|---|
+| `jd-demo.php` (legacy app UI) | `jd-brain.html` | [EXISTS] calls `/api/jd-brain-gateway`, logs to Supabase `messages` | Cutover in 4/10 |
+| `jd-brain.php` (AI brain IP) | `POST /api/jd-brain-gateway` | [STUB] generic 1-liner, none of the IP | **Step 8** (near-full port) |
+| `jd-access.php` (7-day trial, flat file) | Supabase `trials` table + gate inside gateway | [TODO] no server trial gate on Vercel | **Step 7** |
+| `reset-password.php` (Supabase PKCE reset) | `signin.html` + Supabase JS (Vercel) | [EXISTS] `signin.html` present; creds move to env | **Step 6** |
+| Stripe checkout (Payment Links, live) | `POST /api/create-checkout` (UNUSED) + live links | [STUB] APIs unwired; keep static | **Step 11 hold / Phase 14** |
+| Stripe billing portal | `POST /api/create-portal` | [EXISTS] called by `jd-brain.html` | Verify only |
+| `enterprise.html` | Vercel root `enterprise.html` | [TODO] recovered in archive, not served | Step 4/10 |
+
+### Cutover leak to fix (exact locations in `index.html`)
+- L1570: nav CTA → `https://digitaljd.org/jd-demo.php` (should point to Vercel app)
+- L1974: post-signin redirect → `jd-demo.php`
+- L2040: password-reset `redirectTo` → `reset-password.php`
+These three outbound links are the last hard dependencies on Bluehost PHP from
+the landing page. They are the concrete Step 4 route-transition targets.
+
+### Parity conclusion
+Every Bluehost behavior maps to a concrete Vercel route. Two are effectively
+done (app shell, billing portal), one is a verify (signin), and the substantive
+work is concentrated in **Steps 6 (auth), 7 (trials), 8 (brain IP)** plus the
+**Step 4 cutover** of the three `index.html` links above. Step 1 is COMPLETE.
