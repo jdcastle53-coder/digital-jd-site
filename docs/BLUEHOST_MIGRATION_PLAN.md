@@ -12,6 +12,25 @@
 
 ---
 
+## >>> RESUME HERE (next session) <<<
+Steps 0-4 DONE. Step 5 DESIGN done. Production points at BAM correctly.
+BLOCKER: the v0 SANDBOX env is stuck showing the OLD project
+`waevqqrqelloacoxywqq` (not BAM `hiejaayyeprfnrrukbam`) — a sandbox snapshot that
+did NOT refresh this session despite the user re-entering the key and
+redeploying. This is a v0-side refresh issue, NOT a production problem and NOT a
+user error. It is expected to clear in a FRESH session.
+
+FIRST ACTION next session: run the BAM check —
+  node --env-file-if-exists=/vercel/share/.env.project -e "const k=process.env.SUPABASE_SERVICE_ROLE_KEY||'';let r='';try{r=JSON.parse(Buffer.from(k.split('.')[1],'base64').toString()).ref}catch(e){};console.log(process.env.SUPABASE_URL, r)"
+  - If it shows `hiejaayyeprfnrrukbam`: read tables, resolve
+    `application_logs` vs `messages`, flip Steps 2 & 5 to [x], continue at Step 6.
+  - If it STILL shows `waevqqrqelloacoxywqq`: do NOT send the user clicking again
+    — production is already fixed. Investigate the v0↔Supabase integration
+    binding instead (the integration is still tied to the deleted orange-elephant
+    store; the env vars need to originate from BAM).
+
+---
+
 ## End-state (current decision)
 
 - **Interim:** reduce Bluehost to STATIC-ONLY hosting (HTML/CSS/presentation JS,
