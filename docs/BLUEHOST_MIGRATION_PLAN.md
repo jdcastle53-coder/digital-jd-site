@@ -108,9 +108,19 @@ project.
   - This pending item does NOT block Step 3. It DOES need to clear before Step 8
     (brain port) so v0 can read/write BAM directly.
 
-### [ ] Step 3 — Documentation & coding standards
+### [x] Step 3 — Documentation & coding standards
 Establish the coding + documentation standards the ported code must follow.
 **Verify:** standards doc exists and is agreed before porting begins.
+**DONE 2026-07-27:** `docs/CODING_STANDARDS.md` written, grounded in the real
+`api/jd-brain-gateway.js` + `auth.js` patterns (ES-module handlers, env-only
+secrets, dual-write structured logging, generic client errors). Surfaced TWO
+discrepancies to resolve before their steps (NOT assumed away):
+  1. Log table name: gateway writes `application_logs` but plan/`jd-brain.html`
+     reference `messages` — confirm real table(s) in Step 5.
+  2. Trial length: `auth.js` uses 24h (`TRIAL_HOURS=24`) vs marketing "7-day
+     Sprint" vs `jd-access.php` 7-day file trial — decide with JD before Step 7.
+**PENDING USER AGREEMENT:** standards to be confirmed by JD (esp. plain JS / no
+TS, and the two discrepancies above).
 
 ### [ ] Step 4 — Non-breaking route-transition map
 Map every current URL to its future Vercel route with zero production breakage.
