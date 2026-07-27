@@ -122,9 +122,16 @@ discrepancies to resolve before their steps (NOT assumed away):
 **PENDING USER AGREEMENT:** standards to be confirmed by JD (esp. plain JS / no
 TS, and the two discrepancies above).
 
-### [ ] Step 4 — Non-breaking route-transition map
+### [x] Step 4 — Non-breaking route-transition map
 Map every current URL to its future Vercel route with zero production breakage.
 **Verify:** each live URL has a defined target route + redirect strategy.
+**DONE 2026-07-27:** full inventory in `docs/ROUTE_TRANSITION_MAP.md`. Bluehost
+PHP dependency is isolated to exactly 3 links in `index.html` (L1570, L1974,
+L2040). Also catalogued broken placeholder links (dead Stripe link + `#` /
+`hello@your-domain.com` placeholders) and a tier-vocabulary discrepancy
+(`essentials/pro/executive` vs `lite/core/pro`) deferred to Phase 14. Cutover
+ordering defined: don't edit the 3 links until Steps 6/7/8 targets work; keep
+PHP live until Step 12; change in one verified commit.
 
 ### [ ] Step 5 — Initial Supabase logging
 Add baseline event logging in Supabase (deeper Phase-2 logging deferred).

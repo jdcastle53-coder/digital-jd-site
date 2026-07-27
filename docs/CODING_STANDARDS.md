@@ -74,10 +74,10 @@ ported from Bluehost PHP into Vercel during Steps 4–12.
   server-side, never ship it wholesale to the browser.
 
 ## 8. Trial / access (for Step 7)
-- **DISCREPANCY TO RESOLVE:** `auth.js` sets `TRIAL_HOURS = 24` (24-hour trial),
-  while marketing says a "7-day Executive Sprint" and `jd-access.php` used a
-  7-day file-based trial. Decide the real trial length with JD before Step 7 and
-  make it a single server-side constant. Do not silently pick one.
+- **DECIDED (JD, 2026-07-27): the trial is 7 DAYS, and during the trial the user
+  gets full PRO-level access.** The current `auth.js` `TRIAL_HOURS = 24` is WRONG
+  and must be changed to 7 days (168h) during Step 7. Make trial length a single
+  server-side constant and grant Pro entitlements for its duration.
 - Trial state must move OFF the flat file (`jd-trials.json`) into BAM (no
   persistent disk on Vercel). Enforce expiry server-side, not just in the browser.
 
