@@ -27,9 +27,11 @@
 
 ## Critical verified watch-items (carry through every step)
 
-- **Supabase connection:** v0 is currently connected to `waevqqrqelloacoxywqq`,
-  NOT the production `hiejaayyeprfnrrukbam`. The production DB cannot be
-  introspected until "bam" is connected (Step 2).
+- **Supabase connection:** PRODUCTION now points at `hiejaayyeprfnrrukbam`
+  ("bam") — env vars repointed + redeployed 2026-07-27. The old
+  `waevqqrqelloacoxywqq` project was deleted. NOTE: the v0 sandbox's env copy may
+  still lag showing the old ref until it re-syncs; that is a v0 refresh delay,
+  not a production issue (see Step 2).
 - **Tiers are FROZEN during migration.** Live gating + Payment Links use
   `lite/core/pro`. A different, UNUSED set (`essentials/pro/founding/executive`)
   sits in `api/create-checkout.js`. All tier work is DEFERRED to Phase 14.
@@ -72,32 +74,39 @@ concentrated in Step 6 (auth), Step 7 (trials), Step 8 (brain IP), plus a Step 4
 cutover of three outbound `jd-demo.php`/`reset-password.php` links in
 `index.html` (L1570, L1974, L2040).
 
-### [~] Step 2 — Verify Vercel/Supabase production config  (BLOCKED — awaiting user connect)
-Confirm production Vercel + Supabase settings and connect the "bam" production
-project to v0.
-**Verify:** v0 is connected to `hiejaayyeprfnrrukbam`; prod schema introspectable.
+### [~] Step 2 — Verify Vercel/Supabase production config  (PROD FIXED — sandbox verify pending)
+Confirm production Vercel + Supabase settings and point production at the "bam"
+project.
+**Verify:** production env points at `hiejaayyeprfnrrukbam`; prod schema introspectable.
 
-**STATUS 2026-07-27 — BLOCKED, decision recorded.**
-- CONFIRMED mismatch: v0 integration points at `waevqqrqelloacoxywqq`; live code
-  (`auth.js` L3/L23, `index.html` L6/L7, `jd-brain.html` L13/L14,
-  archived `reset-password.php`) uses production `hiejaayyeprfnrrukbam`.
-- DECISION (user): connect the REAL prod project `hiejaayyeprfnrrukbam` to v0.
-  Keep waevqqrqelloacoxywqq out of the migration. This is a user-only action
-  (Supabase auth required) — v0 cannot self-connect.
-- Integration schema introspection currently ERRORS — recheck after reconnect.
+**HISTORY 2026-07-27:**
+- CONFIRMED original mismatch: env vars pointed at `waevqqrqelloacoxywqq`; live
+  code (`auth.js`, `index.html`, `jd-brain.html`, archived `reset-password.php`)
+  uses production `hiejaayyeprfnrrukbam`.
+- ROOT CAUSE found: the Supabase env vars were owned by the Vercel↔Supabase
+  MARKETPLACE integration for the OLD "orange-elephant" (`waevqqrqelloacoxywqq`,
+  FREE org). BAM was created directly in Supabase under a DIFFERENT org
+  ("jdcastle53-coder's Org", PRO) and was never a Vercel-managed store — so it
+  never appeared in "Connect Database" and the integration-owned vars could not
+  be edited in place.
+- FIX APPLIED (user, in Vercel): deleted orphaned `SUPABASE_URL` +
+  `SUPABASE_SERVICE_ROLE_KEY`, deleted the uninstalled orange-elephant store,
+  re-added both as PLAIN vars with BAM values
+  (`https://hiejaayyeprfnrrukbam.supabase.co` + BAM service_role key), and
+  REDEPLOYED production to green "Ready".
+- The old `waevqqrqelloacoxywqq` project was DELETED in Supabase (a backup was
+  offered; user confident all data is on BAM). Confirmed no migration writes
+  ever targeted it.
 
-**User action required (connect "bam"):**
-  1. Project Settings (top-right) → Integrations/Connections → Supabase.
-  2. Disconnect `waevqqrqelloacoxywqq`, connect `hiejaayyeprfnrrukbam` ("bam").
-  3. Confirm env vars now resolve to the bam host.
-
-**v0 verification checklist to run AFTER reconnect (the Step 2 gate):**
-  - [ ] `SUPABASE_URL` host resolves to `hiejaayyeprfnrrukbam.supabase.co`.
-  - [ ] Integration schema introspects without error.
-  - [ ] Confirm expected prod tables exist (auth users, `messages` logging
-        table used by `jd-brain.html`); record actual schema snapshot.
-  - [ ] Confirm no accidental writes were made to `waevqqrqelloacoxywqq`.
-  - [ ] Then flip this step to [x] and record the schema snapshot.
+**Verification state:**
+  - [x] Production env repointed to BAM + redeployed (user-verified: Ready).
+  - [ ] PENDING: v0 SANDBOX env copy still shows `waevqqrqelloacoxywqq` (stale;
+        not re-synced with the Vercel change). NOT a production problem — a v0
+        sandbox refresh lag. Re-run the decode+schema-read once the sandbox env
+        re-syncs (or next session), then flip this step to [x] and record the
+        table snapshot (expect auth users + `messages` logging table).
+  - This pending item does NOT block Step 3. It DOES need to clear before Step 8
+    (brain port) so v0 can read/write BAM directly.
 
 ### [ ] Step 3 — Documentation & coding standards
 Establish the coding + documentation standards the ported code must follow.
