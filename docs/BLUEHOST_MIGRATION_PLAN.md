@@ -163,9 +163,29 @@ BAM), so cannot confirm real tables or resolve the `application_logs` vs
 `messages` discrepancy yet. Re-run the BAM read once the sandbox env re-syncs
 (or next session), then finish + flip to [x].
 
-### [ ] Step 6 — Consolidate auth into Supabase Auth
+### [~] Step 6 — Consolidate auth into Supabase Auth  (CODE done; 1 Supabase setting pending)
 Move all authentication into Supabase Auth and replace `reset-password.php`.
 **Verify:** login + password reset work end-to-end on Vercel; PHP auth retired.
+**DONE 2026-07-27 (code):**
+  - Login + signup were already Vercel-native Supabase Auth (`signin.html` +
+    `auth.js`, both on BAM). Left as-is.
+  - NEW `reset-password.html` (Vercel-native) replaces archived
+    `reset-password.php`. Matches signin/expired design system (Space Grotesk /
+    Newsreader / --ink). Reuses `window.Auth.client` (no new hardcoded keys).
+    Handles BOTH Supabase v2 PKCE (`?code=`) and legacy implicit (`#access_token`)
+    flows. All links point to `signin.html` (NOT the old digitaljd.org/jd-demo.php).
+  - Added "Forgot your password?" flow to `signin.html` → calls
+    `resetPasswordForEmail(email, { redirectTo: origin + '/reset-password.html' })`.
+**PENDING USER ACTION (blocks true end-to-end):** Supabase dashboard →
+  Authentication → URL Configuration must allowlist the Vercel origin +
+  `/reset-password.html` as a Redirect URL (and set Site URL to the Vercel
+  domain). Per memory these still point at Bluehost/digitaljd.org. Until then the
+  reset EMAIL link may bounce to the old domain. NOT verified live yet (dev
+  server wasn't running; static pages code-reviewed only).
+**NOTE (defer to Step 7):** `auth.js` `TRIAL_HOURS=24` + "24-hour" copy in
+  `signin.html`/`expired.html` still say 24h — must become 7-day @ Pro in Step 7.
+**PHP retirement:** the 3 `index.html` links stay pointed at Bluehost until
+  cutover (per ROUTE_TRANSITION_MAP ordering) — do not flip yet.
 
 ### [ ] Step 7 — Consolidate trial/access logic into Vercel
 Bring trial and access-gating logic out of PHP into Vercel.
