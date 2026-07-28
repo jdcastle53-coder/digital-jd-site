@@ -1567,7 +1567,7 @@ iframe {
         </div>
       </li>
       <li>
-<a class="nav-cta" href="https://digitaljd.org/jd-demo.php">
+<a class="nav-cta" href="https://digitaljd.org/signin.html">
   Login
 </a>
 </li>
@@ -1971,7 +1971,7 @@ async function submitLogin() {
 document.getElementById('loginModal').classList.remove('open');
 document.body.style.overflow = '';
 
-  window.location.href = 'https://digitaljd.org/jd-demo.php';
+  window.location.href = 'https://digitaljd.org/jd-brain.html';
 }
  document.getElementById('sprintModal').addEventListener('click', function(e) {
       if (e.target === this) closeModal();
@@ -2037,7 +2037,7 @@ async function forgotPassword() {
   }
 
   const { error } = await window.supabaseClient.auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://digitaljd.org/reset-password.php'
+    redirectTo: 'https://digitaljd.org/reset-password.html'
   });
 
   if (error) {

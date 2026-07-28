@@ -282,9 +282,28 @@ Lock down the gateway: authenticated access, rate limits, secret handling.
      the demo blocks after 5 in real deployment.
   3. Rate-limit numbers (60/hr, 5/day) are first-pass — tune after real usage.
 
-### [ ] Step 10 — Consolidate app under jd-brain
+### [x] Step 10 — Consolidate app under jd-brain
 Unify the app into one modular `jd-brain` surface (retire `jd-demo.php`).
 **Verify:** single app entry point; legacy PHP app no longer used.
+**DONE 2026-07-27:** Flipped the 3 remaining Bluehost/PHP links in `index.html`
+(timing per ROUTE_TRANSITION_MAP §E — only after Steps 6/7/8, now true):
+  - `:1570` nav "Login" -> `https://digitaljd.org/signin.html` (was jd-demo.php).
+    Chosen over jd-brain.html since the app now requires auth (Step 9) — sending
+    a "Login" click straight to the gated app would just bounce to signin anyway.
+  - `:1974` post-login redirect -> `https://digitaljd.org/jd-brain.html`
+    (was jd-demo.php). User is authenticated at this point, so app entry is correct.
+  - `:2040` password reset redirectTo -> `https://digitaljd.org/reset-password.html`
+    (was reset-password.php) — the Vercel-native page built in Step 6.
+  - URLs kept ABSOLUTE on digitaljd.org per JD decision: app STAYS on
+    digitaljd.org (DNS repoints Bluehost->Vercel), marketing/index.html moves to
+    GHL on a SEPARATE domain, so relative links would break once on GHL.
+**VERIFIED:** grep of all root *.html/*.js -> ZERO refs to jd-demo.php or
+  reset-password.php remain. Only copies left are in docs/bluehost-archive/
+  (intentional). jd-brain.html is now the single app entry point.
+**NOTE:** actual PHP file *deletion* on Bluehost happens at DNS cutover (not a
+  code change here); links no longer point at them regardless.
+**VERIFIED ASIDE:** confirmed nothing in the live repo references enterprise.html
+  (only the archived copy exists), so no enterprise restore is needed.
 
 ### [ ] Step 11 — Keep Stripe FULLY STATIC
 Leave Payment Links, portal link, and `lite/core/pro` gating untouched. Do NOT
