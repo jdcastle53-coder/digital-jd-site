@@ -212,10 +212,41 @@ Bring trial and access-gating logic out of PHP into Vercel.
   3. `expired.html` still has a placeholder `mailto:hello@your-domain.com` — fix
      with real support address (tracked in ROUTE_TRANSITION_MAP broken-links).
 
-### [ ] Step 8 — Port the FULL AI brain to Vercel
+### [~] Step 8 — Port the FULL AI brain to Vercel  (CODE done; live LLM run not yet verified)
 Replace the stub gateway with a real port of `jd-brain.php` (the 3-part output
 system + knowledge-base reasoning).
 **Verify:** Vercel gateway output matches PHP brain behavior on test prompts.
+**DONE 2026-07-27:** `api/jd-brain-gateway.js` fully rewritten from the 8-line
+stub to a real port of `jd-brain.php`:
+  - JD MIND ported verbatim in substance: identity block, altitude principle,
+    reasoning sequence + foundations (values-as-compass, never quoted).
+  - 3-PART STRUCTURED OUTPUT: SITUATIONAL ANALYSIS / JD INSIGHT / EXECUTION PLAN
+    (+ optional COMMUNICATION DRAFT) and DOCUMENT MODE (EXECUTIVE DRAFT). Exact
+    headings preserved because the UI depends on them.
+  - KB WIRED IN (this step, per JD): loads `data/jd-knowledge-base.json`
+    (55 concepts, 3 rules, 6 chains). Rules+chains always injected; concepts are
+    relevance-scored against the user input and capped at 14 to bound tokens.
+    Instructed to reason FROM the KB in JD's voice, never cite/name it.
+  - RESEARCH GROUNDING ported (Semantic Scholar, theme->query map, fail-silent,
+    12s AbortController timeout, SUPPORTING RESEARCH section + citations array).
+  - Supabase `application_logs` logging preserved exactly (same structured logger).
+  - RESPONSE CONTRACT kept backward compatible: returns { reply } (jd-brain.html
+    reads data.reply); adds { mode, model, citations } additively. Optional
+    `mode:"clarify"` supported in gateway (two-step flow) — UI still single-shot
+    (UI wiring intentionally deferred, matches Step 6/7 gateway-first approach).
+**VERIFIED:** node --check passes; KB loads and concept selection returns the
+  right concepts (accountability/trust/morale prompt -> Lencioni Avoidance of
+  Accountability, Absence of Trust, Fear of Conflict, Edmondson Psych Safety).
+**NOT YET VERIFIED (honest):**
+  1. No live end-to-end LLM run (needs OPENAI_API_KEY + running server; not
+     executed this session). Confirm a real advisory + a real clarify response
+     next session.
+  2. Semantic Scholar returned HTTP 429 (rate-limited) from this env on the
+     free keyless endpoint. Gateway fails silent (answer still proceeds), so
+     citations will be INTERMITTENT in production. Same limitation existed in
+     the PHP version. If reliable citations are wanted, add a Semantic Scholar
+     API key later.
+  3. Not compared side-by-side against live PHP output (PHP is being retired).
 
 ### [ ] Step 9 — Secure the AI gateway
 Lock down the gateway: authenticated access, rate limits, secret handling.
