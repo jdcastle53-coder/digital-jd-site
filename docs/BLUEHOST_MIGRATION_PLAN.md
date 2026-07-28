@@ -305,10 +305,33 @@ Unify the app into one modular `jd-brain` surface (retire `jd-demo.php`).
 **VERIFIED ASIDE:** confirmed nothing in the live repo references enterprise.html
   (only the archived copy exists), so no enterprise restore is needed.
 
-### [ ] Step 11 — Keep Stripe FULLY STATIC
+### [x] Step 11 — Stripe checkout confirmed working (premise updated)
 Leave Payment Links, portal link, and `lite/core/pro` gating untouched. Do NOT
 wire `create-checkout.js` / `create-portal.js`. NO tier work.
 **Verify:** checkout still flows through existing Payment Links; nothing changed.
+**REALITY CHECK 2026-07-27 (premise was OUTDATED):** the plan assumed Stripe was
+  still static Payment Links. It is NOT — checkout already runs through the live
+  serverless API and has for a while:
+  - `index.html startCheckout()` -> `fetch('/api/create-checkout')`;
+    `jd-brain.html` -> `/api/create-portal`.
+  - `api/create-checkout.js` VERIFIED intact: live PRICE_IDS keyed
+    essentials/pro/founding/executive, uses `STRIPE_ACCESS_TOKEN` (fallback
+    STRIPE_SECRET_KEY), success/cancel URLs on digitaljd.org.
+  - Per JD: accept reality, do NOT rip out working API checkout. Step 11's real
+    intent ("don't break/restructure checkout mid-migration") is satisfied.
+**TIER RENAME (partial, per JD — full rename still Phase 14):**
+  - Functional gating vocab was ALREADY essentials/pro/executive
+    (startCheckout args + price-ID keys + pricing card titles).
+  - FIXED now: the 2 user-facing "JD Lite" prose lines in index.html
+    (:1743, :1748) -> "JD Essentials". Verified: no user-facing "JD Lite" remains.
+  - DEFERRED to Phase 14 (per JD): internal CSS class names `tier-btn-lite`/
+    `tier-btn-core` (invisible to users; offset naming = lite->Essentials btn,
+    core->Pro btn, pro->Executive btn; rename carries collision risk, no user benefit).
+**BROKEN LINK FIXED:** `digitaljd-vs-ai.html` "Get started" was a dead
+  placeholder `buy.stripe.com/YOUR_STARTER_LINK` -> now
+  `https://digitaljd.org/signin.html` (absolute, consistent with Step 10).
+**NOT VERIFIED LIVE:** actual Stripe checkout session creation (needs live key +
+  running server; add to the verify-later list).
 
 ### [ ] Step 12 — Reduce Bluehost to static-only
 Strip Bluehost to static hosting, rotate all secrets, keep an offline archive.
