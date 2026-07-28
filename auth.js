@@ -2,7 +2,11 @@
   const AUTH_ENABLED = true;
   const SUPABASE_URL = "https://hiejaayyeprfnrrukbam.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZWphYXl5ZXByZm5ycnVrYmFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5NDI3OTAsImV4cCI6MjA4NjUxODc5MH0._gOINPPuGvuXMpEm_qv_cSkwemt7wvFl6QDADknq4Bg";
-  const TRIAL_HOURS = 24;
+  // Trial policy (single source of truth): new accounts get a 7-day trial
+  // at PRO-level access. Decision recorded 2026-07-27 (JD).
+  const TRIAL_DAYS = 7;
+  const TRIAL_HOURS = TRIAL_DAYS * 24;
+  const TRIAL_TIER = "pro";
   const SIGNIN_URL = "signin.html";
   const RENEW_URL = "expired.html";
 
@@ -37,8 +41,11 @@
     if (!session || !session.user) return null;
     const meta = session.user.user_metadata || {};
     if (meta.expires_at) return meta.expires_at;
+    // First login: start the 7-day clock and grant Pro-level trial access.
     const expiresAt = getExpiryIso(TRIAL_HOURS);
-    await client.auth.updateUser({ data: { expires_at: expiresAt } });
+    await client.auth.updateUser({
+      data: { expires_at: expiresAt, plan: TRIAL_TIER, trial: true }
+    });
     return expiresAt;
   }
 
@@ -78,7 +85,9 @@
     ensureExpiry: ensureExpiry,
     requireActiveSession: requireActiveSession,
     signOut: signOut,
+    TRIAL_DAYS: TRIAL_DAYS,
     TRIAL_HOURS: TRIAL_HOURS,
+    TRIAL_TIER: TRIAL_TIER,
     SIGNIN_URL: SIGNIN_URL,
     RENEW_URL: RENEW_URL
   };

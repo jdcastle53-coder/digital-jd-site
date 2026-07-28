@@ -187,9 +187,30 @@ Move all authentication into Supabase Auth and replace `reset-password.php`.
 **PHP retirement:** the 3 `index.html` links stay pointed at Bluehost until
   cutover (per ROUTE_TRANSITION_MAP ordering) — do not flip yet.
 
-### [ ] Step 7 — Consolidate trial/access logic into Vercel
+### [~] Step 7 — Consolidate trial/access logic into Vercel  (CLIENT done; server-side gating in Step 9)
 Bring trial and access-gating logic out of PHP into Vercel.
 **Verify:** trial start/expiry + tier gating enforced server-side on Vercel.
+**DONE 2026-07-27 (client-side, in `auth.js`):**
+  - Trial is now 7 DAYS at PRO level (per JD decision). Single source of truth:
+    `TRIAL_DAYS=7` (`TRIAL_HOURS` derived), `TRIAL_TIER="pro"`.
+  - `ensureExpiry()` on first login stamps `user_metadata` with
+    `{ expires_at, plan:"pro", trial:true }` — so "Pro during trial" is real
+    data the gateway can read, not an assumption.
+  - Copy fixed to match: `signin.html` ("7-day trial with full Pro-level
+    access") and `expired.html` ("Your 7-day trial has ended"). `index.html`
+    marketing already said "7 Days Full Access" — code was the thing out of sync.
+**HONEST GAPS (must close before claiming full parity):**
+  1. ENFORCEMENT IS CLIENT-SIDE ONLY. Expiry lives in `user_metadata` and is
+     checked in the browser (`requireActiveSession`) — a technical user could
+     edit it. TRUE server-side gating (gateway rejects expired/over-tier calls)
+     is Step 9. Do NOT mark this [x] until then. Plan's "server-side" verify is
+     intentionally deferred to Step 9.
+  2. EXISTING trial users created under the old 24h rule already have a
+     24h-from-first-login `expires_at` stamped; the new 7-day value only applies
+     to users whose `expires_at` is not yet set. If any real trials exist on BAM,
+     decide whether to bulk-extend them (needs live BAM access — still pending).
+  3. `expired.html` still has a placeholder `mailto:hello@your-domain.com` — fix
+     with real support address (tracked in ROUTE_TRANSITION_MAP broken-links).
 
 ### [ ] Step 8 — Port the FULL AI brain to Vercel
 Replace the stub gateway with a real port of `jd-brain.php` (the 3-part output
