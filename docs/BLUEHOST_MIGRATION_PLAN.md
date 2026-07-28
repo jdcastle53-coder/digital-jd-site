@@ -333,9 +333,41 @@ wire `create-checkout.js` / `create-portal.js`. NO tier work.
 **NOT VERIFIED LIVE:** actual Stripe checkout session creation (needs live key +
   running server; add to the verify-later list).
 
-### [ ] Step 12 — Reduce Bluehost to static-only
+### [~] Step 12 — Reduce Bluehost to static-only  (mostly OPERATIONAL — user does on dashboards)
 Strip Bluehost to static hosting, rotate all secrets, keep an offline archive.
 **Verify:** no programmatic code runs on Bluehost; secrets rotated; archive kept.
+**CODE/REPO SIDE — DONE/VERIFIED 2026-07-27:**
+  - OFFLINE ARCHIVE: kept in-repo at `docs/bluehost-archive/` — enterprise.html,
+    jd-access.php, jd-brain.php, reset-password.php, jd-knowledge-base.json.
+    VERIFIED intact. No live secrets hardcoded in any archived file (OpenAI key
+    was pulled from a server-side `config.php` that was NEVER in the repo).
+  - All live links already point off Bluehost PHP (Step 10). Nothing in the
+    Vercel app depends on Bluehost anymore.
+**OPERATIONAL — USER ACTION (cannot be done from v0; do on provider dashboards):**
+  SECRET ROTATION, prioritized by VERIFIED exposure:
+  - TIER 1 — ROTATE (was on the Bluehost shared host): OpenAI API key. Archived
+    jd-brain.php read it from Bluehost `config.php`; that host is being
+    decommissioned. Generate a new key, put it in VERCEL env `OPENAI_API_KEY`
+    only. No code change needed (gateway already reads env).
+  - TIER 2 — ROTATE as post-migration hygiene (not found in archive; likely
+    only ever in Vercel env, so lower urgency): `SUPABASE_SERVICE_ROLE_KEY`,
+    `STRIPE_ACCESS_TOKEN`. Rotate on Supabase/Stripe dashboards, update Vercel
+    env. No code change needed.
+  - TIER 3 — OPTIONAL (public by design): Supabase ANON key. Safe in client code;
+    rotate only if abuse suspected. IF rotated, MUST also update the 2 hardcoded
+    spots: `auth.js:4` and `reset-password.html:68` (they are static HTML, no
+    build step, so the key is intentionally inline).
+  BLUEHOST STRIP: delete/disable PHP (jd-demo.php, jd-brain.php, jd-access.php,
+    reset-password.php) once DNS cutover is done; leave only static assets.
+**!!! SLEEPING BOMB — DATA LOSS RISK (verified in jd-access.php) !!!**
+  Bluehost has a FILE-BASED trial system: `jd-trials.json` stores invite-link
+  trial tokens (7-day expiry, first_used_at/expires_at per token). This data
+  lives ONLY on Bluehost and will be DESTROYED when the host is stripped.
+  BEFORE decommissioning: download `jd-trials.json` from Bluehost. If any tokens
+  are still active, decide whether to migrate those users into Supabase. This
+  ties to the Step 7 "existing trial users" open item. NOT yet handled.
+**ADD TO VERIFY-LATER:** after rotation, confirm the app still works end-to-end
+  with the NEW keys (gateway answers, checkout, auth).
 
 ---
 
