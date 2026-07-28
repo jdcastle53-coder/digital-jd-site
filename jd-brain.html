@@ -326,9 +326,16 @@ content: text
 
 const response = await fetch("/api/jd-brain-gateway", {
 method: "POST",
-headers: { "Content-Type": "application/json" },
+headers: await jdBrainHeaders(),
 body: JSON.stringify({ message: text })
 });
+if (response.status === 401 || response.status === 402) {
+const info = await response.json().catch(() => ({}));
+addMessage(info.error || "Your session has ended. Please sign in again.", "ai");
+if (info.code === "trial_expired") window.location.href = "expired.html";
+else if (window.Auth) window.location.href = window.Auth.SIGNIN_URL;
+return;
+}
 
 const data = await response.json();
 
@@ -354,19 +361,37 @@ async function askDigitalJD() {
 
   const response = await fetch("/api/jd-brain-gateway", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: await jdBrainHeaders(),
     body: JSON.stringify({
       message: question
     })
   });
+
+  if (response.status === 401 || response.status === 402) {
+    const info = await response.json().catch(() => ({}));
+    if (info.code === "trial_expired") { window.location.href = "expired.html"; return; }
+    if (window.Auth) { window.location.href = window.Auth.SIGNIN_URL; return; }
+  }
 
   const data = await response.json();
 
   document.getElementById("responseArea").classList.remove("hidden");
   document.getElementById("responseText").innerText = data.reply;
 
+}
+
+// Attaches the current Supabase access token so the gateway can verify
+// the session and enforce the trial server-side (Step 9).
+async function jdBrainHeaders() {
+  const headers = { "Content-Type": "application/json" };
+  try {
+    if (window.Auth && window.Auth.client) {
+      const { data } = await window.Auth.client.auth.getSession();
+      const token = data && data.session && data.session.access_token;
+      if (token) headers["Authorization"] = "Bearer " + token;
+    }
+  } catch (e) {}
+  return headers;
 }
 
 </script>

@@ -248,9 +248,39 @@ stub to a real port of `jd-brain.php`:
      API key later.
   3. Not compared side-by-side against live PHP output (PHP is being retired).
 
-### [ ] Step 9 — Secure the AI gateway
+### [~] Step 9 — Secure the AI gateway  (rate-limit LIVE-VERIFIED; auth/trial prod-verified-only)
 Lock down the gateway: authenticated access, rate limits, secret handling.
 **Verify:** gateway rejects unauthenticated/abusive calls; no secrets exposed.
+**DONE 2026-07-27:** New `api/_lib/gateway-security.js` + wired into
+`api/jd-brain-gateway.js` after message validation:
+  - AUTH: app path (`jd-brain.html`) now sends `Authorization: Bearer <supabase
+    access_token>` (new `jdBrainHeaders()` helper on BOTH gateway fetches).
+    Gateway calls `supabase.auth.getUser(token)`; invalid/expired token -> 401.
+  - TRIAL/TIER GATE (closes Step 7 client-side gap): reads
+    `user_metadata.{expires_at,plan,trial}`; expired trial -> 402, and the UI
+    redirects to `expired.html`. This is the real server-side enforcement Steps
+    5/7/8 pointed to.
+  - RATE LIMIT (Upstash Redis, shared across instances): authenticated users
+    60/hr per user; public demo 5/day per IP. Fail-OPEN on Redis error (never
+    block a paying user), fail-CLOSED on auth/trial.
+  - DEMO stays public (per JD decision): `demo.html` now sends `source:"demo"`,
+    allowed anonymously but hard-throttled per IP; 429 -> "sign up" message.
+  - Uses Upstash env `KV_REST_API_URL` / `KV_REST_API_TOKEN` (integration
+    connected this session). `@upstash/redis` installed.
+**LIVE-VERIFIED (real infra, not just code review):**
+  - node --check passes on both files.
+  - Ran checkRateLimit against REAL Upstash: demo 5/day allowed req 1-5
+    (remaining 4->0), BLOCKED req 6-7, degraded:false. Rate limiting genuinely
+    works. Test keys cleaned up afterward.
+**NOT YET VERIFIED (honest — needs prod/BAM, same access gap as before):**
+  1. Auth + trial gate not run live: `SUPABASE_URL`/`SERVICE_ROLE_KEY` are NOT
+     in the sandbox env, so `supabase.auth.getUser()` couldn't be exercised here.
+     Code is correct against standard env names and WILL run in production.
+     Next session (or in prod): confirm (a) valid token passes, (b) no token ->
+     401 on app path, (c) expired trial -> 402 + redirect to expired.html.
+  2. Demo IP throttle assumes Vercel sets `x-forwarded-for` (it does) — confirm
+     the demo blocks after 5 in real deployment.
+  3. Rate-limit numbers (60/hr, 5/day) are first-pass — tune after real usage.
 
 ### [ ] Step 10 — Consolidate app under jd-brain
 Unify the app into one modular `jd-brain` surface (retire `jd-demo.php`).

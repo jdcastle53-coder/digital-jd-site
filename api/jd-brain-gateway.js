@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
+import { verifyAccess, checkRateLimit, getClientIp } from "./_lib/gateway-security.js";
 
 /* =========================================================
    DIGITAL JD — BRAIN GATEWAY (Vercel port of jd-brain.php)
@@ -343,6 +344,50 @@ export default async function handler(req, res) {
     await log("INFO", "request_completed", { status: 400, durationMs: Date.now() - startTime });
     return res.status(400).json({ error: "Message is required" });
   }
+
+  /* =========================================================
+     STEP 9 — SERVER-SIDE SECURITY GATE
+     - App path (jd-brain.html): sends a Supabase bearer token.
+       Require a valid session AND an unexpired trial/tier.
+     - Demo path (demo.html): no token, marked source:"demo".
+       Allowed anonymously but rate-limited hard per IP.
+  ========================================================= */
+  const isDemo = (body.source || "").toLowerCase() === "demo";
+  const access = await verifyAccess(req);
+
+  // Reject invalid tokens / expired trials outright (fail closed).
+  if (!access.ok && access.status) {
+    await log("WARN", "access_denied", { code: access.code, status: access.status, userId: access.userId || null });
+    await log("INFO", "request_completed", { status: access.status, durationMs: Date.now() - startTime });
+    return res.status(access.status).json({ error: access.message, code: access.code });
+  }
+
+  // No token: only the demo path may proceed anonymously.
+  if (!access.ok && !access.status && !isDemo) {
+    await log("WARN", "auth_required", { code: "no_token" });
+    await log("INFO", "request_completed", { status: 401, durationMs: Date.now() - startTime });
+    return res.status(401).json({ error: "Please sign in to use JD Brain.", code: "auth_required" });
+  }
+
+  // Rate limit: per-user when authenticated, per-IP for the demo.
+  const rlKind = access.ok ? "user" : "demo";
+  const rlId = access.ok ? access.userId : getClientIp(req);
+  const rl = await checkRateLimit(rlKind, rlId);
+  res.setHeader("X-RateLimit-Limit", rl.limit);
+  res.setHeader("X-RateLimit-Remaining", rl.remaining);
+  if (!rl.allowed) {
+    await log("WARN", "rate_limited", { kind: rlKind, limit: rl.limit, resetSec: rl.resetSec, userId: access.userId || null });
+    await log("INFO", "request_completed", { status: 429, durationMs: Date.now() - startTime });
+    res.setHeader("Retry-After", rl.resetSec);
+    return res.status(429).json({
+      error: rlKind === "demo"
+        ? "You've reached the free demo limit. Sign up for a 7-day Pro trial to keep going."
+        : "You're sending requests a bit fast. Please wait a moment and try again.",
+      code: "rate_limited",
+      retryAfterSec: rl.resetSec,
+    });
+  }
+  await log("INFO", "access_granted", { path: rlKind, degradedRateLimit: !!rl.degraded, userId: access.userId || null });
 
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
   await log("INFO", "api_key_check", { apiKeyExists: !!OPENAI_API_KEY });

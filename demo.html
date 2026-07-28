@@ -210,9 +210,12 @@
         const response = await fetch('/api/jd-brain-gateway', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: formatted })
+          body: JSON.stringify({ message: formatted, source: 'demo' })
         });
         const data = await response.json();
+        if (response.status === 429) {
+          throw new Error(data.error || "You've reached the free demo limit. Sign up to keep going.");
+        }
         if (!response.ok || !data.reply) {
           throw new Error(data.error || 'No response received.');
         }
