@@ -4,6 +4,11 @@ import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { verifyAccess, checkRateLimit, getClientIp } from "./_lib/gateway-security.js";
 
+// Allow the function enough time to run research + a full-length generation.
+// Without this, Vercel's default serverless timeout can kill a long answer
+// mid-flight, which the browser sees as a failed request (blank reply).
+export const config = { maxDuration: 60 };
+
 /* =========================================================
    DIGITAL JD — BRAIN GATEWAY (Vercel port of jd-brain.php)
    - Encodes the Digital JD "mind" (identity, altitude, reasoning)

@@ -281,6 +281,7 @@ cursor:pointer;
   <script>
 
 let conversationId = null;
+let isSending = false;
 
 function addMessage(text, role) {
 
@@ -288,66 +289,96 @@ const messagesDiv = document.getElementById("messages");
 
 const message = document.createElement("div");
 message.classList.add("message", role);
+message.style.whiteSpace = "pre-wrap";
 
 message.innerText = (role === "user" ? "You: " : "Digital JD: ") + text;
 
 messagesDiv.appendChild(message);
 messagesDiv.scrollTop = messagesDiv.scrollHeight;
+return message;
 }
 
 async function sendMessage() {
+
+// Prevent double-sends (clicking Send twice while a request is in flight).
+if (isSending) return;
 
 const input = document.getElementById("messageInput");
 const text = input.value.trim();
 
 if (!text) return;
 
+isSending = true;
 addMessage(text, "user");
 input.value = "";
 
-const { data: { user } } = await supabase.auth.getUser();
+// Show a visible "thinking" placeholder so the UI is never a silent blank.
+const pending = addMessage("Thinking...", "ai");
 
-if (!conversationId) {
+try {
+  const { data: { user } } = await supabase.auth.getUser();
 
-const { data } = await supabase
-.from("conversations")
-.insert({ user_id: user.id })
-.select()
-.single();
+  if (!conversationId) {
+    const { data } = await supabase
+      .from("conversations")
+      .insert({ user_id: user.id })
+      .select()
+      .single();
+    conversationId = data ? data.id : null;
+  }
 
-conversationId = data.id;
+  if (conversationId) {
+    await supabase.from("messages").insert({
+      conversation_id: conversationId,
+      role: "user",
+      content: text
+    });
+  }
+
+  const response = await fetch("/api/jd-brain-gateway", {
+    method: "POST",
+    headers: await jdBrainHeaders(),
+    body: JSON.stringify({ message: text })
+  });
+
+  if (response.status === 401 || response.status === 402) {
+    const info = await response.json().catch(() => ({}));
+    pending.innerText = "Digital JD: " + (info.error || "Your session has ended. Please sign in again.");
+    if (info.code === "trial_expired") window.location.href = "expired.html";
+    else if (window.Auth) window.location.href = window.Auth.SIGNIN_URL;
+    return;
+  }
+
+  // Read the body as text first so we can surface real errors instead of
+  // throwing on a non-JSON response (e.g. a 500/504 that returns HTML).
+  const raw = await response.text();
+  let data = null;
+  try { data = JSON.parse(raw); } catch (e) {}
+
+  if (!response.ok) {
+    const serverMsg = (data && (data.error || data.message)) || raw || "";
+    pending.innerText = "Digital JD: Sorry, something went wrong (error "
+      + response.status + "). " + serverMsg.slice(0, 300);
+    return;
+  }
+
+  const aiReply = (data && data.reply) ? data.reply
+    : "Digital JD returned an empty response. Please try again.";
+  pending.innerText = "Digital JD: " + aiReply;
+
+  if (conversationId) {
+    await supabase.from("messages").insert({
+      conversation_id: conversationId,
+      role: "assistant",
+      content: aiReply
+    });
+  }
+} catch (err) {
+  pending.innerText = "Digital JD: The request failed (" + (err && err.message ? err.message : "network error")
+    + "). Please try again.";
+} finally {
+  isSending = false;
 }
-
-await supabase.from("messages").insert({
-conversation_id: conversationId,
-role: "user",
-content: text
-});
-
-const response = await fetch("/api/jd-brain-gateway", {
-method: "POST",
-headers: await jdBrainHeaders(),
-body: JSON.stringify({ message: text })
-});
-if (response.status === 401 || response.status === 402) {
-const info = await response.json().catch(() => ({}));
-addMessage(info.error || "Your session has ended. Please sign in again.", "ai");
-if (info.code === "trial_expired") window.location.href = "expired.html";
-else if (window.Auth) window.location.href = window.Auth.SIGNIN_URL;
-return;
-}
-
-const data = await response.json();
-
-const aiReply = data.reply;
-
-addMessage(aiReply, "ai");
-
-await supabase.from("messages").insert({
-conversation_id: conversationId,
-role: "assistant",
-content: aiReply
-});
 
 }
 
