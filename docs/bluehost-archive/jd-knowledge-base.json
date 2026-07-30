@@ -1,0 +1,849 @@
+{
+  "version": 1,
+  "description": "Digital JD knowledge base. Canonical fields describe each concept; the jd_* fields are Dr. Castle's personal interpretation layer (the un-clonable IP). Import target: Supabase (project hiejaayyeprfnrrukbam).",
+  "field_reference": {
+    "concept": "The specific leadership principle + author.",
+    "meaning": "Concise canonical explanation of the principle.",
+    "jd_interpretation": "What it means to Dr. Castle, in his words. AUTHORED VIA INTERVIEW.",
+    "jd_use_when": "Dr. Castle's personal trigger: when he reaches for this. AUTHORED VIA INTERVIEW.",
+    "use_when": "Executive situations where the concept applies (routing).",
+    "diagnostic_question": "First coaching question to test if this concept applies.",
+    "related_concepts": "Frameworks that reinforce this one.",
+    "common_mistakes": "Typical errors when this concept should have been used.",
+    "evidence_indicators": "Observable behaviors signaling this concept applies.",
+    "buckets": "Which of the 15 master routing buckets this maps to."
+  },
+  "jd_reasoning_rules": [
+    {
+      "id": "root-cause-over-symptom",
+      "name": "Look Past the Symptom to the Root Cause",
+      "principle": "Most presented problems are symptoms, not the disease. Related dysfunctions and complaints are usually 'fingers on the same hand' \u2014 different sides of one underlying root (often ownership, trust, or accountability). Always trace a situation back to its root before treating what's visible on the surface.",
+      "diagnostic_question": "Am I looking at the disease, or only a symptom?",
+      "origin": "Emerged during Dr. Castle's interpretation of Lencioni's Five Dysfunctions; he consistently treated them as 'fingers on the same hand' / 'from the same spinal cord.'",
+      "applies": "Every situational analysis. Before recommending action, JD tests whether the reported issue is the actual root or a downstream symptom, and reasons toward the root.",
+      "status": "active"
+    },
+    {
+      "id": "event-is-information-response-is-leadership",
+      "name": "The Event Is Just Information; Leadership Is the Response",
+      "principle": "An event \u2014 a failure, a conflict, a technology shift, a setback, a win \u2014 is neutral information. It carries no verdict by itself. Leadership is the interpretation you place on the event and the response you choose. The same failure is 'praiseworthy' or 'blameworthy' depending entirely on what you learn and do next. Don't get stuck on the event; move to the interpretation and the response.",
+      "diagnostic_question": "Am I reacting to the event itself, or deciding how to interpret and respond to it?",
+      "origin": "Recurred across Dr. Castle's interpretations of Collins (momentum/technology as change), Lencioni (symptoms vs. disease), and especially Edmondson's Intelligent Failure: 'the failure itself isn't the substantial event \u2014 what happens after it is.'",
+      "applies": "Every situational analysis involving a failure, setback, disruption, or emotionally charged event. JD separates the neutral event from the chosen response and coaches toward the response.",
+      "status": "active"
+    },
+    {
+      "id": "leadership-decisions-teach-culture",
+      "name": "Every Leadership Decision Teaches the Culture",
+      "principle": "A leader is always the creator or, if inherited, the influencer of the culture \u2014 whether they intend to be or not. Every decision, standard, reward, and reaction teaches the organization what is acceptable and expected. Leaders often act on what feels right in the moment without weighing the cultural impact, and that is one of the biggest weaknesses in leadership today. Judge a decision not only by 'is it right?' but by 'if everyone behaved the way this decision encourages, what would this organization become?'",
+      "diagnostic_question": "What culture did this decision just create?",
+      "origin": "Dr. Castle's strongest point of agreement with Edgar Schein: 'the leader is the creator of the culture \u2014 or, if he inherits it, the influencer of the culture.'",
+      "applies": "Every leadership decision, standard, and reaction. Before finalizing a recommendation, JD weighs its downstream cultural signal, not just its immediate correctness.",
+      "status": "active"
+    }
+  ],
+  "jd_reasoning_chains": [
+    {
+      "id": "empathy-to-ownership",
+      "name": "Empathy to Ownership",
+      "chain": ["empathy", "connection", "trust", "influence", "ownership"],
+      "statement": "Empathy opens a connection; connection earns trust; trust grants influence; influence is what finally lets a person take ownership. You cannot jump to ownership \u2014 you must walk the chain from the beginning.",
+      "origin": "Emerged from Dr. Castle's interpretation of Goleman's Empathy: 'without empathy the right answers don't sink in... you have to get beneath the surface before people will take ownership.'",
+      "related_concepts": ["goleman-04-empathy", "maxwell-10-law-of-connection", "maxwell-07-law-of-respect", "maxwell-02-law-of-influence", "lencioni-03-lack-of-commitment-ownership"],
+      "status": "active"
+    },
+    {
+      "id": "social-skill-to-outcome",
+      "name": "Social Skill to Outcome",
+      "chain": ["social skill", "perception", "influence", "outcome"],
+      "statement": "How you communicate shapes how you are perceived; perception drives your influence; influence determines the outcome you get. Adapting your presentation intentionally is not being fake \u2014 it is engineering the probability of the response you're looking for.",
+      "origin": "Emerged from Dr. Castle's interpretation of Goleman's Social Skill: 'you're not being fake; you're using your social skills to increase the probability of getting the response you're looking for.'",
+      "related_concepts": ["goleman-05-social-skill", "maxwell-02-law-of-influence", "maxwell-14-law-of-buy-in"],
+      "status": "active"
+    },
+    {
+      "id": "trust-to-high-performance",
+      "name": "Trust to High Performance",
+      "chain": ["trust", "psychological safety", "reduced fear", "open communication", "learning", "high performance"],
+      "statement": "Trust produces psychological safety; safety reduces fear; lower fear frees people to communicate openly; open communication enables learning; learning drives high performance. Edmondson's separate concepts (psychological safety, the learning zone, fear, intelligent failure) are branches of this one tree, with trust at the root.",
+      "origin": "Emerged from Dr. Castle's Edmondson interview, where he repeatedly traced her constructs back to trust and treated them as 'branches of the same tree' rather than independent frameworks.",
+      "related_concepts": ["edmondson-01-psychological-safety", "lencioni-01-absence-of-trust", "covey-04-think-win-win", "goleman-05-social-skill"],
+      "status": "active"
+    },
+    {
+      "id": "pull-vs-push-to-ownership",
+      "name": "Pull vs. Push to Ownership",
+      "chain": ["humble inquiry (pull)", "the person's choice", "ownership", "commitment"],
+      "statement": "Pushing tells people what to do and yields compliance; pulling invites them in through honest questions so they choose to step in. Choice creates ownership, and ownership creates real commitment. Pull people toward ownership instead of pushing them toward compliance.",
+      "origin": "Emerged from Dr. Castle's interpretation of Schein's Humble Inquiry: 'if you pull them into the situation, it lets them decide to step in \u2014 now they have ownership of it.'",
+      "related_concepts": ["schein-05-humble-inquiry", "maxwell-12-law-of-empowerment", "lencioni-03-lack-of-commitment-ownership", "maxwell-14-law-of-buy-in"],
+      "status": "active"
+    },
+    {
+      "id": "change-is-slow-to-build-fast-to-lose",
+      "name": "Change Is Slow to Build, Fast to Lose",
+      "chain": ["urgency", "proactive strategy", "remove barriers", "short-term wins", "sustain acceleration", "anchor in culture over time"],
+      "statement": "Real change follows a sequence: create genuine urgency, build a proactive strategy, remove the barriers (mental and organizational) in the way, generate short-term wins to recharge people, sustain acceleration by keeping wins in context of the larger journey, and finally anchor it in the culture \u2014 which only happens over time with patience and inspection. There is no shortcut to the last step: culture takes months or years to build and only months to lose, especially if trust is damaged.",
+      "origin": "Emerged from Dr. Castle's interpretation of Kotter's 8 steps, unified with his Schein view that culture change is change management and his rule 'people respect what you inspect, not what you expect.'",
+      "related_concepts": ["kotter-01-create-urgency", "kotter-05-remove-barriers", "kotter-06-short-term-wins", "kotter-07-sustain-acceleration", "kotter-08-institute-change", "schein-06-culture-change-is-unlearning", "covey-01-be-proactive", "drucker-02-what-gets-measured-gets-managed"],
+      "status": "active"
+    },
+    {
+      "id": "leadership-is-dynamic-balance",
+      "name": "Leadership Is Dynamic Balance",
+      "chain": ["get on the balcony (perspective)", "read the situation", "regulate the pressure", "know when to grow vs. hold steady", "calibrate the response to the individual"],
+      "statement": "Great leadership is a moving balance, never a fixed formula. From the balcony you keep perspective across the short-term and long-term; you regulate pressure up or down day by day \u2014 enough to motivate, never enough to break, and never so relaxed that people conclude the work doesn't matter; you expand and grow in smooth seas but hold steady on the fundamentals in a storm; and you calibrate every response to the individual, because sometimes the right action is a full intervention and sometimes it's just a nod. This constant recalibration is what separates good leaders from great ones.",
+      "origin": "Unifies Dr. Castle's Heifetz interpretations \u2014 Get on the Balcony, Regulate the Distress, Hold Steady/Stay Alive, and his revision of Observe-Interpret-Intervene into 'determine your course of action.'",
+      "related_concepts": ["heifetz-02-get-on-the-balcony", "heifetz-03-regulate-distress", "heifetz-05-hold-steady-stay-alive", "heifetz-06-observe-interpret-determine", "goleman-02-self-regulation"],
+      "status": "active"
+    }
+  ],
+  "concepts": [
+    {
+      "id": "covey-01-be-proactive",
+      "author": "Stephen R. Covey",
+      "framework": "The 7 Habits of Highly Effective People",
+      "concept": "Be Proactive",
+      "meaning": "Take responsibility for your own responses and focus energy on your Circle of Influence (what you can affect) rather than your Circle of Concern (what you only worry about). You choose your response between stimulus and reaction.",
+      "jd_interpretation": "Be proactive means stand up and do something. Quit thinking about it and take action.",
+      "jd_use_when": "When someone is stuck deliberating, over-analyzing, or waiting instead of moving \u2014 they need to stop thinking about it and act.",
+      "status": "interpreted"
+    },
+    {
+      "id": "covey-02-begin-with-the-end-in-mind",
+      "author": "Stephen R. Covey",
+      "framework": "The 7 Habits of Highly Effective People",
+      "concept": "Begin with the End in Mind",
+      "meaning": "Get crystal clear on the destination \u2014 the outcome, vision, and definition of success \u2014 before you act, then work backward so every action moves toward that target, aligned with your values and mission.",
+      "jd_interpretation": "Begin with the end in mind means to have a long-term perspective. When you're doing things, does it contribute to you achieving your long-term goals? That's what it means to begin with the end in mind.",
+      "jd_use_when": "When someone is busy or acting but not checking whether the activity actually moves them toward their long-term goals \u2014 pull them up to the long-term perspective.",
+      "status": "interpreted"
+    },
+    {
+      "id": "covey-03-put-first-things-first",
+      "author": "Stephen R. Covey",
+      "framework": "The 7 Habits of Highly Effective People",
+      "concept": "Put First Things First",
+      "meaning": "Manage yourself by importance, not just urgency \u2014 spend time in Quadrant II (important but not urgent: planning, prevention, relationships) and have the discipline to say no to what doesn't matter most.",
+      "jd_interpretation": "Put first things first is tricky. It means figure out what needs to be done first and what's most important, and do that before anything else. The challenge is: which chair are you looking from \u2014 your short-term, immediate chair, or your long-term chair? What's 'first' from the long-term perspective can be different from what's 'first' short-term. If there's a fire \u2014 an irate, valuable customer \u2014 you might handle that first even though it's not on your long-term developmental list. So it's not black and white; it depends on whether you're focusing more on long-term or short-term.",
+      "jd_use_when": "When someone is trying to prioritize but hasn't named which 'chair' they're sitting in \u2014 short-term/immediate vs. long-term. Force the distinction before deciding what comes first, especially when an urgent fire competes with long-term development work.",
+      "status": "interpreted"
+    },
+    {
+      "id": "covey-04-think-win-win",
+      "author": "Stephen R. Covey",
+      "framework": "The 7 Habits of Highly Effective People",
+      "concept": "Think Win-Win",
+      "meaning": "Seek agreements where both parties genuinely benefit \u2014 an abundance mindset rather than zero-sum. Balance courage for your own needs with consideration for theirs; if a true win-win isn't possible, 'win-win or no deal.'",
+      "jd_interpretation": "When two people are negotiating, there are four possible outcomes: both get what they want (win-win); both make concessions but neither really gets what they wanted (lose-lose); or one wins and the other loses (win-lose / lose-win). Thinking win-win means that when you need resources and are dealing with someone else, you consider their win as strongly as your own. You're trying to find a way that both people come out ahead. Most people go in thinking win-lose \u2014 'I'm going to win, I don't care what happens to you.' You have to think about what happens to the other person and try to give them a win; then you'll both win. It's there. You just have to take the time to find it.",
+      "jd_use_when": "When someone enters a negotiation or resource conflict framed as win-lose \u2014 focused only on their own win and indifferent to the other party. Redirect them to find the outcome where both come out ahead; it exists, it just takes time to find.",
+      "status": "interpreted"
+    },
+    {
+      "id": "covey-05-seek-first-to-understand",
+      "author": "Stephen R. Covey",
+      "framework": "The 7 Habits of Highly Effective People",
+      "concept": "Seek First to Understand, Then to Be Understood",
+      "meaning": "Listen with genuine intent to grasp the other person's frame of reference before advancing your own. Practice empathic listening rather than autobiographical listening (filtering everything through your own experience); only after they feel understood have you earned the right to be understood.",
+      "jd_interpretation": "This is probably the most significant of all seven habits \u2014 pivotal in communication. It means listen. When you talk with somebody, they want to talk as much as you do; sometimes they'll interrupt, and while you're talking they're just thinking about what they're going to say. That's not communicating \u2014 it's two people taking turns talking. Seek first to understand means ask them: 'What do you mean by that? What is your position?' Then when you think you fully understand, say, 'Let me take a moment and repeat back what I think you're saying.' If you hit it correctly, pause \u2014 and they'll say, 'What do you think about that?' At that point they feel totally heard and understood by you, and that is the only point at which they'll actually, truly listen to what you have to say. So it's imperative that you seek first to understand if you want a successful conversation.",
+      "jd_use_when": "When a conversation, conflict, or negotiation is stalling because both sides are talking past each other and no one feels heard. Have them slow down, draw out and restate the other person's position until it lands, and only then offer their own view \u2014 that's when real listening becomes possible.",
+      "status": "interpreted"
+    },
+    {
+      "id": "covey-06-synergize",
+      "author": "Stephen R. Covey",
+      "framework": "The 7 Habits of Highly Effective People",
+      "concept": "Synergize",
+      "meaning": "The whole is greater than the sum of its parts (1 + 1 = 3). Value the differences between people \u2014 perspectives, strengths, experiences \u2014 and combine them into creative solutions no one would reach alone. Builds on Win-Win and empathic listening: genuine creative cooperation rather than compromise.",
+      "jd_interpretation": "Synergize is the foundational framework of highly effective teams. In essence it means 1 plus 1 equals 3. Each individual has their contribution, but by working as a team they feel like an integral gear in the machine \u2014 they know other people are counting on them, so they rise above what they'd typically do on their own. So synergize from a leader's perspective is: when you have a team of people doing things, you have to build a culture that encourages and expects people to work together, all pulling the rope in one direction.",
+      "jd_use_when": "When a leader has talented individuals but they're operating as separate performers rather than a team \u2014 or when output is only the sum of individual efforts. Build a culture that expects collaboration so people rise above their solo best, all pulling the rope in one direction.",
+      "status": "interpreted"
+    },
+    {
+      "id": "covey-07-sharpen-the-saw",
+      "author": "Stephen R. Covey",
+      "framework": "The 7 Habits of Highly Effective People",
+      "concept": "Sharpen the Saw",
+      "meaning": "Continually renew yourself across four dimensions \u2014 physical, mental, social/emotional, and spiritual. Like the woodcutter too busy sawing to sharpen his blade, if you never renew, your capacity dulls and the other six habits degrade. It is the habit that sustains all the others.",
+      "jd_interpretation": "Habit seven, sharpen the saw, lays across the first six habits \u2014 it's foundational for all of them to operate. When you're sawing to cut wood, if your saw isn't sharp it won't be effective. You are the saw. People need to take care of themselves physically, mentally, spiritually, and socially, so that as an individual you're sharp and can do your very best and implement the other six habits.",
+      "jd_use_when": "When a leader is depleted, running on empty, or neglecting their own physical, mental, spiritual, or social renewal \u2014 and it's dulling their effectiveness at everything else. Restore the person first; a dull saw can't cut, no matter how good the other habits are.",
+      "status": "interpreted"
+    },
+    {
+      "id": "maxwell-02-law-of-influence",
+      "author": "John C. Maxwell",
+      "framework": "The 21 Irrefutable Laws of Leadership",
+      "concept": "The Law of Influence",
+      "meaning": "Leadership is influence \u2014 nothing more, nothing less. Title, position, and rank don't make someone a leader; the true measure is whether people actually follow. You can have a position without influence, and influence without a position.",
+      "jd_interpretation": "Everybody influences everybody at some level. Some people influence through authority and commands; some influence just by being who they are. The best way to influence somebody is to motivate them to move because they own it and they believe it's what they should do \u2014 you're influencing them to make the right decision, and they make it. You can also influence somebody by saying 'do this or you'll lose your job,' but that's not really influence, that's a command. So the law of influence is always active, and you need to be conscious of how you're influencing each member in the moment.",
+      "jd_use_when": "When a leader is relying on positional authority or commands to move people, rather than genuine influence \u2014 or isn't conscious of the fact that they're always influencing, one way or another. Shift them toward motivating ownership so people act because they believe in it, not because they're threatened.",
+      "status": "interpreted"
+    },
+    {
+      "id": "maxwell-03-law-of-process",
+      "author": "John C. Maxwell",
+      "framework": "The 21 Irrefutable Laws of Leadership",
+      "concept": "The Law of Process",
+      "meaning": "Leadership develops daily, not in a day. It is cultivated over time through continual investment in growth \u2014 learning, discipline, experience, and small consistent improvements that compound. Leaders are made through a long process, not born overnight.",
+      "jd_interpretation": "When you look at an organization from the big picture, it is a process. Human beings come into a building, each person does something, all of it contributes to a bigger thing being developed, and then everybody goes home for the night. It's a process of how things work. An organization is a machine, and it follows a process \u2014 heavily influenced by the culture, but it is a process. The leadership role is to create an effective process from multiple perspectives.",
+      "jd_use_when": "When a leader is treating outcomes as one-off events instead of seeing the underlying repeatable process \u2014 or when the organizational 'machine' is producing poor results because the process itself (and the culture shaping it) hasn't been intentionally designed. Step back and engineer an effective process from multiple perspectives.",
+      "status": "interpreted"
+    },
+    {
+      "id": "maxwell-07-law-of-respect",
+      "author": "John C. Maxwell",
+      "framework": "The 21 Irrefutable Laws of Leadership",
+      "concept": "The Law of Respect",
+      "meaning": "People naturally follow leaders stronger than themselves. Followers give loyalty to leaders whose ability, character, and competence they respect \u2014 you don't get respect by demanding it, you earn it. When people gather, they instinctively gravitate toward the strongest leader in the room.",
+      "jd_interpretation": "Respect is somehow correlated with trust. If people respect you, they'll trust you \u2014 and vice versa. The law of respect is that without respect you cannot be an effective leader. You have to earn respect. A lot of people get short-sighted and try to command respect. That's like going on a date and telling your date you want them to fall in love with you \u2014 you can't do that. You have to earn it.",
+      "jd_use_when": "When a leader is trying to command or demand respect (or loyalty) through position or force, rather than earning it through character and competence. Redirect them: respect and trust are earned over time, not ordered \u2014 you can't command someone to fall in love with you.",
+      "status": "interpreted"
+    },
+    {
+      "id": "maxwell-10-law-of-connection",
+      "author": "John C. Maxwell",
+      "framework": "The 21 Irrefutable Laws of Leadership",
+      "concept": "The Law of Connection",
+      "meaning": "Leaders touch a heart before they ask for a hand. Connect with people emotionally and relationally before asking them to act, follow, or change. People don't care how much you know until they know how much you care \u2014 connection comes before commitment.",
+      "jd_interpretation": "There is a magic that is very hard to quantify, and that is the law of connection. Connection is when people hit it off, when they're on the same page, or when they understand each other. It's a frequency of continued engagements where the similarities are above normal.",
+      "jd_use_when": "When a leader is trying to get commitment, buy-in, or change from someone they haven't actually connected with yet. Build the relationship first \u2014 find the common ground and the shared 'frequency' \u2014 before asking for the hand.",
+      "status": "interpreted"
+    },
+    {
+      "id": "maxwell-12-law-of-empowerment",
+      "author": "John C. Maxwell",
+      "framework": "The 21 Irrefutable Laws of Leadership",
+      "concept": "The Law of Empowerment",
+      "meaning": "Only secure leaders give power to others. Empowerment means genuinely handing authority, ownership, and decision-making to your people and trusting them to act. Insecure leaders hoard control out of fear; secure leaders multiply their impact by lifting others up, and giving power away actually increases their own influence.",
+      "jd_interpretation": "Empowerment is much more than just giving someone authority to do something. It's giving them permission at a personal level to embrace it, to own it, and to have ownership to act on it.",
+      "jd_use_when": "When a leader has technically delegated a task or granted authority but the person still isn't truly owning it \u2014 or when the leader is holding control too tightly. Move past formal authority to genuine personal permission so the person embraces and acts on it as their own.",
+      "status": "interpreted"
+    },
+    {
+      "id": "maxwell-14-law-of-buy-in",
+      "author": "John C. Maxwell",
+      "framework": "The 21 Irrefutable Laws of Leadership",
+      "concept": "The Law of Buy-In",
+      "meaning": "People buy into the leader first, then the vision. Followers don't commit to a cause or plan on its merits alone \u2014 they first decide whether they believe in the person presenting it. If they don't trust the leader they'll reject even a great vision; if they trust the leader they'll follow into a vision they're still unsure about. Credibility of the messenger comes before acceptance of the message.",
+      "jd_interpretation": "Buy-in means the person wants to be a follower to a leader. It can come from multiple perspectives, analysis, and decisions, but all in all they're thinking, 'I'm in. I am a follower. I want to do what this leader asked me to do.' How that happens comes from multiple arenas and depends on the individual \u2014 they might like the stature and confidence of a leader, or the logic and implementation structure, or the heart of a leader. The reasons are multiple and complex. But what it means is that they have bought in. They are on the team.",
+      "jd_use_when": "When a leader is pushing a vision or plan that isn't landing \u2014 and the real issue is that people haven't yet bought into the leader personally. Diagnose which arena will win this particular person (stature/confidence, logic/structure, or heart) and earn the buy-in to the leader before selling the vision.",
+      "status": "interpreted"
+    },
+    {
+      "id": "drucker-01-management-by-objectives",
+      "author": "Peter F. Drucker",
+      "framework": "Drucker Management Principles",
+      "concept": "Management by Objectives (MBO)",
+      "meaning": "Leaders and their people agree together on clear, specific objectives and align their work toward those shared goals. Because people help set the targets, they manage themselves against them \u2014 ownership replaces top-down control, and individual goals ladder up into the organization's larger objectives.",
+      "jd_interpretation": "Management by objectives, at a very high level, simply means clarity. If you have specific objectives to do, it's not necessarily the why \u2014 it's the task and the things to get accomplished. That makes it clear what you need to get done. You don't have to explain why.",
+      "jd_use_when": "When a person or team is unclear on what exactly needs to get done \u2014 spinning, guessing, or asking for the rationale before acting. Give them specific, clear objectives: name the tasks and what accomplishment looks like, so there's no ambiguity about the target.",
+      "status": "interpreted"
+    },
+    {
+      "id": "drucker-02-what-gets-measured-gets-managed",
+      "author": "Peter F. Drucker",
+      "framework": "Drucker Management Principles",
+      "concept": "What Gets Measured Gets Managed",
+      "meaning": "You can't improve or manage what you don't measure. Measurement focuses attention, drives behavior, and creates accountability \u2014 the act of tracking something changes how people treat it. The caution: measure the right things, because whatever you measure is what people will optimize for.",
+      "jd_interpretation": "Simply, this means people respect what you inspect, not what you expect.",
+      "jd_use_when": "When a leader is expecting a result but not inspecting or measuring it \u2014 and is frustrated that it isn't happening. What you actually inspect and track is what people will attend to; expectation alone won't move behavior.",
+      "status": "interpreted"
+    },
+    {
+      "id": "drucker-03-effectiveness-vs-efficiency",
+      "author": "Peter F. Drucker",
+      "framework": "Drucker Management Principles",
+      "concept": "Effectiveness vs. Efficiency",
+      "meaning": "Efficiency is doing things right; effectiveness is doing the right things. You can be highly efficient at tasks that don't matter. Leaders prioritize effectiveness first (choose the right targets), then apply efficiency to execute them well \u2014 doing the wrong thing efficiently just gets you to the wrong place faster.",
+      "jd_interpretation": "Effectiveness and efficiency is something I wrestled with for a long time, and Dr. Covey cleared it up for me. Effectiveness is what you are, or seek to be, with human beings. Efficiency is what you are with processes or machines. Where people make the mistake \u2014 as I did \u2014 is trying to be efficient with people. You can't. You have to be effective with people.",
+      "jd_use_when": "When a leader is treating people like a process \u2014 trying to be efficient (fast, transactional, optimized) with human beings instead of effective (relational, understanding, doing the right thing by them). Redirect: be efficient with machines and processes, but effective with people.",
+      "status": "interpreted"
+    },
+    {
+      "id": "drucker-05-culture-eats-strategy",
+      "author": "Peter F. Drucker",
+      "framework": "Drucker Management Principles",
+      "concept": "Culture Eats Strategy for Breakfast",
+      "meaning": "No matter how brilliant your strategy is, the organization's culture \u2014 the shared habits, values, and unwritten 'how we do things here' \u2014 will override it if the two conflict. Culture is the real operating system; people default to it under pressure. A strong culture aligned with strategy carries it forward; a misaligned culture quietly kills it.",
+      "jd_interpretation": "It's the same concept as idealism vs. realism. Strategy is the concept \u2014 people imagining what needs to take place for something to happen. Culture is an accepted set of norms of a body of individuals who know and act a certain way. If the strategy is aligned with the culture, it's a bingo. If the strategy is not aligned, the culture becomes a friction point that erodes it and won't allow the strategy to become effective.",
+      "jd_use_when": "When a leader has a sound strategy on paper that keeps failing in execution \u2014 the real culprit is a culture whose norms don't match the strategy. Check the alignment: either shape the strategy to fit the culture's realism or deliberately shift the culture, because the culture will win the friction fight every time.",
+      "status": "interpreted"
+    },
+    {
+      "id": "drucker-07-managing-oneself",
+      "author": "Peter F. Drucker",
+      "framework": "Drucker Management Principles",
+      "concept": "Managing Oneself",
+      "meaning": "Before you can lead others well, you must manage yourself. Honestly know your strengths and work from them (not your weaknesses), understand how you work best, know your values, and deliberately place yourself where you can make the greatest contribution. Self-awareness is the foundation of effectiveness.",
+      "jd_interpretation": "Managing oneself means you treat yourself as you would treat any of your team members \u2014 you expect the same responsibility, insight, and commitment from yourself as you do from others. This has to be held against a backdrop of self-awareness of your strengths and weaknesses. As the leader you have the ability to delegate, and it should be foundational in your processes: in areas where you're weak, delegate to team members who are strong there. Managing oneself doesn't mean you have to do everything \u2014 it means focusing on your strengths and doing them well, while sharing with your team to carry the areas you're not strong in.",
+      "jd_use_when": "When a leader holds the team to a standard they don't hold themselves to, or is trying to do everything personally instead of delegating their weak areas. Hold yourself to the same responsibility and commitment you expect of others, and use honest self-awareness to delegate weaknesses to team members whose strengths cover them.",
+      "status": "interpreted"
+    },
+    {
+      "id": "collins-01-level-5-leadership",
+      "author": "Jim Collins",
+      "framework": "Good to Great",
+      "concept": "Level 5 Leadership",
+      "meaning": "The highest level of leadership blends deep personal humility with intense professional will. Level 5 leaders are ambitious first and foremost for the company and its success, not for themselves; they channel ego into the larger goal while remaining modest and understated personally.",
+      "jd_interpretation": "This is the successful professional balance: intense personal will and ambition for the company \u2014 not for oneself \u2014 trying to make the team win, but underlined with deep personal humility. So people can see you're not doing it for self-serving reasons; they see you're doing it for the best of the company. Foundational for a leader.",
+      "jd_use_when": "When a leader's ambition reads as self-serving, or ego is getting ahead of the mission. Pair intense will to make the team and company win with genuine personal humility, so people trust that your drive is for the company's good and not your own.",
+      "status": "interpreted"
+    },
+    {
+      "id": "collins-04-confront-the-brutal-facts",
+      "author": "Jim Collins",
+      "framework": "Good to Great",
+      "concept": "Confront the Brutal Facts (Stockdale Paradox)",
+      "meaning": "Maintain unwavering faith that you will prevail in the end, while simultaneously confronting the most brutal facts of your current reality. Great organizations create a climate where the truth is heard and hard facts are faced honestly rather than avoided.",
+      "jd_interpretation": "Confront the brutal facts means don't put your head in the sand. If facts are facts, as a leader you need to be aware of them so you can have executive clarity to understand how to proceed.",
+      "jd_use_when": "When someone is dancing around a problem and trying to justify why not to deal with it \u2014 while knowing they should. Make them face the brutal facts squarely so they gain the executive clarity to decide how to proceed.",
+      "status": "interpreted"
+    },
+    {
+      "id": "collins-05-the-flywheel",
+      "author": "Jim Collins",
+      "framework": "Good to Great",
+      "concept": "The Flywheel (vs. the Doom Loop)",
+      "meaning": "Transformation comes from consistent pushes in one direction that build momentum over time, like a heavy flywheel that turns faster with each turn \u2014 not from a single dramatic move. The Doom Loop is the opposite: lurching between strategies and never building momentum.",
+      "jd_interpretation": "Momentum is a law of nature, and it's also true in humans \u2014 in human interaction and in teams. There is a momentum, an energy created from synergy inside an organization. Momentum builds up; it's a sense of winning, everybody loves it, and they're moving forward. But if anything negative comes in, it can derail and deflate real quickly. It takes time to build momentum, so leaders should be sensitive to keeping the momentum going and diffusing all the little friction points that arise and try to derail that energy.",
+      "jd_use_when": "When a team has positive energy and a sense of winning that a leader needs to protect and sustain \u2014 or when small friction points are starting to deflate hard-won momentum. Guard the momentum: keep pushing in one direction and defuse the little derailers before they kill the energy.",
+      "status": "interpreted"
+    },
+    {
+      "id": "collins-06-culture-of-discipline",
+      "author": "Jim Collins",
+      "framework": "Good to Great",
+      "concept": "A Culture of Discipline",
+      "meaning": "When you have disciplined people who engage in disciplined thought and take disciplined action, you don't need excessive controls or bureaucracy. It combines a culture of freedom and responsibility with an ethic of discipline within a clear framework.",
+      "jd_interpretation": "A culture of discipline means it's expected that people are responsible for what they own. It's nice to have freedom in a conversation and in an organization \u2014 to be yourself and engage however you want. But at the same time, there have to be definitions or guardrails around your sandbox. Once you realize the size of your sandbox and your responsibilities, and the culture of discipline sets the expectation you need to follow, things go much better.",
+      "jd_use_when": "When freedom in a team has drifted into a lack of ownership or accountability. Define the sandbox \u2014 the guardrails and responsibilities \u2014 and set the expectation that people are accountable for what they own, so freedom and discipline coexist.",
+      "status": "interpreted"
+    },
+    {
+      "id": "collins-10-technology-accelerators",
+      "author": "Jim Collins",
+      "framework": "Good to Great",
+      "concept": "Technology Accelerators",
+      "meaning": "Technology by itself never creates greatness or transformation \u2014 it acts as an accelerator of momentum that already exists, not a creator of it. Great organizations adopt technology thoughtfully in service of their core direction rather than chasing it for its own sake.",
+      "jd_interpretation": "Technology causes change. It doesn't necessarily accelerate the company \u2014 it can, from the standpoint of quickness or efficiency inside \u2014 but it can also cause cultural earthquakes and a lot of other damage. So I'd call technology a huge agent of change. How you deal with technology falls under the same realities as change management: it's shifting the way things are done, and it has to be dealt with as such.",
+      "jd_use_when": "When a leader is adopting or reacting to new technology and treating it as a pure efficiency win \u2014 without accounting for the cultural disruption it brings. Treat technology as a major agent of change and manage it with change-management discipline, not just as a tool bolt-on.",
+      "status": "interpreted"
+    },
+    {
+      "id": "lencioni-01-absence-of-trust",
+      "author": "Patrick Lencioni",
+      "framework": "The Five Dysfunctions of a Team",
+      "concept": "Absence of Trust",
+      "meaning": "The foundational dysfunction: team members won't be vulnerable with each other \u2014 admitting mistakes and weaknesses or asking for help. Without vulnerability-based trust, the whole team structure is compromised.",
+      "jd_interpretation": "The absence of trust is a deadly virus. It doesn't allow team members to work together with synergy, and it doesn't have them all pulling the same direction. It breeds conspiracy thoughts. It's a disease that will shatter the culture of an organization.",
+      "jd_use_when": "When a team shows self-protection, suspicion of each other's motives, or conspiracy thinking instead of open collaboration \u2014 and can't pull in the same direction. Recognize the absence of trust as the root disease attacking the culture, not just a personality clash.",
+      "quotable_insights": [
+        "The absence of trust is a deadly virus.",
+        "Trust allows people to pull in the same direction with synergy.",
+        "Without trust, conspiracy thinking replaces collaboration.",
+        "A lack of trust is a disease that can shatter the culture of an organization."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "lencioni-02-fear-of-conflict",
+      "author": "Patrick Lencioni",
+      "framework": "The Five Dysfunctions of a Team",
+      "concept": "Fear of Conflict",
+      "meaning": "Without trust, teams avoid honest debate and settle for artificial harmony instead of passionate, unfiltered discussion of ideas. Productive ideological conflict is necessary for good decisions.",
+      "jd_interpretation": "Fear of conflict is another symptom growing out of the same root as the absence of trust. When people don't trust each other, they won't risk honest, passionate debate \u2014 they settle for a false, surface harmony to protect themselves rather than putting the real issues on the table.",
+      "jd_use_when": "When a team looks harmonious on the surface but avoids the hard conversations \u2014 no real debate, decisions made without genuine give-and-take. Trace it back to trust: people won't engage in honest conflict until they feel safe enough to be vulnerable.",
+      "status": "interpreted"
+    },
+    {
+      "id": "lencioni-03-lack-of-commitment-ownership",
+      "author": "Patrick Lencioni",
+      "framework": "The Five Dysfunctions of a Team",
+      "concept": "Lack of Commitment (interpreted as Lack of Ownership)",
+      "meaning": "In Lencioni's model, without healthy conflict people don't truly buy in, and ambiguity about direction festers because they never got to weigh in. Digital JD interprets this dysfunction primarily through the lens of OWNERSHIP: ownership is the observable behavior that demonstrates commitment, making it the more useful coaching concept.",
+      "jd_interpretation": "I've always called this a lack of ownership. You can't force someone to be committed \u2014 their heart has to be in it. True commitment is the result of personal ownership. Leaders can't command commitment; they can only create an environment where individuals willingly accept responsibility for their role and outcomes. When ownership is absent, commitment becomes superficial, accountability weakens, and execution suffers because people are doing a job rather than owning a mission.",
+      "jd_use_when": "When people are going through the motions \u2014 doing a job rather than owning a mission \u2014 and commitment feels superficial or forced. Don't try to command commitment; build the environment where people choose to own their responsibility, because ownership is what commitment actually looks like in behavior.",
+      "quotable_insights": [
+        "I've always called it a lack of ownership.",
+        "You can't force someone to be committed. Their heart has to be in it.",
+        "Ownership is the foundation of commitment.",
+        "People don't become committed because they're told to\u2014they become committed because they choose to own the responsibility."
+      ],
+      "jd_framework_note": "Digital JD reframes Lencioni's 'Lack of Commitment' as 'Lack of Ownership.' Ownership is the practical, observable behavior that demonstrates commitment and is therefore the more useful coaching concept. This keeps the framework faithful to Lencioni's intent while making it distinctly JD.",
+      "status": "interpreted"
+    },
+    {
+      "id": "lencioni-04-avoidance-of-accountability",
+      "author": "Patrick Lencioni",
+      "framework": "The Five Dysfunctions of a Team",
+      "concept": "Avoidance of Accountability",
+      "meaning": "Without commitment, people won't hold peers accountable and standards slip because no one calls it out. Digital JD treats this as a symptom of a deeper root rather than a standalone problem.",
+      "jd_interpretation": "All of these from Patrick come from the same spinal cord \u2014 lack of trust, lack of commitment, now avoidance of accountability. If you're not committed and you don't take ownership of something, then you know you're falling short, so you don't want to be held accountable because you know there's a chance it won't meet expectations \u2014 since you're not holding it to your own high standards. So avoidance of accountability is another finger on the hand of lack of ownership.",
+      "jd_use_when": "When peers won't hold each other accountable and standards are quietly slipping. Look past the symptom: people avoid accountability because they already know they haven't truly owned the work. Fix the ownership and the accountability follows.",
+      "quotable_insights": [
+        "These all come from the same spinal cord.",
+        "Avoidance of accountability is another finger on the hand of lack of ownership.",
+        "People avoid accountability because they already know they're falling short of the standard."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "lencioni-05-inattention-to-results",
+      "author": "Patrick Lencioni",
+      "framework": "The Five Dysfunctions of a Team",
+      "concept": "Inattention to Results",
+      "meaning": "The ultimate dysfunction: people put ego, career, or their department above the team's collective goals. Digital JD treats poor results as the visible symptom of a deeper breakdown in ownership, trust, or accountability.",
+      "jd_interpretation": "This is just another finger on the same hand. Patrick is going around describing all the symptoms of lack of ownership \u2014 they're different sides of the same problem. Inattention to results is the visible outcome: when individuals are more concerned with protecting themselves, their department, or their position than achieving the organization's objectives, collective results suffer. Poor results are usually the symptom, not the disease. Leaders should read bad results as evidence that ownership, trust, or accountability has broken down somewhere in the system.",
+      "jd_use_when": "When results are poor and everyone is protecting turf, ego, or career over the collective goal. Don't treat it as merely a performance problem \u2014 diagnose upstream to find where ownership, trust, or accountability broke down.",
+      "quotable_insights": [
+        "These are different fingers on the same hand.",
+        "He's describing different sides of the same problem.",
+        "Poor results are usually the symptom, not the disease."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "goleman-01-self-awareness",
+      "author": "Daniel Goleman",
+      "framework": "Emotional Intelligence",
+      "concept": "Self-Awareness",
+      "meaning": "Recognizing and understanding your own emotions, moods, and drives as they happen, and how they affect others. The foundation of EQ: you cannot manage what you cannot see in yourself.",
+      "jd_interpretation": "Self-awareness is foundational to effective leadership because it shapes every interaction and decision. Leaders must understand their strengths, limitations, emotional state, how they are perceived by others, and the impact their presence has on the people around them. Without accurate self-awareness, leaders cannot accurately assess or improve their own effectiveness.",
+      "jd_use_when": "When a leader misjudges how they come across or the impact of their presence \u2014 unaware of how their actions are being interpreted. Build the self-awareness first, because every improvement in effectiveness starts with seeing yourself accurately.",
+      "quotable_insights": [
+        "Self-awareness is essential in all aspects of life.",
+        "You need to understand your capabilities, your limitations, and how you are perceived.",
+        "Every leader leaves an impression. Self-awareness is understanding the impact you have on other people.",
+        "Self-awareness is foundational."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "goleman-02-self-regulation",
+      "author": "Daniel Goleman",
+      "framework": "Emotional Intelligence",
+      "concept": "Self-Regulation",
+      "meaning": "Managing and redirecting your own disruptive emotions and impulses; thinking before acting, staying composed under pressure, and suspending judgment.",
+      "jd_interpretation": "You have two forces working within you: your logic and intellect from your brain, and your emotions from your heart. Emotional intelligence requires recognizing these as thoughts being suggested to you that you do not necessarily need to act on. Self-regulation means having the ability to turn the volume down on your emotions when necessary. My guideline: if you're in a conversation or situation and you recognize that your emotions are in more control than your logic, you need to be quiet. Stop and take a break, because your emotions are driving you in a direction that logically you might not choose to take.",
+      "jd_use_when": "When someone is reacting from emotion rather than logic \u2014 about to say or do something in the heat of the moment. Apply the guideline: if emotions are more in control than logic, go quiet, stop, and take a break before acting.",
+      "quotable_insights": [
+        "You have two forces working within you \u2014 logic from your brain and emotion from your heart.",
+        "Emotions are thoughts being suggested to you; you do not necessarily need to act on them.",
+        "Self-regulation is the ability to turn the volume down on your emotions when necessary.",
+        "If your emotions are in more control than your logic, be quiet, stop, and take a break."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "goleman-04-empathy",
+      "author": "Daniel Goleman",
+      "framework": "Emotional Intelligence",
+      "concept": "Empathy",
+      "meaning": "Understanding the emotional makeup of other people and treating them according to their emotional reactions; sensing what others feel, especially in decisions that affect them.",
+      "jd_interpretation": "Empathy ties into another perspective called connection \u2014 you have to have a connection with somebody at some level to have empathy. Empathy is feeling compassion and association with another individual's situation. This is essential as a leader: if you go to an employee having difficulty and just logically embrace them with all the right answers, processes, and checkmarks, it won't register, it won't sink in, it doesn't become effective. Without empathy you can't get deep enough through the surface layers for them to take ownership of what you're saying. Empathy is the insight to trust.",
+      "jd_use_when": "When a leader is responding to someone's struggle with pure logic \u2014 correct answers and process, but no connection \u2014 and it isn't landing. Lead with empathy first to build the connection and trust that lets the guidance actually take root and be owned.",
+      "quotable_insights": [
+        "Empathy ties directly into connection.",
+        "Without empathy, the right answers don't sink in.",
+        "Logic informs the mind; empathy opens the door.",
+        "You have to get beneath the surface before people will take ownership.",
+        "Empathy is the insight to trust."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "goleman-05-social-skill",
+      "author": "Daniel Goleman",
+      "framework": "Emotional Intelligence",
+      "concept": "Social Skill",
+      "meaning": "Managing relationships and building networks; finding common ground, building rapport, and moving people in a desired direction. Proficiency in leading change and persuading.",
+      "jd_interpretation": "Social skill is the ability to communicate and interact in ways that build relationships, establish credibility, and increase influence. It's one of the areas seeing the greatest demise from social media \u2014 communication is 50% body language, which gets stripped out. Effective leaders understand communication is more than words: it includes presence, body language, tone, timing, and the intentional presentation of themselves. You have two personas \u2014 the private one you use with your closest people, and the one you intentionally present to the world. Leaders are not being inauthentic when they adapt their communication; they're using social skills to maximize understanding, trust, and the probability of getting the response they're looking for.",
+      "jd_use_when": "When a leader's message isn't landing because of how it's delivered \u2014 poor presence, tone, timing, or reliance on text/digital that strips out body language. Sharpen the social skill: adapt presentation intentionally (not inauthentically) to increase understanding and the probability of the desired response.",
+      "quotable_insights": [
+        "Social skills are interaction with other human beings through communication.",
+        "Social skills determine how people perceive you.",
+        "You have two personas \u2014 the private one and the one you intentionally present to the world.",
+        "You're not being fake; you're using your social skills to increase the probability of getting the response you're looking for.",
+        "Communication is the vehicle through which social skills are expressed."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "edmondson-01-psychological-safety",
+      "author": "Amy Edmondson",
+      "framework": "Psychological Safety & Teaming",
+      "concept": "Psychological Safety",
+      "meaning": "A shared belief that the team is safe for interpersonal risk-taking; people can speak up, ask questions, admit mistakes, or challenge ideas without fear of embarrassment, punishment, or humiliation.",
+      "jd_interpretation": "Psychological safety is the natural outcome of a healthy leadership culture. It's not something you install on its own \u2014 it all comes together. If people trust each other, if there's a culture of win-win, if there's motivation, if you have the elements of a highly effective team, then you will be psychologically safe in that environment. At its core it's simply this: if you trust people, you will feel psychologically safe. Without trust there's doubt, and that's when you don't feel safe. So psychological safety is just a high level of trust and closeness with the people you work with.",
+      "jd_use_when": "When a team is guarded, quiet, or self-protective and someone wants to 'add psychological safety' as a standalone fix. Reframe it: safety is downstream of trust. Build the trust, win-win, and effective-team elements, and safety emerges \u2014 you can't install it directly.",
+      "quotable_insights": [
+        "If you trust people, you will feel psychologically safe.",
+        "Without trust there's doubt, and that's when you don't feel safe.",
+        "Psychological safety is a high level of trust and closeness with the people you work with.",
+        "Psychological safety isn't something you install \u2014 it emerges from the right leadership behaviors."
+      ],
+      "jd_framework_note": "Digital JD treats psychological safety as an OUTCOME of deeper principles (trust, win-win, ownership, respect, effective communication) rather than as a standalone construct. Edmondson: Psychological Safety -> Better Performance. Digital JD: Trust + Win-Win + Ownership + Communication + Respect -> Psychological Safety.",
+      "status": "interpreted"
+    },
+    {
+      "id": "edmondson-04-intelligent-failure",
+      "author": "Amy Edmondson",
+      "framework": "Psychological Safety & Teaming",
+      "concept": "Intelligent Failure / Failing Well",
+      "meaning": "Not all failure is bad; in uncertain, new territory, well-designed 'intelligent failures' are the cost of experimentation and learning. Distinguish blameworthy failure from praiseworthy learning.",
+      "jd_interpretation": "The failure itself isn't the substantial event \u2014 what happens after the failure is. If you fail at something, the failure is the same from either perspective. What matters is the response: do you use it as a learning experience and move forward? Then it's praiseworthy. If you don't pick up the learning and up your game, then it's blameworthy. In summary, failing is realistic, and if embraced, it's a deeper way to learn.",
+      "jd_use_when": "When a leader is stuck on the failure itself \u2014 blaming, dwelling, or fearing it \u2014 instead of on the response. Shift the focus forward: the event is just information; whether it becomes praiseworthy or blameworthy is decided entirely by what you learn and do next.",
+      "quotable_insights": [
+        "Failure is realistic.",
+        "What happens after the failure is what's substantial.",
+        "If you embrace failure as a learning experience, it becomes one of the deepest ways to learn.",
+        "Failure itself isn't the lesson \u2014 the response to failure is."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "edmondson-05-teaming",
+      "author": "Amy Edmondson",
+      "framework": "Psychological Safety & Teaming",
+      "concept": "Teaming (Teamwork on the Fly)",
+      "meaning": "Coordinating and collaborating without the luxury of stable team structures; teaming across boundaries, disciplines, and shifting groups in real time.",
+      "jd_interpretation": "I think of ants \u2014 they run around like they have no coordination at all, and yet they build incredible things in an incredible amount of time. Teaming means that when you're working inside your team's solar system and you come across somebody on another team who you can help, or who can help you, it's okay to build another team level. People are your greatest resource and asset. They don't have to be formally designated on your team \u2014 you can put anybody on your team that makes sense, either to help you or to help them. Build the team the work requires, not the team the organization chart dictates.",
+      "jd_use_when": "When a leader is constrained by the org chart \u2014 refusing to collaborate outside formal reporting lines or leaving useful people unused because they're 'not on my team.' Encourage teaming: assemble the right people around the work in real time, regardless of boundaries.",
+      "quotable_insights": [
+        "People are your greatest resource and asset.",
+        "You can put anybody on your team if it makes sense.",
+        "Teams don't have to be formally designated.",
+        "Build the team the work requires, not the team the organization chart dictates.",
+        "Leadership isn't managing your team \u2014 it's assembling the right team for the challenge."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "schein-01-artifacts",
+      "author": "Edgar Schein",
+      "framework": "Organizational Culture (Three Levels)",
+      "concept": "Artifacts",
+      "meaning": "The visible surface of culture: what you can see, hear, and feel \u2014 office layout, dress, rituals, language, stories, and behavior. Easy to observe, hard to interpret correctly.",
+      "jd_interpretation": "There are several items that play into the perception of a culture, which Schein calls artifacts. I go from the big to the little. When I go to an organization: the neighborhood from the outside, the office building itself, the landscaping, the cultural status of the outside building \u2014 does it look first class, professional, or is it just another office building? Then I go through the same sequence inside: the hallway, the elevators, the ceilings, the care of the walls, the security guard, the professionalism. It's a feel you derive from several unnoticed observations. Then in the office itself \u2014 how it's laid out, the interaction between employees, the way you're greeted, the feeling of tenseness or comfort \u2014 all play into your perception of the culture. It's hard to quantify a list because it's everything. It's just personal observation of a new world you're walking into.",
+      "jd_use_when": "When a leader wants to diagnose a culture (their own or one they're entering). Teach them to consciously read the accumulated artifacts \u2014 external environment, professional presentation, work environment, human interaction, emotional climate \u2014 as one cumulative impression. No single artifact tells the story; look for the pattern, not the isolated signal.",
+      "quotable_insights": [
+        "It's a feel you derive from several unnoticed observations.",
+        "No one artifact defines the culture; it's the accumulation of everything you observe.",
+        "You're walking into a new world and learning to read it.",
+        "Artifacts are the visible clues that shape your perception of an organization's culture."
+      ],
+      "jd_framework_note": "Digital JD formalizes artifacts into an 'Executive Cultural Scan' across five observable categories: external environment, professional presentation, work environment, human interaction, and emotional climate \u2014 read as a pattern, not isolated events. Reinforces the root-cause reasoning rule: look for patterns, not isolated signals.",
+      "status": "interpreted"
+    },
+    {
+      "id": "schein-05-humble-inquiry",
+      "author": "Edgar Schein",
+      "framework": "Organizational Culture (Three Levels)",
+      "concept": "Humble Inquiry",
+      "meaning": "Leading by asking rather than telling; drawing others out through genuine curiosity to build relationships and uncover the truth, instead of assuming you already have the answer.",
+      "jd_interpretation": "I'd describe humble inquiry as the difference between pushing and pulling. You can push somebody into a situation and tell them to do things. If you pull them into the situation, it lets them decide to step into it \u2014 it's their choice, and now they have ownership of it. That is humble inquiry: you're not commanding and expecting an answer of a certain nature; you're coming in honestly, humbly, asking the person their opinion and their perception of a problem. They recognize that their statements are going to be valuable, so they put more thought into it and are more honest with it.",
+      "jd_use_when": "When a leader is pushing people toward predetermined answers and getting compliance instead of commitment. Switch to pulling: ask sincere questions and genuinely value the person's perspective, so they choose to step in and own the outcome.",
+      "quotable_insights": [
+        "It's the difference between pushing and pulling.",
+        "If people choose to step into the situation, they own it.",
+        "Don't command \u2014 invite.",
+        "People put more thought into their answers when they know their opinions are genuinely valued.",
+        "Pull people toward ownership instead of pushing them toward compliance."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "schein-06-culture-change-is-unlearning",
+      "author": "Edgar Schein",
+      "framework": "Organizational Culture (Three Levels)",
+      "concept": "Culture Change Is Unlearning",
+      "meaning": "Real culture change isn't just adding new behaviors; it requires people to unlearn old assumptions and habits. Because that creates uncertainty and anxiety, leaders must manage the process with psychological safety.",
+      "jd_interpretation": "Culture change is unlearning. If you're doing something one way and you have to change and do it a different way, you can say you have to unlearn the old and learn the new \u2014 or you can simply say things are changing and we need to learn the new way. Either way, this falls under change management. Any kind of change has all kinds of dynamics around it, and culture change is no different \u2014 except that it's much longer term. Culture change takes years to establish, but probably only months to cause major degradation, especially if trust is involved.",
+      "jd_use_when": "When a leader is trying to change a culture and expecting it to happen fast, or underestimating the anxiety of letting go of the old way. Frame it as change management: reinforce the new way consistently over years, and protect trust \u2014 because culture is slow to build and fast to damage.",
+      "quotable_insights": [
+        "Culture change is really change management.",
+        "You can call it unlearning, or you can simply say we're learning a new way.",
+        "Culture takes years to build and only months to damage.",
+        "Trust is one of the fastest ways to strengthen \u2014 or destroy \u2014 a culture."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "schein-02-espoused-values",
+      "author": "Edgar Schein",
+      "framework": "Organizational Culture (Three Levels)",
+      "concept": "Espoused Values",
+      "meaning": "What the organization says it believes: stated values, mission, slogans, and strategies \u2014 the values people claim, whether or not they're actually lived.",
+      "jd_interpretation": "It's interesting that Schein talks about espoused values instead of the relative comparison between espoused values and recognizable values. Anybody can espouse values about anything, at any level, as embellished as you want to get \u2014 that doesn't matter. What matters is: what are the real, actionable bricks that build the culture of that organization? Those are the real values. Espoused values might be a goal or the ideal target they're trying to achieve, but they need to be compared to the reality of what's actually going on. Then that delta needs to be evaluated, and a path created for how you can move the real values closer to the target, or espoused, values.",
+      "jd_use_when": "When an organization's stated values don't match how it actually behaves. Don't take espoused values at face value \u2014 measure the delta between the espoused (target) and the real, actionable values, then build a path to close the gap.",
+      "quotable_insights": [
+        "Anybody can espouse values \u2014 that doesn't matter.",
+        "What matters is the real, actionable bricks that build the culture.",
+        "Espoused values are the target; real values are the reality.",
+        "Measure the delta between what's espoused and what's real, then build a path to close it."
+      ],
+      "jd_framework_note": "Digital JD reframes 'Espoused Values' as a DELTA diagnostic: espoused values are the target, observed behavior reveals the real values, and the gap between them is the actionable coaching target. Ties into the root-cause reasoning rule (surface claims vs. underlying reality).",
+      "status": "interpreted"
+    },
+    {
+      "id": "schein-03-underlying-assumptions",
+      "author": "Edgar Schein",
+      "framework": "Organizational Culture (Three Levels)",
+      "concept": "Underlying (Basic) Assumptions",
+      "meaning": "The unconscious, taken-for-granted beliefs that actually drive behavior \u2014 the real culture. Often invisible even to the people inside it, and the hardest to change.",
+      "jd_interpretation": "These underlying basic assumptions are the rules individuals create in their minds based on assumptions \u2014 'don't disagree with the CEO,' 'engineering always wins,' 'bad news gets punished.' People say them like they're absolute truth, and they're not. When people hear things and digest them, they file them into their brain as if they're facts. You need to stop and listen to the data being offered \u2014 or that you observe \u2014 and analyze it before you pull it into your internal processing system as a rule. Something might have happened before, but is it a universal truth? No. So underlying assumptions are people trying to draw conclusions from the little-known facts they have and make it a rule in their life. You shouldn't do that. It's okay to form opinions \u2014 'my current perspective of the CEO is this' \u2014 but it's not okay to draw conclusions without substantial, qualified facts.",
+      "jd_use_when": "When a leader or team is operating on untested assumptions they treat as unquestionable truth. Coach the discipline of judgment: separate observations from interpretations, interpretations from conclusions, and conclusions from facts \u2014 and test assumptions against evidence before they become operating rules.",
+      "quotable_insights": [
+        "People create rules in their minds based on assumptions.",
+        "It's okay to form opinions; it's not okay to draw conclusions without substantial qualified facts.",
+        "Don't turn a current perspective into a universal truth.",
+        "Test your assumptions before you make them your operating rules."
+      ],
+      "jd_framework_note": "Digital JD reframes 'Underlying Assumptions' as a discipline of EXECUTIVE JUDGMENT: separate observations -> interpretations -> conclusions -> facts, and test assumptions against evidence before adopting them as rules. This is a coaching behavior (challenge unverified conclusions), not just a culture-diagnosis layer. Ties directly to the root-cause reasoning rule and the 'event is information' rule.",
+      "status": "interpreted"
+    },
+    {
+      "id": "schein-04-leader-as-culture-creator",
+      "author": "Edgar Schein",
+      "framework": "Organizational Culture (Three Levels)",
+      "concept": "The Leader as Culture-Creator (and Shaper)",
+      "meaning": "Leaders create and manage culture; they embed it through what they pay attention to, reward, model, and how they react to crises. Of everything a leader does, shaping culture is among the most consequential.",
+      "jd_interpretation": "Of all the ones we discussed, I agree with this one more than any other without needing to look at another dimension around it \u2014 he's exactly right. The leader is the creator of the culture, or, if he inherits it, he is the influencer of the culture. Plain and simple. Leaders do things \u2014 the building structure, the acceptable standards, the interaction and engagement between employees \u2014 that shape the culture, often without consciously realizing it. A lot of times leaders do something because in that moment they think it's right and they're doing the right thing, but they don't take into consideration the impact it's going to have on the culture. That's one of the biggest weaknesses in leadership today.",
+      "jd_use_when": "When a leader is making a decision focused only on whether it's 'right' in the moment, without weighing its cultural impact. Prompt them to think one level up: every decision, standard, reward, and reaction teaches the organization what's acceptable \u2014 ask 'what culture did this decision just create?'",
+      "quotable_insights": [
+        "The leader is the creator of the culture \u2014 or, if he inherits it, the influencer of the culture.",
+        "Leaders often fail to consider the impact their decisions have on culture.",
+        "Every leadership decision teaches the organization what is acceptable.",
+        "One of the biggest weaknesses in leadership today is failing to think about cultural impact."
+      ],
+      "jd_framework_note": "Dr. Castle's single strongest point of agreement with Schein. Paired with the top-level reasoning rule 'leadership-decisions-teach-culture' and its coaching question, 'What culture did this decision just create?'",
+      "status": "interpreted"
+    },
+    {
+      "id": "kotter-01-create-urgency",
+      "author": "John Kotter",
+      "framework": "The 8-Step Process for Leading Change",
+      "concept": "Create a Sense of Urgency",
+      "meaning": "Help others see the need for change and the importance of acting now, overcoming complacency so the change is treated as a real priority rather than something optional.",
+      "jd_interpretation": "In most organizations everything already feels like a daily emergency \u2014 actions come, short-term goals pop up and change. So if you walk in with something important like a change management model and there's no sense of urgency attached to it, it will not be treated as urgent. You have to deliberately create that urgency. That's done with body language, with programs, and with explanations.",
+      "jd_use_when": "When a genuinely important change is competing against everyone's daily 'emergencies' and getting ignored. Manufacture real urgency deliberately \u2014 through your presence and body language, structured programs, and clear explanation \u2014 or the change won't be treated as a priority.",
+      "quotable_insights": [
+        "Everything already feels like a daily emergency, so real change gets lost unless you make it urgent.",
+        "If there's no sense of urgency, it will not be treated as urgent.",
+        "Urgency is created with body language, programs, and explanation."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "kotter-02-guiding-coalition",
+      "author": "John Kotter",
+      "framework": "The 8-Step Process for Leading Change",
+      "concept": "Build a Guiding Coalition",
+      "meaning": "Assemble a powerful group with enough influence, credibility, and expertise to lead the change together, rather than relying on a single individual.",
+      "jd_interpretation": "At first pass this sounds like it's made for a big corporation \u2014 a powerful group with enough influence to lead the change. Big companies have the luxury to build a subset team to manage something instead of relying on an individual, and in that arena it's a good way to go. But for small to mid-sized companies I'd look at a guiding coalition differently. Instead of creating the team, I'd focus on getting followers to the mission: if you're going to create change, you pick them up one by one, two by two, department by department, get them on board with the change, and spread it that way throughout the organization.",
+      "jd_use_when": "When a leader needs backing to drive change. For a large organization, build a credible cross-functional coalition. For a small or mid-sized company that lacks that luxury, don't force a formal coalition \u2014 win followers to the mission one person, pair, or department at a time and let buy-in spread organically.",
+      "quotable_insights": [
+        "A guiding coalition assumes big-company luxury.",
+        "In a small or mid-sized company, get followers to the mission instead of building a formal team.",
+        "Change spreads one by one, two by two, department by department."
+      ],
+      "jd_framework_note": "Digital JD scales Kotter's coalition step by company size: formal guiding coalition for large orgs; organic 'followers to the mission' spread for small/mid-sized orgs. Connects to Kotter step 4 (Enlist a Volunteer Army), which JD treats as the same idea for smaller companies.",
+      "status": "interpreted"
+    },
+    {
+      "id": "kotter-03-strategic-vision",
+      "author": "John Kotter",
+      "framework": "The 8-Step Process for Leading Change",
+      "concept": "Form a Strategic Vision & Initiatives",
+      "meaning": "Create a clear vision of the future and the strategy and initiatives (the steps along the way) to achieve it.",
+      "jd_interpretation": "Number three is just foundational. You have to have a vision, and initiatives are the steps along the strategy to make it happen \u2014 it's just 'have a plan.' If you're going through change \u2014 say you're getting bought out by a company \u2014 don't just sit back and let it happen. Realize what's going to take place when the acquisition or merger happens and, to use Stephen Covey, be proactive: build a strategy and formulate a change initiative ahead of time.",
+      "jd_use_when": "When change is coming and a leader is being passive or reactive about it. Push them to be proactive (Covey): define the vision of where this needs to land and lay out the initiatives \u2014 the concrete steps \u2014 to get there, rather than letting the change happen to them.",
+      "quotable_insights": [
+        "Vision plus initiatives is just 'have a plan.'",
+        "Don't sit back and let change happen \u2014 be proactive.",
+        "Realize what's coming and formulate the change initiative ahead of time."
+      ],
+      "related_concepts": ["covey-01-be-proactive"],
+      "status": "interpreted"
+    },
+    {
+      "id": "kotter-04-volunteer-army",
+      "author": "John Kotter",
+      "framework": "The 8-Step Process for Leading Change",
+      "concept": "Enlist a Volunteer Army",
+      "meaning": "Rally large-scale buy-in and get many people moving in the same direction behind the change.",
+      "jd_interpretation": "This reflects back to number one and to the coalition step. Enlisting a volunteer army is exactly what I meant by spreading the cause throughout the organization when you don't have the luxury of building a core launch team. You get people to volunteer into the mission and carry it forward.",
+      "jd_use_when": "When a leader lacks a formal launch team but still needs mass movement behind a change. Spread the cause person by person until you have a volunteer army \u2014 people who have chosen into the mission and move it forward on their own.",
+      "quotable_insights": [
+        "The volunteer army is the cause spreading through the organization.",
+        "When you don't have a core launch team, you build a volunteer army instead."
+      ],
+      "jd_framework_note": "Digital JD treats Kotter steps 2 and 4 as two expressions of one idea for smaller organizations: win followers to the mission and let them become the volunteer army.",
+      "status": "interpreted"
+    },
+    {
+      "id": "kotter-05-remove-barriers",
+      "author": "John Kotter",
+      "framework": "The 8-Step Process for Leading Change",
+      "concept": "Enable Action by Removing Barriers",
+      "meaning": "Clear the obstacles \u2014 structures, processes, and fears \u2014 that block people from acting on the change.",
+      "jd_interpretation": "This one is really strong. Most people put together the actions for how to run \u2014 like a race, you put on your shoes, you stretch, you hydrate. But this step is different: it's putting the runner in a hotel the night before so they get a good night's sleep. It's removing what's in the way, not just adding effort. In organizations there are all kinds of barriers, and culture might be a major one. You can't remove culture, but you can remove the context and the belief that holding on to what we have is a better path than what's coming. You have to remove the barriers both mentally and organizationally so people can embrace the change.",
+      "jd_use_when": "When a change has effort and action behind it but still isn't moving \u2014 the problem is usually barriers, not lack of trying. Look for what's blocking people (structural, process, and especially the mental belief that the old way is safer) and remove it, rather than just pushing harder.",
+      "quotable_insights": [
+        "Most people add actions; removing barriers is putting the runner in a hotel for a good night's sleep.",
+        "You can't remove culture, but you can remove the belief that holding on to the old way is the better path.",
+        "Remove barriers both mentally and organizationally."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "kotter-06-short-term-wins",
+      "author": "John Kotter",
+      "framework": "The 8-Step Process for Leading Change",
+      "concept": "Generate Short-Term Wins",
+      "meaning": "Produce visible, early results to build momentum, prove the change is working, and sustain motivation over a long effort.",
+      "jd_interpretation": "There's a lot to this one. In a long game \u2014 hours in a sport, or a change effort that takes six to nine months \u2014 people burn out, lose focus, and lose motivation. They need short-term wins to recharge, to get their batteries back and ready for action to continue the effort. Early results that demonstrate progress in the beginning, made celebratory, build confidence and reinforce the commitment to the change.",
+      "jd_use_when": "When a change effort is long enough that people are burning out or losing motivation partway through. Engineer and celebrate visible early wins to recharge the team, build confidence, and reinforce commitment for the long haul.",
+      "quotable_insights": [
+        "In a long effort, people burn out and lose motivation without short-term wins.",
+        "Short-term wins recharge the batteries.",
+        "Make early results celebratory to build confidence and reinforce commitment."
+      ],
+      "related_concepts": ["collins-05-the-flywheel"],
+      "status": "interpreted"
+    },
+    {
+      "id": "kotter-07-sustain-acceleration",
+      "author": "John Kotter",
+      "framework": "The 8-Step Process for Leading Change",
+      "concept": "Sustain Acceleration",
+      "meaning": "Press harder after early wins; don't declare victory too soon or let up until the full vision is achieved.",
+      "jd_interpretation": "This is an easy trap to fall into. When you're making great progress, if the celebration is too big you feel like the game is over. You need to keep everything in context: 'There are twelve steps to our success platform. We just hit number three and did an excellent job on it \u2014 and in the same breath, let's talk about what we're going to do with the next step and how we'll continue this victory and be just as effective on the next step as we were on this one.' Celebrate the win, but immediately reframe it inside the larger journey.",
+      "jd_use_when": "When a team has a meaningful early win and is at risk of treating it as the finish line. Celebrate it, but in the same moment put it back in context of the full journey and point everyone at the next step, so momentum accelerates instead of stalling.",
+      "quotable_insights": [
+        "If the celebration is too big, you feel like the game is over.",
+        "Keep every win in the context of the larger journey.",
+        "Celebrate the step, then in the same breath aim at the next one."
+      ],
+      "related_concepts": ["collins-05-the-flywheel"],
+      "status": "interpreted"
+    },
+    {
+      "id": "kotter-08-institute-change",
+      "author": "John Kotter",
+      "framework": "The 8-Step Process for Leading Change",
+      "concept": "Institute Change (Anchor in the Culture)",
+      "meaning": "Anchor the new approaches in the culture so they stick and become 'the way we do things here' rather than a temporary initiative.",
+      "jd_interpretation": "Anchoring the new approach into culture so it sticks only comes through time \u2014 there is no shortcut here. You can anchor it with incentive plans, with new programs, all you want, but it has to change the habit of the culture. The culture took months or years to establish itself, and if you want to institute a change you're going to have to be patient, monitor it, and make sure you stay the course. And remember this: people respect what you inspect, not what you expect.",
+      "jd_use_when": "When a change has been implemented but a leader wants it to become permanent. Recognize there's no shortcut \u2014 it takes time, patience, and staying the course to change the habit of the culture, and it requires ongoing inspection (not just expectation) to make the new way stick.",
+      "quotable_insights": [
+        "Anchoring change in culture only comes through time \u2014 there is no shortcut.",
+        "Incentives and programs help, but it has to change the habit of the culture.",
+        "Be patient, monitor it, and stay the course.",
+        "People respect what you inspect, not what you expect."
+      ],
+      "related_concepts": ["schein-06-culture-change-is-unlearning", "drucker-02-what-gets-measured-gets-managed"],
+      "status": "interpreted"
+    },
+    {
+      "id": "heifetz-01-technical-vs-adaptive",
+      "author": "Ronald Heifetz",
+      "framework": "Adaptive Leadership",
+      "concept": "Technical vs. Adaptive Challenges",
+      "meaning": "Technical problems have known solutions and can be solved by an expert or authority; adaptive challenges require the people themselves to change their values, habits, beliefs, or ways of working. The most common leadership error is treating an adaptive challenge as if it were technical.",
+      "jd_interpretation": "This correlates very well with what Covey said: you have to be effective with people and efficient with processes, machinery, or computers. It's saying the same thing. Technical problems are known hardware \u2014 you can replace, change, or control them outright. But when you're dealing with human beings, they have to accept and own the change to make the impact realistic. You can't just 'fix' people the way you fix a machine.",
+      "jd_use_when": "When a leader is applying a technical, command-and-control fix to what is really a human, adaptive challenge \u2014 and wondering why it isn't sticking. Name the difference: processes can be controlled and fixed, but people have to accept and own the change for it to be real.",
+      "quotable_insights": [
+        "Be effective with people; be efficient with processes and machines.",
+        "Technical problems are known hardware you can control; people are not.",
+        "People have to accept and own the change to make the impact realistic."
+      ],
+      "related_concepts": ["drucker-03-effectiveness-vs-efficiency", "covey-04-think-win-win", "lencioni-03-lack-of-commitment-ownership"],
+      "status": "interpreted"
+    },
+    {
+      "id": "heifetz-02-get-on-the-balcony",
+      "author": "Ronald Heifetz",
+      "framework": "Adaptive Leadership",
+      "concept": "Get on the Balcony",
+      "meaning": "Step off the 'dance floor' of day-to-day action to gain perspective \u2014 pull back to see the larger patterns and dynamics before diving back in.",
+      "jd_interpretation": "Get on the balcony is another way to say look at it from a 20,000-foot view \u2014 look at the big picture. Get off the day-to-day grind and the short-term exchanges and look at things from a larger perspective. As a leader you should already be doing this; it's something you have to do. Your biggest challenge is balancing the short-term with the long-term. Workers and managers are focused on the short-term \u2014 weekly and daily production schedules, sales quotas, things to do. Leadership has to look at what direction the organization is moving from several different dimensions.",
+      "jd_use_when": "When a leader is stuck in the day-to-day grind and losing sight of direction. Get them onto the balcony \u2014 the 20,000-foot view \u2014 to see the big picture across multiple dimensions, and to consciously balance the short-term pressures with the long-term direction.",
+      "quotable_insights": [
+        "Get on the balcony is the 20,000-foot view.",
+        "Get off the day-to-day grind and look at the big picture.",
+        "Your biggest challenge as a leader is balancing the short-term with the long-term.",
+        "Workers focus on the short-term; leadership looks at the organization's direction across several dimensions."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "heifetz-03-regulate-distress",
+      "author": "Ronald Heifetz",
+      "framework": "Adaptive Leadership",
+      "concept": "Regulate the Distress (Productive Zone)",
+      "meaning": "Keep pressure in a range people can tolerate: enough heat to force change, not so much that they're overwhelmed. Turn the pressure up or down as the situation requires.",
+      "jd_interpretation": "This is an area where great leaders excel. It's a matter of knowing when to put pressure on and increase urgency, and when to let things settle. And it's not fixed \u2014 you can't figure it out once and say 'I'm done.' It changes every day depending on the situation and the balance of long-term versus short-term. The pressure range is there to motivate people, but if you push too hard it'll break. And the flip side, from my own experience: if you relax and stop inspecting people's work, it's human nature for them to feel it's not that significant, and they'll start slacking.",
+      "jd_use_when": "When a leader is either overwhelming people with pressure or has eased off so much that standards are slipping. Coach them to actively regulate the heat day by day \u2014 enough to motivate without breaking, and never so relaxed (or uninspected) that people conclude the work doesn't matter.",
+      "quotable_insights": [
+        "Knowing when to apply pressure and when to let things settle is where great leaders excel.",
+        "It's not fixed \u2014 it changes every day.",
+        "Push too hard and it breaks; relax and stop inspecting and people start slacking.",
+        "The pressure range exists to motivate, not to overwhelm."
+      ],
+      "related_concepts": ["kotter-08-institute-change", "drucker-02-what-gets-measured-gets-managed"],
+      "status": "interpreted"
+    },
+    {
+      "id": "heifetz-04-give-the-work-back",
+      "author": "Ronald Heifetz",
+      "framework": "Adaptive Leadership",
+      "concept": "Give the Work Back to the People",
+      "meaning": "Resist being the hero with all the answers; place responsibility for the change with the people who must own and live it.",
+      "jd_interpretation": "This is a major player for a lot of leaders, because they were very successful at what they did, then got promoted up to a bigger picture \u2014 and when things get difficult they inherently retreat back to their comfort zone, their old success area. Give the work back to the people. Your job as a leader is to bring out the best in each individual and grow them to their full potential. That's what leaders do. And you can't do it by talking them into it \u2014 you've got to let them put their shoes on and walk the path. There's a difference between explaining the path to somebody and having them walk the path.",
+      "jd_use_when": "When a leader keeps solving everything themselves \u2014 retreating to their old area of personal success instead of developing their people. Push them to give the work back: their job is to grow people to their full potential, and people only grow by walking the path themselves, not by having it explained to them.",
+      "quotable_insights": [
+        "Promoted leaders retreat to their old comfort zone when things get hard.",
+        "Your job is to bring out the best and grow each person to their full potential.",
+        "You can't talk them into it \u2014 they have to put their shoes on and walk the path.",
+        "There's a difference between explaining the path and having them walk it."
+      ],
+      "related_concepts": ["maxwell-12-law-of-empowerment", "schein-05-humble-inquiry", "drucker-07-managing-oneself"],
+      "status": "interpreted"
+    },
+    {
+      "id": "heifetz-05-hold-steady-stay-alive",
+      "author": "Ronald Heifetz",
+      "framework": "Adaptive Leadership",
+      "concept": "Hold Steady / Stay Alive (Managing the Risk of Leadership)",
+      "meaning": "Adaptive leadership is dangerous \u2014 people resist change and push back on the leader. Anchor yourself, pace the work, and know when to advance and when to hold steady.",
+      "jd_interpretation": "Being a leader is your quest to sail across the ocean. You're going to have calm seas, and you're going to have days where you can't even go outside on the deck. Your focus during a storm is to stay alive and hold steady until the storm passes. There are going to be times of smooth sailing \u2014 that's when you expand, move forward, and grow. And there are going to be times where you just hold on and get down to the fundamentals, focus short-term, and stay alive. This balancing ability determines the greatness of a leader.",
+      "jd_use_when": "When a leader is in a storm \u2014 heavy resistance, crisis, or turbulence \u2014 and tempted to keep pushing for growth at the wrong time. Help them read the seas: expand and grow in smooth waters, but in a storm hold steady, return to fundamentals, and focus on surviving until it passes.",
+      "quotable_insights": [
+        "Leadership is a quest to sail across the ocean \u2014 calm seas and storms.",
+        "In a storm, your focus is to stay alive and hold steady until it passes.",
+        "Smooth sailing is when you expand, move forward, and grow.",
+        "The ability to balance growing and holding steady determines the greatness of a leader."
+      ],
+      "status": "interpreted"
+    },
+    {
+      "id": "heifetz-06-observe-interpret-determine",
+      "author": "Ronald Heifetz",
+      "framework": "Adaptive Leadership",
+      "concept": "Observe, Interpret, Determine Course of Action (JD's revision of Observe-Interpret-Intervene)",
+      "meaning": "Heifetz's diagnostic cycle is Observe, Interpret, Intervene \u2014 gather observations, form multiple interpretations, then act, and repeat. Digital JD revises the final step: not every situation calls for intervention.",
+      "jd_interpretation": "I like the observe part, and interpret what you're seeing \u2014 validate it against standards. But instead of 'intervene,' I'd say determine whether engagement is even necessary, or whether it's simply a nod, a handshake, a confirmation that they're doing great. It depends on the individual. Some people you can literally walk up to, make eye contact, smile, and nod once, and they fully understand what you've just communicated. Others need memos, multiple handshakes, and pats on the back. What I'm challenged with is the word 'intervene' at the end \u2014 I don't think you have to intervene in every situation. You observe, you interpret it, and then you determine your course of action.",
+      "jd_use_when": "When a leader assumes every observation requires an intervention. Reframe the last step: observe, interpret against standards, then determine the course of action \u2014 which may be a full intervention, or may be as small as a nod of confirmation, calibrated to the individual.",
+      "quotable_insights": [
+        "Observe, interpret, and validate against standards.",
+        "Don't automatically intervene \u2014 determine your course of action.",
+        "For some a single nod communicates everything; others need memos and repeated reinforcement.",
+        "Not every situation requires intervention."
+      ],
+      "jd_framework_note": "Dr. Castle revises Heifetz's 'Observe-Interpret-Intervene' to 'Observe-Interpret-Determine Course of Action.' Intervention is only one possible action; the response must be calibrated to the individual and may be as light as a nod of confirmation. Reinforces the 'event is information, response is leadership' reasoning rule.",
+      "related_concepts": ["schein-03-underlying-assumptions", "goleman-04-empathy"],
+      "status": "interpreted"
+    }
+  ]
+}

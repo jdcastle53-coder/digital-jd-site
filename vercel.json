@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/jd-brain-gateway.js": {
+      "includeFiles": "data/**"
+    }
+  }
+}

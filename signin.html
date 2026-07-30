@@ -38,7 +38,7 @@
         <span class="font-semibold tracking-tight">Digital JD</span>
       </a>
       <h1 class="title-font text-4xl md:text-5xl font-semibold text-[var(--ink)]">Welcome back to Digital JD</h1>
-      <p class="mt-4 text-lg text-slate-700">Sign in to access the JD Brain experience. New accounts get a 24-hour access window by default.</p>
+      <p class="mt-4 text-lg text-slate-700">Sign in to access the JD Brain experience. New accounts get a 7-day trial with full Pro-level access.</p>
       <div class="mt-6 p-4 rounded-2xl border border-slate-200 bg-white/80">
         <p class="text-sm text-slate-600">Need access for longer? You can extend a user&#39;s expiration in your Supabase dashboard at any time.</p>
       </div>
@@ -63,6 +63,10 @@
         <div class="flex flex-col gap-3">
           <button type="button" id="signInBtn" class="w-full rounded-xl bg-[var(--ink)] text-white py-3 font-semibold hover:opacity-90">Sign in</button>
           <button type="button" id="signUpBtn" class="w-full rounded-xl border border-[var(--ink)] text-[var(--ink)] py-3 font-semibold hover:bg-white">Create account</button>
+        </div>
+
+        <div class="text-center">
+          <button type="button" id="forgotBtn" class="text-sm text-[var(--ink)] underline hover:opacity-80">Forgot your password?</button>
         </div>
       </form>
     </section>
@@ -113,8 +117,27 @@
       window.location.href = "jd-brain.html";
     }
 
+    async function handleForgotPassword() {
+      const email = document.getElementById("email").value.trim();
+      if (!email) {
+        setStatus("Enter your email above first, then click \u201CForgot your password?\u201D again.", true);
+        return;
+      }
+      setStatus("Sending reset link...");
+      const redirectTo = window.location.origin + "/reset-password.html";
+      const result = await window.Auth.client.auth.resetPasswordForEmail(email, { redirectTo });
+      if (result.error) {
+        setStatus(result.error.message, true);
+        return;
+      }
+      setStatus("Check your email for a link to reset your password.");
+    }
+
+    const forgotBtn = document.getElementById("forgotBtn");
+
     signInBtn.addEventListener("click", handleSignIn);
     signUpBtn.addEventListener("click", handleSignUp);
+    forgotBtn.addEventListener("click", handleForgotPassword);
   </script>
 </body>
 </html>

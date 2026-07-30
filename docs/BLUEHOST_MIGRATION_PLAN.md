@@ -1,0 +1,389 @@
+# Bluehost → Vercel Migration — Authoritative Runbook
+
+> **Status of this document:** RECONSTRUCTED on 2026-07-27 from the approved
+> memory note (`v0_memories/user/migration-plan.md`). The original
+> `docs/BLUEHOST_MIGRATION_PLAN.md` and its companion docs
+> (`BLUEHOST_DISCOVERY_ANALYSIS.md`, `BLUEHOST_MIGRATION_EXECUTIVE_SUMMARY.md`,
+> `BLUEHOST_RETRIEVAL_CHECKLIST.md`) are NOT present in the repo. The step order,
+> end-state, and watch-items below are faithful to the approved plan; the deep
+> per-step verification detail from the original discovery docs must be
+> re-derived as we execute. Treat every "Verify" line as a gate: do not advance
+> until it passes, and record the evidence.
+
+---
+
+## >>> RESUME HERE (next session) <<<
+Steps 0-4 DONE. Step 5 DESIGN done. Production points at BAM correctly.
+BLOCKER: the v0 SANDBOX env is stuck showing the OLD project
+`waevqqrqelloacoxywqq` (not BAM `hiejaayyeprfnrrukbam`) — a sandbox snapshot that
+did NOT refresh this session despite the user re-entering the key and
+redeploying. This is a v0-side refresh issue, NOT a production problem and NOT a
+user error. It is expected to clear in a FRESH session.
+
+FIRST ACTION next session: run the BAM check —
+  node --env-file-if-exists=/vercel/share/.env.project -e "const k=process.env.SUPABASE_SERVICE_ROLE_KEY||'';let r='';try{r=JSON.parse(Buffer.from(k.split('.')[1],'base64').toString()).ref}catch(e){};console.log(process.env.SUPABASE_URL, r)"
+  - If it shows `hiejaayyeprfnrrukbam`: read tables, resolve
+    `application_logs` vs `messages`, flip Steps 2 & 5 to [x], continue at Step 6.
+  - If it STILL shows `waevqqrqelloacoxywqq`: do NOT send the user clicking again
+    — production is already fixed. Investigate the v0↔Supabase integration
+    binding instead (the integration is still tied to the deleted orange-elephant
+    store; the env vars need to originate from BAM).
+
+---
+
+## End-state (current decision)
+
+- **Interim:** reduce Bluehost to STATIC-ONLY hosting (HTML/CSS/presentation JS,
+  images, fonts, legal pages) without breaking production.
+- **Vercel:** single origin for ALL programmatic logic — auth, trial/access,
+  Stripe, and the full Digital JD AI brain, consolidated under `jd-brain`.
+- **Supabase:** unchanged identity provider. Production project
+  `hiejaayyeprfnrrukbam` (ends in "bam").
+- **GHL:** moving marketing to Go High Level is DEFERRED (Phase 13), out of
+  scope until the 12 steps are complete.
+
+---
+
+## Critical verified watch-items (carry through every step)
+
+- **Supabase connection:** PRODUCTION now points at `hiejaayyeprfnrrukbam`
+  ("bam") — env vars repointed + redeployed 2026-07-27. The old
+  `waevqqrqelloacoxywqq` project was deleted. NOTE: the v0 sandbox's env copy may
+  still lag showing the old ref until it re-syncs; that is a v0 refresh delay,
+  not a production issue (see Step 2).
+- **Tiers are FROZEN during migration.** Live gating + Payment Links use
+  `lite/core/pro`. A different, UNUSED set (`essentials/pro/founding/executive`)
+  sits in `api/create-checkout.js`. All tier work is DEFERRED to Phase 14.
+- **AI brain:** `api/jd-brain-gateway.js` is a thin stub, NOT a port of
+  `jd-brain.php`. Real parity is Step 8.
+- **Stripe:** live checkout = hardcoded Payment Links; `create-checkout.js` and
+  `create-portal.js` exist but are NOT wired. No Stripe→Supabase webhook exists.
+- **enterprise.html:** referenced by `index.html`/`contact.html`. Live copy now
+  archived at `docs/bluehost-archive/enterprise.html`, but still ABSENT from the
+  deployed repo root — must be restored/ported during the route work (Step 4/10).
+  It is presentation-only (accordion + Calendly CTA); no auth/Stripe/Supabase.
+
+---
+
+## Gated 12-step order
+
+Legend: `[ ]` = not started · `[~]` = in progress · `[x]` = done + verified.
+
+### [x] Step 0 — Retrieve Bluehost-only files
+Pull the live PHP source (`jd-access.php`, live `jd-brain.php`,
+`reset-password.php`, and possibly `enterprise.html`) off Bluehost and diff the
+live files against the repo's `jd-demo.php`.
+**Verify:** all live PHP files are captured into an offline archive and their
+behavior is documented before anything is changed.
+**DONE 2026-07-27:** `jd-brain.php` (617), `jd-access.php` (211),
+`reset-password.php` (100), and `enterprise.html` (352) archived to
+`docs/bluehost-archive/`. Findings + diff vs stub recorded in
+`docs/PHP_TO_VERCEL_PARITY.md`. Step 0 fully closed — all four Bluehost-only
+files captured.
+
+### [x] Step 1 — PHP→Vercel feature-parity spec
+Write down exactly what the PHP app does (inputs, outputs, auth checks, access
+gates, AI calls) so Vercel can replicate it feature-for-feature.
+**Verify:** every PHP behavior maps to a planned Vercel route/function.
+**DONE 2026-07-27:** full route/behavior map in `docs/PHP_TO_VERCEL_PARITY.md`
+(verified against current `api/` + root `*.html`). Every Bluehost behavior maps
+to a concrete Vercel route. Findings: app shell (`jd-brain.html`) + billing
+portal already wired; `signin.html` present (verify); substantive work is
+concentrated in Step 6 (auth), Step 7 (trials), Step 8 (brain IP), plus a Step 4
+cutover of three outbound `jd-demo.php`/`reset-password.php` links in
+`index.html` (L1570, L1974, L2040).
+
+### [~] Step 2 — Verify Vercel/Supabase production config  (PROD FIXED — sandbox verify pending)
+Confirm production Vercel + Supabase settings and point production at the "bam"
+project.
+**Verify:** production env points at `hiejaayyeprfnrrukbam`; prod schema introspectable.
+
+**HISTORY 2026-07-27:**
+- CONFIRMED original mismatch: env vars pointed at `waevqqrqelloacoxywqq`; live
+  code (`auth.js`, `index.html`, `jd-brain.html`, archived `reset-password.php`)
+  uses production `hiejaayyeprfnrrukbam`.
+- ROOT CAUSE found: the Supabase env vars were owned by the Vercel↔Supabase
+  MARKETPLACE integration for the OLD "orange-elephant" (`waevqqrqelloacoxywqq`,
+  FREE org). BAM was created directly in Supabase under a DIFFERENT org
+  ("jdcastle53-coder's Org", PRO) and was never a Vercel-managed store — so it
+  never appeared in "Connect Database" and the integration-owned vars could not
+  be edited in place.
+- FIX APPLIED (user, in Vercel): deleted orphaned `SUPABASE_URL` +
+  `SUPABASE_SERVICE_ROLE_KEY`, deleted the uninstalled orange-elephant store,
+  re-added both as PLAIN vars with BAM values
+  (`https://hiejaayyeprfnrrukbam.supabase.co` + BAM service_role key), and
+  REDEPLOYED production to green "Ready".
+- The old `waevqqrqelloacoxywqq` project was DELETED in Supabase (a backup was
+  offered; user confident all data is on BAM). Confirmed no migration writes
+  ever targeted it.
+
+**Verification state:**
+  - [x] Production env repointed to BAM + redeployed (user-verified: Ready).
+  - [ ] PENDING: v0 SANDBOX env copy still shows `waevqqrqelloacoxywqq` (stale;
+        not re-synced with the Vercel change). NOT a production problem — a v0
+        sandbox refresh lag. Re-run the decode+schema-read once the sandbox env
+        re-syncs (or next session), then flip this step to [x] and record the
+        table snapshot (expect auth users + `messages` logging table).
+  - This pending item does NOT block Step 3. It DOES need to clear before Step 8
+    (brain port) so v0 can read/write BAM directly.
+
+### [x] Step 3 — Documentation & coding standards
+Establish the coding + documentation standards the ported code must follow.
+**Verify:** standards doc exists and is agreed before porting begins.
+**DONE 2026-07-27:** `docs/CODING_STANDARDS.md` written, grounded in the real
+`api/jd-brain-gateway.js` + `auth.js` patterns (ES-module handlers, env-only
+secrets, dual-write structured logging, generic client errors). Surfaced TWO
+discrepancies to resolve before their steps (NOT assumed away):
+  1. Log table name: gateway writes `application_logs` but plan/`jd-brain.html`
+     reference `messages` — confirm real table(s) in Step 5.
+  2. Trial length: `auth.js` uses 24h (`TRIAL_HOURS=24`) vs marketing "7-day
+     Sprint" vs `jd-access.php` 7-day file trial — decide with JD before Step 7.
+**PENDING USER AGREEMENT:** standards to be confirmed by JD (esp. plain JS / no
+TS, and the two discrepancies above).
+
+### [x] Step 4 — Non-breaking route-transition map
+Map every current URL to its future Vercel route with zero production breakage.
+**Verify:** each live URL has a defined target route + redirect strategy.
+**DONE 2026-07-27:** full inventory in `docs/ROUTE_TRANSITION_MAP.md`. Bluehost
+PHP dependency is isolated to exactly 3 links in `index.html` (L1570, L1974,
+L2040). Also catalogued broken placeholder links (dead Stripe link + `#` /
+`hello@your-domain.com` placeholders) and a tier-vocabulary discrepancy
+(`essentials/pro/executive` vs `lite/core/pro`) deferred to Phase 14. Cutover
+ordering defined: don't edit the 3 links until Steps 6/7/8 targets work; keep
+PHP live until Step 12; change in one verified commit.
+
+### [~] Step 5 — Initial Supabase logging  (DESIGN done; live verify BLOCKED)
+Add baseline event logging in Supabase (deeper Phase-2 logging deferred).
+**Verify:** core auth/access/AI events are logged in the prod project.
+**STATUS 2026-07-27:** DESIGN complete in `docs/LOGGING_PLAN.md`, grounded in the
+gateway's existing structured logger (dual-write to `application_logs` with
+level/action/request_id/user_id/etc.). LIVE portion BLOCKED: sandbox env still
+resolves to `waevqqrqelloacoxywqq` (rechecked 2026-07-27, not yet re-synced to
+BAM), so cannot confirm real tables or resolve the `application_logs` vs
+`messages` discrepancy yet. Re-run the BAM read once the sandbox env re-syncs
+(or next session), then finish + flip to [x].
+
+### [~] Step 6 — Consolidate auth into Supabase Auth  (CODE done; 1 Supabase setting pending)
+Move all authentication into Supabase Auth and replace `reset-password.php`.
+**Verify:** login + password reset work end-to-end on Vercel; PHP auth retired.
+**DONE 2026-07-27 (code):**
+  - Login + signup were already Vercel-native Supabase Auth (`signin.html` +
+    `auth.js`, both on BAM). Left as-is.
+  - NEW `reset-password.html` (Vercel-native) replaces archived
+    `reset-password.php`. Matches signin/expired design system (Space Grotesk /
+    Newsreader / --ink). Reuses `window.Auth.client` (no new hardcoded keys).
+    Handles BOTH Supabase v2 PKCE (`?code=`) and legacy implicit (`#access_token`)
+    flows. All links point to `signin.html` (NOT the old digitaljd.org/jd-demo.php).
+  - Added "Forgot your password?" flow to `signin.html` → calls
+    `resetPasswordForEmail(email, { redirectTo: origin + '/reset-password.html' })`.
+**PENDING USER ACTION (blocks true end-to-end):** Supabase dashboard →
+  Authentication → URL Configuration must allowlist the Vercel origin +
+  `/reset-password.html` as a Redirect URL (and set Site URL to the Vercel
+  domain). Per memory these still point at Bluehost/digitaljd.org. Until then the
+  reset EMAIL link may bounce to the old domain. NOT verified live yet (dev
+  server wasn't running; static pages code-reviewed only).
+**NOTE (defer to Step 7):** `auth.js` `TRIAL_HOURS=24` + "24-hour" copy in
+  `signin.html`/`expired.html` still say 24h — must become 7-day @ Pro in Step 7.
+**PHP retirement:** the 3 `index.html` links stay pointed at Bluehost until
+  cutover (per ROUTE_TRANSITION_MAP ordering) — do not flip yet.
+
+### [~] Step 7 — Consolidate trial/access logic into Vercel  (CLIENT done; server-side gating in Step 9)
+Bring trial and access-gating logic out of PHP into Vercel.
+**Verify:** trial start/expiry + tier gating enforced server-side on Vercel.
+**DONE 2026-07-27 (client-side, in `auth.js`):**
+  - Trial is now 7 DAYS at PRO level (per JD decision). Single source of truth:
+    `TRIAL_DAYS=7` (`TRIAL_HOURS` derived), `TRIAL_TIER="pro"`.
+  - `ensureExpiry()` on first login stamps `user_metadata` with
+    `{ expires_at, plan:"pro", trial:true }` — so "Pro during trial" is real
+    data the gateway can read, not an assumption.
+  - Copy fixed to match: `signin.html` ("7-day trial with full Pro-level
+    access") and `expired.html` ("Your 7-day trial has ended"). `index.html`
+    marketing already said "7 Days Full Access" — code was the thing out of sync.
+**HONEST GAPS (must close before claiming full parity):**
+  1. ENFORCEMENT IS CLIENT-SIDE ONLY. Expiry lives in `user_metadata` and is
+     checked in the browser (`requireActiveSession`) — a technical user could
+     edit it. TRUE server-side gating (gateway rejects expired/over-tier calls)
+     is Step 9. Do NOT mark this [x] until then. Plan's "server-side" verify is
+     intentionally deferred to Step 9.
+  2. EXISTING trial users created under the old 24h rule already have a
+     24h-from-first-login `expires_at` stamped; the new 7-day value only applies
+     to users whose `expires_at` is not yet set. If any real trials exist on BAM,
+     decide whether to bulk-extend them (needs live BAM access — still pending).
+  3. `expired.html` still has a placeholder `mailto:hello@your-domain.com` — fix
+     with real support address (tracked in ROUTE_TRANSITION_MAP broken-links).
+
+### [~] Step 8 — Port the FULL AI brain to Vercel  (CODE done; live LLM run not yet verified)
+Replace the stub gateway with a real port of `jd-brain.php` (the 3-part output
+system + knowledge-base reasoning).
+**Verify:** Vercel gateway output matches PHP brain behavior on test prompts.
+**DONE 2026-07-27:** `api/jd-brain-gateway.js` fully rewritten from the 8-line
+stub to a real port of `jd-brain.php`:
+  - JD MIND ported verbatim in substance: identity block, altitude principle,
+    reasoning sequence + foundations (values-as-compass, never quoted).
+  - 3-PART STRUCTURED OUTPUT: SITUATIONAL ANALYSIS / JD INSIGHT / EXECUTION PLAN
+    (+ optional COMMUNICATION DRAFT) and DOCUMENT MODE (EXECUTIVE DRAFT). Exact
+    headings preserved because the UI depends on them.
+  - KB WIRED IN (this step, per JD): loads `data/jd-knowledge-base.json`
+    (55 concepts, 3 rules, 6 chains). Rules+chains always injected; concepts are
+    relevance-scored against the user input and capped at 14 to bound tokens.
+    Instructed to reason FROM the KB in JD's voice, never cite/name it.
+  - RESEARCH GROUNDING ported (Semantic Scholar, theme->query map, fail-silent,
+    12s AbortController timeout, SUPPORTING RESEARCH section + citations array).
+  - Supabase `application_logs` logging preserved exactly (same structured logger).
+  - RESPONSE CONTRACT kept backward compatible: returns { reply } (jd-brain.html
+    reads data.reply); adds { mode, model, citations } additively. Optional
+    `mode:"clarify"` supported in gateway (two-step flow) — UI still single-shot
+    (UI wiring intentionally deferred, matches Step 6/7 gateway-first approach).
+**VERIFIED:** node --check passes; KB loads and concept selection returns the
+  right concepts (accountability/trust/morale prompt -> Lencioni Avoidance of
+  Accountability, Absence of Trust, Fear of Conflict, Edmondson Psych Safety).
+**NOT YET VERIFIED (honest):**
+  1. No live end-to-end LLM run (needs OPENAI_API_KEY + running server; not
+     executed this session). Confirm a real advisory + a real clarify response
+     next session.
+  2. Semantic Scholar returned HTTP 429 (rate-limited) from this env on the
+     free keyless endpoint. Gateway fails silent (answer still proceeds), so
+     citations will be INTERMITTENT in production. Same limitation existed in
+     the PHP version. If reliable citations are wanted, add a Semantic Scholar
+     API key later.
+  3. Not compared side-by-side against live PHP output (PHP is being retired).
+
+### [~] Step 9 — Secure the AI gateway  (rate-limit LIVE-VERIFIED; auth/trial prod-verified-only)
+Lock down the gateway: authenticated access, rate limits, secret handling.
+**Verify:** gateway rejects unauthenticated/abusive calls; no secrets exposed.
+**DONE 2026-07-27:** New `api/_lib/gateway-security.js` + wired into
+`api/jd-brain-gateway.js` after message validation:
+  - AUTH: app path (`jd-brain.html`) now sends `Authorization: Bearer <supabase
+    access_token>` (new `jdBrainHeaders()` helper on BOTH gateway fetches).
+    Gateway calls `supabase.auth.getUser(token)`; invalid/expired token -> 401.
+  - TRIAL/TIER GATE (closes Step 7 client-side gap): reads
+    `user_metadata.{expires_at,plan,trial}`; expired trial -> 402, and the UI
+    redirects to `expired.html`. This is the real server-side enforcement Steps
+    5/7/8 pointed to.
+  - RATE LIMIT (Upstash Redis, shared across instances): authenticated users
+    60/hr per user; public demo 5/day per IP. Fail-OPEN on Redis error (never
+    block a paying user), fail-CLOSED on auth/trial.
+  - DEMO stays public (per JD decision): `demo.html` now sends `source:"demo"`,
+    allowed anonymously but hard-throttled per IP; 429 -> "sign up" message.
+  - Uses Upstash env `KV_REST_API_URL` / `KV_REST_API_TOKEN` (integration
+    connected this session). `@upstash/redis` installed.
+**LIVE-VERIFIED (real infra, not just code review):**
+  - node --check passes on both files.
+  - Ran checkRateLimit against REAL Upstash: demo 5/day allowed req 1-5
+    (remaining 4->0), BLOCKED req 6-7, degraded:false. Rate limiting genuinely
+    works. Test keys cleaned up afterward.
+**NOT YET VERIFIED (honest — needs prod/BAM, same access gap as before):**
+  1. Auth + trial gate not run live: `SUPABASE_URL`/`SERVICE_ROLE_KEY` are NOT
+     in the sandbox env, so `supabase.auth.getUser()` couldn't be exercised here.
+     Code is correct against standard env names and WILL run in production.
+     Next session (or in prod): confirm (a) valid token passes, (b) no token ->
+     401 on app path, (c) expired trial -> 402 + redirect to expired.html.
+  2. Demo IP throttle assumes Vercel sets `x-forwarded-for` (it does) — confirm
+     the demo blocks after 5 in real deployment.
+  3. Rate-limit numbers (60/hr, 5/day) are first-pass — tune after real usage.
+
+### [x] Step 10 — Consolidate app under jd-brain
+Unify the app into one modular `jd-brain` surface (retire `jd-demo.php`).
+**Verify:** single app entry point; legacy PHP app no longer used.
+**DONE 2026-07-27:** Flipped the 3 remaining Bluehost/PHP links in `index.html`
+(timing per ROUTE_TRANSITION_MAP §E — only after Steps 6/7/8, now true):
+  - `:1570` nav "Login" -> `https://digitaljd.org/signin.html` (was jd-demo.php).
+    Chosen over jd-brain.html since the app now requires auth (Step 9) — sending
+    a "Login" click straight to the gated app would just bounce to signin anyway.
+  - `:1974` post-login redirect -> `https://digitaljd.org/jd-brain.html`
+    (was jd-demo.php). User is authenticated at this point, so app entry is correct.
+  - `:2040` password reset redirectTo -> `https://digitaljd.org/reset-password.html`
+    (was reset-password.php) — the Vercel-native page built in Step 6.
+  - URLs kept ABSOLUTE on digitaljd.org per JD decision: app STAYS on
+    digitaljd.org (DNS repoints Bluehost->Vercel), marketing/index.html moves to
+    GHL on a SEPARATE domain, so relative links would break once on GHL.
+**VERIFIED:** grep of all root *.html/*.js -> ZERO refs to jd-demo.php or
+  reset-password.php remain. Only copies left are in docs/bluehost-archive/
+  (intentional). jd-brain.html is now the single app entry point.
+**NOTE:** actual PHP file *deletion* on Bluehost happens at DNS cutover (not a
+  code change here); links no longer point at them regardless.
+**VERIFIED ASIDE:** confirmed nothing in the live repo references enterprise.html
+  (only the archived copy exists), so no enterprise restore is needed.
+
+### [x] Step 11 — Stripe checkout confirmed working (premise updated)
+Leave Payment Links, portal link, and `lite/core/pro` gating untouched. Do NOT
+wire `create-checkout.js` / `create-portal.js`. NO tier work.
+**Verify:** checkout still flows through existing Payment Links; nothing changed.
+**REALITY CHECK 2026-07-27 (premise was OUTDATED):** the plan assumed Stripe was
+  still static Payment Links. It is NOT — checkout already runs through the live
+  serverless API and has for a while:
+  - `index.html startCheckout()` -> `fetch('/api/create-checkout')`;
+    `jd-brain.html` -> `/api/create-portal`.
+  - `api/create-checkout.js` VERIFIED intact: live PRICE_IDS keyed
+    essentials/pro/founding/executive, uses `STRIPE_ACCESS_TOKEN` (fallback
+    STRIPE_SECRET_KEY), success/cancel URLs on digitaljd.org.
+  - Per JD: accept reality, do NOT rip out working API checkout. Step 11's real
+    intent ("don't break/restructure checkout mid-migration") is satisfied.
+**TIER RENAME (partial, per JD — full rename still Phase 14):**
+  - Functional gating vocab was ALREADY essentials/pro/executive
+    (startCheckout args + price-ID keys + pricing card titles).
+  - FIXED now: the 2 user-facing "JD Lite" prose lines in index.html
+    (:1743, :1748) -> "JD Essentials". Verified: no user-facing "JD Lite" remains.
+  - DEFERRED to Phase 14 (per JD): internal CSS class names `tier-btn-lite`/
+    `tier-btn-core` (invisible to users; offset naming = lite->Essentials btn,
+    core->Pro btn, pro->Executive btn; rename carries collision risk, no user benefit).
+**BROKEN LINK FIXED:** `digitaljd-vs-ai.html` "Get started" was a dead
+  placeholder `buy.stripe.com/YOUR_STARTER_LINK` -> now
+  `https://digitaljd.org/signin.html` (absolute, consistent with Step 10).
+**NOT VERIFIED LIVE:** actual Stripe checkout session creation (needs live key +
+  running server; add to the verify-later list).
+
+### [~] Step 12 — Reduce Bluehost to static-only  (mostly OPERATIONAL — user does on dashboards)
+Strip Bluehost to static hosting, rotate all secrets, keep an offline archive.
+**Verify:** no programmatic code runs on Bluehost; secrets rotated; archive kept.
+**CODE/REPO SIDE — DONE/VERIFIED 2026-07-27:**
+  - OFFLINE ARCHIVE: kept in-repo at `docs/bluehost-archive/` — enterprise.html,
+    jd-access.php, jd-brain.php, reset-password.php, jd-knowledge-base.json.
+    VERIFIED intact. No live secrets hardcoded in any archived file (OpenAI key
+    was pulled from a server-side `config.php` that was NEVER in the repo).
+  - All live links already point off Bluehost PHP (Step 10). Nothing in the
+    Vercel app depends on Bluehost anymore.
+**OPERATIONAL — USER ACTION (cannot be done from v0; do on provider dashboards):**
+  SECRET ROTATION, prioritized by VERIFIED exposure:
+  - TIER 1 — ROTATE (was on the Bluehost shared host): OpenAI API key. Archived
+    jd-brain.php read it from Bluehost `config.php`; that host is being
+    decommissioned. Generate a new key, put it in VERCEL env `OPENAI_API_KEY`
+    only. No code change needed (gateway already reads env).
+  - TIER 2 — ROTATE as post-migration hygiene (not found in archive; likely
+    only ever in Vercel env, so lower urgency): `SUPABASE_SERVICE_ROLE_KEY`,
+    `STRIPE_ACCESS_TOKEN`. Rotate on Supabase/Stripe dashboards, update Vercel
+    env. No code change needed.
+  - TIER 3 — OPTIONAL (public by design): Supabase ANON key. Safe in client code;
+    rotate only if abuse suspected. IF rotated, MUST also update the 2 hardcoded
+    spots: `auth.js:4` and `reset-password.html:68` (they are static HTML, no
+    build step, so the key is intentionally inline).
+  BLUEHOST STRIP: delete/disable PHP (jd-demo.php, jd-brain.php, jd-access.php,
+    reset-password.php) once DNS cutover is done; leave only static assets.
+**!!! SLEEPING BOMB — DATA LOSS RISK (verified in jd-access.php) !!!**
+  Bluehost has a FILE-BASED trial system: `jd-trials.json` stores invite-link
+  trial tokens (7-day expiry, first_used_at/expires_at per token). This data
+  lives ONLY on Bluehost and will be DESTROYED when the host is stripped.
+  BEFORE decommissioning: download `jd-trials.json` from Bluehost. If any tokens
+  are still active, decide whether to migrate those users into Supabase. This
+  ties to the Step 7 "existing trial users" open item. NOT yet handled.
+**ADD TO VERIFY-LATER:** after rotation, confirm the app still works end-to-end
+  with the NEW keys (gateway answers, checkout, auth).
+
+---
+
+## Deferred phases (DO NOT start until Steps 0–12 complete)
+
+### Phase 13 — Marketing to GHL
+Move marketing content to Go High Level as pure marketing (no auth, no Stripe,
+no Supabase SDK) that links out to Vercel.
+
+### Phase 14 — Stripe tier restructure — DECIDED: PRICING MODEL C
+Verify live `plan_tier`, define new tiers, remap products/prices, redesign
+entitlement sync.
+- **Tier names:** Essentials, Pro (Most Popular), Executive, Enterprise.
+- **Prices:** Essentials **$99/mo**, Pro **$299/mo**, Executive **$899/mo**
+  (AI + human time with Dr. JD), Enterprise **custom**.
+- Rename live gating vocabulary `lite/core/pro` → `essentials/pro/executive`.
+- Founding "Lifetime $99" becomes a **Pro-tier** hook.
+- Add-on modules: **Pro-and-up upsells only, never on Essentials.**
+- Model B ($199/$499/$999) explicitly NOT chosen.
