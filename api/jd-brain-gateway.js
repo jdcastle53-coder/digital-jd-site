@@ -304,7 +304,9 @@ function buildCitationSection(papers) {
 export default async function handler(req, res) {
   const startTime = Date.now();
   const requestId = `req_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-  const supabase = getSupabaseClient();
+  // Never let client construction (bad/scrambled env) crash the function.
+  let supabase = null;
+  try { supabase = getSupabaseClient(); } catch (_e) { supabase = null; }
 
   const log = async (level, action, data = {}) => {
     const entry = {
@@ -357,6 +359,12 @@ export default async function handler(req, res) {
      - Demo path (demo.html): no token, marked source:"demo".
        Allowed anonymously but rate-limited hard per IP.
   ========================================================= */
+  // OUTER guard: verifyAccess / checkRateLimit and other pre-flight calls
+  // run outside the inner try below. Any throw here (e.g. a bad Redis/Supabase
+  // client from a scrambled env var, or auth.getUser rejecting) would escape
+  // the function as FUNCTION_INVOCATION_FAILED. Wrap everything so we always
+  // return a clean JSON error the client can display.
+  try {
   const isDemo = (body.source || "").toLowerCase() === "demo";
   const access = await verifyAccess(req);
 
@@ -479,5 +487,23 @@ export default async function handler(req, res) {
     });
     await log("INFO", "request_completed", { status: 500, durationMs: Date.now() - startTime });
     return res.status(500).json({ error: "AI request failed" });
+  }
+  } catch (outerErr) {
+    // Catch anything thrown by the pre-flight calls (auth, rate limit,
+    // client construction) so the function never hard-crashes. Surface the
+    // real message/name so the client and logs show the true cause.
+    try {
+      await log("ERROR", "unhandled_exception", {
+        errorName: outerErr && outerErr.name,
+        message: outerErr && outerErr.message,
+        stack: outerErr && outerErr.stack ? outerErr.stack.split("\n").slice(0, 3).join(" | ") : null,
+      });
+    } catch (_ignore) {}
+    if (res.headersSent) return;
+    return res.status(500).json({
+      error: "Server error: " + ((outerErr && outerErr.message) || "unknown"),
+      code: "unhandled_exception",
+      where: (outerErr && outerErr.name) || "Error",
+    });
   }
 }
