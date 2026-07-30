@@ -1,7 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { readFileSync } from "fs";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+import { join } from "path";
 import { verifyAccess, checkRateLimit, getClientIp } from "./_lib/gateway-security.js";
 
 // Allow the function enough time to run research + a full-length generation.
@@ -41,8 +40,26 @@ const getSupabaseClient = () =>
 let KB = null;
 let KB_ERROR = null;
 try {
-  const here = dirname(fileURLToPath(import.meta.url));
-  KB = JSON.parse(readFileSync(join(here, "..", "data", "jd-knowledge-base.json"), "utf8"));
+  // NOTE: do NOT use import.meta.url here. Vercel compiles api/*.js as
+  // CommonJS (no "type":"module" in package.json), and `import.meta` is
+  // illegal in CJS -> "Cannot use 'import.meta' outside a module" at load
+  // time, which crashes the whole function (FUNCTION_INVOCATION_FAILED)
+  // before the handler ever runs. Resolve the KB from the project root
+  // (process.cwd()), which is where Vercel places bundled files.
+  const candidates = [
+    join(process.cwd(), "data", "jd-knowledge-base.json"),
+    join(process.cwd(), "api", "..", "data", "jd-knowledge-base.json"),
+  ];
+  let lastErr = null;
+  for (const p of candidates) {
+    try {
+      KB = JSON.parse(readFileSync(p, "utf8"));
+      break;
+    } catch (e) {
+      lastErr = e;
+    }
+  }
+  if (!KB && lastErr) KB_ERROR = lastErr.message;
 } catch (e) {
   KB_ERROR = e.message;
 }
