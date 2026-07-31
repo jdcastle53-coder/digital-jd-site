@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script>
-    window.supabaseClient = window.supabase.createClient(
-      'https://hiejaayyeprfnrrukbam.supabase.co',
-      'sb_publishable_rds2HjpM6PVVgQVoJ5W8Dg_URB-vraV'
-    );
-  </script>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Digital JD — Executive Clarity: On Demand v2</title>
@@ -1567,7 +1560,7 @@ iframe {
         </div>
       </li>
       <li>
-<a class="nav-cta" href="https://digitaljd.org/signin.html">
+<a class="nav-cta" href="https://digital-jd-site.vercel.app/signin.html">
   Login
 </a>
 </li>
@@ -1932,8 +1925,10 @@ iframe {
 
   <script>
     function openModal() {
-      document.getElementById('sprintModal').classList.add('open');
-      document.body.style.overflow = 'hidden';
+      // Interim (Bluehost static page): signup happens on the Vercel app so the
+      // Supabase session is created on the app origin. Link out instead of
+      // opening the old inline modal.
+      window.location.href = 'https://digital-jd-site.vercel.app/signin.html';
     }
 
    function closeModal() {
@@ -1950,102 +1945,28 @@ function closeLoginModal() {
   document.getElementById('loginModal').classList.remove('open');
   document.body.style.overflow = '';
 }
-async function submitLogin() {
-  const email = document.getElementById('loginEmail').value.trim();
-  const password = document.getElementById('loginPassword').value;
-
-  if (!email || !password) {
-    alert('Please enter your email and password.');
-    return;
-  }
-
-  const { data, error } = await window.supabaseClient.auth.signInWithPassword({
-    email: email,
-    password: password
-  });
-
-  if (error) {
-    alert(error.message);
-    return;
-  }
-document.getElementById('loginModal').classList.remove('open');
-document.body.style.overflow = '';
-
-  window.location.href = 'https://digitaljd.org/jd-brain.html';
+function submitLogin() {
+  // Interim: login happens on the Vercel app so the Supabase session is created
+  // on the app origin (a cross-origin login here would be lost on redirect).
+  window.location.href = 'https://digital-jd-site.vercel.app/signin.html';
 }
  document.getElementById('sprintModal').addEventListener('click', function(e) {
       if (e.target === this) closeModal();
     });
 
   
-    async function submitSprint() {
-  const name = document.getElementById('sprintName').value.trim();
-  const email = document.getElementById('sprintEmail').value.trim();
-
-  if (!name || !email) {
-    alert('Please enter your name and email.');
-    return;
-  }
-
-const password = document.getElementById('sprintPassword').value.trim();
-const confirmPassword = document.getElementById('sprintConfirmPassword').value.trim();
-
-if (password !== confirmPassword) {
-  alert('Passwords do not match.');
-  return;
-}
-
-const { data, error } = await window.supabaseClient.auth.signUp({
-  email: email,
-  password: password,
-  options: {
-    data: {
-      name: name
-    }
-  }
-});
-
-if (error) {
-  alert(error.message);
-  return;
-}
-
-  localStorage.setItem('login_email', email);
-  localStorage.setItem('login_name', name);
-
-  // Show the branded blue/gold success panel instead of plain browser pop-ups
-  const modal = document.getElementById('sprintModal');
-  document.getElementById('modalFormWrap').style.display = 'none';
-  const heading = modal.querySelector('h2');
-  if (heading) heading.style.display = 'none';
-  const sub = modal.querySelector('.modal-sub');
-  if (sub) sub.style.display = 'none';
-  const note = modal.querySelector('.modal-note');
-  if (note) note.style.display = 'none';
-  document.getElementById('modalSuccess').style.display = 'block';
+    function submitSprint() {
+  // Interim: signup happens on the Vercel app (signin.html captures name +
+  // email + password and creates the Supabase account on the app origin).
+  window.location.href = 'https://digital-jd-site.vercel.app/signin.html';
 }
 
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeModal();
     });
-async function forgotPassword() {
-  const email = document.getElementById('loginEmail').value.trim();
-
-  if (!email) {
-    alert('Enter your email first, then click Forgot Password.');
-    return;
-  }
-
-  const { error } = await window.supabaseClient.auth.resetPasswordForEmail(email, {
-    redirectTo: 'https://digitaljd.org/reset-password.html'
-  });
-
-  if (error) {
-    alert(error.message);
-    return;
-  }
-
-  alert('Password reset email sent. Check your inbox.');
+function forgotPassword() {
+  // Interim: password reset is handled on the Vercel app.
+  window.location.href = 'https://digital-jd-site.vercel.app/reset-password.html';
 }
   </script>
        <div id="loginModal" class="modal-overlay">

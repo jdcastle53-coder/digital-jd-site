@@ -50,6 +50,10 @@
 
       <form id="authForm" class="mt-6 space-y-4">
         <label class="block">
+          <span class="text-sm text-slate-700">Full name <span class="text-slate-400">(for new accounts)</span></span>
+          <input id="name" type="text" autocomplete="name" class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--sea)]" placeholder="Jane Doe" />
+        </label>
+        <label class="block">
           <span class="text-sm text-slate-700">Email</span>
           <input id="email" type="email" required class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--sea)]" placeholder="you@company.com" />
         </label>
@@ -99,9 +103,26 @@
 
     async function handleSignUp() {
       setStatus("Creating account...");
+      const name = document.getElementById("name").value.trim();
       const email = document.getElementById("email").value.trim();
       const password = document.getElementById("password").value;
-      const result = await window.Auth.client.auth.signUp({ email, password });
+
+      if (!name) {
+        setStatus("Please enter your full name to create an account.", true);
+        return;
+      }
+
+      const result = await window.Auth.client.auth.signUp({
+        email,
+        password,
+        options: {
+          // Store the name in Supabase user metadata (matches the legacy signup).
+          data: { name: name, full_name: name },
+          // Land email-confirmation clicks on the app, on whatever origin this
+          // page is served from.
+          emailRedirectTo: window.location.origin + "/jd-brain.html",
+        },
+      });
 
       if (result.error) {
         setStatus(result.error.message, true);
