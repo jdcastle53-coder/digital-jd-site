@@ -2,6 +2,34 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <script>
+    // Auth token catcher (interim migration safeguard).
+    // Supabase email links (signup-confirm / password-recovery) sometimes land
+    // on the Site URL (this root marketing page) with the session token in the
+    // URL fragment. This page intentionally has NO Supabase SDK, so it can't
+    // consume that token. Forward the visitor to the correct app page —
+    // preserving the fragment — where the SDK finishes signing them in.
+    // Runs first in <head>, before any marketing markup renders. No-op for
+    // normal visitors (no auth token in the URL).
+    (function () {
+      try {
+        var h = window.location.hash || "";
+        var q = window.location.search || "";
+        var hasToken = /access_token=|refresh_token=/.test(h);
+        var isRecovery = /type=recovery/.test(h);
+        var isError = /error=|error_description=/.test(h);
+        // PKCE fallback: some flows return ?code=... in the query string.
+        var hasCode = /[?&]code=/.test(q);
+        if (isRecovery) {
+          window.location.replace("/reset-password.html" + q + h);
+        } else if (hasToken || hasCode || isError) {
+          window.location.replace("/jd-brain.html" + q + h);
+        }
+      } catch (e) {
+        /* never block the marketing page on an error */
+      }
+    })();
+  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Digital JD — Executive Clarity: On Demand v2</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
