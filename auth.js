@@ -51,6 +51,13 @@
 
   async function requireActiveSession(options) {
     const opts = options || {};
+    if (/[#?&](access_token|code|refresh_token)=/.test(window.location.href)) {
+      for (let i = 0; i < 20; i++) {
+        const r = await client.auth.getSession();
+        if (r && r.data && r.data.session) break;
+        await new Promise(function (res) { setTimeout(res, 150); });
+      }
+    }
     const result = await client.auth.getSession();
     const session = result && result.data ? result.data.session : null;
 
