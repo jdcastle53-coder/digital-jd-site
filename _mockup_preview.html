@@ -1,0 +1,774 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Digital JD Brain - Intelligent Leadership System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Talk through a leadership situation with Executive Advisor, or build a document, class, or plan with Executive Content Workshop." />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+  <script>
+// IMPORTANT: the Supabase UMD SDK registers a GLOBAL named `supabase`
+// (window.supabase). Declaring `const supabase = ...` in a classic inline
+// script collides with it -> "Identifier 'supabase' has already been
+// declared" -> the whole script aborts, so nothing on the page wires up.
+// Fix: reuse the working client auth.js already created (window.Auth.client,
+// the one that handles sign-in) and expose it as the global `supabase` that
+// the rest of this page's code references. Fall back to a fresh client only
+// if auth.js didn't load, reading window.supabase.createClient BEFORE we
+// overwrite the global.
+window.supabase = (window.Auth && window.Auth.client)
+  ? window.Auth.client
+  : window.supabase.createClient(
+      "https://hiejaayyeprfnrrukbam.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZWphYXl5ZXByZm5ycnVrYmFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5NDI3OTAsImV4cCI6MjA4NjUxODc5MH0._gOINPPuGvuXMpEm_qv_cSkwemt7wvFl6QDADknq4Bg"
+    );
+// Local alias so existing code that refers to bare `supabase` keeps working.
+var supabase = window.supabase;
+</script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111c34;
+      --panel-2: #16213d;
+      --border: rgba(255,255,255,0.08);
+      --text: #e2e8f0;
+      --muted: #9fb0cc;
+      --gold: #d4af37;
+      --blue-1: #2563eb;
+      --blue-2: #1d4ed8;
+      --input: #0b1223;
+      --shadow: 0 18px 48px rgba(0,0,0,0.32);
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #081121 0%, #0f172a 100%);
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      min-height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 16px 12px 32px;
+    }
+
+    .shell {
+      width: 100%;
+      max-width: 1400px;
+    }
+
+    .app {
+      position: relative;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: appReveal 0.6s ease both;
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #d4af37, #60a5fa, #d4af37, transparent);
+      background-size: 200% 100%;
+      animation: signalLine 5s linear infinite;
+      z-index: 2;
+    }
+
+    .app-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      flex-wrap: wrap;
+      gap: 12px;
+      animation: fadeSlideUp 0.5s ease 0.05s both;
+    }
+
+    .app-top-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-logo-wrap {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      flex: 0 0 64px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-logo-wrap::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(212,175,55,0.5), transparent 70%);
+      animation: glowPulse 2.6s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    .brand-logo {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      display: block;
+      z-index: 1;
+    }
+
+    .brand-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      line-height: 1.15;
+    }
+
+    .brand-line {
+      color: var(--gold);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .app-top-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(37, 99, 235, 0.16);
+      border: 1px solid rgba(37, 99, 235, 0.32);
+      border-radius: 999px;
+      color: #dbeafe;
+      font-size: 13px;
+      white-space: nowrap;
+      font-family: Georgia, serif;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #60a5fa;
+    }
+
+    .top-btn {
+      background: transparent;
+      border: 1px solid rgba(212,175,55,0.45);
+      color: #d4af37;
+      border-radius: 999px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: Georgia, serif;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .top-btn:hover {
+      background: rgba(212,175,55,0.12);
+    }
+
+    .home-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px 4px;
+      white-space: nowrap;
+    }
+    .home-link:hover { color: var(--text); }
+
+    .chat-wrap {
+      padding: 16px 20px 8px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
+      animation: fadeSlideUp 0.5s ease 0.12s both;
+    }
+
+    .chat-output {
+      height: auto;
+      min-height: 40px;
+      max-height: 46vh;
+      overflow-y: auto;
+      padding-right: 6px;
+      scroll-behavior: smooth;
+    }
+
+    .msg {
+      margin-bottom: 12px;
+      display: flex;
+      width: 100%;
+      animation: fadeSlideUp 0.35s ease both;
+    }
+
+    .msg.user { justify-content: flex-end; }
+    .msg.assistant { justify-content: flex-start; }
+
+    .bubble {
+      max-width: 900px;
+      width: fit-content;
+      border-radius: 18px;
+      padding: 14px 18px;
+      line-height: 1.6;
+      font-size: 16px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.22);
+      white-space: pre-wrap;
+    }
+
+    .user .bubble {
+      background: linear-gradient(180deg, #2d4fe0, #2643bc);
+      color: #ffffff;
+      border-top-right-radius: 6px;
+    }
+
+    .assistant .bubble {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-top-left-radius: 6px;
+    }
+
+    .composer {
+      padding: 8px 20px 24px;
+      animation: fadeSlideUp 0.5s ease 0.18s both;
+    }
+
+    .mode-fork {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .mode-btn {
+      position: relative;
+      flex: 1 1 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(212,175,55,0.35);
+      background: #0b1223;
+      color: #c9d4e0;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s, box-shadow 0.15s;
+      font-family: Georgia, serif;
+    }
+    .mode-btn:hover {
+      border-color: rgba(212,175,55,0.7);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.28);
+    }
+    .mode-btn-active {
+      border-color: #d4af37;
+      background: #14233f;
+      box-shadow: 0 0 0 1px #d4af37 inset;
+      animation: cardGlow 2.4s ease-in-out infinite;
+    }
+    .mode-btn-title {
+      font-weight: 800;
+      font-size: 15px;
+      color: #f6d36b;
+    }
+    .mode-btn-sub {
+      font-size: 12px;
+      color: #9fb0c3;
+    }
+
+    .input-prompt {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .input-area-wrap {
+      position: relative;
+    }
+
+    textarea#userInput {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--input);
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    textarea#userInput:focus {
+      outline: none;
+      border-color: rgba(212,175,55,0.6);
+    }
+    textarea#userInput::placeholder { color: #6b7a94; }
+
+    .helper {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .action-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .mic-btn {
+      width: 100%;
+      background: linear-gradient(180deg, #f6d36b, #d4af37);
+      color: #14233f;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(212,175,55,0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .mic-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(212,175,55,0.5);
+    }
+    .mic-btn.is-listening {
+      background: linear-gradient(180deg, #ef4444, #b91c1c);
+      color: #ffffff;
+      animation: micPulse 1.4s ease-in-out infinite;
+    }
+
+    .send-btn {
+      width: 100%;
+      background: linear-gradient(180deg, var(--blue-1), var(--blue-2));
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px 20px;
+      font-size: 16px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(37,99,235,0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+    .send-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(37,99,235,0.5);
+    }
+    .send-btn:active:not(:disabled) { transform: translateY(0); }
+    .send-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes appReveal {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes signalLine {
+      0% { background-position: 0% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.55; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.12); }
+    }
+
+    @keyframes cardGlow {
+      0%, 100% { box-shadow: 0 0 0 1px #d4af37 inset, 0 0 0 rgba(212,175,55,0); }
+      50% { box-shadow: 0 0 0 1px #d4af37 inset, 0 0 18px rgba(212,175,55,0.45); }
+    }
+
+    @keyframes micPulse {
+      0%, 100% { box-shadow: 0 0 0 rgba(239,68,68,0.5); }
+      50% { box-shadow: 0 0 14px rgba(239,68,68,0.7); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .app, .app::before, .app-top, .chat-wrap, .composer, .msg,
+      .brand-logo-wrap::after, .mode-btn-active, .send-btn,
+      .mic-btn.is-listening {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app-top { flex-direction: column; align-items: flex-start; }
+      .app-top-right { width: 100%; justify-content: flex-start; }
+      .mode-btn { flex: 1 1 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="app">
+      <div class="app-top">
+        <div class="app-top-left">
+          <div class="brand-logo-wrap">
+            <img src="digital-jd-logo.png" alt="Digital JD Bluehead Logo" class="brand-logo" />
+          </div>
+          <div class="brand-stack" aria-label="Intelligent Leadership System">
+            <div class="brand-line">Intelligent</div>
+            <div class="brand-line">Leadership</div>
+            <div class="brand-line">System</div>
+          </div>
+        </div>
+
+        <div class="app-top-right">
+          <a href="/" class="home-link">Home</a>
+          <span class="status-pill">
+            <span class="dot"></span>
+            <span id="systemStatus">Loading...</span>
+          </span>
+          <button id="manageSubscriptionButton" class="top-btn">Manage Subscription</button>
+          <button id="signOutButton" class="top-btn">Sign out</button>
+        </div>
+      </div>
+
+      <div class="chat-wrap">
+        <div id="chatOutput" class="chat-output"></div>
+      </div>
+
+      <div class="composer">
+        <div class="mode-fork" id="modeFork" role="tablist" aria-label="Choose how Digital JD helps you">
+          <button type="button" id="modeAdvisorBtn" class="mode-btn mode-btn-active" role="tab" aria-selected="true" onclick="setMode('advisor')">
+            <span class="mode-btn-title">Executive Advisor</span>
+            <span class="mode-btn-sub">Talk through a leadership situation</span>
+          </button>
+          <button type="button" id="modeWorkshopBtn" class="mode-btn" role="tab" aria-selected="false" onclick="setMode('workshop')">
+            <span class="mode-btn-title">Executive Content Workshop</span>
+            <span class="mode-btn-sub">Build a document, class, or plan</span>
+          </button>
+        </div>
+
+        <div class="input-prompt" id="inputPrompt">
+          Describe your situation — the more detail you provide, the sharper the insight.
+        </div>
+
+        <div class="input-area-wrap">
+          <textarea id="userInput" placeholder="Describe the leadership, communication, decision, or execution situation you want to work through."></textarea>
+        </div>
+
+        <div class="helper" id="helperText">
+          Digital JD will think through this with you and respond directly below.
+        </div>
+
+        <div class="action-col">
+          <button id="micBtn" type="button" class="mic-btn">🎙️ Dictate</button>
+          <button id="sendBtn" class="send-btn">Get Insight</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    let conversationId = null;
+    let isSending = false;
+    let currentMode = 'advisor';
+
+    function setMode(mode) {
+      currentMode = mode;
+      const advisorBtn = document.getElementById('modeAdvisorBtn');
+      const workshopBtn = document.getElementById('modeWorkshopBtn');
+      const advisorActive = mode === 'advisor';
+      advisorBtn.classList.toggle('mode-btn-active', advisorActive);
+      advisorBtn.setAttribute('aria-selected', advisorActive ? 'true' : 'false');
+      workshopBtn.classList.toggle('mode-btn-active', !advisorActive);
+      workshopBtn.setAttribute('aria-selected', !advisorActive ? 'true' : 'false');
+
+      const inputPrompt = document.getElementById('inputPrompt');
+      const userInput = document.getElementById('userInput');
+      if (advisorActive) {
+        inputPrompt.textContent = 'Describe your situation — the more detail you provide, the sharper the insight.';
+        userInput.placeholder = 'Describe the leadership, communication, decision, or execution situation you want to work through.';
+      } else {
+        inputPrompt.textContent = 'Tell Digital JD what to build — a document, training class, plan, email, or script.';
+        userInput.placeholder = 'e.g., Draft a board memo on our Q3 restructuring, or build a training outline on giving hard feedback.';
+      }
+    }
+
+    function addMessage(text, role) {
+      const chatOutput = document.getElementById('chatOutput');
+      const msg = document.createElement('div');
+      msg.classList.add('msg', role);
+      const bubble = document.createElement('div');
+      bubble.classList.add('bubble');
+      bubble.style.whiteSpace = 'pre-wrap';
+      bubble.innerText = text;
+      msg.appendChild(bubble);
+      chatOutput.appendChild(msg);
+      chatOutput.scrollTop = chatOutput.scrollHeight;
+      return bubble;
+    }
+
+    async function sendMessage() {
+      if (isSending) return;
+
+      const input = document.getElementById('userInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      if (recognition && isListening) {
+        isListening = false;
+        try { recognition.stop(); } catch (e) {}
+        const micBtn = document.getElementById('micBtn');
+        if (micBtn) {
+          micBtn.textContent = '🎙️ Dictate';
+          micBtn.classList.remove('is-listening');
+        }
+      }
+
+      isSending = true;
+      const sendBtn = document.getElementById('sendBtn');
+      sendBtn.disabled = true;
+      sendBtn.textContent = 'Thinking...';
+
+      addMessage(text, 'user');
+      input.value = '';
+
+      const pending = addMessage('Thinking...', 'assistant');
+
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!conversationId && user) {
+          const { data } = await supabase
+            .from('conversations')
+            .insert({ user_id: user.id })
+            .select()
+            .single();
+          conversationId = data ? data.id : null;
+        }
+
+        if (conversationId) {
+          await supabase.from('messages').insert({
+            conversation_id: conversationId,
+            role: 'user',
+            content: text
+          });
+        }
+
+        const response = await fetch('/api/jd-brain-gateway', {
+          method: 'POST',
+          headers: await jdBrainHeaders(),
+          body: JSON.stringify({ message: text, mode: currentMode })
+        });
+
+        if (response.status === 401 || response.status === 402) {
+          const info = await response.json().catch(() => ({}));
+          pending.innerText = info.error || 'Your session has ended. Please sign in again.';
+          if (info.code === 'trial_expired') window.location.href = 'expired.html';
+          else if (window.Auth) window.location.href = window.Auth.SIGNIN_URL;
+          return;
+        }
+
+        const raw = await response.text();
+        let data = null;
+        try { data = JSON.parse(raw); } catch (e) {}
+
+        if (!response.ok) {
+          const serverMsg = (data && (data.error || data.message)) || raw || '';
+          pending.innerText = 'Sorry, something went wrong (error ' + response.status + '). ' + serverMsg.slice(0, 300);
+          return;
+        }
+
+        const aiReply = (data && data.reply) ? data.reply : 'Digital JD returned an empty response. Please try again.';
+        pending.innerText = aiReply;
+
+        if (conversationId) {
+          await supabase.from('messages').insert({
+            conversation_id: conversationId,
+            role: 'assistant',
+            content: aiReply
+          });
+        }
+      } catch (err) {
+        pending.innerText = 'The request failed (' + (err && err.message ? err.message : 'network error') + '). Please try again.';
+      } finally {
+        isSending = false;
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Get Insight';
+      }
+    }
+
+    let recognition = null;
+    let isListening = false;
+
+    function setupDictation() {
+      const micBtn = document.getElementById('micBtn');
+      const userInput = document.getElementById('userInput');
+      if (!micBtn || !userInput) return;
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        micBtn.addEventListener('click', () => {
+          alert('Microphone dictation is not supported in this browser. Try Chrome.');
+        });
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      let baseText = '';
+
+      recognition.onresult = function (event) {
+        let finalText = '';
+        let interimText = '';
+        for (let i = 0; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) finalText += transcript + ' ';
+          else interimText += transcript;
+        }
+        userInput.value = (baseText + finalText + interimText).trim();
+      };
+
+      recognition.onend = function () {
+        if (isListening) {
+          try { recognition.start(); } catch (e) {}
+        }
+      };
+
+      recognition.onerror = function (event) {
+        console.log('[v0] Speech recognition error:', event.error);
+      };
+
+      micBtn.addEventListener('click', function () {
+        if (!isListening) {
+          baseText = userInput.value ? userInput.value.trim() + ' ' : '';
+          try {
+            recognition.start();
+            isListening = true;
+            micBtn.textContent = '■ Stop';
+            micBtn.classList.add('is-listening');
+          } catch (e) {}
+        } else {
+          isListening = false;
+          try { recognition.stop(); } catch (e) {}
+          micBtn.textContent = '🎙️ Dictate';
+          micBtn.classList.remove('is-listening');
+        }
+      });
+    }
+
+    async function jdBrainHeaders() {
+      const headers = { 'Content-Type': 'application/json' };
+      try {
+        if (window.Auth && window.Auth.client) {
+          const { data } = await window.Auth.client.auth.getSession();
+          const token = data && data.session && data.session.access_token;
+          if (token) headers['Authorization'] = 'Bearer ' + token;
+        }
+      } catch (e) {}
+      return headers;
+    }
+
+    async function openBillingPortal() {
+      const btn = document.getElementById('manageSubscriptionButton');
+      const original = btn ? btn.textContent : '';
+      if (btn) { btn.disabled = true; btn.textContent = 'Opening...'; }
+
+      let email;
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        email = user ? user.email : undefined;
+      } catch (e) {}
+
+      if (!email) {
+        alert('Please sign in to manage your subscription.');
+        if (btn) { btn.disabled = false; btn.textContent = original; }
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/create-portal', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email }),
+        });
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert(data.error || 'Could not open the billing portal.');
+        }
+      } catch (e) {
+        alert('Could not open the billing portal. Please try again.');
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = original; }
+      }
+    }
+
+    window.addEventListener('load', () => {
+      // preview: auth check disabled
+
+      const statusEl = document.getElementById('systemStatus');
+      if (statusEl) statusEl.textContent = 'Subscription Active';
+
+      const signOutButton = document.getElementById('signOutButton');
+      if (signOutButton && window.Auth && window.Auth.enabled) {
+        signOutButton.addEventListener('click', () => window.Auth.signOut());
+      }
+
+      const manageSubscriptionButton = document.getElementById('manageSubscriptionButton');
+      if (manageSubscriptionButton) {
+        manageSubscriptionButton.addEventListener('click', openBillingPortal);
+      }
+
+      const sendBtn = document.getElementById('sendBtn');
+      if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+
+      setupDictation();
+
+      const userInput = document.getElementById('userInput');
+      if (userInput) {
+        userInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && e.keyCode !== 229) {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>
