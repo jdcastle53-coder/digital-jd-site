@@ -88,8 +88,8 @@
     }
 
     .nav-logo img {
-      width: 80px;
-      height: 80px;
+      width: 94px;
+      height: 94px;
       object-fit: contain;
       object-position: top center;
       display: block;
@@ -124,10 +124,33 @@
 
     .nav-links {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       gap: 2.5rem;
       list-style: none;
-      margin-top: 0.4rem;
+      margin-top: 0.9rem;
+    }
+    .nav-links a.sprint-link {
+      font-weight: 700;
+      color: #ffffff !important;
+    }
+    .sprint-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      color: #ffcf4a;
+      line-height: 1.6;
+      margin-top: 0.55rem;
+    }
+    .nav-right {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      align-items: stretch;
+      margin-top: 0.9rem;
+    }
+    .nav-right .nav-cta {
+      text-align: center;
     }
 
 .nav-links a {
@@ -384,12 +407,12 @@ overflow:hidden;
 
 .executive-cascade{
 width:100%;
-max-width:1200px;
+max-width:1340px;
 margin:0 auto;
 display:flex;
 flex-wrap:wrap;
 justify-content:center;
-gap:20px;
+gap:16px;
 padding:0 20px;
 }
 
@@ -423,84 +446,65 @@ box-shadow:
 0 0 26px #33d6ff;
 }
 
-/* CARD 1 */
+/* SIX CASCADE BOXES — shared sizing */
 
-.cascade-five{
-width:260px;
-min-height:200px;
-padding:24px 20px 24px 20px;
+.cascade-days,
+.cascade-rules,
+.cascade-chains,
+.cascade-concepts,
+.cascade-output{
+width:200px;
+min-height:210px;
+padding:24px 16px;
 margin:0;
-z-index:4;
 }
 
-.cascade-five::before{
-content:'🏛';
+.cascade-days::after,
+.cascade-rules::after,
+.cascade-chains::after,
+.cascade-concepts::after,
+.cascade-output::after{
+display:none;
+}
+
+.cascade-days::before,
+.cascade-rules::before,
+.cascade-chains::before,
+.cascade-concepts::before,
+.cascade-output::before{
 position:absolute;
 left:50%;
 top:20px;
 transform:translateX(-50%);
-font-size:40px;
+font-size:38px;
 filter:drop-shadow(0 0 10px #00bfff);
 }
 
-.cascade-five::after{
-display:none;
+.cascade-days::before{content:'📅';filter:drop-shadow(0 0 10px #f0c24f);}
+.cascade-rules::before{content:'⚖️';}
+.cascade-chains::before{content:'🔗';}
+.cascade-concepts::before{content:'📚';}
+.cascade-output::before{content:'🎯';}
+
+/* BOX 1 — soft gold outline (the free-trial push) */
+.cascade-days{
+border:2px solid rgba(240,194,79,.75);
+background:
+radial-gradient(circle at top right, rgba(255,205,74,.10), transparent 45%),
+linear-gradient(180deg,#12100a 0%,#080604 100%);
+box-shadow:
+0 0 10px rgba(240,194,79,.55),
+0 0 26px rgba(240,194,79,.28),
+inset 0 0 30px rgba(240,194,79,.05);
 }
-
-/* CARD 2 */
-
-.cascade-seven{
-width:260px;
-min-height:200px;
-padding:24px 20px 24px 20px;
-margin:0;
-z-index:3;
-}
-
-.cascade-seven::before{
-content:'📅';
-position:absolute;
-left:50%;
-top:20px;
-transform:translateX(-50%);
-font-size:40px;
-filter:drop-shadow(0 0 10px #00bfff);
-}
-
-.cascade-seven::after{
-display:none;
-}
-
-/* CARD 3 */
-
-.cascade-three{
-width:260px;
-min-height:200px;
-padding:24px 20px 24px 20px;
-margin:0;
-z-index:2;
-}
-
-.cascade-three::before{
-content:'🎯';
-position:absolute;
-left:50%;
-top:20px;
-transform:translateX(-50%);
-font-size:40px;
-filter:drop-shadow(0 0 10px #00bfff);
-}
-
-.cascade-three::after{
-display:none;
-}
+.cascade-days .cascade-number{color:#ffcf4a;text-shadow:0 0 14px rgba(255,205,74,.6);}
 
 /* PHD GOLD CARD */
 
 .cascade-phd{
-width:260px;
-min-height:200px;
-padding:24px 20px 24px 20px;
+width:200px;
+min-height:210px;
+padding:24px 16px;
 margin:0;
 z-index:1;
 
@@ -637,9 +641,11 @@ padding:0 10px;
 border-radius:16px;
 }
 
-.cascade-five,
-.cascade-seven,
-.cascade-three,
+.cascade-days,
+.cascade-rules,
+.cascade-chains,
+.cascade-concepts,
+.cascade-output,
 .cascade-phd{
 width:90%;
 max-width:300px;
@@ -648,9 +654,11 @@ padding:24px 20px;
 margin:0;
 }
 
-.cascade-five::before,
-.cascade-seven::before,
-.cascade-three::before{
+.cascade-days::before,
+.cascade-rules::before,
+.cascade-chains::before,
+.cascade-concepts::before,
+.cascade-output::before{
 left:50%;
 top:15px;
 transform:translateX(-50%);
@@ -1063,12 +1071,7 @@ font-size:12px;
     }
 
     .tier-items li::before {
-      content: '';
-      width: 4px;
-      height: 4px;
-      background: var(--cyan);
-      border-radius: 50%;
-      flex-shrink: 0;
+      content: none;
     }
 
     footer {
@@ -1567,7 +1570,6 @@ iframe {
     <a href="#" class="nav-logo">
       <div class="nav-logo-left">
         <img src="digital-jd-logo.png" alt="Digital JD" />
-        <span class="nav-logo-name">Digital JD</span>
       </div>
       <div class="nav-brand-stack" aria-label="Intelligent Leadership System">
         <div class="nav-brand-line">Intelligent</div>
@@ -1579,20 +1581,18 @@ iframe {
     <ul class="nav-links">
       <li><a href="#difference">Why Digital JD</a></li>
       <li><a href="#what">The System</a></li>
-      <li><a href="#sprint">Executive Sprint</a></li>
-      <li><a href="#pricing">Access Tiers</a></li>
       <li style="text-align:center;">
-        <a href="#sprint" class="nav-cta" style="font-weight:700;">Start Sprint</a>
-        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.82rem;letter-spacing:0.08em;color:#c9a84c;line-height:1.9;margin-top:0.6rem;">
-          No Commitment<br>No Credit Card<br>No Contract
-        </div>
+        <a href="#sprint" class="sprint-link">Executive Sprint</a>
+        <div class="sprint-sub">No Commitment<br>No Credit Card<br>No Contract</div>
       </li>
-      <li>
-<a class="nav-cta" href="https://digital-jd-site.vercel.app/signin.html">
-  Login
-</a>
-</li>
+      <li><a href="#pricing">Access Tiers</a></li>
     </ul>
+
+    <div class="nav-right">
+      <a class="nav-cta" href="#hero">Home</a>
+      <a class="nav-cta" href="https://digital-jd-site.vercel.app/signin.html">Login</a>
+      <a class="nav-cta" href="#sprint">Start Sprint</a>
+    </div>
   </nav>
 
   <section id="hero">
@@ -1623,41 +1623,54 @@ iframe {
 
   <div class="executive-cascade">
 
-    <div class="cascade-card cascade-five">
-      <div class="cascade-number">5</div>
-
-      <div class="cascade-title">
-        Core Operating Principles
-      </div>
-
-      <div class="cascade-subtitle">
-        Built from Decades of Leadership Research
-      </div>
-    </div>
-
-    <div class="cascade-card cascade-seven">
+    <div class="cascade-card cascade-days">
       <div class="cascade-number">7</div>
-
       <div class="cascade-title">
-        Days – Full System Access
+        Full Days Free
       </div>
-
       <div class="cascade-free">
         FREE
       </div>
-
       <div class="cascade-subtitle">
         No Card Required
       </div>
     </div>
 
-    <div class="cascade-card cascade-three">
+    <div class="cascade-card cascade-rules">
       <div class="cascade-number">3</div>
-
       <div class="cascade-title">
-        Output Dimensions Per Decision
+        Reasoning Rules
       </div>
+      <div class="cascade-subtitle">
+        Applied to Every Situation
+      </div>
+    </div>
 
+    <div class="cascade-card cascade-chains">
+      <div class="cascade-number">6</div>
+      <div class="cascade-title">
+        Reasoning Chains
+      </div>
+      <div class="cascade-subtitle">
+        Cross-Author Logic Paths
+      </div>
+    </div>
+
+    <div class="cascade-card cascade-concepts">
+      <div class="cascade-number">55</div>
+      <div class="cascade-title">
+        Expert Concepts
+      </div>
+      <div class="cascade-subtitle">
+        From 10 Leadership Authorities
+      </div>
+    </div>
+
+    <div class="cascade-card cascade-output">
+      <div class="cascade-number">3</div>
+      <div class="cascade-title">
+        Output Dimensions
+      </div>
       <div class="cascade-list">
         <div>Situational Analysis</div>
         <div>Strategic Comments</div>
@@ -1722,14 +1735,14 @@ iframe {
       <div class="what-grid">
         <div class="what-left">
           <div class="section-label">The System</div>
-          <h2 class="section-heading">Not a Tool.<br><em>A Thinking System.</em></h2>
+          <h2 class="section-heading">Not just a Tool.<br><em>A Thinking System.</em></h2>
           <p>Most executives operate under pressure without a structured framework for their decisions. They rely on instinct, incomplete data, and reactive communication.</p>
           <p><strong>Digital JD changes that.</strong> It is a leadership intelligence system built on the same frameworks used in elite executive coaching — now accessible on demand, without the engagement model.</p>
           <p>Every response you receive follows a disciplined structure: <strong>situational analysis</strong> first, <strong>strategic insight</strong> second, <strong>clear execution plan</strong> third. No noise. No filler.</p>
         </div>
 
         <div class="what-right">
-          <div class="principle-item"><div class="principle-num">01</div><div class="principle-text"><strong>Clarity Before Action</strong><p>Define the actual problem before deploying a solution. Most executive errors begin here.</p></div></div>
+          <div class="principle-item"><div class="principle-num">01</div><div class="principle-text"><strong>Clarity Before Action</strong><p>Define in detail the actual problem before deploying a solution. Most executive errors begin here.</p></div></div>
           <div class="principle-item"><div class="principle-num">02</div><div class="principle-text"><strong>Communication Excellence</strong><p>Message, delivery, timing, and confirmation — four levers most leaders only use one of.</p></div></div>
           <div class="principle-item"><div class="principle-num">03</div><div class="principle-text"><strong>Decision Discipline</strong><p>Structured frameworks that remove emotion from high-stakes choices without removing humanity.</p></div></div>
           <div class="principle-item"><div class="principle-num">04</div><div class="principle-text"><strong>Human Dynamics</strong><p>Emotion, perception, and relationship capital — the variables no spreadsheet captures.</p></div></div>
@@ -1756,7 +1769,7 @@ iframe {
             <div class="sprint-phase">
               <div class="sprint-phase-label">Days 1-7</div>
               <h3>Full System Access</h3>
-              <p>Complete access to JD Brain — full analytical depth, no usage caps, no feature restrictions. <em style="color:var(--gold);">Most executives make their decision here.</em></p>
+              <p>Complete access to Digital JD — full analytical depth, no usage caps, no feature restrictions. <em style="color:var(--gold);">Most executives make their decision here.</em></p>
             </div>
             <div class="sprint-phase dim">
               <div class="sprint-phase-label">Day 7 — Your Moment of Clarity</div>
@@ -1775,14 +1788,14 @@ iframe {
           <h3>7-Day Executive Sprint</h3>
           <div class="price">Complimentary Access — No Card Required</div>
           <ul class="sprint-features">
-            <li>Full JD Brain — unrestricted analytical depth</li>
+            <li>Full Digital JD — unrestricted analytical depth</li>
             <li>Situational analysis on any leadership challenge</li>
             <li>Strategic insight drawn from your actual context</li>
-            <li>Execution plans built for real-world deployment</li>
-            <li>Grounded in Ph.D-level organizational leadership research</li>
+            <li>Execution plans built for your real-world deployment</li>
+            <li>Grounded in Dr. JD Castle&apos;s Ph.D-level organizational research</li>
             <li>Available on desktop and mobile</li>
           </ul>
-          <button class="btn-primary" onclick="openModal()" style="width:100%;justify-content:center;"><span>Your Sprint Starts Now →</span></button>
+          <button class="btn-primary" onclick="openModal()" style="width:100%;justify-content:center;"><span style="font-size:1.2em;">Your Sprint Starts Now →</span></button>
         </div>
       </div>
     </div>
@@ -1793,133 +1806,119 @@ iframe {
       <div class="section-label">Access Structure</div>
       <h2 class="section-heading">Built for <em>Sustained</em><br>Executive Performance.</h2>
       <div class="tiers-grid">
-        <div class="tier-card" style="border:3px solid #38bdf8;">
-         <div class="tier-name">Essentials</div>
-<div class="tier-title">Digital JD Essentials</div>
-          <ul class="tier-items">
-            <li>Core system access (~70% capability)</li>
-            <li>Standard usage allocation</li>
-            <li>Structured output format</li>
-            <li>Available post-Sprint</li>
+        <div class="tier-card" style="border:3px solid #38bdf8;display:flex;flex-direction:column;">
+          <div class="tier-kicker" style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#38bdf8;margin-bottom:0.5rem;">For Individual Leaders</div>
+          <div class="tier-title" style="text-align:center;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.9rem;line-height:1.05;color:#f3f7fd;">Digital JD<br>Essentials</div>
+          <div style="text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--white-dim);margin:0.8rem 0 1.3rem;">Executive Clarity on Demand</div>
+          <ul class="tier-items" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.85rem;">
+            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Executive Clarity on Demand</li>
+            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Identify the Real Challenge</li>
+            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>PhD-Level Leadership Thinking</li>
+            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Turn Insight into Action</li>
+            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Personalized to Your Situation</li>
+            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Confident Leadership Decisions</li>
           </ul>
-          <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--white-faint);">
-            <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--cyan);">$49<span style="font-size:1rem;font-weight:300;color:var(--white-dim);">/month</span></div>
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $490 / year <span style="color:#d4af37;font-style:italic;">(save $98)</span></div>
+          <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--white-faint);text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--cyan);">$199<span style="font-size:1rem;font-weight:300;color:var(--white-dim);">/month</span></div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $1,990 / year <span style="color:#d4af37;font-style:italic;">(save $398)</span></div>
           </div>
-      <div style="margin-top:1.25rem;">
-  <a class="tier-btn tier-btn-lite" href="#" onclick="startCheckout('essentials', event)"
-     style="display:block;text-align:center;
-     background:linear-gradient(135deg,#38bdf8,#2563eb);
-     color:#ffffff;
-     text-decoration:none;
-     font-family:Arial, Helvetica, sans-serif;
-     font-size:0.95rem;
-     font-weight:500;
-     letter-spacing:0.06em;
-     text-transform:uppercase;
-     padding:0.9rem 1rem;
-     border-radius:10px;
-     box-shadow:0 6px 14px rgba(0,0,0,0.25),
-                inset 0 1px 0 rgba(255,255,255,0.15);">
-  Get Essentials
-  </a>
-</div>
+          <div style="margin-top:1.25rem;">
+            <a class="tier-btn tier-btn-lite" href="#" onclick="startCheckout('essentials', event)"
+               style="display:block;text-align:center;background:linear-gradient(135deg,#38bdf8,#2563eb);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 6px 14px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.15);">Start Building Clarity</a>
+          </div>
+          <a href="#pricing" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid var(--white-faint);border-radius:10px;text-decoration:none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.7" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15 20c0-2.6 1.6-4.8 4-5.5"/></svg>
+            <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading a team?<br><span style="color:#38bdf8;font-weight:600;">Explore Enterprise &rarr;</span></span>
+          </a>
         </div>
 
-       <div class="tier-card featured" id="proFoundingCard" style="border:3px solid #ffffff;overflow:visible;">
+       <div class="tier-card featured" id="proFoundingCard" style="border:3px solid #e5e7eb;overflow:visible;display:flex;flex-direction:column;">
           <div class="tier-featured-tag">Most Popular</div>
-          <div class="founding-pill" id="foundingPill">
+          <a class="founding-pill" id="foundingPill" href="#" onclick="startCheckout('founding', event)" style="text-decoration:none;cursor:pointer;">
             <span class="founding-star">&#9733;</span>
             First 50 members &mdash; <strong>Lifetime $99</strong>
-          </div>
-         <div class="tier-name">Pro</div>
-<div class="tier-title">Digital JD Pro</div>
-          <ul class="tier-items">
-            <li>Full system — no restrictions</li>
-            <li>Complete analytical depth</li>
-            <li>Unlimited usage</li>
-            <li>All five operating principles active</li>
-            <li>Priority output quality</li>
+          </a>
+          <div class="tier-kicker" style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#93c5fd;margin-bottom:0.5rem;">For Executive Decision Making</div>
+          <div class="tier-title" style="text-align:center;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.9rem;line-height:1.05;color:#f3f7fd;">Digital JD<br>Pro</div>
+          <div style="text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--white-dim);margin:0.8rem 0 1.3rem;">Complete Executive Decision Support</div>
+          <ul class="tier-items" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.85rem;">
+            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Alternative Courses of Action</li>
+            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Risk &amp; Consequence Analysis</li>
+            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Stakeholder Impact</li>
+            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Communication Strategy</li>
+            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Implementation Roadmap</li>
+            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>90-Day Success Plan</li>
           </ul>
-          <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(0,180,216,0.2);">
-            <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--cyan);">$149<span style="font-size:1rem;font-weight:300;color:var(--white-dim);">/month</span></div>
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $1490 / year <span style="color:#d4af37;font-style:italic;">(save $298)</span></div>
+          <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(0,180,216,0.2);text-align:center;">
+            <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--cyan);">$399<span style="font-size:1rem;font-weight:300;color:var(--white-dim);">/month</span></div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $3,990 / year <span style="color:#d4af37;font-style:italic;">(save $798)</span></div>
           </div>
-      <div style="margin-top:1.25rem;">
-  <a class="tier-btn tier-btn-core" href="#" onclick="startCheckout('pro', event)"
-     style="display:block;text-align:center;
-     background:linear-gradient(135deg,#38bdf8,#2563eb);
-     color:#ffffff;
-     text-decoration:none;
-     font-family:Arial, Helvetica, sans-serif;
-     font-size:0.95rem;
-     font-weight:500;
-     letter-spacing:0.06em;
-     text-transform:uppercase;
-     padding:0.9rem 1rem;
-     border-radius:10px;
-     border:1px solid #d4af37;
-     box-shadow:0 6px 14px rgba(0,0,0,0.25),
-                inset 0 1px 0 rgba(255,255,255,0.15);">
-    Get Digital JD Pro
-  </a>
-</div>
+          <div style="margin-top:1.25rem;">
+            <a class="tier-btn tier-btn-core" href="#" onclick="startCheckout('pro', event)"
+               style="display:block;text-align:center;background:linear-gradient(135deg,#38bdf8,#2563eb);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;border:1px solid #d4af37;box-shadow:0 6px 14px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.15);">Upgrade Your Decisions</a>
+          </div>
+          <a href="#pricing" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid var(--white-faint);border-radius:10px;text-decoration:none;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="1.7" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15 20c0-2.6 1.6-4.8 4-5.5"/></svg>
+            <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading a team?<br><span style="color:#93c5fd;font-weight:600;">Explore Enterprise &rarr;</span></span>
+          </a>
         </div>
 
-    <div class="tier-card pro-tier" style="border:3px solid #d4af37; box-shadow:0 0 0 1px #d4af37;">
-  <div class="tier-name">Executive</div>
-  <div class="tier-title">Digital JD Executive</div>
-
-  <ul class="tier-items">
-    <li>Full system access</li>
-    <li>Direct sessions with Dr. JD</li>
-    <li>Group strategy sessions</li>
-    <li>Higher-order strategic application</li>
-    <li>Investor and board-level preparation</li>
-  </ul>
-
-  <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--white-faint);">
-    <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--cyan);">$399<span style="font-size:1rem;font-weight:300;color:var(--white-dim);">/month</span></div>
-    <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $3,390 / year <span style="color:#d4af37;font-style:italic;">(save $798)</span></div>
-    <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.85rem;color:var(--gold);margin-top:0.8rem;line-height:1.5;">Human executive coaching runs $500-$1,000 per hour. This is the alternative.</div>
-
-    <div style="margin-top:1.25rem; padding:4px; border:2px solid #d4af37; border-radius:12px;">
-      <div style="border:1px solid #d4af37; border-radius:10px;">
-        <a class="tier-btn tier-btn-pro" href="#" onclick="startCheckout('executive', event)"
-           style="display:block;text-align:center;background:linear-gradient(135deg,#38bdf8,#2563eb);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.95rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2);">
-          Enter Executive Tier
-        </a>
+    <div class="tier-card pro-tier" style="border:3px solid #d4af37;box-shadow:0 0 0 1px #d4af37;display:flex;flex-direction:column;">
+      <div class="tier-kicker" style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#d4af37;margin-bottom:0.5rem;">For Senior Executives</div>
+      <div class="tier-title" style="text-align:center;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.9rem;line-height:1.05;color:#f3f7fd;">Digital JD<br>Executive</div>
+      <div style="text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--gold);margin:0.8rem 0 1.3rem;">Your Executive Leadership Advisor</div>
+      <ul class="tier-items" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.85rem;">
+        <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Leadership Risk Assessment</li>
+        <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Blind Spot Analysis</li>
+        <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Executive Strategy Sessions</li>
+        <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Leadership Network Access</li>
+        <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Executive Dashboard</li>
+        <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>White-Glove Support</li>
+      </ul>
+      <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--white-faint);text-align:center;">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--cyan);">$899<span style="font-size:1rem;font-weight:300;color:var(--white-dim);">/month</span></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $8,990 / year <span style="color:#d4af37;font-style:italic;">(save $1,798)</span></div>
+        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.85rem;color:var(--gold);margin-top:0.8rem;line-height:1.5;">Human executive coaching runs $500-$1,000 per hour. This is the alternative.</div>
+        <div style="margin-top:1.25rem; padding:4px; border:2px solid #d4af37; border-radius:12px;">
+          <div style="border:1px solid #d4af37; border-radius:10px;">
+            <a class="tier-btn tier-btn-pro" href="#" onclick="startCheckout('executive', event)"
+               style="display:block;text-align:center;background:linear-gradient(135deg,#e8c860,#b8891f);color:#1a1204;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.35);">Lead at the Highest Level</a>
+          </div>
+        </div>
       </div>
+      <a href="#pricing" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid rgba(212,175,55,0.4);border-radius:10px;text-decoration:none;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.7" aria-hidden="true"><path d="M12 3l2 2-2 2-2-2z"/><circle cx="9" cy="10" r="2.6"/><path d="M3.5 20c0-3 2.5-5.4 5.5-5.4s5.5 2.4 5.5 5.4"/><circle cx="17.5" cy="11" r="2"/><path d="M15.5 20c0-2.4 1.4-4.4 3.5-5"/></svg>
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading a team?<br><span style="color:#d4af37;font-weight:600;">Explore Enterprise &rarr;</span></span>
+      </a>
     </div>
-  </div>
-</div>
 
-<div class="tier-card enterprise-tier" style="border:3px solid #d4af37;background:linear-gradient(145deg,rgba(45,32,8,0.96),rgba(18,12,3,0.98));box-shadow:0 0 30px rgba(212,175,55,0.28), inset 0 0 40px rgba(212,175,55,0.08);">
-  <div class="tier-name" style="color:#f4d06f;">Enterprise Tier</div>
-  <div class="tier-title" style="color:#e0b84f;">Digital JD Enterprise</div>
-
-  <ul class="tier-items">
-    <li>Department and leadership team deployment</li>
-    <li>Executive communication alignment systems</li>
-    <li>HR and organizational leadership integration</li>
-    <li>Custom strategic frameworks and onboarding</li>
-    <li>Enterprise-level leadership intelligence deployment</li>
+<div class="tier-card enterprise-tier" style="border:3px solid #2dd4bf;background:linear-gradient(145deg,rgba(6,40,38,0.96),rgba(3,18,17,0.98));box-shadow:0 0 30px rgba(45,212,191,0.25), inset 0 0 40px rgba(45,212,191,0.07);display:flex;flex-direction:column;">
+  <div class="tier-kicker" style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#2dd4bf;margin-bottom:0.5rem;">For Organizations</div>
+  <div class="tier-title" style="text-align:center;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.9rem;line-height:1.05;color:#f3f7fd;">Digital JD<br>Enterprise</div>
+  <div style="text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:#7fe7d8;margin:0.8rem 0 1.3rem;">One Leadership System. One Organization.</div>
+  <ul class="tier-items" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.85rem;">
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#03110f;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Organization-Wide Deployment</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#03110f;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Executive Team Alignment</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#03110f;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Common Leadership Framework</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#03110f;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Department Integration</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#03110f;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Enterprise Knowledge Base</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#03110f;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;">&#10003;</span>Custom AI Deployment</li>
   </ul>
-
-  <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(212,175,55,0.35);">
+  <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(45,212,191,0.3);text-align:center;">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:0.12em;color:var(--white-dim);text-transform:uppercase;line-height:1.7;">
-      Built for executive teams, departments, HR leadership, and organizational deployment.
+      Built for executive teams, departments, and organizations ready for transformation.
     </div>
-
-    <div style="margin-top:1.25rem; padding:4px; border:2px solid #d4af37; border-radius:12px;">
-      <div style="border:1px solid #d4af37; border-radius:10px;">
+    <div style="margin-top:1.25rem; padding:4px; border:2px solid #2dd4bf; border-radius:12px;">
+      <div style="border:1px solid #2dd4bf; border-radius:10px;">
         <a class="tier-btn tier-btn-pro" href="/contact.html"
-           style="display:block;text-align:center;background:linear-gradient(135deg,#d4af37,#8f6a16);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.95rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.2);">
-          Let's Have a Dialogue
-        </a>
+           style="display:block;text-align:center;background:linear-gradient(135deg,#2dd4bf,#0d9488);color:#03110f;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.3);">Transform Your Organization</a>
       </div>
     </div>
   </div>
+  <a href="/contact.html" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid rgba(45,212,191,0.4);border-radius:10px;text-decoration:none;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="1.7" aria-hidden="true"><path d="M4 21V5a1 1 0 011-1h7a1 1 0 011 1v16"/><path d="M13 9h6a1 1 0 011 1v11"/><path d="M2 21h20"/><path d="M7 8h2M7 12h2M7 16h2M16 13h1M16 17h1"/></svg>
+    <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading an enterprise?<br><span style="color:#2dd4bf;font-weight:600;">Let&apos;s Talk &rarr;</span></span>
+  </a>
 </div>
       </div>
     </div>
