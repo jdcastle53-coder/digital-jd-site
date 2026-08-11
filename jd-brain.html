@@ -338,45 +338,66 @@ var supabase = window.supabase;
       margin-top: 8px;
     }
 
-    .action-col {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      margin-top: 16px;
+    .mic-btn {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      border: 1px solid rgba(212,175,55,0.8);
+      background: #0b1223;
+      color: #f6d36b;
+      border-radius: 999px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      font-size: 13px;
+      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+    }
+    .mic-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(212,175,55,0.25);
+    }
+    .mic-btn.is-listening {
+      background: #7f1d1d;
+      color: #ffffff;
+      border-color: #ef4444;
+      animation: micPulse 1.4s ease-in-out infinite;
     }
 
-    .mic-btn {
-      width: 100%;
+    .action-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .cta-full-btn {
+      flex: 1 1 260px;
       background: linear-gradient(180deg, #f6d36b, #d4af37);
       color: #14233f;
       border: none;
       border-radius: 12px;
-      padding: 16px 20px;
-      font-size: 16px;
+      padding: 14px 20px;
+      font-size: 15px;
       font-weight: 700;
       font-family: Georgia, serif;
       cursor: pointer;
       box-shadow: 0 10px 24px rgba(212,175,55,0.35);
       transition: transform 0.15s ease, box-shadow 0.15s ease;
     }
-    .mic-btn:hover {
+    .cta-full-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 14px 30px rgba(212,175,55,0.5);
     }
-    .mic-btn.is-listening {
-      background: linear-gradient(180deg, #ef4444, #b91c1c);
-      color: #ffffff;
-      animation: micPulse 1.4s ease-in-out infinite;
-    }
 
     .send-btn {
-      width: 100%;
+      flex: 1 1 200px;
       background: linear-gradient(180deg, var(--blue-1), var(--blue-2));
       color: #ffffff;
       border: none;
       border-radius: 12px;
-      padding: 16px 20px;
-      font-size: 16px;
+      padding: 14px 20px;
+      font-size: 15px;
       font-weight: 700;
       font-family: Georgia, serif;
       cursor: pointer;
