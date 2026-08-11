@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Mockup - Digital JD Brain</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  :root {
+    --bg: #0b1220;
+    --panel: #0f1b33;
+    --border-gold: rgba(212,175,55,0.55);
+    --border-soft: rgba(212,175,55,0.22);
+    --gold: #d4af37;
+    --gold-bright: #f0c96a;
+    --blue: #3b82f6;
+    --text: #e7edf7;
+    --muted: #93a3bd;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: linear-gradient(180deg, #060b16 0%, #0b1220 100%);
+    color: var(--text);
+    font-family: Georgia, "Times New Roman", serif;
+  }
+  body { padding: 16px 12px 32px; display: flex; justify-content: center; }
+  .shell { width: 100%; max-width: 900px; }
+  .app {
+    background: var(--panel);
+    border: 1px solid var(--border-soft);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+  }
+
+  /* top bar */
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border-soft);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .top-left { display: flex; align-items: center; gap: 12px; }
+  .logo-col { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .logo-circle {
+    width: 40px; height: 40px; border-radius: 999px;
+    background: radial-gradient(circle at 35% 30%, #4b8fd6, #1e3a8a);
+    display: flex; align-items: center; justify-content: center;
+    color: #cfe3ff; font-size: 18px;
+  }
+  .logo-label { font-size: 10px; color: #7fb0e8; font-weight: 700; letter-spacing: 0.02em; }
+  .brand-stack { line-height: 1.15; }
+  .brand-line { color: var(--gold); font-size: 15px; font-weight: 700; }
+
+  .top-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 12px;
+    background: rgba(59,130,246,0.14);
+    border: 1px solid rgba(59,130,246,0.35);
+    border-radius: 999px;
+    color: #dbeafe;
+    font-size: 12.5px;
+    white-space: nowrap;
+  }
+  .dot { width: 7px; height: 7px; border-radius: 999px; background: #60a5fa; }
+
+  /* gold onboard btn - REVISED per approved change: shorter text, no icon, sized like Logout */
+  .onboard-btn {
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color: #1a1200;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12.5px;
+    font-weight: 700;
+    font-family: Georgia, serif;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .logout-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.18);
+    color: #c7d2e3;
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 12.5px;
+    font-family: Georgia, serif;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  /* mode fork */
+  .body-pad { padding: 18px 20px 22px; }
+  .mode-fork { display: flex; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
+  .mode-card {
+    flex: 1 1 220px;
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border-soft);
+    background: rgba(255,255,255,0.02);
+    cursor: pointer;
+  }
+  .mode-card.active {
+    border-color: var(--gold);
+    background: rgba(212,175,55,0.06);
+  }
+  .mode-icon {
+    width: 30px; height: 30px; border-radius: 8px;
+    background: rgba(212,175,55,0.12);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold-bright);
+    flex: 0 0 30px;
+  }
+  .mode-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+  .mode-title { font-size: 14px; font-weight: 700; color: #f3e6bd; }
+  .mode-sub { font-size: 11.5px; color: var(--muted); line-height: 1.3; }
+  .mode-check {
+    position: absolute; top: 10px; right: 10px;
+    width: 16px; height: 16px; border-radius: 999px;
+    background: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    color: #1a1200; font-size: 10px;
+  }
+
+  /* composer card */
+  .composer-card {
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 18px;
+  }
+  .composer-title { font-size: 14px; font-weight: 700; color: #f3e6bd; margin-bottom: 3px; }
+  .composer-sub { font-size: 11.5px; color: var(--muted); margin-bottom: 12px; }
+  .composer-row { display: flex; gap: 12px; align-items: stretch; }
+  textarea.userInput {
+    flex: 1 1 auto;
+    min-height: 92px;
+    resize: vertical;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: #0a1120;
+    color: var(--text);
+    font-family: Georgia, serif;
+    font-size: 13.5px;
+    line-height: 1.5;
+  }
+  textarea.userInput::placeholder { color: #5c6b85; }
+  .composer-actions { display: flex; flex-direction: column; gap: 8px; flex: 0 0 110px; }
+  .gold-outline-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    border: 1px solid var(--border-gold);
+    background: transparent;
+    color: var(--gold-bright);
+    border-radius: 8px;
+    padding: 10px 8px;
+    font-size: 12.5px;
+    font-weight: 700;
+    font-family: Georgia, serif;
+    cursor: pointer;
+  }
+
+  .response-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 4px 0 14px;
+    color: var(--gold-bright);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    font-weight: 700;
+  }
+  .response-divider::before, .response-divider::after {
+    content: ""; flex: 1; height: 1px; background: var(--border-soft);
+  }
+
+  .resp-card {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 14px;
+    border: 1px solid var(--border-soft);
+    border-radius: 10px;
+    margin-bottom: 10px;
+    background: rgba(255,255,255,0.015);
+  }
+  .resp-avatar {
+    width: 30px; height: 30px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    flex: 0 0 30px;
+  }
+  .avatar-a { background: #1e3a8a; color: #bfdbfe; }
+  .avatar-jd { background: var(--gold); color: #1a1200; }
+  .avatar-play { background: rgba(59,130,246,0.18); color: #93c5fd; }
+  .resp-body { flex: 1 1 auto; min-width: 0; }
+  .resp-tag { font-size: 10px; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; margin-bottom: 2px; }
+  .resp-title { font-size: 14.5px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .resp-text { font-size: 12.5px; color: #b8c4da; line-height: 1.5; }
+  .resp-chevron { color: var(--muted); font-size: 14px; margin-left: 8px; }
+</style>
+</head>
+<body>
+<div class="shell">
+  <section class="app">
+    <div class="top">
+      <div class="top-left">
+        <div class="logo-col">
+          <div class="logo-circle">◐</div>
+          <div class="logo-label">Digital JD</div>
+        </div>
+        <div class="brand-stack">
+          <div class="brand-line">Intelligent</div>
+          <div class="brand-line">Leadership System</div>
+        </div>
+      </div>
+      <div class="top-right">
+        <span class="status-pill"><span class="dot"></span>Executive Sprint — Day 3 of 7</span>
+        <button type="button" class="onboard-btn">Get Onboard</button>
+        <button type="button" class="logout-btn">Logout</button>
+      </div>
+    </div>
+
+    <div class="body-pad">
+      <div class="mode-fork">
+        <div class="mode-card active">
+          <div class="mode-icon">☺</div>
+          <div class="mode-text">
+            <div class="mode-title">Executive Advisor</div>
+            <div class="mode-sub">Talk through a leadership situation — get analysis, insight, and a plan.</div>
+          </div>
+          <div class="mode-check">✓</div>
+        </div>
+        <div class="mode-card">
+          <div class="mode-icon">▤</div>
+          <div class="mode-text">
+            <div class="mode-title">Executive Content Workshop</div>
+            <div class="mode-sub">Build a document, training program, or CEO letter — JD writes it with you.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="composer-card">
+        <div class="composer-title">Describe Your Situation</div>
+        <div class="composer-sub">The more detail you provide, the sharper the insight.</div>
+        <div class="composer-row">
+          <textarea class="userInput" placeholder="Describe the leadership, communication, decision, or execution situation you want to work through."></textarea>
+          <div class="composer-actions">
+            <button type="button" class="gold-outline-btn">🎤 Dictate</button>
+            <button type="button" class="gold-outline-btn">✨ Get Insight</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="response-divider">DIGITAL JD RESPONSE</div>
+
+      <div class="resp-card">
+        <div class="resp-avatar avatar-a">A</div>
+        <div class="resp-body">
+          <div class="resp-tag">Advisor Mode</div>
+          <div class="resp-title">Situational Analysis</div>
+          <div class="resp-text">Two senior leaders are in open conflict over an overlapping mandate. The visible fight is about strategy, but the real driver is unresolved territory and status.</div>
+        </div>
+        <div class="resp-chevron">⌄</div>
+      </div>
+
+      <div class="resp-card">
+        <div class="resp-avatar avatar-jd">JD</div>
+        <div class="resp-body">
+          <div class="resp-tag">JD's Words</div>
+          <div class="resp-title">JD's Insight</div>
+          <div class="resp-text">People rarely fight over the facts on the table. They fight over identity, territory, and who gets to be right. Name the real game before you try to solve it.</div>
+        </div>
+        <div class="resp-chevron">⌄</div>
+      </div>
+
+      <div class="resp-card">
+        <div class="resp-avatar avatar-play">▶</div>
+        <div class="resp-body">
+          <div class="resp-tag">Do This Next</div>
+          <div class="resp-title">Execution Plan</div>
+          <div class="resp-text">1. Meet each leader privately within 48 hours.<br>2. Define clear, non-overlapping lanes in writing.<br>3. Reconvene jointly to align on the shared objective.</div>
+        </div>
+        <div class="resp-chevron">⌄</div>
+      </div>
+    </div>
+  </section>
+</div>
+</body>
+</html>
