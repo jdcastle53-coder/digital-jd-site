@@ -338,11 +338,56 @@ var supabase = window.supabase;
       margin-top: 8px;
     }
 
+    .mic-btn {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      border: 1px solid rgba(212,175,55,0.8);
+      background: #0b1223;
+      color: #f6d36b;
+      border-radius: 999px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      font-size: 13px;
+      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+    }
+    .mic-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(212,175,55,0.25);
+    }
+    .mic-btn.is-listening {
+      background: #7f1d1d;
+      color: #ffffff;
+      border-color: #ef4444;
+      animation: micPulse 1.4s ease-in-out infinite;
+    }
+
     .action-row {
       display: flex;
       gap: 12px;
       margin-top: 14px;
       flex-wrap: wrap;
+    }
+
+    .cta-full-btn {
+      flex: 1 1 260px;
+      background: linear-gradient(180deg, #f6d36b, #d4af37);
+      color: #14233f;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(212,175,55,0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .cta-full-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(212,175,55,0.5);
     }
 
     .send-btn {
@@ -391,9 +436,15 @@ var supabase = window.supabase;
       50% { box-shadow: 0 0 0 1px #d4af37 inset, 0 0 18px rgba(212,175,55,0.45); }
     }
 
+    @keyframes micPulse {
+      0%, 100% { box-shadow: 0 0 0 rgba(239,68,68,0.5); }
+      50% { box-shadow: 0 0 14px rgba(239,68,68,0.7); }
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .app, .app::before, .app-top, .chat-wrap, .composer, .msg,
-      .brand-logo-wrap::after, .mode-btn-active, .send-btn {
+      .brand-logo-wrap::after, .mode-btn-active, .send-btn,
+      .mic-btn.is-listening, .cta-full-btn {
         animation: none !important;
         transition: none !important;
       }
@@ -454,6 +505,7 @@ var supabase = window.supabase;
 
         <div class="input-area-wrap">
           <textarea id="userInput" placeholder="Describe the leadership, communication, decision, or execution situation you want to work through."></textarea>
+          <button id="micBtn" type="button" class="mic-btn">🎙️ Dictate</button>
         </div>
 
         <div class="helper" id="helperText">
@@ -462,6 +514,7 @@ var supabase = window.supabase;
 
         <div class="action-row">
           <button id="sendBtn" class="send-btn">Get Insight</button>
+          <button type="button" class="cta-full-btn" onclick="window.location.href='https://digitaljd.org/#pricing'">Get on board with Digital JD</button>
         </div>
       </div>
     </section>
@@ -513,6 +566,16 @@ var supabase = window.supabase;
       const input = document.getElementById('userInput');
       const text = input.value.trim();
       if (!text) return;
+
+      if (recognition && isListening) {
+        isListening = false;
+        try { recognition.stop(); } catch (e) {}
+        const micBtn = document.getElementById('micBtn');
+        if (micBtn) {
+          micBtn.textContent = '🎙️ Dictate';
+          micBtn.classList.remove('is-listening');
+        }
+      }
 
       isSending = true;
       const sendBtn = document.getElementById('sendBtn');
@@ -587,6 +650,68 @@ var supabase = window.supabase;
       }
     }
 
+    let recognition = null;
+    let isListening = false;
+
+    function setupDictation() {
+      const micBtn = document.getElementById('micBtn');
+      const userInput = document.getElementById('userInput');
+      if (!micBtn || !userInput) return;
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        micBtn.addEventListener('click', () => {
+          alert('Microphone dictation is not supported in this browser. Try Chrome.');
+        });
+        return;
+      }
+
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      let baseText = '';
+
+      recognition.onresult = function (event) {
+        let finalText = '';
+        let interimText = '';
+        for (let i = 0; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) finalText += transcript + ' ';
+          else interimText += transcript;
+        }
+        userInput.value = (baseText + finalText + interimText).trim();
+      };
+
+      recognition.onend = function () {
+        if (isListening) {
+          try { recognition.start(); } catch (e) {}
+        }
+      };
+
+      recognition.onerror = function (event) {
+        console.log('[v0] Speech recognition error:', event.error);
+      };
+
+      micBtn.addEventListener('click', function () {
+        if (!isListening) {
+          baseText = userInput.value ? userInput.value.trim() + ' ' : '';
+          try {
+            recognition.start();
+            isListening = true;
+            micBtn.textContent = '■ Stop';
+            micBtn.classList.add('is-listening');
+          } catch (e) {}
+        } else {
+          isListening = false;
+          try { recognition.stop(); } catch (e) {}
+          micBtn.textContent = '🎙️ Dictate';
+          micBtn.classList.remove('is-listening');
+        }
+      });
+    }
+
     async function jdBrainHeaders() {
       const headers = { 'Content-Type': 'application/json' };
       try {
@@ -655,6 +780,8 @@ var supabase = window.supabase;
 
       const sendBtn = document.getElementById('sendBtn');
       if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+
+      setupDictation();
 
       const userInput = document.getElementById('userInput');
       if (userInput) {
