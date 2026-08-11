@@ -1,11 +1,13 @@
 import Stripe from "stripe";
 
 // Live price IDs for each Digital JD tier (created in the live Stripe account)
+// Updated 2026-08: new pricing $199 / $399 / $899 per month (all recurring).
+// "founding" = first-50 offer, $99/mo recurring rate locked for life (unchanged price).
 const PRICE_IDS = {
-  essentials: "price_1Tj87EAADeI7ymn3W3JYdxBG",
-  pro: "price_1Tj896AADeI7ymn3yuCdnWYm",
-  founding: "price_1Tj8AdAADeI7ymn3KwYMeDKi",
-  executive: "price_1Tj8BtAADeI7ymn3gjFKpbr7",
+  essentials: "price_1U3EsHAADeI7ymn398ulRjWF", // $199/mo
+  pro: "price_1U3EsHAADeI7ymn3DPNDuHLs", // $399/mo
+  executive: "price_1U3EsIAADeI7ymn35kw67WTg", // $899/mo
+  founding: "price_1Tj8AdAADeI7ymn3KwYMeDKi", // $99/mo locked for life
 };
 
 export default async function handler(req, res) {
