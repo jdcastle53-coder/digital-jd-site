@@ -10,9 +10,9 @@
     --navy-2: #16234f;
     --cream: #f7f1e3;
     --cream-2: #f2ead6;
-    --gold: #b8912f;
-    --gold-bright: #d4af37;
-    --gold-soft: #e6c866;
+    --gold: #b8860a;
+    --gold-bright: #ffc700;
+    --gold-soft: #ffe066;
     --ink: #1a1a1a;
   }
   * { box-sizing: border-box; }
@@ -48,15 +48,27 @@
     box-shadow: 0 30px 70px rgba(0,0,0,0.6);
   }
   .letter-frame {
-    border: 2px solid var(--gold-bright);
-    border-radius: 4px;
-    padding: 4px;
+    border: 4px solid var(--gold-bright);
+    border-radius: 6px;
+    padding: 5px;
+    position: relative;
   }
   .letter-inner {
-    border: 1px solid var(--gold);
-    border-radius: 2px;
+    border: 2px solid var(--gold);
+    border-radius: 3px;
     overflow: hidden;
   }
+  .corner-ornament {
+    position: absolute;
+    width: 46px;
+    height: 46px;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .corner-tl { top: -4px; left: -4px; }
+  .corner-tr { top: -4px; right: -4px; transform: scaleX(-1); }
+  .corner-bl { bottom: -4px; left: -4px; transform: scaleY(-1); }
+  .corner-br { bottom: -4px; right: -4px; transform: scale(-1,-1); }
 
   .header {
     background: linear-gradient(160deg, var(--navy) 0%, var(--navy-2) 100%);
@@ -67,11 +79,11 @@
     gap: 14px;
   }
   .brand-left { display: flex; align-items: center; gap: 12px; }
-  .brand-icon { width: 46px; height: 46px; flex: 0 0 46px; }
+  .brand-icon { width: 58px; height: 58px; flex: 0 0 58px; }
   .brand-name {
     font-family: Georgia, serif;
     font-weight: 700;
-    font-size: 22px;
+    font-size: 27.5px;
     color: #4fa8ea;
     letter-spacing: 0.01em;
   }
@@ -112,7 +124,7 @@
   .title-sub::before, .title-sub::after {
     content: '';
     flex: 1 1 40px;
-    height: 1px;
+    height: 2.5px;
     background: var(--gold-bright);
     max-width: 70px;
   }
@@ -122,7 +134,7 @@
   .icon-circle {
     width: 40px; height: 40px; border-radius: 50%;
     background: var(--navy);
-    border: 2px solid var(--gold-bright);
+    border: 3px solid var(--gold-bright);
     display: flex; align-items: center; justify-content: center;
     flex: 0 0 40px;
   }
@@ -153,7 +165,7 @@
 
   .results-box {
     background: var(--navy);
-    border: 2px solid var(--gold-bright);
+    border: 3px solid var(--gold-bright);
     border-radius: 6px;
     padding: 16px 18px 18px;
     margin: 18px 0;
@@ -174,7 +186,8 @@
     font-size: 11.5px;
     margin: 2px 0 0;
   }
-  .example-row { display: flex; align-items: flex-start; gap: 10px; margin: 12px 0 6px; }
+  .example-row { display: flex; align-items: flex-start; gap: 10px; margin: 10px 0; margin-left: 10px; }
+  .example-row.rather-row { margin-left: 28px; margin-top: 6px; }
   .pill {
     flex: 0 0 auto;
     font-family: Arial, sans-serif;
@@ -186,7 +199,7 @@
     margin-top: 1px;
   }
   .pill-not { background: var(--gold-bright); color: var(--navy); }
-  .pill-rather { background: transparent; border: 1px solid var(--gold-bright); color: var(--gold-bright); }
+  .pill-rather { background: var(--gold-bright); color: var(--navy); }
   .example-text { color: #eee; font-family: Georgia, serif; font-size: 12.5px; font-style: italic; line-height: 1.4; }
   .results-footer {
     text-align: center;
@@ -241,6 +254,10 @@
     <div>
       <div class="letter">
         <div class="letter-frame">
+          <svg class="corner-ornament corner-tl" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <svg class="corner-ornament corner-tr" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <svg class="corner-ornament corner-bl" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <svg class="corner-ornament corner-br" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
           <div class="letter-inner">
             <div class="header">
               <div class="brand-left">
@@ -291,7 +308,7 @@
                   <div class="pill pill-not">NOT</div>
                   <div class="example-text">&ldquo;How do I motivate employees?&rdquo;</div>
                 </div>
-                <div class="example-row">
+                <div class="example-row rather-row">
                   <div class="pill pill-rather">RATHER</div>
                   <div class="example-text">&ldquo;My operations manager stopped taking ownership after our reorganization. Help me understand what's happening and what I should do next.&rdquo;</div>
                 </div>
@@ -318,6 +335,10 @@
     <div>
       <div class="letter">
         <div class="letter-frame">
+          <svg class="corner-ornament corner-tl" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <svg class="corner-ornament corner-tr" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <svg class="corner-ornament corner-bl" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <svg class="corner-ornament corner-br" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
           <div class="letter-inner">
             <div class="header">
               <div class="brand-left">
@@ -368,7 +389,7 @@
                   <div class="pill pill-not">NOT</div>
                   <div class="example-text">&ldquo;How do I motivate employees?&rdquo;</div>
                 </div>
-                <div class="example-row">
+                <div class="example-row rather-row">
                   <div class="pill pill-rather">RATHER</div>
                   <div class="example-text">&ldquo;My operations manager stopped taking ownership after our reorganization. Help me understand what's happening and what I should do next.&rdquo;</div>
                 </div>
