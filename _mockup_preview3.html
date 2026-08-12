@@ -35,7 +35,7 @@
 
   /* ============ shared component styles ============ */
   .app {
-    background: linear-gradient(160deg, var(--royal) 0%, var(--royal-2) 45%, var(--royal-deep) 100%);
+    background: linear-gradient(160deg, var(--royal-deep) 0%, var(--royal) 55%, var(--royal-2) 100%);
     border: 2px solid var(--gold);
     border-radius: 14px;
     overflow: hidden;
@@ -54,17 +54,16 @@
   }
   .top-left { display: flex; align-items: center; gap: 12px; }
   .logo-mark {
-    width: 46px; height: 46px; border-radius: 10px;
-    overflow: hidden;
-    flex: 0 0 46px;
-    background: #030512;
-    border: 1.5px solid rgba(34,211,238,0.5);
+    width: 55px; height: 55px;
+    flex: 0 0 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .logo-mark img {
     width: 100%;
-    height: 132%;
-    object-fit: cover;
-    object-position: top center;
+    height: 100%;
+    object-fit: contain;
     display: block;
   }
   .brand-stack { line-height: 1.12; }
@@ -247,6 +246,7 @@
   .device-mobile .composer-row { flex-direction: column; }
   .device-mobile .composer-actions { flex-direction: column; width: 100%; margin-top: 10px; }
   .device-mobile .gold-outline-btn { width: 100%; }
+  .device-mobile .logo-mark { width: 70px; height: 70px; flex: 0 0 70px; }
 </style>
 </head>
 <body>
@@ -257,7 +257,7 @@
       <section class="app">
         <div class="top">
           <div class="top-left">
-            <div class="logo-mark"><img src="/digital-jd-logo.png" alt="Digital JD logo" /></div>
+            <div class="logo-mark"><img src="/public/images/digital-jd-head-icon.png" alt="Digital JD logo" /></div>
             <div class="brand-stack">
               <div class="brand-line">Intelligent</div>
               <div class="brand-line">Leadership</div>
@@ -341,7 +341,7 @@
       <section class="app">
         <div class="top">
           <div class="top-left">
-            <div class="logo-mark"><img src="/digital-jd-logo.png" alt="Digital JD logo" /></div>
+            <div class="logo-mark"><img src="/public/images/digital-jd-head-icon.png" alt="Digital JD logo" /></div>
             <div class="brand-stack">
               <div class="brand-line">Digital JD</div>
             </div>
