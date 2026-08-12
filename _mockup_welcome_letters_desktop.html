@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MOCKUP ONLY — Welcome Letters on Desktop (not wired to real routing)</title>
+<style>
+  :root {
+    --navy: #050c22;
+    --navy-2: #0a1638;
+    --cream: #f7f1e3;
+    --cream-2: #f2ead6;
+    --gold: #b8860a;
+    --gold-bright: #ffc700;
+    --gold-soft: #ffe066;
+    --ink: #1a1a1a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #1c1c1c;
+    font-family: Georgia, 'Times New Roman', serif;
+    padding: 30px 20px 60px;
+  }
+  .banner {
+    text-align: center;
+    color: #d4af37;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    margin-bottom: 22px;
+    text-transform: uppercase;
+  }
+
+  .browser-window {
+    width: 1280px;
+    max-width: 100%;
+    margin: 0 auto 46px;
+    background: #e8e8e8;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+  }
+  .browser-chrome {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: #d9d9d9;
+    padding: 10px 16px;
+  }
+  .dots { display: flex; gap: 7px; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot-r { background: #ff5f57; }
+  .dot-y { background: #ffbd2e; }
+  .dot-g { background: #28c840; }
+  .url-bar {
+    flex: 1;
+    background: #fff;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-family: Arial, sans-serif;
+    font-size: 12.5px;
+    color: #555;
+  }
+  .browser-page {
+    background: #f1ece0;
+    padding: 60px 20px;
+    min-height: 780px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .letter {
+    width: 520px;
+    background: var(--cream);
+    border-radius: 4px;
+    padding: 14px;
+    position: relative;
+    box-shadow: 0 25px 55px rgba(0,0,0,0.35);
+  }
+  .letter-frame {
+    border: 4px solid var(--gold-bright);
+    border-radius: 6px;
+    padding: 5px;
+    position: relative;
+  }
+  .letter-inner {
+    border: 2px solid var(--gold);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .corner-ornament {
+    position: absolute;
+    width: 46px;
+    height: 46px;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .corner-tl { top: -4px; left: -4px; }
+  .corner-tr { top: -4px; right: -4px; transform: scaleX(-1); }
+  .corner-bl { bottom: -4px; left: -4px; transform: scaleY(-1); }
+  .corner-br { bottom: -4px; right: -4px; transform: scale(-1,-1); }
+
+  .header {
+    background: linear-gradient(160deg, var(--navy) 0%, var(--navy-2) 100%);
+    padding: 22px 24px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  .brand-left { display: flex; align-items: center; gap: 12px; }
+  .brand-icon { width: 58px; height: 58px; flex: 0 0 58px; }
+  .brand-name {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 27.5px;
+    color: #4fa8ea;
+    letter-spacing: 0.01em;
+  }
+  .tagline {
+    text-align: right;
+    color: var(--gold-soft);
+    font-family: Georgia, serif;
+    font-size: 12.5px;
+    font-weight: 700;
+    line-height: 1.35;
+    border-left: 1px solid rgba(230,200,102,0.4);
+    padding-left: 12px;
+  }
+
+  .body { background: var(--cream); padding: 26px 30px 30px; }
+
+  .title-block { text-align: center; margin-bottom: 20px; }
+  .title-main {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: 0.03em;
+    color: var(--navy);
+    margin: 0 0 4px;
+  }
+  .title-sub {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--gold);
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.15em;
+    margin-top: 6px;
+  }
+  .title-sub::before, .title-sub::after {
+    content: '';
+    flex: 1 1 40px;
+    height: 2.5px;
+    background: var(--gold-bright);
+    max-width: 70px;
+  }
+
+  .section { display: flex; gap: 14px; margin-bottom: 18px; padding-bottom: 16px; border-bottom: 1px solid rgba(184,145,47,0.25); }
+  .section:last-of-type { border-bottom: none; }
+  .icon-circle {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--navy);
+    border: 3px solid var(--gold-bright);
+    display: flex; align-items: center; justify-content: center;
+    flex: 0 0 40px;
+  }
+  .section-title {
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 15px;
+    letter-spacing: 0.08em;
+    color: var(--navy);
+    margin: 0 0 6px;
+  }
+  .section-quote {
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 700;
+    color: var(--gold);
+    font-size: 14.5px;
+    margin: 0 0 8px;
+    line-height: 1.35;
+  }
+  .section-body {
+    font-family: Georgia, serif;
+    color: var(--ink);
+    font-size: 13px;
+    line-height: 1.55;
+    margin: 0;
+  }
+
+  .results-box {
+    background: var(--navy);
+    border: 3px solid var(--gold-bright);
+    border-radius: 6px;
+    padding: 16px 18px 18px;
+    margin: 18px 0;
+  }
+  .results-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .results-head .icon-circle { width: 34px; height: 34px; flex: 0 0 34px; }
+  .results-title {
+    color: #ffc700;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 22px;
+    letter-spacing: 0.05em;
+    margin: 0;
+    text-shadow: 0 0 10px rgba(255,199,0,0.6);
+  }
+  .results-subtitle {
+    color: #ffc700;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: 14px;
+    margin: 5px 0 0;
+    text-shadow: 0 0 6px rgba(255,199,0,0.4);
+  }
+  .example-row { display: flex; align-items: flex-start; gap: 10px; margin: 10px 0; margin-left: 10px; }
+  .example-row:first-of-type { margin-top: 4px; }
+  .example-row.rather-row { margin-top: 6px; }
+  .pill {
+    flex: 0 0 46px;
+    width: 46px;
+    text-align: center;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    padding: 4px 0;
+    border-radius: 4px;
+    margin-top: 1px;
+    background: linear-gradient(180deg, #ffe066, #ffc700 55%, #d4a300);
+    color: #1a1200;
+    box-shadow: 0 0 10px 1px rgba(255,199,0,0.85), 0 2px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.6);
+    border: 1px solid #fff4c2;
+  }
+  .example-text { color: #eee; font-family: Georgia, serif; font-size: 12.5px; font-style: italic; line-height: 1.4; }
+  .results-footer {
+    text-align: center;
+    color: #ffc700;
+    font-family: Georgia, serif;
+    font-style: italic;
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.4;
+    margin-top: 14px;
+    text-shadow: 0 0 8px rgba(255,199,0,0.5);
+  }
+
+  .ask-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 6px 0 14px; }
+  .ask-label {
+    color: var(--gold);
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+
+  .cta-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%;
+    text-align: center;
+    flex-wrap: wrap;
+    background: linear-gradient(180deg, #e8b923, #a9740a);
+    border: none;
+    border-radius: 8px;
+    padding: 16px 8px;
+    color: var(--navy);
+    font-family: Georgia, serif;
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.25);
+  }
+
+  .label-under {
+    text-align: center;
+    color: #d4af37;
+    font-family: Arial, sans-serif;
+    font-size: 11px;
+    margin-top: 10px;
+    opacity: 0.7;
+  }
+</style>
+</head>
+<body>
+  <div class="banner">MOCKUP ONLY — desktop browser framing, letter content unchanged from approved version</div>
+
+  <!-- EXECUTIVE SPRINT — DESKTOP BROWSER FRAME -->
+  <div class="browser-window">
+    <div class="browser-chrome">
+      <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+      <div class="url-bar">digitaljd.org/welcome-sprint</div>
+    </div>
+    <div class="browser-page">
+      <div class="letter">
+        <div class="letter-frame">
+          <svg class="corner-ornament corner-tl" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <svg class="corner-ornament corner-tr" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <svg class="corner-ornament corner-bl" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <svg class="corner-ornament corner-br" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <div class="letter-inner">
+            <div class="header">
+              <div class="brand-left">
+                <div class="brand-icon"><img src="/public/images/digital-jd-head-icon.png" alt="" style="width:100%;height:100%;object-fit:contain;" /></div>
+                <div class="brand-name">Digital JD</div>
+              </div>
+              <div class="tagline">Intelligent<br/>Leadership<br/>System</div>
+            </div>
+            <div class="body">
+              <div class="title-block">
+                <h1 class="title-main">EXECUTIVE SPRINT</h1>
+                <div class="title-sub">QUICK START GUIDE</div>
+              </div>
+
+              <div class="section">
+                <div class="icon-circle">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#d4af37"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+                </div>
+                <div>
+                  <h3 class="section-title">WELCOME</h3>
+                  <p class="section-quote">&ldquo;Congratulations on taking a major step in improving your leadership skills.&rdquo;</p>
+                  <p class="section-body">Over the next seven days, you'll have full access to doctoral-level executive coaching precisely designed to help you think clearer, communicate more effectively, and be more decisive.</p>
+                </div>
+              </div>
+
+              <div class="section">
+                <div class="icon-circle">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M8.5 12l2.5 2.5L16 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div>
+                  <h3 class="section-title">ONE PROMISE</h3>
+                  <p class="section-quote">&ldquo;Digital JD doesn't replace your judgment&mdash;it will strengthen it.&rdquo;</p>
+                  <p class="section-body">Every recommendation is grounded in the Digital JD Executive Reasoning Framework, informed by peer-reviewed research, published executive case studies, and a massive proprietary executive leadership knowledge base.</p>
+                </div>
+              </div>
+
+              <div class="results-box">
+                <div class="results-head">
+                  <div class="icon-circle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.5" fill="#d4af37"/></svg>
+                  </div>
+                  <div>
+                    <p class="results-title">GET BETTER RESULTS</p>
+                    <p class="results-subtitle">Make your questions specific to your situation</p>
+                  </div>
+                </div>
+                <div class="example-row">
+                  <div class="pill pill-not">NOT</div>
+                  <div class="example-text">&ldquo;How do I motivate employees?&rdquo;</div>
+                </div>
+                <div class="example-row rather-row">
+                  <div class="pill pill-rather">RATHER</div>
+                  <div class="example-text">&ldquo;My operations manager stopped taking ownership after our reorganization. Help me understand what's happening and what I should do next.&rdquo;</div>
+                </div>
+                <div class="results-footer">The more specific your situation,<br/>the more valuable your guidance will be.</div>
+              </div>
+
+              <div class="ask-row">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#b8912f"><path d="M20 2H4a2 2 0 00-2 2v12a2 2 0 002 2h4l4 4 4-4h4a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
+                <span class="ask-label">ASK YOUR FIRST LEADERSHIP QUESTION&hellip;</span>
+              </div>
+
+              <button class="cta-btn" type="button">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#050c22" style="flex:0 0 auto;"><path d="M14.5 2c-2 1-4 3-5.5 6-2 .3-3.6 1.4-4.8 3.2-.4.6-.1 1.4.6 1.5l2.6.4.4 2.6c.1.7.9 1 1.5.6 1.8-1.2 2.9-2.8 3.2-4.8 3-1.5 5-3.5 6-5.5.6-1.2-.5-2.6-2-2-.4.2-.7.5-1 1z"/><circle cx="15" cy="9" r="1.3" fill="#050c22"/></svg>
+                START YOUR SPRINT NOW
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MEMBERSHIP — DESKTOP BROWSER FRAME -->
+  <div class="browser-window">
+    <div class="browser-chrome">
+      <div class="dots"><span class="dot dot-r"></span><span class="dot dot-y"></span><span class="dot dot-g"></span></div>
+      <div class="url-bar">digitaljd.org/welcome-membership</div>
+    </div>
+    <div class="browser-page">
+      <div class="letter">
+        <div class="letter-frame">
+          <svg class="corner-ornament corner-tl" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <svg class="corner-ornament corner-tr" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <svg class="corner-ornament corner-bl" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <svg class="corner-ornament corner-br" viewBox="0 0 46 46" fill="none"><path d="M42 4 L17 4 C8 4 4 8 4 17 L4 42" stroke="#ffc700" stroke-width="4" stroke-linecap="round"/><path d="M4 17 C4 11 8 7 13 6.5" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="13" cy="6.5" r="2.4" fill="#ffc700"/><path d="M17 4 C22 4 26 8 27 13" stroke="#ffc700" stroke-width="2.5" stroke-linecap="round"/><circle cx="27" cy="13" r="2.4" fill="#ffc700"/></svg>
+          <div class="letter-inner">
+            <div class="header">
+              <div class="brand-left">
+                <div class="brand-icon"><img src="/public/images/digital-jd-head-icon.png" alt="" style="width:100%;height:100%;object-fit:contain;" /></div>
+                <div class="brand-name">Digital JD</div>
+              </div>
+              <div class="tagline">Intelligent<br/>Leadership<br/>System</div>
+            </div>
+            <div class="body">
+              <div class="title-block">
+                <h1 class="title-main">MEMBERSHIP</h1>
+                <div class="title-sub">QUICK START GUIDE</div>
+              </div>
+
+              <div class="section">
+                <div class="icon-circle">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="#d4af37"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+                </div>
+                <div>
+                  <h3 class="section-title">WELCOME</h3>
+                  <p class="section-quote">&ldquo;Congratulations on taking a major step in improving your leadership skills.&rdquo;</p>
+                  <p class="section-body">You now have full access to doctoral-level executive coaching precisely designed to help you think clearer, communicate more effectively, and be more decisive.</p>
+                </div>
+              </div>
+
+              <div class="section">
+                <div class="icon-circle">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M8.5 12l2.5 2.5L16 9.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div>
+                  <h3 class="section-title">ONE PROMISE</h3>
+                  <p class="section-quote">&ldquo;Digital JD doesn't replace your judgment&mdash;it will strengthen it.&rdquo;</p>
+                  <p class="section-body">Every recommendation is grounded in the Digital JD Executive Reasoning Framework, informed by peer-reviewed research, published executive case studies, and a massive proprietary executive leadership knowledge base.</p>
+                </div>
+              </div>
+
+              <div class="results-box">
+                <div class="results-head">
+                  <div class="icon-circle">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="2"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="0.5" fill="#d4af37"/></svg>
+                  </div>
+                  <div>
+                    <p class="results-title">GET BETTER RESULTS</p>
+                    <p class="results-subtitle">Make your questions specific to your situation</p>
+                  </div>
+                </div>
+                <div class="example-row">
+                  <div class="pill pill-not">NOT</div>
+                  <div class="example-text">&ldquo;How do I motivate employees?&rdquo;</div>
+                </div>
+                <div class="example-row rather-row">
+                  <div class="pill pill-rather">RATHER</div>
+                  <div class="example-text">&ldquo;My operations manager stopped taking ownership after our reorganization. Help me understand what's happening and what I should do next.&rdquo;</div>
+                </div>
+                <div class="results-footer">The more specific your situation,<br/>the more valuable your guidance will be.</div>
+              </div>
+
+              <div class="ask-row">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="#b8912f"><path d="M20 2H4a2 2 0 00-2 2v12a2 2 0 002 2h4l4 4 4-4h4a2 2 0 002-2V4a2 2 0 00-2-2z"/></svg>
+                <span class="ask-label">ASK YOUR FIRST LEADERSHIP QUESTION&hellip;</span>
+              </div>
+
+              <button class="cta-btn" type="button">
+                START YOUR MEMBERSHIP
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
