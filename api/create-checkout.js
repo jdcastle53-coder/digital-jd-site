@@ -42,6 +42,9 @@ export default async function handler(req, res) {
       // Pre-fill and bind the customer to the signed-in email when available
       customer_email: email || undefined,
       allow_promotion_codes: true,
+      // Recorded so the Stripe webhook (api/stripe-webhook.js) can create
+      // the Supabase account for the correct tier after payment clears.
+      metadata: { tier },
       success_url: `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/cancel.html`,
     });

@@ -118,9 +118,10 @@
         options: {
           // Store the name in Supabase user metadata (matches the legacy signup).
           data: { name: name, full_name: name },
-          // Land email-confirmation clicks on the app, on whatever origin this
-          // page is served from.
-          emailRedirectTo: window.location.origin + "/jd-brain.html",
+          // Land email-confirmation clicks on the Sprint welcome letter,
+          // not straight on the dashboard, on whatever origin this page is
+          // served from.
+          emailRedirectTo: window.location.origin + "/welcome-sprint.html",
         },
       });
 
@@ -134,8 +135,11 @@
         return;
       }
 
+      // Email confirmation is disabled for this Supabase project, so a
+      // session comes back immediately. Still route through the welcome
+      // letter so every Sprint signup sees it once.
       await window.Auth.ensureExpiry(result.data.session);
-      window.location.href = "jd-brain.html";
+      window.location.href = "welcome-sprint.html";
     }
 
     async function handleForgotPassword() {

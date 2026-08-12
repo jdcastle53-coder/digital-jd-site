@@ -41,7 +41,22 @@
     if (!session || !session.user) return null;
     const meta = session.user.user_metadata || {};
     if (meta.expires_at) return meta.expires_at;
-    // First login: start the 7-day clock and grant Pro-level trial access.
+
+    // Paid Membership accounts (created by api/stripe-webhook.js) carry
+    // membership: true and an explicit plan, but no expires_at yet since
+    // that only gets set on first login. Give these a long-lived, non-trial
+    // expiry and preserve the paid plan — never downgrade to the trial tier.
+    if (meta.membership) {
+      const NON_EXPIRING_YEARS_IN_HOURS = 100 * 365 * 24;
+      const expiresAt = getExpiryIso(NON_EXPIRING_YEARS_IN_HOURS);
+      await client.auth.updateUser({
+        data: { expires_at: expiresAt, plan: meta.plan || TRIAL_TIER, trial: false }
+      });
+      return expiresAt;
+    }
+
+    // First login on a non-paid (Sprint/trial) account: start the 7-day
+    // clock and grant Pro-level trial access.
     const expiresAt = getExpiryIso(TRIAL_HOURS);
     await client.auth.updateUser({
       data: { expires_at: expiresAt, plan: TRIAL_TIER, trial: true }
