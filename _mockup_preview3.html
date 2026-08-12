@@ -174,7 +174,7 @@
     line-height: 1.5;
   }
   textarea.userInput::placeholder { color: #5c6b85; }
-  .composer-actions { display: flex; flex-direction: column; gap: 9px; flex: 0 0 112px; }
+  .composer-actions { display: flex; flex-direction: column; gap: 8px; flex: 0 0 118px; }
   .gold-outline-btn {
     display: flex; align-items: center; justify-content: center; gap: 6px;
     border: 2px solid var(--gold-bright);
@@ -182,11 +182,46 @@
     color: var(--gold-bright);
     border-radius: 8px;
     padding: 0 8px;
-    height: 44px;
+    height: 40px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: Georgia, serif;
+    cursor: pointer;
+  }
+  .turquoise-outline-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    border: 2px solid var(--turquoise);
+    background: rgba(34,211,238,0.1);
+    color: var(--turquoise);
+    border-radius: 8px;
+    padding: 0 8px;
+    height: 40px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: Georgia, serif;
+    cursor: pointer;
+  }
+
+  .plan-actions { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+  .plan-actions button {
+    flex: 1 1 160px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    border-radius: 9px;
+    padding: 11px 14px;
     font-size: 12.5px;
     font-weight: 700;
     font-family: Georgia, serif;
     cursor: pointer;
+  }
+  .continue-btn {
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color: #1a1200;
+    border: none;
+  }
+  .print-btn {
+    background: transparent;
+    border: 2px solid var(--turquoise);
+    color: var(--turquoise);
   }
 
   .response-divider {
@@ -245,7 +280,9 @@
   .device-mobile .mode-fork { flex-direction: column; }
   .device-mobile .composer-row { flex-direction: column; }
   .device-mobile .composer-actions { flex-direction: column; width: 100%; margin-top: 10px; }
-  .device-mobile .gold-outline-btn { width: 100%; }
+  .device-mobile .gold-outline-btn, .device-mobile .turquoise-outline-btn { width: 100%; }
+  .device-mobile .plan-actions { flex-direction: column; }
+  .device-mobile .plan-actions button { flex: 1 1 auto; }
   .device-mobile .logo-mark { width: 70px; height: 70px; flex: 0 0 70px; }
 </style>
 </head>
@@ -297,7 +334,8 @@
               <textarea class="userInput" placeholder="Describe the leadership, communication, decision, or execution situation you want to work through."></textarea>
               <div class="composer-actions">
                 <button type="button" class="gold-outline-btn">🎤 Dictate</button>
-                <button type="button" class="gold-outline-btn">✨ Get Insight</button>
+                <button type="button" class="turquoise-outline-btn">🔎 Go Deeper</button>
+                <button type="button" class="gold-outline-btn">✨ Quick Answer</button>
               </div>
             </div>
           </div>
@@ -329,6 +367,11 @@
               <div class="resp-title">Execution Plan</div>
             </div>
             <div class="resp-chevron">⌄</div>
+          </div>
+
+          <div class="plan-actions">
+            <button type="button" class="continue-btn">📄 Continue to Content Workshop</button>
+            <button type="button" class="print-btn">🖨 Print This Case</button>
           </div>
         </div>
       </section>
@@ -379,7 +422,8 @@
               <textarea class="userInput" placeholder="Describe the leadership, communication, decision, or execution situation you want to work through."></textarea>
               <div class="composer-actions">
                 <button type="button" class="gold-outline-btn">🎤 Dictate</button>
-                <button type="button" class="gold-outline-btn">✨ Get Insight</button>
+                <button type="button" class="turquoise-outline-btn">🔎 Go Deeper</button>
+                <button type="button" class="gold-outline-btn">✨ Quick Answer</button>
               </div>
             </div>
           </div>
@@ -411,6 +455,11 @@
               <div class="resp-title">Execution Plan</div>
             </div>
             <div class="resp-chevron">⌄</div>
+          </div>
+
+          <div class="plan-actions">
+            <button type="button" class="continue-btn">📄 Continue to Content Workshop</button>
+            <button type="button" class="print-btn">🖨 Print This Case</button>
           </div>
         </div>
       </section>
