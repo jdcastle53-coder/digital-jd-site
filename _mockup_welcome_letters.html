@@ -6,8 +6,8 @@
 <title>MOCKUP ONLY — Welcome Letters (not wired to real routing)</title>
 <style>
   :root {
-    --navy: #0d1b3e;
-    --navy-2: #16234f;
+    --navy: #050c22;
+    --navy-2: #0a1638;
     --cream: #f7f1e3;
     --cream-2: #f2ead6;
     --gold: #b8860a;
@@ -173,44 +173,53 @@
   .results-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
   .results-head .icon-circle { width: 34px; height: 34px; flex: 0 0 34px; }
   .results-title {
-    color: #d4af0e;
+    color: #ffc700;
     font-family: Georgia, serif;
     font-weight: 700;
     font-size: 22px;
     letter-spacing: 0.05em;
     margin: 0;
+    text-shadow: 0 0 10px rgba(255,199,0,0.6);
   }
   .results-subtitle {
-    color: #d4af0e;
+    color: #ffc700;
     font-family: Georgia, serif;
     font-weight: 700;
+    font-style: italic;
     font-size: 14px;
     margin: 5px 0 0;
+    text-shadow: 0 0 6px rgba(255,199,0,0.4);
   }
   .example-row { display: flex; align-items: flex-start; gap: 10px; margin: 10px 0; margin-left: 10px; }
   .example-row:first-of-type { margin-top: 4px; }
-  .example-row.rather-row { margin-left: 28px; margin-top: 6px; }
+  .example-row.rather-row { margin-top: 6px; }
   .pill {
-    flex: 0 0 auto;
+    flex: 0 0 46px;
+    width: 46px;
+    text-align: center;
     font-family: Arial, sans-serif;
     font-weight: 700;
     font-size: 10px;
     letter-spacing: 0.05em;
-    padding: 3px 10px;
-    border-radius: 3px;
+    padding: 4px 0;
+    border-radius: 4px;
     margin-top: 1px;
+    background: linear-gradient(180deg, #ffe066, #ffc700 55%, #d4a300);
+    color: #1a1200;
+    box-shadow: 0 0 10px 1px rgba(255,199,0,0.85), 0 2px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.6);
+    border: 1px solid #fff4c2;
   }
-  .pill-not { background: var(--gold-bright); color: var(--navy); }
-  .pill-rather { background: var(--gold-bright); color: var(--navy); }
   .example-text { color: #eee; font-family: Georgia, serif; font-size: 12.5px; font-style: italic; line-height: 1.4; }
   .results-footer {
     text-align: center;
-    color: var(--gold-soft);
+    color: #ffc700;
     font-family: Georgia, serif;
     font-style: italic;
     font-weight: 700;
-    font-size: 12px;
-    margin-top: 12px;
+    font-size: 15px;
+    line-height: 1.4;
+    margin-top: 14px;
+    text-shadow: 0 0 8px rgba(255,199,0,0.5);
   }
 
   .ask-row { display: flex; align-items: center; justify-content: center; gap: 8px; margin: 6px 0 14px; }
@@ -225,15 +234,18 @@
   .cta-btn {
     display: flex; align-items: center; justify-content: center; gap: 10px;
     width: 100%;
+    text-align: center;
+    flex-wrap: wrap;
     background: linear-gradient(180deg, #e8b923, #a9740a);
     border: none;
     border-radius: 8px;
-    padding: 16px;
+    padding: 16px 8px;
     color: var(--navy);
     font-family: Georgia, serif;
     font-weight: 700;
-    font-size: 17px;
-    letter-spacing: 0.06em;
+    font-size: 24px;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
     cursor: pointer;
     box-shadow: 0 6px 14px rgba(0,0,0,0.25);
   }
@@ -323,7 +335,7 @@
               </div>
 
               <button class="cta-btn" type="button">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="#0d1b3e"><path d="M14.5 2c-2 1-4 3-5.5 6-2 .3-3.6 1.4-4.8 3.2-.4.6-.1 1.4.6 1.5l2.6.4.4 2.6c.1.7.9 1 1.5.6 1.8-1.2 2.9-2.8 3.2-4.8 3-1.5 5-3.5 6-5.5.6-1.2-.5-2.6-2-2-.4.2-.7.5-1 1z"/><circle cx="15" cy="9" r="1.3" fill="#0d1b3e"/></svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="#050c22" style="flex:0 0 auto;"><path d="M14.5 2c-2 1-4 3-5.5 6-2 .3-3.6 1.4-4.8 3.2-.4.6-.1 1.4.6 1.5l2.6.4.4 2.6c.1.7.9 1 1.5.6 1.8-1.2 2.9-2.8 3.2-4.8 3-1.5 5-3.5 6-5.5.6-1.2-.5-2.6-2-2-.4.2-.7.5-1 1z"/><circle cx="15" cy="9" r="1.3" fill="#050c22"/></svg>
                 START YOUR SPRINT NOW
               </button>
             </div>
@@ -403,8 +415,8 @@
                 <span class="ask-label">ASK YOUR FIRST LEADERSHIP QUESTION&hellip;</span>
               </div>
 
-              <button class="cta-btn" type="button">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="#0d1b3e"><path d="M14.5 2c-2 1-4 3-5.5 6-2 .3-3.6 1.4-4.8 3.2-.4.6-.1 1.4.6 1.5l2.6.4.4 2.6c.1.7.9 1 1.5.6 1.8-1.2 2.9-2.8 3.2-4.8 3-1.5 5-3.5 6-5.5.6-1.2-.5-2.6-2-2-.4.2-.7.5-1 1z"/><circle cx="15" cy="9" r="1.3" fill="#0d1b3e"/></svg>
+              <button class="cta-btn" type="button" style="font-size: 20px;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="#050c22" style="flex:0 0 auto;"><path d="M14.5 2c-2 1-4 3-5.5 6-2 .3-3.6 1.4-4.8 3.2-.4.6-.1 1.4.6 1.5l2.6.4.4 2.6c.1.7.9 1 1.5.6 1.8-1.2 2.9-2.8 3.2-4.8 3-1.5 5-3.5 6-5.5.6-1.2-.5-2.6-2-2-.4.2-.7.5-1 1z"/><circle cx="15" cy="9" r="1.3" fill="#050c22"/></svg>
                 START YOUR MEMBERSHIP NOW
               </button>
             </div>
