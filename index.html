@@ -1865,7 +1865,7 @@ iframe {
         </div>
 
         <div style="background:linear-gradient(135deg,rgba(0,180,216,0.1),rgba(0,180,216,0.03));border:1px solid rgba(0,180,216,0.35);padding:2rem;position:relative;">
-          <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:#00b4d8;color:#040608;font-family:'Barlow Condensed',sans-serif;font-size:0.6rem;letter-spacing:0.2em;padding:0.2rem 1rem;font-weight:700;white-space:nowrap;">DIGITAL JD</div>
+          <button type="button" onclick="openComparisonMatrix()" style="position:absolute;top:-1.35rem;left:50%;transform:translateX(-50%);background:linear-gradient(180deg,#33ccff,#0088bb);color:#040608;font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;letter-spacing:0.2em;padding:0.6rem 1.7rem;font-weight:700;white-space:nowrap;border:none;border-radius:6px;cursor:pointer;box-shadow:0 6px 0 #005f80,0 10px 18px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.5);transition:transform 0.12s ease, box-shadow 0.12s ease;" onmousedown="this.style.transform='translateX(-50%) translateY(4px)';this.style.boxShadow='0 2px 0 #005f80, 0 4px 8px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.5)';" onmouseup="this.style.transform='translateX(-50%) translateY(0)';this.style.boxShadow='0 6px 0 #005f80, 0 10px 18px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.5)';" onmouseleave="this.style.transform='translateX(-50%) translateY(0)';this.style.boxShadow='0 6px 0 #005f80, 0 10px 18px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.5)';">COMPARE WITH OTHER AIs</button>
           <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.9rem;letter-spacing:0.25em;text-transform:uppercase;color:#00b4d8;margin-bottom:1rem;margin-top:0.5rem;font-weight:700;">Digital JD</div>
           <div style="font-family:'Cormorant Garamond',serif;font-size:4.5rem;font-weight:600;color:#f0f4f8;margin-bottom:1rem;">Built on one framework.<br>Accountable to your outcome.</div>
           <p style="font-size:0.85rem;color:rgba(240,244,248,0.85);line-height:1.7;">Sourced exclusively from peer-reviewed research and doctoral-level scholarship. Every source quantitatively verified. Same three-part output every time. Asks before it answers. Built for one audience — senior executives who need clarity, not content.</p>
@@ -2191,6 +2191,30 @@ function forgotPassword() {
   <button id="submitLoginBtn" onclick="submitLogin()">Login</button>
   </div>
 </div>
+
+  <div class="modal-overlay" id="comparisonMatrixModal">
+    <div class="modal" style="max-width:1000px;padding:1.5rem;background:#040608;">
+      <button class="modal-close" onclick="closeComparisonMatrix()" style="z-index:2;">&times;</button>
+      <img src="/images/comparison-matrix.png" alt="Comparison matrix: Other AIs vs Digital JD across core purpose, response style, source of intelligence, and more" style="display:block;width:100%;height:auto;border-radius:4px;" />
+    </div>
+  </div>
+
+  <script>
+    function openComparisonMatrix() {
+      document.getElementById('comparisonMatrixModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeComparisonMatrix() {
+      document.getElementById('comparisonMatrixModal').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.getElementById('comparisonMatrixModal').addEventListener('click', function(e) {
+      if (e.target === this) closeComparisonMatrix();
+    });
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeComparisonMatrix();
+    });
+  </script>
  
 <script>
 async function startCheckout(tier, evt) {
