@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Intelligent Leadership System — Digital JD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #040608;
+      --navy: #070d1a;
+      --deep: #0a1628;
+      --cyan: #00b4d8;
+      --cyan-bright: #00e5ff;
+      --white: #f0f4f8;
+      --white-dim: rgba(240,244,248,0.85);
+      --gold: #c9a84c;
+      --gold-dim: rgba(201,168,76,0.2);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .top-bar {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 1.75rem 1.5rem 0.5rem;
+    }
+    .top-bar-inner {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.15em;
+      font-size: 0.9rem;
+      color: var(--white-dim);
+      text-transform: uppercase;
+    }
+    .brand strong { color: var(--gold); font-weight: 700; }
+
+    main {
+      width: 100%;
+      max-width: 1200px;
+      padding: 1.5rem 1.5rem 3rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .page-heading {
+      text-align: center;
+      max-width: 720px;
+    }
+    .page-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.25em;
+      font-size: 0.8rem;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .page-heading h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 2.4rem;
+      line-height: 1.15;
+      color: var(--white);
+    }
+    .page-heading h1 em {
+      color: var(--gold);
+      font-style: italic;
+    }
+    .page-heading p {
+      margin-top: 1rem;
+      color: var(--white-dim);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .map-frame {
+      width: 100%;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid rgba(201,168,76,0.35);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.55);
+      background: var(--navy);
+    }
+    .map-frame img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .return-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+    .return-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      background: linear-gradient(180deg,#f6d36b,#c9941a);
+      color: #1a1200;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-weight: 700;
+      padding: 0.95rem 2.2rem;
+      border-radius: 999px;
+      box-shadow: 0 6px 0 #8a6410, 0 10px 20px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.6);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .return-btn:active,
+    .return-btn.pressed {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #8a6410, 0 4px 10px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .return-btn svg { flex: 0 0 auto; }
+    .return-caption {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.9rem;
+      color: rgba(240,244,248,0.5);
+    }
+
+    @media (max-width: 640px) {
+      .page-heading h1 { font-size: 1.9rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <div class="brand"><strong>Digital JD</strong> — Leadership Intelligence System</div>
+    </div>
+  </div>
+
+  <main>
+    <div class="page-heading">
+      <div class="page-eyebrow">The System</div>
+      <h1>Not just a Tool.<br><em>A Thinking System.</em></h1>
+      <p>A proven progression that turns insight into impact — the same structured cycle behind every response Digital JD delivers.</p>
+    </div>
+
+    <div class="map-frame">
+      <img src="/images/system-map.png" alt="The Digital JD Intelligent Leadership System: a five-step cycle moving from Executive Clarity, to Leadership Judgment, to Decisiveness, to Engagement, to Leadership Effectiveness — feeding back into higher executive clarity and continuous improvement." />
+    </div>
+
+    <div class="return-wrap">
+      <a href="/index.html#what" class="return-btn" id="returnBtn">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1a1200" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 14 4 9l5-5" />
+          <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11" />
+        </svg>
+        Back to Digital JD
+      </a>
+      <div class="return-caption">Executive Clarity : On Demand</div>
+    </div>
+  </main>
+
+  <script>
+    var btn = document.getElementById('returnBtn');
+    btn.addEventListener('mousedown', function () { btn.classList.add('pressed'); });
+    btn.addEventListener('mouseup', function () { btn.classList.remove('pressed'); });
+    btn.addEventListener('mouseleave', function () { btn.classList.remove('pressed'); });
+  </script>
+</body>
+</html>
