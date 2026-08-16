@@ -1,12 +1,11 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>DigitalJD Brain - Interactive Leadership Assistant</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Experience DigitalJD's AI-powered leadership coaching in real-time. Ask your toughest questions and get McKinsey-grade insights." />
+  <meta charset="UTF-8" />
+  <title>Digital JD Brain - Intelligent Leadership System</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Talk through a leadership situation with Executive Advisor, or build a document, class, or plan with Executive Content Workshop." />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
-  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
   <script>
@@ -28,216 +27,702 @@ window.supabase = (window.Auth && window.Auth.client)
 // Local alias so existing code that refers to bare `supabase` keeps working.
 var supabase = window.supabase;
 </script>
-  
+
   <style>
-    :root { --accent-blue: rgba(11,59,102,0.95); }
-    .glass { backdrop-filter: blur(10px); background: rgba(255,255,255,0.75); }
-    .shadow-soft { box-shadow: 0 10px 30px rgba(0,0,0,.08); }
-    .gradient { background: linear-gradient(135deg,#0ea5e9,#6366f1,#22c55e); }
-    .chat-container{
-height:100%;
-display:flex;
-flex-direction:column;
-padding:20px;
-}
-
-.messages{
-flex:1;
-overflow-y:auto;
-background:white;
-border-radius:10px;
-padding:15px;
-margin-bottom:10px;
-}
-
-.message{
-margin-bottom:10px;
-padding:10px;
-border-radius:8px;
-}
-
-.message.user{
-background:#e2f2ff;
-}
-
-.message.ai{
-background:#f1f5f9;
-}
-
-.input-area{
-display:flex;
-gap:10px;
-}
-
-.input-area input{
-flex:1;
-padding:10px;
-border:1px solid #ddd;
-border-radius:6px;
-}
-
-.input-area button{
-background:#0b3b66;
-color:white;
-padding:10px 18px;
-border-radius:6px;
-cursor:pointer;
-}
-    /* Full-screen iframe styles */
-    .brain-container {
-      position: fixed;
-      top: 80px; /* Account for header */
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 10;
+    :root {
+      --bg: #0f172a;
+      --panel: #111c34;
+      --panel-2: #16213d;
+      --border: rgba(255,255,255,0.08);
+      --text: #e2e8f0;
+      --muted: #9fb0cc;
+      --gold: #d4af37;
+      --blue-1: #2563eb;
+      --blue-2: #1d4ed8;
+      --input: #0b1223;
+      --shadow: 0 18px 48px rgba(0,0,0,0.32);
     }
-    
-    .brain-iframe {
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(180deg, #081121 0%, #0f172a 100%);
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      min-height: 100%;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 16px 12px 32px;
+    }
+
+    .shell {
       width: 100%;
-      height: 100%;
-      border: none;
-      background: #f8fafc;
+      max-width: 1400px;
     }
-    
-    /* Loading state */
-    .loading-overlay {
+
+    .app {
+      position: relative;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      animation: appReveal 0.6s ease both;
+    }
+
+    .app::before {
+      content: "";
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
-      bottom: 0;
-      background: #f8fafc;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #d4af37, #60a5fa, #d4af37, transparent);
+      background-size: 200% 100%;
+      animation: signalLine 5s linear infinite;
+      z-index: 2;
+    }
+
+    .app-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      flex-wrap: wrap;
+      gap: 12px;
+      animation: fadeSlideUp 0.5s ease 0.05s both;
+    }
+
+    .app-top-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .brand-logo-wrap {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      flex: 0 0 64px;
       display: flex;
       align-items: center;
       justify-content: center;
-      z-index: 20;
+    }
+
+    .brand-logo-wrap::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(212,175,55,0.5), transparent 70%);
+      animation: glowPulse 2.6s ease-in-out infinite;
+      z-index: 0;
+    }
+
+    .brand-logo {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      display: block;
+      z-index: 1;
+    }
+
+    .brand-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      line-height: 1.15;
+    }
+
+    .brand-line {
+      color: var(--gold);
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+
+    .app-top-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(37, 99, 235, 0.16);
+      border: 1px solid rgba(37, 99, 235, 0.32);
+      border-radius: 999px;
+      color: #dbeafe;
+      font-size: 13px;
+      white-space: nowrap;
+      font-family: Georgia, serif;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: #60a5fa;
+    }
+
+    .top-btn {
+      background: transparent;
+      border: 1px solid rgba(212,175,55,0.45);
+      color: #d4af37;
+      border-radius: 999px;
+      padding: 8px 16px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: Georgia, serif;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .top-btn:hover {
+      background: rgba(212,175,55,0.12);
+    }
+
+    .home-link {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px 4px;
+      white-space: nowrap;
+    }
+    .home-link:hover { color: var(--text); }
+
+    .chat-wrap {
+      padding: 16px 20px 8px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.015));
+      animation: fadeSlideUp 0.5s ease 0.12s both;
+    }
+
+    .chat-output {
+      height: auto;
+      min-height: 40px;
+      max-height: 46vh;
+      overflow-y: auto;
+      padding-right: 6px;
+      scroll-behavior: smooth;
+    }
+
+    .msg {
+      margin-bottom: 12px;
+      display: flex;
+      width: 100%;
+      animation: fadeSlideUp 0.35s ease both;
+    }
+
+    .msg.user { justify-content: flex-end; }
+    .msg.assistant { justify-content: flex-start; }
+
+    .bubble {
+      max-width: 900px;
+      width: fit-content;
+      border-radius: 18px;
+      padding: 14px 18px;
+      line-height: 1.6;
+      font-size: 16px;
+      box-shadow: 0 8px 22px rgba(0,0,0,0.22);
+      white-space: pre-wrap;
+    }
+
+    .user .bubble {
+      background: linear-gradient(180deg, #2d4fe0, #2643bc);
+      color: #ffffff;
+      border-top-right-radius: 6px;
+    }
+
+    .assistant .bubble {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-top-left-radius: 6px;
+    }
+
+    .composer {
+      padding: 8px 20px 24px;
+      animation: fadeSlideUp 0.5s ease 0.18s both;
+    }
+
+    .mode-fork {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .mode-btn {
+      position: relative;
+      flex: 1 1 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 4px;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid rgba(212,175,55,0.35);
+      background: #0b1223;
+      color: #c9d4e0;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s, background 0.15s, transform 0.15s, box-shadow 0.15s;
+      font-family: Georgia, serif;
+    }
+    .mode-btn:hover {
+      border-color: rgba(212,175,55,0.7);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.28);
+    }
+    .mode-btn-active {
+      border-color: #d4af37;
+      background: #14233f;
+      box-shadow: 0 0 0 1px #d4af37 inset;
+      animation: cardGlow 2.4s ease-in-out infinite;
+    }
+    .mode-btn-title {
+      font-weight: 800;
+      font-size: 15px;
+      color: #f6d36b;
+    }
+    .mode-btn-sub {
+      font-size: 12px;
+      color: #9fb0c3;
+    }
+
+    .input-prompt {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .input-area-wrap {
+      position: relative;
+    }
+
+    textarea#userInput {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--input);
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    textarea#userInput:focus {
+      outline: none;
+      border-color: rgba(212,175,55,0.6);
+    }
+    textarea#userInput::placeholder { color: #6b7a94; }
+
+    .helper {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .mic-btn {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      border: 1px solid rgba(212,175,55,0.8);
+      background: #0b1223;
+      color: #f6d36b;
+      border-radius: 999px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      font-size: 13px;
+      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+    }
+    .mic-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(212,175,55,0.25);
+    }
+    .mic-btn.is-listening {
+      background: #7f1d1d;
+      color: #ffffff;
+      border-color: #ef4444;
+      animation: micPulse 1.4s ease-in-out infinite;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .cta-full-btn {
+      flex: 1 1 260px;
+      background: linear-gradient(180deg, #f6d36b, #d4af37);
+      color: #14233f;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(212,175,55,0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .cta-full-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(212,175,55,0.5);
+    }
+
+    .send-btn {
+      flex: 1 1 200px;
+      background: linear-gradient(180deg, var(--blue-1), var(--blue-2));
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(37,99,235,0.35);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+    }
+    .send-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 14px 30px rgba(37,99,235,0.5);
+    }
+    .send-btn:active:not(:disabled) { transform: translateY(0); }
+    .send-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes appReveal {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes signalLine {
+      0% { background-position: 0% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    @keyframes glowPulse {
+      0%, 100% { opacity: 0.55; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.12); }
+    }
+
+    @keyframes cardGlow {
+      0%, 100% { box-shadow: 0 0 0 1px #d4af37 inset, 0 0 0 rgba(212,175,55,0); }
+      50% { box-shadow: 0 0 0 1px #d4af37 inset, 0 0 18px rgba(212,175,55,0.45); }
+    }
+
+    @keyframes micPulse {
+      0%, 100% { box-shadow: 0 0 0 rgba(239,68,68,0.5); }
+      50% { box-shadow: 0 0 14px rgba(239,68,68,0.7); }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .app, .app::before, .app-top, .chat-wrap, .composer, .msg,
+      .brand-logo-wrap::after, .mode-btn-active, .send-btn,
+      .mic-btn.is-listening, .cta-full-btn {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .app-top { flex-direction: column; align-items: flex-start; }
+      .app-top-right { width: 100%; justify-content: flex-start; }
+      .mode-btn { flex: 1 1 100%; }
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 overflow-hidden">
-  <!-- Header -->
-  <header class="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200">
-    <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-      <a href="/" class="flex items-center gap-2">
-        <img src="../images/ai-jd-logo.png" alt="AI JD Logo" class="w-16 h-16 rounded-xl" />
-        <span class="font-semibold tracking-tight">Digital JD</span>
-      </a>
-      <nav class="hidden md:flex items-center gap-6 text-sm">
-        <a href="/" class="hover:text-slate-600">Home</a>
-        <a href="/digitaljd-vs-ai.html" class="hover:text-slate-600">JD vs AI</a>
-        <span class="text-[var(--accent-blue)] font-medium">JD Brain</span>
-      </nav>
-      <div class="flex items-center gap-3">
-        <button onclick="toggleFullscreen()" class="hidden md:inline-flex items-center rounded-lg bg-slate-100 text-slate-700 px-3 py-2 text-sm hover:bg-slate-200">
-          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
-          </svg>
-          Fullscreen
-        </button>
-        <button id="manageSubscriptionButton" class="hidden md:inline-flex items-center rounded-lg border border-slate-200 text-slate-700 px-3 py-2 text-sm hover:bg-slate-100">
-          Manage Subscription
-        </button>
-        <button id="signOutButton" class="hidden md:inline-flex items-center rounded-lg border border-slate-200 text-slate-700 px-3 py-2 text-sm hover:bg-slate-100">
-          Sign out
-        </button>
-        <a href="/#pricing" class="inline-flex items-center rounded-xl bg-slate-900 text-white px-4 py-2 text-sm font-medium shadow-soft hover:bg-black">
-          <span>View Plans</span>
-        </a>
-      </div>
-    </div>
-  </header>
-
-  <!-- JD Brain Interface Container -->
-  <div class="brain-container">
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay" style="display:none;"> 
-      <div class="text-center">
-        <div class="w-16 h-16 gradient rounded-full animate-pulse mb-4 mx-auto"></div>
-        <h3 class="text-xl font-semibold text-slate-800 mb-2">Initializing DigitalJD Brain</h3>
-        <p class="text-slate-600">Preparing your personalized leadership assistant...</p>
-      </div>
-    </div>
-
-    <!-- JD Brain Iframe -->
-  <div class="chat-container">
-
-<div id="messages" class="messages"></div>
-
-<div class="input-area">
-<input id="messageInput" placeholder="Ask Digital JD anything about leadership..." />
-<button onclick="sendMessage()">Send</button>
-</div>
-
-</div>
-  </div>
-
-  <!-- Fallback for when iframe fails to load -->
-  <div id="fallbackContent" style="display: none;" class="brain-container bg-white">
-    <div class="h-full flex items-center justify-center">
-      <div class="text-center max-w-md mx-auto p-8">
-        <div class="w-20 h-20 gradient rounded-2xl mb-6 mx-auto"></div>
-        <h2 class="text-3xl font-bold text-slate-800 mb-4">DigitalJD Brain</h2>
-        <p class="text-slate-600 mb-6">Experience McKinsey-grade leadership coaching powered by AI. Ask your toughest questions and get actionable insights.</p>
-        
-        <!-- Demo Interface -->
-        <div class="bg-slate-50 rounded-xl p-6 text-left">
-          <div class="mb-4">
-            <label class="block text-sm font-medium text-slate-700 mb-2">Ask DigitalJD a question:</label>
-            <textarea 
-              class="w-full p-3 border border-slate-300 rounded-lg resize-none focus:ring-2 focus:ring-blue-500 focus:border-transparent" 
-              rows="3" 
-              placeholder="e.g., How do I handle a conflict between two senior executives who both report to me?"
-              id="questionInput"
-            ></textarea>
+<body>
+  <div class="shell">
+    <section class="app">
+      <div class="app-top">
+        <div class="app-top-left">
+          <div class="brand-logo-wrap">
+            <img src="digital-jd-logo.png" alt="Digital JD Bluehead Logo" class="brand-logo" />
           </div>
-          <button 
-            onclick="askDigitalJD()"
-            class="w-full bg-[var(--accent-blue)] text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity"
-          >
-            Get DigitalJD's Insight
+          <div class="brand-stack" aria-label="Intelligent Leadership System">
+            <div class="brand-line">Intelligent</div>
+            <div class="brand-line">Leadership</div>
+            <div class="brand-line">System</div>
+          </div>
+        </div>
+
+        <div class="app-top-right">
+          <a href="/" class="home-link">Home</a>
+          <span class="status-pill">
+            <span class="dot"></span>
+            <span id="systemStatus">Loading...</span>
+          </span>
+          <button id="manageSubscriptionButton" class="top-btn">Manage Subscription</button>
+          <button id="signOutButton" class="top-btn">Sign out</button>
+        </div>
+      </div>
+
+      <div class="chat-wrap">
+        <div id="chatOutput" class="chat-output"></div>
+      </div>
+
+      <div class="composer">
+        <div class="mode-fork" id="modeFork" role="tablist" aria-label="Choose how Digital JD helps you">
+          <button type="button" id="modeAdvisorBtn" class="mode-btn mode-btn-active" role="tab" aria-selected="true" onclick="setMode('advisor')">
+            <span class="mode-btn-title">Executive Advisor</span>
+            <span class="mode-btn-sub">Talk through a leadership situation</span>
           </button>
-          
-          <div id="responseArea" class="mt-4 p-4 bg-white border border-slate-200 rounded-lg">
-            <div class="flex items-start gap-3">
-              <div class="w-8 h-8 gradient rounded-full flex-shrink-0"></div>
-              <div class="flex-1">
-                <p class="font-semibold text-slate-800 mb-2">DigitalJD:</p>
-                <div id="responseText" class="text-slate-700 leading-relaxed"></div>
-              </div>
-            </div>
-          </div>
+          <button type="button" id="modeWorkshopBtn" class="mode-btn" role="tab" aria-selected="false" onclick="setMode('workshop')">
+            <span class="mode-btn-title">Executive Content Workshop</span>
+            <span class="mode-btn-sub">Build a document, class, or plan</span>
+          </button>
         </div>
-        
-        <div class="mt-6 text-sm text-slate-500">
-          <p>This is a demo interface. The full DigitalJD Brain experience includes:</p>
-          <ul class="mt-2 space-y-1 text-left">
-            <li>• Real-time leadership coaching</li>
-            <li>• Scenario-based training</li>
-            <li>• Personalized development plans</li>
-            <li>• Integration with your team metrics</li>
-          </ul>
+
+        <div class="input-prompt" id="inputPrompt">
+          Describe your situation — the more detail you provide, the sharper the insight.
+        </div>
+
+        <div class="input-area-wrap">
+          <textarea id="userInput" placeholder="Describe the leadership, communication, decision, or execution situation you want to work through."></textarea>
+          <button id="micBtn" type="button" class="mic-btn">🎙️ Dictate</button>
+        </div>
+
+        <div class="helper" id="helperText">
+          Digital JD will think through this with you and respond directly below.
+        </div>
+
+        <div class="action-row">
+          <button id="sendBtn" class="send-btn">Get Insight</button>
+          <button type="button" class="cta-full-btn" onclick="window.location.href='https://digitaljd.org/#pricing'">Get on board with Digital JD</button>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 
   <script>
-    window.addEventListener('load', () => {
-      if (window.Auth && window.Auth.enabled) {
-        window.Auth.requireActiveSession();
+    let conversationId = null;
+    let isSending = false;
+    let currentMode = 'advisor';
+
+    function setMode(mode) {
+      currentMode = mode;
+      const advisorBtn = document.getElementById('modeAdvisorBtn');
+      const workshopBtn = document.getElementById('modeWorkshopBtn');
+      const advisorActive = mode === 'advisor';
+      advisorBtn.classList.toggle('mode-btn-active', advisorActive);
+      advisorBtn.setAttribute('aria-selected', advisorActive ? 'true' : 'false');
+      workshopBtn.classList.toggle('mode-btn-active', !advisorActive);
+      workshopBtn.setAttribute('aria-selected', !advisorActive ? 'true' : 'false');
+
+      const inputPrompt = document.getElementById('inputPrompt');
+      const userInput = document.getElementById('userInput');
+      if (advisorActive) {
+        inputPrompt.textContent = 'Describe your situation — the more detail you provide, the sharper the insight.';
+        userInput.placeholder = 'Describe the leadership, communication, decision, or execution situation you want to work through.';
+      } else {
+        inputPrompt.textContent = 'Tell Digital JD what to build — a document, training class, plan, email, or script.';
+        userInput.placeholder = 'e.g., Draft a board memo on our Q3 restructuring, or build a training outline on giving hard feedback.';
+      }
+    }
+
+    function addMessage(text, role) {
+      const chatOutput = document.getElementById('chatOutput');
+      const msg = document.createElement('div');
+      msg.classList.add('msg', role);
+      const bubble = document.createElement('div');
+      bubble.classList.add('bubble');
+      bubble.style.whiteSpace = 'pre-wrap';
+      bubble.innerText = text;
+      msg.appendChild(bubble);
+      chatOutput.appendChild(msg);
+      chatOutput.scrollTop = chatOutput.scrollHeight;
+      return bubble;
+    }
+
+    async function sendMessage() {
+      if (isSending) return;
+
+      const input = document.getElementById('userInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      if (recognition && isListening) {
+        isListening = false;
+        try { recognition.stop(); } catch (e) {}
+        const micBtn = document.getElementById('micBtn');
+        if (micBtn) {
+          micBtn.textContent = '🎙️ Dictate';
+          micBtn.classList.remove('is-listening');
+        }
       }
 
-      const signOutButton = document.getElementById('signOutButton');
-      if (signOutButton && window.Auth && window.Auth.enabled) {
-        signOutButton.addEventListener('click', () => window.Auth.signOut());
+      isSending = true;
+      const sendBtn = document.getElementById('sendBtn');
+      sendBtn.disabled = true;
+      sendBtn.textContent = 'Thinking...';
+
+      addMessage(text, 'user');
+      input.value = '';
+
+      const pending = addMessage('Thinking...', 'assistant');
+
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!conversationId && user) {
+          const { data } = await supabase
+            .from('conversations')
+            .insert({ user_id: user.id })
+            .select()
+            .single();
+          conversationId = data ? data.id : null;
+        }
+
+        if (conversationId) {
+          await supabase.from('messages').insert({
+            conversation_id: conversationId,
+            role: 'user',
+            content: text
+          });
+        }
+
+        const response = await fetch('/api/jd-brain-gateway', {
+          method: 'POST',
+          headers: await jdBrainHeaders(),
+          body: JSON.stringify({ message: text, mode: currentMode })
+        });
+
+        if (response.status === 401 || response.status === 402) {
+          const info = await response.json().catch(() => ({}));
+          pending.innerText = info.error || 'Your session has ended. Please sign in again.';
+          if (info.code === 'trial_expired') window.location.href = 'expired.html';
+          else if (window.Auth) window.location.href = window.Auth.SIGNIN_URL;
+          return;
+        }
+
+        const raw = await response.text();
+        let data = null;
+        try { data = JSON.parse(raw); } catch (e) {}
+
+        if (!response.ok) {
+          const serverMsg = (data && (data.error || data.message)) || raw || '';
+          pending.innerText = 'Sorry, something went wrong (error ' + response.status + '). ' + serverMsg.slice(0, 300);
+          return;
+        }
+
+        const aiReply = (data && data.reply) ? data.reply : 'Digital JD returned an empty response. Please try again.';
+        pending.innerText = aiReply;
+
+        if (conversationId) {
+          await supabase.from('messages').insert({
+            conversation_id: conversationId,
+            role: 'assistant',
+            content: aiReply
+          });
+        }
+      } catch (err) {
+        pending.innerText = 'The request failed (' + (err && err.message ? err.message : 'network error') + '). Please try again.';
+      } finally {
+        isSending = false;
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Get Insight';
+      }
+    }
+
+    let recognition = null;
+    let isListening = false;
+
+    function setupDictation() {
+      const micBtn = document.getElementById('micBtn');
+      const userInput = document.getElementById('userInput');
+      if (!micBtn || !userInput) return;
+
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        micBtn.addEventListener('click', () => {
+          alert('Microphone dictation is not supported in this browser. Try Chrome.');
+        });
+        return;
       }
 
-      const manageSubscriptionButton = document.getElementById('manageSubscriptionButton');
-      if (manageSubscriptionButton) {
-        manageSubscriptionButton.addEventListener('click', openBillingPortal);
-      }
-    });
+      recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'en-US';
+
+      let baseText = '';
+
+      recognition.onresult = function (event) {
+        let finalText = '';
+        let interimText = '';
+        for (let i = 0; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) finalText += transcript + ' ';
+          else interimText += transcript;
+        }
+        userInput.value = (baseText + finalText + interimText).trim();
+      };
+
+      recognition.onend = function () {
+        if (isListening) {
+          try { recognition.start(); } catch (e) {}
+        }
+      };
+
+      recognition.onerror = function (event) {
+        console.log('[v0] Speech recognition error:', event.error);
+      };
+
+      micBtn.addEventListener('click', function () {
+        if (!isListening) {
+          baseText = userInput.value ? userInput.value.trim() + ' ' : '';
+          try {
+            recognition.start();
+            isListening = true;
+            micBtn.textContent = '■ Stop';
+            micBtn.classList.add('is-listening');
+          } catch (e) {}
+        } else {
+          isListening = false;
+          try { recognition.stop(); } catch (e) {}
+          micBtn.textContent = '🎙️ Dictate';
+          micBtn.classList.remove('is-listening');
+        }
+      });
+    }
+
+    async function jdBrainHeaders() {
+      const headers = { 'Content-Type': 'application/json' };
+      try {
+        if (window.Auth && window.Auth.client) {
+          const { data } = await window.Auth.client.auth.getSession();
+          const token = data && data.session && data.session.access_token;
+          if (token) headers['Authorization'] = 'Bearer ' + token;
+        }
+      } catch (e) {}
+      return headers;
+    }
 
     async function openBillingPortal() {
       const btn = document.getElementById('manageSubscriptionButton');
@@ -275,170 +760,39 @@ cursor:pointer;
       }
     }
 
-    function hideLoading() {
-      document.getElementById('loadingOverlay').style.display = 'none';
-    }
-
-    hideLoading();
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen();
-      } else {
-        document.exitFullscreen();
+    window.addEventListener('load', () => {
+      if (window.Auth && window.Auth.enabled) {
+        window.Auth.requireActiveSession();
       }
-    }
 
-    // Demo functionality for fallback
- 
+      const statusEl = document.getElementById('systemStatus');
+      if (statusEl) statusEl.textContent = 'Subscription Active';
+
+      const signOutButton = document.getElementById('signOutButton');
+      if (signOutButton && window.Auth && window.Auth.enabled) {
+        signOutButton.addEventListener('click', () => window.Auth.signOut());
+      }
+
+      const manageSubscriptionButton = document.getElementById('manageSubscriptionButton');
+      if (manageSubscriptionButton) {
+        manageSubscriptionButton.addEventListener('click', openBillingPortal);
+      }
+
+      const sendBtn = document.getElementById('sendBtn');
+      if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+
+      setupDictation();
+
+      const userInput = document.getElementById('userInput');
+      if (userInput) {
+        userInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && e.keyCode !== 229) {
+            e.preventDefault();
+            sendMessage();
+          }
+        });
+      }
+    });
   </script>
-  <script>
-
-let conversationId = null;
-let isSending = false;
-
-function addMessage(text, role) {
-
-const messagesDiv = document.getElementById("messages");
-
-const message = document.createElement("div");
-message.classList.add("message", role);
-message.style.whiteSpace = "pre-wrap";
-
-message.innerText = (role === "user" ? "You: " : "Digital JD: ") + text;
-
-messagesDiv.appendChild(message);
-messagesDiv.scrollTop = messagesDiv.scrollHeight;
-return message;
-}
-
-async function sendMessage() {
-
-// Prevent double-sends (clicking Send twice while a request is in flight).
-if (isSending) return;
-
-const input = document.getElementById("messageInput");
-const text = input.value.trim();
-
-if (!text) return;
-
-isSending = true;
-addMessage(text, "user");
-input.value = "";
-
-// Show a visible "thinking" placeholder so the UI is never a silent blank.
-const pending = addMessage("Thinking...", "ai");
-
-try {
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!conversationId) {
-    const { data } = await supabase
-      .from("conversations")
-      .insert({ user_id: user.id })
-      .select()
-      .single();
-    conversationId = data ? data.id : null;
-  }
-
-  if (conversationId) {
-    await supabase.from("messages").insert({
-      conversation_id: conversationId,
-      role: "user",
-      content: text
-    });
-  }
-
-  const response = await fetch("/api/jd-brain-gateway", {
-    method: "POST",
-    headers: await jdBrainHeaders(),
-    body: JSON.stringify({ message: text })
-  });
-
-  if (response.status === 401 || response.status === 402) {
-    const info = await response.json().catch(() => ({}));
-    pending.innerText = "Digital JD: " + (info.error || "Your session has ended. Please sign in again.");
-    if (info.code === "trial_expired") window.location.href = "expired.html";
-    else if (window.Auth) window.location.href = window.Auth.SIGNIN_URL;
-    return;
-  }
-
-  // Read the body as text first so we can surface real errors instead of
-  // throwing on a non-JSON response (e.g. a 500/504 that returns HTML).
-  const raw = await response.text();
-  let data = null;
-  try { data = JSON.parse(raw); } catch (e) {}
-
-  if (!response.ok) {
-    const serverMsg = (data && (data.error || data.message)) || raw || "";
-    pending.innerText = "Digital JD: Sorry, something went wrong (error "
-      + response.status + "). " + serverMsg.slice(0, 300);
-    return;
-  }
-
-  const aiReply = (data && data.reply) ? data.reply
-    : "Digital JD returned an empty response. Please try again.";
-  pending.innerText = "Digital JD: " + aiReply;
-
-  if (conversationId) {
-    await supabase.from("messages").insert({
-      conversation_id: conversationId,
-      role: "assistant",
-      content: aiReply
-    });
-  }
-} catch (err) {
-  pending.innerText = "Digital JD: The request failed (" + (err && err.message ? err.message : "network error")
-    + "). Please try again.";
-} finally {
-  isSending = false;
-}
-
-}
-
-</script>
-
-<script>
-
-async function askDigitalJD() {
-
-  const question = document.getElementById("questionInput").value;
-
-  const response = await fetch("/api/jd-brain-gateway", {
-    method: "POST",
-    headers: await jdBrainHeaders(),
-    body: JSON.stringify({
-      message: question
-    })
-  });
-
-  if (response.status === 401 || response.status === 402) {
-    const info = await response.json().catch(() => ({}));
-    if (info.code === "trial_expired") { window.location.href = "expired.html"; return; }
-    if (window.Auth) { window.location.href = window.Auth.SIGNIN_URL; return; }
-  }
-
-  const data = await response.json();
-
-  document.getElementById("responseArea").classList.remove("hidden");
-  document.getElementById("responseText").innerText = data.reply;
-
-}
-
-// Attaches the current Supabase access token so the gateway can verify
-// the session and enforce the trial server-side (Step 9).
-async function jdBrainHeaders() {
-  const headers = { "Content-Type": "application/json" };
-  try {
-    if (window.Auth && window.Auth.client) {
-      const { data } = await window.Auth.client.auth.getSession();
-      const token = data && data.session && data.session.access_token;
-      if (token) headers["Authorization"] = "Bearer " + token;
-    }
-  } catch (e) {}
-  return headers;
-}
-
-</script>
-
 </body>
 </html>

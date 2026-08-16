@@ -8,69 +8,257 @@
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
   <style>
     :root {
-      --ink: #0b3b66;
-      --mist: #f3f7fb;
-      --sea: #0ea5e9;
-      --sage: #22c55e;
-      --sand: #f6f2ea;
+      --black: #040608;
+      --navy: #070d1a;
+      --deep: #0a1628;
+      --cyan: #00b4d8;
+      --cyan-bright: #00e5ff;
+      --white: #f0f4f8;
+      --white-dim: rgba(240,244,248,0.85);
+      --white-faint: rgba(240,244,248,0.08);
+      --gold: #c9a84c;
+      --gold-bright: #f6d36b;
+      --gold-dim: rgba(201,168,76,0.2);
     }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
     body {
-      font-family: "Space Grotesk", "Segoe UI", system-ui, -apple-system, sans-serif;
-      background: radial-gradient(circle at 20% 20%, rgba(14,165,233,0.12), transparent 45%),
-                  radial-gradient(circle at 80% 10%, rgba(34,197,94,0.18), transparent 40%),
-                  linear-gradient(180deg, var(--mist), var(--sand));
+      background: var(--black);
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(0,180,216,0.10), transparent 45%),
+        radial-gradient(circle at 85% 90%, rgba(201,168,76,0.10), transparent 45%);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
     }
-    .title-font { font-family: "Newsreader", Georgia, serif; }
-    .glass { backdrop-filter: blur(12px); background: rgba(255,255,255,0.78); }
+    a { color: var(--cyan); }
+
+    .top-bar {
+      display: flex;
+      justify-content: center;
+      padding: 1.75rem 1.5rem 0;
+    }
+    .top-bar-inner {
+      width: 100%;
+      max-width: 1100px;
+    }
+    .logo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+    }
+    .logo-link img { width: 40px; height: 40px; border-radius: 8px; }
+    .logo-link span {
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.1em;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      text-transform: uppercase;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      min-height: calc(100vh - 90px);
+    }
+    @media (max-width: 860px) {
+      main { grid-template-columns: 1fr; padding-top: 2rem; gap: 2.5rem; }
+    }
+
+    .intro-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.25em;
+      font-size: 0.8rem;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .intro h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 2.6rem;
+      line-height: 1.15;
+      color: var(--white);
+    }
+    .intro h1 em {
+      color: var(--gold);
+      font-style: italic;
+    }
+    .intro p {
+      margin-top: 1.1rem;
+      color: var(--white-dim);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      max-width: 30rem;
+    }
+    .intro-note {
+      margin-top: 1.75rem;
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--gold-dim);
+      border-radius: 8px;
+      background: var(--white-faint);
+      max-width: 30rem;
+    }
+    .intro-note p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--white-dim);
+      line-height: 1.55;
+    }
+
+    .card {
+      background: var(--deep);
+      border: 1px solid var(--gold-dim);
+      border-radius: 14px;
+      padding: 2.25rem;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.55);
+    }
+    .card h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 1.6rem;
+      color: var(--white);
+    }
+    .card > p {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--white-dim);
+      line-height: 1.55;
+    }
+
+    form { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1.1rem; }
+    label { display: block; }
+    label span {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--white-dim);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.02em;
+    }
+    label span .hint { color: rgba(240,244,248,0.45); }
+    input {
+      width: 100%;
+      background: var(--navy);
+      border: 1px solid rgba(240,244,248,0.15);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem;
+    }
+    input::placeholder { color: rgba(240,244,248,0.35); }
+    input:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0,180,216,0.18);
+    }
+
+    #status {
+      font-size: 0.88rem;
+      color: var(--white-dim);
+      min-height: 1.2em;
+    }
+    #status.is-error { color: #ff8a8a; }
+
+    .btn-row { display: flex; flex-direction: column; gap: 0.85rem; margin-top: 0.25rem; }
+    .btn-gold, .btn-outline {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .btn-gold {
+      background: linear-gradient(180deg, var(--gold-bright), #c9941a);
+      color: #1a1200;
+      box-shadow: 0 6px 0 #8a6410, 0 10px 18px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .btn-gold:active { transform: translateY(4px); box-shadow: 0 2px 0 #8a6410, 0 4px 8px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.6); }
+    .btn-outline {
+      background: transparent;
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+    }
+    .btn-outline:hover { background: rgba(0,180,216,0.1); }
+
+    .forgot-row { text-align: center; margin-top: 0.25rem; }
+    .forgot-row button {
+      background: none;
+      border: none;
+      color: var(--white-dim);
+      font-size: 0.85rem;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .forgot-row button:hover { color: var(--gold-bright); }
   </style>
 </head>
-<body class="min-h-screen text-slate-900">
-  <main class="max-w-5xl mx-auto px-4 py-16 grid md:grid-cols-2 gap-10 items-center">
-    <section>
-      <a href="/" class="inline-flex items-center gap-3 mb-8">
-        <img src="images/ai-jd-logo.png" alt="Digital JD Logo" class="w-12 h-12 rounded-xl" />
-        <span class="font-semibold tracking-tight">Digital JD</span>
+<body>
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <a href="/" class="logo-link">
+        <img src="digital-jd-logo.png" alt="Digital JD Logo" />
+        <span>Digital JD</span>
       </a>
-      <h1 class="title-font text-4xl md:text-5xl font-semibold text-[var(--ink)]">Welcome back to Digital JD</h1>
-      <p class="mt-4 text-lg text-slate-700">Sign in to access the JD Brain experience. New accounts get a 7-day trial with full Pro-level access.</p>
-      <div class="mt-6 p-4 rounded-2xl border border-slate-200 bg-white/80">
-        <p class="text-sm text-slate-600">Need access for longer? You can extend a user&#39;s expiration in your Supabase dashboard at any time.</p>
+    </div>
+  </div>
+
+  <main>
+    <section class="intro">
+      <div class="intro-eyebrow">Intelligent Leadership System</div>
+      <h1>Welcome back to <em>Digital JD</em></h1>
+      <p>Sign in to access the JD Brain experience. New accounts get a 7-day trial with full Pro-level access.</p>
+      <div class="intro-note">
+        <p>Need access for longer? You can extend a user&#39;s expiration in your Supabase dashboard at any time.</p>
       </div>
     </section>
 
-    <section class="glass shadow-xl rounded-3xl p-8 border border-white">
-      <h2 class="text-2xl font-semibold text-[var(--ink)]">Sign in or create an account</h2>
-      <p class="mt-2 text-sm text-slate-600">Use the same email each time. Passwords are stored securely by Supabase.</p>
+    <section class="card">
+      <h2>Sign in or create an account</h2>
+      <p>Use the same email each time. Passwords are stored securely by Supabase.</p>
 
-      <form id="authForm" class="mt-6 space-y-4">
-        <label class="block">
-          <span class="text-sm text-slate-700">Full name <span class="text-slate-400">(for new accounts)</span></span>
-          <input id="name" type="text" autocomplete="name" class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--sea)]" placeholder="Jane Doe" />
+      <form id="authForm">
+        <label>
+          <span>Full name <span class="hint">(for new accounts)</span></span>
+          <input id="name" type="text" autocomplete="name" placeholder="Jane Doe" />
         </label>
-        <label class="block">
-          <span class="text-sm text-slate-700">Email</span>
-          <input id="email" type="email" required class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--sea)]" placeholder="you@company.com" />
+        <label>
+          <span>Email</span>
+          <input id="email" type="email" required placeholder="you@company.com" />
         </label>
-        <label class="block">
-          <span class="text-sm text-slate-700">Password</span>
-          <input id="password" type="password" required minlength="6" class="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 focus:outline-none focus:ring-2 focus:ring-[var(--sea)]" placeholder="••••••••" />
+        <label>
+          <span>Password</span>
+          <input id="password" type="password" required minlength="6" placeholder="••••••••" />
         </label>
 
-        <div id="status" class="text-sm text-slate-600"></div>
+        <div id="status"></div>
 
-        <div class="flex flex-col gap-3">
-          <button type="button" id="signInBtn" class="w-full rounded-xl bg-[var(--ink)] text-white py-3 font-semibold hover:opacity-90">Sign in</button>
-          <button type="button" id="signUpBtn" class="w-full rounded-xl border border-[var(--ink)] text-[var(--ink)] py-3 font-semibold hover:bg-white">Create account</button>
+        <div class="btn-row">
+          <button type="button" id="signInBtn" class="btn-gold">Sign In</button>
+          <button type="button" id="signUpBtn" class="btn-outline">Create Account</button>
         </div>
 
-        <div class="text-center">
-          <button type="button" id="forgotBtn" class="text-sm text-[var(--ink)] underline hover:opacity-80">Forgot your password?</button>
+        <div class="forgot-row">
+          <button type="button" id="forgotBtn">Forgot your password?</button>
         </div>
       </form>
     </section>
@@ -83,7 +271,7 @@
 
     function setStatus(message, isError) {
       statusEl.textContent = message;
-      statusEl.className = isError ? "text-sm text-red-600" : "text-sm text-slate-600";
+      statusEl.className = isError ? "is-error" : "";
     }
 
     async function handleSignIn() {
@@ -118,9 +306,10 @@
         options: {
           // Store the name in Supabase user metadata (matches the legacy signup).
           data: { name: name, full_name: name },
-          // Land email-confirmation clicks on the app, on whatever origin this
-          // page is served from.
-          emailRedirectTo: window.location.origin + "/jd-brain.html",
+          // Land email-confirmation clicks on the Sprint welcome letter,
+          // not straight on the dashboard, on whatever origin this page is
+          // served from.
+          emailRedirectTo: window.location.origin + "/welcome-sprint.html",
         },
       });
 
@@ -134,8 +323,11 @@
         return;
       }
 
+      // Email confirmation is disabled for this Supabase project, so a
+      // session comes back immediately. Still route through the welcome
+      // letter so every Sprint signup sees it once.
       await window.Auth.ensureExpiry(result.data.session);
-      window.location.href = "jd-brain.html";
+      window.location.href = "welcome-sprint.html";
     }
 
     async function handleForgotPassword() {

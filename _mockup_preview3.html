@@ -1,0 +1,470 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Mockup - Digital JD Brain</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<style>
+  :root {
+    --royal: #10245e;
+    --royal-2: #14306f;
+    --royal-deep: #081334;
+    --gold: #d4af37;
+    --gold-bright: #ffd766;
+    --turquoise: #22d3ee;
+    --turquoise-soft: #5eead4;
+    --text: #f2f6ff;
+    --muted: #a9bce0;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: #030512;
+    color: var(--text);
+    font-family: Georgia, "Times New Roman", serif;
+  }
+  body { padding: 24px; display: flex; gap: 28px; align-items: flex-start; justify-content: center; flex-wrap: wrap; }
+
+  .device-label {
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    color: #6b7a94;
+    margin-bottom: 8px;
+    text-align: center;
+  }
+
+  /* ============ shared component styles ============ */
+  .app {
+    background: linear-gradient(160deg, var(--royal-deep) 0%, var(--royal-deep) 55%, var(--royal) 85%, var(--royal-2) 100%);
+    border: 2px solid var(--gold);
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(34,211,238,0.15) inset;
+  }
+
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 2px solid rgba(212,175,55,0.55);
+    background: rgba(0,0,0,0.15);
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .top-left { display: flex; align-items: center; gap: 12px; }
+  .logo-mark {
+    width: 55px; height: 55px;
+    flex: 0 0 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .logo-mark img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+  }
+  .brand-stack { line-height: 1.12; }
+  .brand-line { color: var(--gold-bright); font-size: 13px; font-weight: 700; letter-spacing: 0.01em; }
+
+  .top-right { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 11px;
+    background: rgba(34,211,238,0.12);
+    border: 1.5px solid var(--turquoise);
+    border-radius: 999px;
+    color: #cffafe;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--turquoise); box-shadow: 0 0 6px var(--turquoise); }
+
+  .onboard-btn {
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color: #1a1200;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 11px;
+    font-weight: 700;
+    font-family: Georgia, serif;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .logout-btn {
+    background: transparent;
+    border: 1.5px solid rgba(255,255,255,0.3);
+    color: #dbe6ff;
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 11px;
+    font-family: Georgia, serif;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .body-pad { padding: 16px 18px 20px; }
+
+  /* mode fork - taller, rectangular, gold-bordered cards */
+  .mode-fork { display: flex; gap: 12px; margin-bottom: 16px; }
+  .mode-card {
+    flex: 1 1 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    padding: 16px 16px 18px;
+    border-radius: 10px;
+    border: 2px solid rgba(212,175,55,0.75);
+    background: rgba(212,175,55,0.05);
+    cursor: pointer;
+    min-height: 100px;
+  }
+  .mode-card.active {
+    border-color: var(--gold-bright);
+    background: rgba(212,175,55,0.12);
+    box-shadow: 0 0 0 1px var(--gold-bright) inset, 0 8px 20px rgba(212,175,55,0.18);
+  }
+  .mode-top-row { display: flex; align-items: center; gap: 10px; }
+  .mode-icon {
+    width: 32px; height: 32px; border-radius: 7px;
+    background: rgba(212,175,55,0.2);
+    border: 1.5px solid var(--gold-bright);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--gold-bright);
+    flex: 0 0 32px;
+    font-size: 16px;
+  }
+  .mode-title { font-size: 15px; font-weight: 700; color: #fef3d6; flex: 1 1 auto; }
+  .mode-check {
+    width: 20px; height: 20px; border-radius: 999px;
+    background: var(--gold-bright);
+    display: flex; align-items: center; justify-content: center;
+    color: #1a1200; font-size: 12px; font-weight: 900;
+    flex: 0 0 20px;
+  }
+  .mode-sub { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+
+  /* composer card - full gold border wrapping textarea + action buttons */
+  .composer-card {
+    border: 2px solid var(--gold-bright);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 18px;
+    background: rgba(212,175,55,0.04);
+    box-shadow: 0 0 24px rgba(212,175,55,0.08) inset;
+  }
+  .composer-title { font-size: 15px; font-weight: 700; color: #fef3d6; margin-bottom: 3px; }
+  .composer-sub { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .composer-row { display: flex; gap: 12px; align-items: stretch; }
+  textarea.userInput {
+    flex: 1 1 auto;
+    min-height: 92px;
+    resize: vertical;
+    padding: 11px 13px;
+    border-radius: 8px;
+    border: 1.5px solid rgba(34,211,238,0.35);
+    background: #04081a;
+    color: var(--text);
+    font-family: Georgia, serif;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  textarea.userInput::placeholder { color: #5c6b85; }
+  .composer-actions { display: flex; flex-direction: column; gap: 8px; flex: 0 0 118px; }
+  .gold-outline-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    border: 2px solid var(--gold-bright);
+    background: rgba(212,175,55,0.1);
+    color: var(--gold-bright);
+    border-radius: 8px;
+    padding: 0 8px;
+    height: 40px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: Georgia, serif;
+    cursor: pointer;
+  }
+  .turquoise-outline-btn {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    border: 2px solid var(--turquoise);
+    background: rgba(34,211,238,0.1);
+    color: var(--turquoise);
+    border-radius: 8px;
+    padding: 0 8px;
+    height: 40px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: Georgia, serif;
+    cursor: pointer;
+  }
+
+  .plan-actions { display: flex; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+  .plan-actions button {
+    flex: 1 1 160px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    border-radius: 9px;
+    padding: 11px 14px;
+    font-size: 12.5px;
+    font-weight: 700;
+    font-family: Georgia, serif;
+    cursor: pointer;
+  }
+  .continue-btn {
+    background: linear-gradient(180deg, var(--gold-bright), var(--gold));
+    color: #1a1200;
+    border: none;
+  }
+  .print-btn {
+    background: transparent;
+    border: 2px solid var(--turquoise);
+    color: var(--turquoise);
+  }
+
+  .response-divider {
+    display: flex; align-items: center; gap: 10px;
+    margin: 2px 0 14px;
+    color: var(--gold-bright);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+  }
+  .response-divider::before, .response-divider::after {
+    content: ""; flex: 1; height: 1.5px; background: rgba(212,175,55,0.4);
+  }
+
+  .resp-card {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    padding: 11px 13px;
+    border: 1.5px solid rgba(34,211,238,0.3);
+    border-radius: 9px;
+    margin-bottom: 9px;
+    background: rgba(255,255,255,0.02);
+  }
+  .resp-avatar {
+    width: 27px; height: 27px; border-radius: 999px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700;
+    flex: 0 0 27px;
+  }
+  .avatar-a { background: #1e40af; color: #dbeafe; }
+  .avatar-jd { background: #1e40af; color: #dbeafe; }
+  .avatar-play { background: #1e40af; color: #dbeafe; }
+  .resp-body { flex: 1 1 auto; min-width: 0; }
+  .resp-tag { font-size: 9.5px; letter-spacing: 0.08em; color: var(--muted); text-transform: uppercase; margin-bottom: 2px; }
+  .resp-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .resp-text { font-size: 11.5px; color: #b8c4da; line-height: 1.45; display: none; }
+  .resp-chevron { color: var(--muted); font-size: 13px; margin-left: 6px; }
+
+  /* ============ desktop device ============ */
+  .device-desktop { width: 640px; }
+
+  /* ============ mobile device (forced narrow layout regardless of viewport) ============ */
+  .device-mobile { width: 300px; }
+  .device-mobile .app {
+    border-radius: 26px;
+    border: 6px solid #0b1130;
+    box-shadow: 0 0 0 2px var(--gold), 0 20px 60px rgba(0,0,0,0.6);
+  }
+  .device-mobile .top { flex-direction: column; padding: 16px 14px 12px; }
+  .device-mobile .top-left { flex-direction: column; width: 100%; text-align: center; }
+  .device-mobile .brand-stack { text-align: center; }
+  .device-mobile .top-right { width: 100%; flex-direction: column; align-items: stretch; }
+  .device-mobile .status-pill { justify-content: center; }
+  .device-mobile .onboard-btn, .device-mobile .logout-btn { width: 100%; text-align: center; padding: 8px 12px; }
+  .device-mobile .mode-fork { flex-direction: column; }
+  .device-mobile .composer-row { flex-direction: column; }
+  .device-mobile .composer-actions { flex-direction: column; width: 100%; margin-top: 10px; }
+  .device-mobile .gold-outline-btn, .device-mobile .turquoise-outline-btn { width: 100%; }
+  .device-mobile .plan-actions { flex-direction: column; }
+  .device-mobile .plan-actions button { flex: 1 1 auto; }
+  .device-mobile .logo-mark { width: 70px; height: 70px; flex: 0 0 70px; }
+</style>
+</head>
+<body>
+
+  <div>
+    <div class="device-label">DESKTOP / WEB</div>
+    <div class="device-desktop">
+      <section class="app">
+        <div class="top">
+          <div class="top-left">
+            <div class="logo-mark"><img src="/public/images/digital-jd-head-icon.png" alt="Digital JD logo" /></div>
+            <div class="brand-stack">
+              <div class="brand-line">Intelligent</div>
+              <div class="brand-line">Leadership</div>
+              <div class="brand-line">System</div>
+            </div>
+          </div>
+          <div class="top-right">
+            <span class="status-pill"><span class="dot"></span>Executive Sprint — Day 3 of 7</span>
+            <button type="button" class="onboard-btn">Get Onboard</button>
+            <button type="button" class="logout-btn">Logout</button>
+          </div>
+        </div>
+
+        <div class="body-pad">
+          <div class="mode-fork">
+            <div class="mode-card active">
+              <div class="mode-top-row">
+                <div class="mode-icon">☺</div>
+                <div class="mode-title">Executive Advisor</div>
+                <div class="mode-check">✓</div>
+              </div>
+              <div class="mode-sub">Talk through a leadership situation — get analysis, insight, and a plan.</div>
+            </div>
+            <div class="mode-card">
+              <div class="mode-top-row">
+                <div class="mode-icon">▤</div>
+                <div class="mode-title">Executive Content Workshop</div>
+              </div>
+              <div class="mode-sub">Build a document, training program, or CEO letter — JD writes it with you.</div>
+            </div>
+          </div>
+
+          <div class="composer-card">
+            <div class="composer-title">Describe Your Situation</div>
+            <div class="composer-sub">The more detail you provide, the sharper the insight.</div>
+            <div class="composer-row">
+              <textarea class="userInput" placeholder="Describe the leadership, communication, decision, or execution situation you want to work through."></textarea>
+              <div class="composer-actions">
+                <button type="button" class="gold-outline-btn">🎤 Dictate</button>
+                <button type="button" class="turquoise-outline-btn">🔎 Go Deeper</button>
+                <button type="button" class="gold-outline-btn">✨ Quick Answer</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="response-divider">DIGITAL JD RESPONSE</div>
+
+          <div class="resp-card">
+            <div class="resp-avatar avatar-a">A</div>
+            <div class="resp-body">
+              <div class="resp-tag">Advisor Mode</div>
+              <div class="resp-title">Situational Analysis</div>
+            </div>
+            <div class="resp-chevron">⌄</div>
+          </div>
+
+          <div class="resp-card">
+            <div class="resp-avatar avatar-jd">JD</div>
+            <div class="resp-body">
+              <div class="resp-tag">JD's Words</div>
+              <div class="resp-title">JD's Insight</div>
+            </div>
+            <div class="resp-chevron">⌄</div>
+          </div>
+
+          <div class="resp-card">
+            <div class="resp-avatar avatar-play">▶</div>
+            <div class="resp-body">
+              <div class="resp-tag">Do This Next</div>
+              <div class="resp-title">Execution Plan</div>
+            </div>
+            <div class="resp-chevron">⌄</div>
+          </div>
+
+          <div class="plan-actions">
+            <button type="button" class="continue-btn">📄 Continue to Content Workshop</button>
+            <button type="button" class="print-btn">🖨 Print This Case</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div>
+    <div class="device-label">MOBILE APP</div>
+    <div class="device-mobile">
+      <section class="app">
+        <div class="top">
+          <div class="top-left">
+            <div class="logo-mark"><img src="/public/images/digital-jd-head-icon.png" alt="Digital JD logo" /></div>
+            <div class="brand-stack">
+              <div class="brand-line">Digital JD</div>
+            </div>
+          </div>
+          <div class="top-right">
+            <span class="status-pill"><span class="dot"></span>Executive Sprint — Day 3 of 7</span>
+            <button type="button" class="onboard-btn">Get Onboard</button>
+            <button type="button" class="logout-btn">Logout</button>
+          </div>
+        </div>
+
+        <div class="body-pad">
+          <div class="mode-fork">
+            <div class="mode-card active">
+              <div class="mode-top-row">
+                <div class="mode-icon">☺</div>
+                <div class="mode-title">Executive Advisor</div>
+                <div class="mode-check">✓</div>
+              </div>
+              <div class="mode-sub">Talk through a leadership situation — get analysis, insight, and a plan.</div>
+            </div>
+            <div class="mode-card">
+              <div class="mode-top-row">
+                <div class="mode-icon">▤</div>
+                <div class="mode-title">Executive Content Workshop</div>
+              </div>
+              <div class="mode-sub">Build a document, training program, or CEO letter — JD writes it with you.</div>
+            </div>
+          </div>
+
+          <div class="composer-card">
+            <div class="composer-title">Describe Your Situation</div>
+            <div class="composer-sub">The more detail you provide, the sharper the insight.</div>
+            <div class="composer-row">
+              <textarea class="userInput" placeholder="Describe the leadership, communication, decision, or execution situation you want to work through."></textarea>
+              <div class="composer-actions">
+                <button type="button" class="gold-outline-btn">🎤 Dictate</button>
+                <button type="button" class="turquoise-outline-btn">🔎 Go Deeper</button>
+                <button type="button" class="gold-outline-btn">✨ Quick Answer</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="response-divider">DIGITAL JD RESPONSE</div>
+
+          <div class="resp-card">
+            <div class="resp-avatar avatar-a">A</div>
+            <div class="resp-body">
+              <div class="resp-tag">Advisor Mode</div>
+              <div class="resp-title">Situational Analysis</div>
+            </div>
+            <div class="resp-chevron">⌄</div>
+          </div>
+
+          <div class="resp-card">
+            <div class="resp-avatar avatar-jd">JD</div>
+            <div class="resp-body">
+              <div class="resp-tag">JD's Words</div>
+              <div class="resp-title">JD's Insight</div>
+            </div>
+            <div class="resp-chevron">⌄</div>
+          </div>
+
+          <div class="resp-card">
+            <div class="resp-avatar avatar-play">▶</div>
+            <div class="resp-body">
+              <div class="resp-tag">Do This Next</div>
+              <div class="resp-title">Execution Plan</div>
+            </div>
+            <div class="resp-chevron">⌄</div>
+          </div>
+
+          <div class="plan-actions">
+            <button type="button" class="continue-btn">📄 Continue to Content Workshop</button>
+            <button type="button" class="print-btn">🖨 Print This Case</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+</body>
+</html>
