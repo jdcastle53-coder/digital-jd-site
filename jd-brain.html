@@ -411,6 +411,27 @@ var supabase = window.supabase;
     .send-btn:active:not(:disabled) { transform: translateY(0); }
     .send-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
+    .quick-btn {
+      flex: 1 1 200px;
+      background: transparent;
+      border: 1px solid rgba(212,175,55,0.6);
+      color: #f6d36b;
+      border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: Georgia, serif;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+    .quick-btn:hover:not(:disabled) {
+      background: rgba(212,175,55,0.12);
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(212,175,55,0.2);
+    }
+    .quick-btn:active:not(:disabled) { transform: translateY(0); }
+    .quick-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
     @keyframes fadeSlideUp {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
@@ -514,6 +535,7 @@ var supabase = window.supabase;
 
         <div class="action-row">
           <button id="sendBtn" class="send-btn">Get Insight</button>
+          <button id="quickAnswerBtn" type="button" class="quick-btn" title="Skip the follow-up questions and get a shorter, surface-level answer to exactly what you asked">Quick Answer</button>
           <button type="button" class="cta-full-btn" onclick="window.location.href='https://digitaljd.org/#pricing'">Get on board with Digital JD</button>
         </div>
       </div>
@@ -524,9 +546,53 @@ var supabase = window.supabase;
     let conversationId = null;
     let isSending = false;
     let currentMode = 'advisor';
+    // Two-step advisor flow: 'new' -> user describes a situation and (in
+    // Advisor mode) Digital JD asks clarifying questions first, exactly like
+    // a real advisor would, before ever giving a recommendation.
+    // 'awaiting_answers' -> the user is responding to those questions; the
+    // NEXT send combines the original situation + their answers and asks for
+    // the real, grounded advice.
+    let conversationStage = 'new';
+    let pendingSituation = '';
+
+    function updateComposerForStage() {
+      const quickBtn = document.getElementById('quickAnswerBtn');
+      const sendBtn = document.getElementById('sendBtn');
+      const inputPrompt = document.getElementById('inputPrompt');
+      const userInput = document.getElementById('userInput');
+      const helperText = document.getElementById('helperText');
+      const modeFork = document.getElementById('modeFork');
+
+      if (conversationStage === 'awaiting_answers') {
+        sendBtn.textContent = 'Continue';
+        if (quickBtn) quickBtn.style.display = 'none';
+        if (modeFork) modeFork.style.display = 'none';
+        inputPrompt.textContent = 'Dr. Castle needs a bit more before he advises — answer the questions above (a sentence or two each is fine).';
+        userInput.placeholder = 'Type your answers to the questions above...';
+        helperText.textContent = 'Answer as many as you can. Digital JD will use what you share to give a specific, grounded recommendation.';
+        return;
+      }
+
+      sendBtn.textContent = 'Get Insight';
+      if (modeFork) modeFork.style.display = '';
+      const advisorActive = currentMode === 'advisor';
+      if (quickBtn) quickBtn.style.display = advisorActive ? '' : 'none';
+
+      if (advisorActive) {
+        inputPrompt.textContent = 'Describe your situation — the more detail you provide, the sharper the insight.';
+        userInput.placeholder = 'Describe the leadership, communication, decision, or execution situation you want to work through.';
+        helperText.textContent = 'Digital JD will ask a few sharp questions first to understand your situation, then respond directly below. Prefer a faster, surface-level answer? Use Quick Answer instead.';
+      } else {
+        inputPrompt.textContent = 'Tell Digital JD what to build — a document, training class, plan, email, or script.';
+        userInput.placeholder = 'e.g., Draft a board memo on our Q3 restructuring, or build a training outline on giving hard feedback.';
+        helperText.textContent = 'Digital JD will think through this with you and respond directly below.';
+      }
+    }
 
     function setMode(mode) {
       currentMode = mode;
+      conversationStage = 'new';
+      pendingSituation = '';
       const advisorBtn = document.getElementById('modeAdvisorBtn');
       const workshopBtn = document.getElementById('modeWorkshopBtn');
       const advisorActive = mode === 'advisor';
@@ -535,15 +601,7 @@ var supabase = window.supabase;
       workshopBtn.classList.toggle('mode-btn-active', !advisorActive);
       workshopBtn.setAttribute('aria-selected', !advisorActive ? 'true' : 'false');
 
-      const inputPrompt = document.getElementById('inputPrompt');
-      const userInput = document.getElementById('userInput');
-      if (advisorActive) {
-        inputPrompt.textContent = 'Describe your situation — the more detail you provide, the sharper the insight.';
-        userInput.placeholder = 'Describe the leadership, communication, decision, or execution situation you want to work through.';
-      } else {
-        inputPrompt.textContent = 'Tell Digital JD what to build — a document, training class, plan, email, or script.';
-        userInput.placeholder = 'e.g., Draft a board memo on our Q3 restructuring, or build a training outline on giving hard feedback.';
-      }
+      updateComposerForStage();
     }
 
     function addMessage(text, role) {
@@ -560,7 +618,7 @@ var supabase = window.supabase;
       return bubble;
     }
 
-    async function sendMessage() {
+    async function sendMessage(forceQuick) {
       if (isSending) return;
 
       const input = document.getElementById('userInput');
@@ -577,9 +635,18 @@ var supabase = window.supabase;
         }
       }
 
+      // Was this send answering the clarifying questions from the turn before?
+      const isAnsweringClarify = conversationStage === 'awaiting_answers';
+      // Only Advisor mode asks clarifying questions first — Workshop mode
+      // (building a document/plan) goes straight through, same as before.
+      // Quick Answer always skips straight to the single-pass advice call.
+      const isClarifyStep = currentMode === 'advisor' && !forceQuick && !isAnsweringClarify;
+
       isSending = true;
       const sendBtn = document.getElementById('sendBtn');
+      const quickBtn = document.getElementById('quickAnswerBtn');
       sendBtn.disabled = true;
+      if (quickBtn) quickBtn.disabled = true;
       sendBtn.textContent = 'Thinking...';
 
       addMessage(text, 'user');
@@ -607,10 +674,17 @@ var supabase = window.supabase;
           });
         }
 
+        // Combine the original situation with the user's answers so the
+        // final advice call has the full picture, not just the follow-ups.
+        const requestMessage = isAnsweringClarify
+          ? `Original situation:\n${pendingSituation}\n\nAnswers to the clarifying questions:\n${text}`
+          : text;
+        const requestMode = isClarifyStep ? 'clarify' : currentMode;
+
         const response = await fetch('/api/jd-brain-gateway', {
           method: 'POST',
           headers: await jdBrainHeaders(),
-          body: JSON.stringify({ message: text, mode: currentMode })
+          body: JSON.stringify({ message: requestMessage, mode: requestMode })
         });
 
         if (response.status === 401 || response.status === 402) {
@@ -634,6 +708,17 @@ var supabase = window.supabase;
         const aiReply = (data && data.reply) ? data.reply : 'Digital JD returned an empty response. Please try again.';
         pending.innerText = aiReply;
 
+        if (isClarifyStep) {
+          // Hold the situation and wait for the user's answers before advising.
+          pendingSituation = text;
+          conversationStage = 'awaiting_answers';
+        } else {
+          // Either the full advice was just delivered, or this was a Quick
+          // Answer / Workshop request — either way, the topic is closed.
+          pendingSituation = '';
+          conversationStage = 'new';
+        }
+
         if (conversationId) {
           await supabase.from('messages').insert({
             conversation_id: conversationId,
@@ -646,7 +731,8 @@ var supabase = window.supabase;
       } finally {
         isSending = false;
         sendBtn.disabled = false;
-        sendBtn.textContent = 'Get Insight';
+        if (quickBtn) quickBtn.disabled = false;
+        updateComposerForStage();
       }
     }
 
@@ -779,7 +865,12 @@ var supabase = window.supabase;
       }
 
       const sendBtn = document.getElementById('sendBtn');
-      if (sendBtn) sendBtn.addEventListener('click', sendMessage);
+      if (sendBtn) sendBtn.addEventListener('click', () => sendMessage(false));
+
+      const quickAnswerBtn = document.getElementById('quickAnswerBtn');
+      if (quickAnswerBtn) quickAnswerBtn.addEventListener('click', () => sendMessage(true));
+
+      updateComposerForStage();
 
       setupDictation();
 
