@@ -535,7 +535,7 @@ var supabase = window.supabase;
 
         <div class="action-row">
           <button id="sendBtn" class="send-btn" title="Dr. Castle asks a few clarifying questions first, then gives a fully-grounded recommendation">Get Deeper Insight</button>
-          <button id="quickAnswerBtn" type="button" class="quick-btn" title="Skip the follow-up questions and get an immediate, surface-level answer to exactly what you asked">Quick Insight</button>
+          <button id="quickAnswerBtn" type="button" class="quick-btn" title="Skip the follow-up questions and get an immediate, surface-level answer to exactly what you asked">Initial Opinion</button>
           <button type="button" class="cta-full-btn" onclick="window.location.href='https://digitaljd.org/#pricing'">Get on board with Digital JD</button>
         </div>
       </div>
@@ -581,7 +581,7 @@ var supabase = window.supabase;
       if (advisorActive) {
         inputPrompt.textContent = 'Describe your situation — the more detail you provide, the sharper the insight.';
         userInput.placeholder = 'Describe the leadership, communication, decision, or execution situation you want to work through.';
-        helperText.textContent = 'Get Deeper Insight: Digital JD asks a few sharp questions first to fully understand your situation, then delivers a grounded recommendation. In a hurry? Use Quick Insight for an immediate, surface-level answer instead.';
+        helperText.textContent = 'Get Deeper Insight: Digital JD asks a few sharp questions first to fully understand your situation, then delivers a grounded recommendation. In a hurry? Use Initial Opinion for an immediate, surface-level answer instead.';
       } else {
         inputPrompt.textContent = 'Tell Digital JD what to build — a document, training class, plan, email, or script.';
         userInput.placeholder = 'e.g., Draft a board memo on our Q3 restructuring, or build a training outline on giving hard feedback.';
@@ -639,7 +639,7 @@ var supabase = window.supabase;
       const isAnsweringClarify = conversationStage === 'awaiting_answers';
       // Only Advisor mode asks clarifying questions first — Workshop mode
       // (building a document/plan) goes straight through, same as before.
-      // Quick Insight always skips straight to the single-pass advice call.
+      // Initial Opinion always skips straight to the single-pass advice call.
       const isClarifyStep = currentMode === 'advisor' && !forceQuick && !isAnsweringClarify;
 
       isSending = true;
