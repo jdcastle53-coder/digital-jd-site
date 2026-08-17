@@ -2116,10 +2116,10 @@ iframe {
       <h2>Begin Your Sprint</h2>
       <p class="modal-sub">Enter your name and email. You will receive immediate access to the full Digital JD system — no credit card, no commitment.</p>
       <div class="modal-form" id="modalFormWrap">
-        <input type="text" placeholder="Full Name" id="sprintName" />
-        <input type="email" placeholder="Work Email" id="sprintEmail" />
-        <input type="password" placeholder="Create Password" id="sprintPassword" />
-<input type="password" placeholder="Confirm Password" id="sprintConfirmPassword" />
+        <input type="text" placeholder="Full Name" id="sprintName" autocomplete="name" />
+        <input type="email" placeholder="Work Email" id="sprintEmail" autocomplete="email" />
+        <input type="password" placeholder="Create Password" id="sprintPassword" autocomplete="new-password" />
+        <input type="password" placeholder="Confirm Password" id="sprintConfirmPassword" autocomplete="new-password" />
         <button class="btn-primary" onclick="submitSprint()"><span>Activate Full Access →</span></button>
       </div>
       <div id="modalSuccess" style="display:none;text-align:center;padding:2rem 0;">
@@ -2183,8 +2183,8 @@ function forgotPassword() {
     <h2>Welcome Back</h2>
     <p>Log in to continue your Digital JD session.</p>
 
-    <input type="email" id="loginEmail" placeholder="Email" />
-    <input type="password" id="loginPassword" placeholder="Password" />
+    <input type="email" id="loginEmail" placeholder="Email" autocomplete="email" />
+    <input type="password" id="loginPassword" placeholder="Password" autocomplete="current-password" />
     <button type="button" onclick="forgotPassword()" style="background:none;border:none;color:#f6d36b;margin-top:10px;cursor:pointer;">
   Forgot Password?
 </button>
@@ -2195,7 +2195,7 @@ function forgotPassword() {
 
   <div class="modal-overlay" id="comparisonMatrixModal">
     <div class="modal" style="max-width:1000px;padding:1.5rem;background:#040608;">
-      <button class="modal-close" onclick="closeComparisonMatrix()" style="z-index:2;">&times;</button>
+      <button class="modal-close" onclick="closeComparisonMatrix()" aria-label="Return to page" style="z-index:2;top:-0.4rem;right:-0.4rem;width:2.4rem;height:2.4rem;border-radius:50%;background:linear-gradient(180deg,var(--gold-bright),#c9941a);color:#1a1200;font-size:1.4rem;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,0.5);border:1px solid rgba(0,0,0,0.2);">&times;</button>
       <img src="/images/comparison-matrix.png" alt="Comparison matrix: Other AIs vs Digital JD across core purpose, response style, source of intelligence, and more" style="display:block;width:100%;height:auto;border-radius:4px;" />
     </div>
   </div>
