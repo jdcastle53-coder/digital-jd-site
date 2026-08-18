@@ -220,6 +220,50 @@ var supabase = window.supabase;
       scroll-behavior: smooth;
     }
 
+    /* On desktop there's plenty of vertical room — use more of it so the
+       finished analysis (Situational Analysis / JD Insight / Execution Plan)
+       is visible at once instead of being squeezed into a small scroll box. */
+    @media (min-width: 900px) {
+      .chat-output { max-height: 68vh; }
+    }
+
+    /* Final-analysis result: each section (Situational Analysis, JD Insight,
+       Execution Plan, etc.) gets its own clearly separated card instead of
+       one undifferentiated wall of text, so it's obvious the user has
+       arrived at a new, distinct answer rather than still looking at the
+       same box. */
+    .analysis-panel {
+      max-width: 1100px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .analysis-card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    .analysis-heading {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .analysis-body {
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
     .msg {
       margin-bottom: 12px;
       display: flex;
@@ -264,7 +308,7 @@ var supabase = window.supabase;
        the user works through one question at a time instead of everything
        being merged into a single shared box. */
     .clarify-panel {
-      max-width: 900px;
+      max-width: 1100px;
       width: 100%;
     }
 
@@ -416,7 +460,7 @@ var supabase = window.supabase;
 
     textarea#userInput {
       width: 100%;
-      min-height: 110px;
+      min-height: 220px;
       resize: vertical;
       padding: 14px 16px;
       border-radius: 14px;
@@ -636,7 +680,7 @@ var supabase = window.supabase;
         </div>
 
         <div class="app-top-right">
-          <a href="/" class="home-link">Home</a>
+          <a href="jd-brain.html" class="home-link">Home</a>
           <span class="status-pill">
             <span class="dot"></span>
             <span id="systemStatus">Loading...</span>
@@ -867,6 +911,74 @@ var supabase = window.supabase;
       if (firstInput) firstInput.focus();
     }
 
+    // The gateway's final-advice reply uses fixed ALL-CAPS section headings
+    // (see buildSystemPrompt: SITUATIONAL ANALYSIS / EXECUTIVE DRAFT,
+    // JD INSIGHT, EXECUTION PLAN, COMMUNICATION DRAFT). Split the plain-text
+    // reply into those sections so each can be shown as its own card.
+    function parseAnalysisSections(replyText) {
+      if (!replyText) return [];
+      const KNOWN_HEADINGS = ['SITUATIONAL ANALYSIS', 'EXECUTIVE DRAFT', 'JD INSIGHT', 'EXECUTION PLAN', 'COMMUNICATION DRAFT'];
+      const lines = replyText.split('\n');
+      const sections = [];
+      let current = null;
+      for (const rawLine of lines) {
+        const trimmed = rawLine.trim();
+        const heading = KNOWN_HEADINGS.find(h => trimmed.toUpperCase() === h);
+        if (heading) {
+          current = { heading, body: [] };
+          sections.push(current);
+        } else if (current) {
+          current.body.push(rawLine);
+        }
+      }
+      return sections
+        .map(s => ({ heading: s.heading, body: s.body.join('\n').trim() }))
+        .filter(s => s.body);
+    }
+
+    // Renders the final advice as separate, clearly labeled cards (one per
+    // section) instead of one plain-text block, so the user can immediately
+    // see they've arrived at a distinct, structured answer.
+    function renderAnalysisResult(replyText, introBubble) {
+      const sections = parseAnalysisSections(replyText);
+      if (sections.length < 2) {
+        // Couldn't cleanly parse the expected headings — fall back to plain
+        // text rather than showing a broken or empty panel.
+        introBubble.innerText = replyText;
+        return null;
+      }
+
+      introBubble.innerText = "Dr. Castle's analysis is ready below:";
+
+      const chatOutput = document.getElementById('chatOutput');
+      const wrapMsg = document.createElement('div');
+      wrapMsg.classList.add('msg', 'assistant');
+
+      const panel = document.createElement('div');
+      panel.classList.add('analysis-panel');
+
+      sections.forEach(s => {
+        const card = document.createElement('div');
+        card.classList.add('analysis-card');
+
+        const h = document.createElement('div');
+        h.classList.add('analysis-heading');
+        h.textContent = s.heading;
+        card.appendChild(h);
+
+        const body = document.createElement('div');
+        body.classList.add('analysis-body');
+        body.textContent = s.body;
+        card.appendChild(body);
+
+        panel.appendChild(card);
+      });
+
+      wrapMsg.appendChild(panel);
+      chatOutput.appendChild(wrapMsg);
+      return wrapMsg;
+    }
+
     async function submitClarifyingAnswers() {
       if (isSending) return;
       const panel = document.getElementById('activeClarifyPanel');
@@ -994,7 +1106,17 @@ var supabase = window.supabase;
           pendingSituation = text;
           conversationStage = 'awaiting_answers';
         } else {
-          pending.innerText = aiReply;
+          // Render the final advice as separate labeled sections (Situational
+          // Analysis / JD Insight / Execution Plan, etc.) and scroll so the
+          // top of the new answer is what the user sees first — a clear
+          // signal they've arrived at a new, finished result.
+          const resultMsg = renderAnalysisResult(aiReply, pending);
+          if (resultMsg) {
+            requestAnimationFrame(() => {
+              const chatOutput = document.getElementById('chatOutput');
+              chatOutput.scrollTop = resultMsg.offsetTop - 8;
+            });
+          }
           // Either the full advice was just delivered, or this was an Initial
           // Opinion / Workshop request — either way, the topic is closed.
           pendingSituation = '';
