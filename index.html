@@ -1502,9 +1502,18 @@ iframe {
 
 @media (max-width: 768px) {
 
+  /* Stack the logo and the Home/Login/Start Sprint pills into two separate
+     rows on mobile instead of squeezing them into one row. Previously
+     .nav-logo was set to width:100% while still sharing a row with
+     .nav-right, which starved .nav-logo of the space its fixed-width image
+     and nowrap text need, so the brand name overflowed and got clipped
+     against the viewport edge. */
   nav {
     position: relative;
-    padding: 1rem 1.25rem !important;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem !important;
     align-items: center;
     justify-content: center;
   }
@@ -1515,17 +1524,30 @@ iframe {
   }
 
   .nav-logo img {
-    width: 82px !important;
-    height: 82px !important;
-    flex-basis: 82px !important;
+    width: 68px !important;
+    height: 68px !important;
+    flex-basis: 68px !important;
   }
 
   .nav-brand-stack {
-    transform: translateY(10px) !important;
+    transform: translateY(6px) !important;
   }
 
   .nav-brand-line {
-    font-size: 15px !important;
+    font-size: 13px !important;
+  }
+
+  .nav-right {
+    margin-top: 0 !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 6px 7px;
+  }
+
+  .nav-right .nav-cta {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.72rem;
   }
 
   #hero {
