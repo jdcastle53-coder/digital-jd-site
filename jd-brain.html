@@ -258,11 +258,24 @@ var supabase = window.supabase;
     }
 
     .analysis-body {
-      color: var(--text);
-      font-size: 16px;
-      line-height: 1.65;
-      white-space: pre-wrap;
-    }
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  }
+
+  .workshop-link {
+  color: var(--gold);
+  text-decoration: underline;
+  text-decoration-color: rgba(212,175,55,0.5);
+  cursor: pointer;
+  font-weight: 600;
+  }
+
+  .workshop-link:hover, .workshop-link:focus-visible {
+  text-decoration-color: var(--gold);
+  outline: none;
+  }
 
     .msg {
       margin-bottom: 12px;
@@ -826,6 +839,29 @@ var supabase = window.supabase;
       updateComposerForStage();
     }
 
+    // Called when the user clicks the "Executive Content Workshop" mention
+    // inside an analysis result's Communication Draft section. Switches the
+    // mode toggle to Workshop, then scrolls/focuses the composer so the
+    // click visibly does something instead of appearing to do nothing.
+    function goToWorkshopMode() {
+      setMode('workshop');
+      const composer = document.getElementById('composerPanel');
+      if (composer) {
+        composer.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+      const input = document.getElementById('userInput');
+      if (input) {
+        setTimeout(() => input.focus(), 300);
+      }
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+    }
+
     function addMessage(text, role) {
       const chatOutput = document.getElementById('chatOutput');
       const msg = document.createElement('div');
@@ -1012,7 +1048,17 @@ var supabase = window.supabase;
 
         const body = document.createElement('div');
         body.classList.add('analysis-body');
-        body.textContent = s.body;
+        // The Communication Draft section sometimes mentions "Executive
+        // Content Workshop" as a pointer to the other mode. Make that
+        // specific phrase an actual clickable link (was previously plain
+        // text via textContent, so clicking it visibly did nothing) — every
+        // other character is still HTML-escaped first so nothing else in
+        // the AI's response text can inject markup.
+        const escaped = escapeHtml(s.body);
+        body.innerHTML = escaped.replace(
+          /Executive Content Workshop/g,
+          '<span class="workshop-link" role="link" tabindex="0" onclick="goToWorkshopMode()" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();goToWorkshopMode();}">Executive Content Workshop</span>'
+        );
         card.appendChild(body);
 
         panel.appendChild(card);
