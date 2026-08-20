@@ -220,6 +220,50 @@ var supabase = window.supabase;
       scroll-behavior: smooth;
     }
 
+    /* On desktop there's plenty of vertical room — use more of it so the
+       finished analysis (Situational Analysis / JD Insight / Execution Plan)
+       is visible at once instead of being squeezed into a small scroll box. */
+    @media (min-width: 900px) {
+      .chat-output { max-height: 68vh; }
+    }
+
+    /* Final-analysis result: each section (Situational Analysis, JD Insight,
+       Execution Plan, etc.) gets its own clearly separated card instead of
+       one undifferentiated wall of text, so it's obvious the user has
+       arrived at a new, distinct answer rather than still looking at the
+       same box. */
+    .analysis-panel {
+      max-width: 1100px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .analysis-card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--gold);
+      border-radius: 14px;
+      padding: 18px 20px;
+    }
+
+    .analysis-heading {
+      color: var(--gold);
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .analysis-body {
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
     .msg {
       margin-bottom: 12px;
       display: flex;
@@ -264,7 +308,7 @@ var supabase = window.supabase;
        the user works through one question at a time instead of everything
        being merged into a single shared box. */
     .clarify-panel {
-      max-width: 900px;
+      max-width: 1100px;
       width: 100%;
     }
 
@@ -324,6 +368,40 @@ var supabase = window.supabase;
       background: rgba(255,255,255,0.03);
       color: var(--muted);
       border-color: rgba(255,255,255,0.12);
+    }
+
+    /* Per-question dictate button, mirroring the main .mic-btn styling but
+       sized to sit inline next to each answer field instead of anchored
+       inside a single large textarea. */
+    .clarify-mic-btn {
+      flex: 0 0 auto;
+      width: 36px;
+      height: 36px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(212,175,55,0.8);
+      background: #0b1223;
+      color: #f6d36b;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 15px;
+      padding: 0;
+      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+    }
+
+    .clarify-mic-btn:hover { transform: scale(1.06); }
+
+    .clarify-mic-btn.is-listening {
+      background: #7f1d1d;
+      color: #ffffff;
+      border-color: #ef4444;
+      animation: micPulse 1.4s ease-in-out infinite;
+    }
+
+    .clarify-mic-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .clarify-answered .clarify-card { opacity: 0.72; }
@@ -416,7 +494,7 @@ var supabase = window.supabase;
 
     textarea#userInput {
       width: 100%;
-      min-height: 110px;
+      min-height: 280px;
       resize: vertical;
       padding: 14px 16px;
       border-radius: 14px;
@@ -565,31 +643,33 @@ var supabase = window.supabase;
 
   /* "Thinking" indicator: a small pulsing drop sending out rings, replacing
      the word "Thinking..." while Dr. Castle works through a response. */
+  /* Sized 4x larger per JD's request — this is meant to be a noteworthy,
+     impressive moment, not a small discreet spinner. */
   .thinking-ripple {
   position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 144px;
+  height: 144px;
   }
   .ripple-core {
   position: relative;
-  width: 10px;
-  height: 10px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--gold);
-  box-shadow: 0 0 8px rgba(212,175,55,0.65);
+  box-shadow: 0 0 32px rgba(212,175,55,0.65);
   z-index: 1;
   }
   .ripple-ring {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 10px;
-  height: 10px;
-  margin: -5px 0 0 -5px;
-  border: 2px solid var(--gold);
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border: 4px solid var(--gold);
   border-radius: 50%;
   opacity: 0;
   animation: rippleExpand 1.8s ease-out infinite;
@@ -598,15 +678,15 @@ var supabase = window.supabase;
   .ripple-ring-3 { animation-delay: 1.2s; }
 
   @keyframes rippleExpand {
-  0% { width: 10px; height: 10px; margin: -5px 0 0 -5px; opacity: 0.65; border-color: var(--gold); }
+  0% { width: 40px; height: 40px; margin: -20px 0 0 -20px; opacity: 0.65; border-color: var(--gold); }
   70% { opacity: 0.18; border-color: #60a5fa; }
-  100% { width: 36px; height: 36px; margin: -18px 0 0 -18px; opacity: 0; border-color: #60a5fa; }
+  100% { width: 144px; height: 144px; margin: -72px 0 0 -72px; opacity: 0; border-color: #60a5fa; }
   }
 
   @media (prefers-reduced-motion: reduce) {
   .app, .app::before, .app-top, .chat-wrap, .composer, .msg,
   .brand-logo-wrap::after, .mode-btn-active, .send-btn,
-  .mic-btn.is-listening, .cta-full-btn, .ripple-ring {
+  .mic-btn.is-listening, .clarify-mic-btn.is-listening, .cta-full-btn, .ripple-ring {
   animation: none !important;
   transition: none !important;
   }
@@ -636,7 +716,7 @@ var supabase = window.supabase;
         </div>
 
         <div class="app-top-right">
-          <a href="/" class="home-link">Home</a>
+          <a href="jd-brain.html" class="home-link">Home</a>
           <span class="status-pill">
             <span class="dot"></span>
             <span id="systemStatus">Loading...</span>
@@ -836,9 +916,17 @@ var supabase = window.supabase;
           }
         });
 
+        const fieldMicBtn = document.createElement('button');
+        fieldMicBtn.type = 'button';
+        fieldMicBtn.classList.add('clarify-mic-btn');
+        fieldMicBtn.textContent = '🎙️';
+        fieldMicBtn.setAttribute('aria-label', 'Dictate your answer');
+        attachFieldDictation(fieldMicBtn, answerInput);
+
         row.appendChild(num);
         row.appendChild(qText);
         row.appendChild(answerInput);
+        row.appendChild(fieldMicBtn);
         card.appendChild(row);
         panel.appendChild(card);
       });
@@ -867,6 +955,74 @@ var supabase = window.supabase;
       if (firstInput) firstInput.focus();
     }
 
+    // The gateway's final-advice reply uses fixed ALL-CAPS section headings
+    // (see buildSystemPrompt: SITUATIONAL ANALYSIS / EXECUTIVE DRAFT,
+    // JD INSIGHT, EXECUTION PLAN, COMMUNICATION DRAFT). Split the plain-text
+    // reply into those sections so each can be shown as its own card.
+    function parseAnalysisSections(replyText) {
+      if (!replyText) return [];
+      const KNOWN_HEADINGS = ['SITUATIONAL ANALYSIS', 'EXECUTIVE DRAFT', 'JD INSIGHT', 'EXECUTION PLAN', 'COMMUNICATION DRAFT'];
+      const lines = replyText.split('\n');
+      const sections = [];
+      let current = null;
+      for (const rawLine of lines) {
+        const trimmed = rawLine.trim();
+        const heading = KNOWN_HEADINGS.find(h => trimmed.toUpperCase() === h);
+        if (heading) {
+          current = { heading, body: [] };
+          sections.push(current);
+        } else if (current) {
+          current.body.push(rawLine);
+        }
+      }
+      return sections
+        .map(s => ({ heading: s.heading, body: s.body.join('\n').trim() }))
+        .filter(s => s.body);
+    }
+
+    // Renders the final advice as separate, clearly labeled cards (one per
+    // section) instead of one plain-text block, so the user can immediately
+    // see they've arrived at a distinct, structured answer.
+    function renderAnalysisResult(replyText, introBubble) {
+      const sections = parseAnalysisSections(replyText);
+      if (sections.length < 2) {
+        // Couldn't cleanly parse the expected headings — fall back to plain
+        // text rather than showing a broken or empty panel.
+        introBubble.innerText = replyText;
+        return null;
+      }
+
+      introBubble.innerText = "Dr. Castle's analysis is ready below:";
+
+      const chatOutput = document.getElementById('chatOutput');
+      const wrapMsg = document.createElement('div');
+      wrapMsg.classList.add('msg', 'assistant');
+
+      const panel = document.createElement('div');
+      panel.classList.add('analysis-panel');
+
+      sections.forEach(s => {
+        const card = document.createElement('div');
+        card.classList.add('analysis-card');
+
+        const h = document.createElement('div');
+        h.classList.add('analysis-heading');
+        h.textContent = s.heading;
+        card.appendChild(h);
+
+        const body = document.createElement('div');
+        body.classList.add('analysis-body');
+        body.textContent = s.body;
+        card.appendChild(body);
+
+        panel.appendChild(card);
+      });
+
+      wrapMsg.appendChild(panel);
+      chatOutput.appendChild(wrapMsg);
+      return wrapMsg;
+    }
+
     async function submitClarifyingAnswers() {
       if (isSending) return;
       const panel = document.getElementById('activeClarifyPanel');
@@ -879,8 +1035,12 @@ var supabase = window.supabase;
         return `Q${i + 1}: ${q}\nA${i + 1}: ${a || '(no answer provided)'}`;
       }).join('\n\n');
 
-      inputs.forEach(inp => { inp.disabled = true; });
-      const continueBtn = document.getElementById('clarifyContinueBtn');
+  inputs.forEach(inp => { inp.disabled = true; });
+  panel.querySelectorAll('.clarify-mic-btn').forEach(btn => {
+    btn.disabled = true;
+    btn.classList.remove('is-listening');
+  });
+  const continueBtn = document.getElementById('clarifyContinueBtn');
       if (continueBtn) continueBtn.disabled = true;
       panel.classList.add('clarify-answered');
       panel.removeAttribute('id');
@@ -994,7 +1154,21 @@ var supabase = window.supabase;
           pendingSituation = text;
           conversationStage = 'awaiting_answers';
         } else {
-          pending.innerText = aiReply;
+          // Render the final advice as separate labeled sections (Situational
+          // Analysis / JD Insight / Execution Plan, etc.) and scroll so the
+          // top of the new answer is what the user sees first — a clear
+          // signal they've arrived at a new, finished result.
+          const resultMsg = renderAnalysisResult(aiReply, pending);
+          if (resultMsg) {
+            // scrollIntoView (rather than manual offsetTop math) reliably
+            // scrolls the nearest scrollable ancestor (.chat-output) so the
+            // TOP of the new result — starting with Situational Analysis —
+            // is the first thing visible, instead of leaving the user
+            // stranded mid-scroll on the old content.
+            requestAnimationFrame(() => {
+              resultMsg.scrollIntoView({ block: 'start', behavior: 'smooth' });
+            });
+          }
           // Either the full advice was just delivered, or this was an Initial
           // Opinion / Workshop request — either way, the topic is closed.
           pendingSituation = '';
@@ -1076,6 +1250,68 @@ var supabase = window.supabase;
           try { recognition.stop(); } catch (e) {}
           micBtn.textContent = '🎙️ Dictate';
           micBtn.classList.remove('is-listening');
+        }
+      });
+    }
+
+    // Attaches a self-contained dictate button + its own SpeechRecognition
+    // instance to a single input/textarea element. Used for each clarifying
+    // question's answer field, which each need independent start/stop state
+    // (unlike the single shared #micBtn/#userInput pair above).
+    function attachFieldDictation(btnEl, inputEl) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        btnEl.addEventListener('click', () => {
+          alert('Microphone dictation is not supported in this browser. Try Chrome.');
+        });
+        return;
+      }
+
+      const fieldRecognition = new SpeechRecognition();
+      fieldRecognition.continuous = true;
+      fieldRecognition.interimResults = true;
+      fieldRecognition.lang = 'en-US';
+
+      let fieldIsListening = false;
+      let baseText = '';
+
+      fieldRecognition.onresult = function (event) {
+        let finalText = '';
+        let interimText = '';
+        for (let i = 0; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) finalText += transcript + ' ';
+          else interimText += transcript;
+        }
+        inputEl.value = (baseText + finalText + interimText).trim();
+      };
+
+      fieldRecognition.onend = function () {
+        if (fieldIsListening) {
+          try { fieldRecognition.start(); } catch (e) {}
+        }
+      };
+
+      fieldRecognition.onerror = function (event) {
+        console.log('[v0] Speech recognition error (field):', event.error);
+      };
+
+      btnEl.addEventListener('click', function () {
+        if (!fieldIsListening) {
+          baseText = inputEl.value ? inputEl.value.trim() + ' ' : '';
+          try {
+            fieldRecognition.start();
+            fieldIsListening = true;
+            btnEl.textContent = '■';
+            btnEl.classList.add('is-listening');
+            btnEl.setAttribute('aria-label', 'Stop dictating');
+          } catch (e) {}
+        } else {
+          fieldIsListening = false;
+          try { fieldRecognition.stop(); } catch (e) {}
+          btnEl.textContent = '🎙️';
+          btnEl.classList.remove('is-listening');
+          btnEl.setAttribute('aria-label', 'Dictate your answer');
         }
       });
     }

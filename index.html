@@ -1502,9 +1502,18 @@ iframe {
 
 @media (max-width: 768px) {
 
+  /* Stack the logo and the Home/Login/Start Sprint pills into two separate
+     rows on mobile instead of squeezing them into one row. Previously
+     .nav-logo was set to width:100% while still sharing a row with
+     .nav-right, which starved .nav-logo of the space its fixed-width image
+     and nowrap text need, so the brand name overflowed and got clipped
+     against the viewport edge. */
   nav {
     position: relative;
-    padding: 1rem 1.25rem !important;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0.6rem;
+    padding: 0.85rem 1rem !important;
     align-items: center;
     justify-content: center;
   }
@@ -1515,17 +1524,30 @@ iframe {
   }
 
   .nav-logo img {
-    width: 82px !important;
-    height: 82px !important;
-    flex-basis: 82px !important;
+    width: 68px !important;
+    height: 68px !important;
+    flex-basis: 68px !important;
   }
 
   .nav-brand-stack {
-    transform: translateY(10px) !important;
+    transform: translateY(6px) !important;
   }
 
   .nav-brand-line {
-    font-size: 15px !important;
+    font-size: 13px !important;
+  }
+
+  .nav-right {
+    margin-top: 0 !important;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    padding: 6px 7px;
+  }
+
+  .nav-right .nav-cta {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.72rem;
   }
 
   #hero {
@@ -1983,7 +2005,7 @@ iframe {
             <a class="tier-btn tier-btn-lite" href="#" onclick="startCheckout('essentials', event)"
                style="display:block;text-align:center;background:linear-gradient(135deg,#38bdf8,#2563eb);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 6px 14px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.15);">Start Building Clarity</a>
           </div>
-          <a href="#pricing" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid var(--white-faint);border-radius:10px;text-decoration:none;">
+          <a href="/contact.html" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid var(--white-faint);border-radius:10px;text-decoration:none;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.7" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15 20c0-2.6 1.6-4.8 4-5.5"/></svg>
             <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading a team?<br><span style="color:#38bdf8;font-weight:600;">Explore Enterprise &rarr;</span></span>
           </a>
@@ -2014,7 +2036,7 @@ iframe {
             <a class="tier-btn tier-btn-core" href="#" onclick="startCheckout('pro', event)"
                style="display:block;text-align:center;background:linear-gradient(135deg,#38bdf8,#2563eb);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;border:1px solid #d4af37;box-shadow:0 6px 14px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.15);">Upgrade Your Decisions</a>
           </div>
-          <a href="#pricing" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid var(--white-faint);border-radius:10px;text-decoration:none;">
+          <a href="/contact.html" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid var(--white-faint);border-radius:10px;text-decoration:none;">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="1.7" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15 20c0-2.6 1.6-4.8 4-5.5"/></svg>
             <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading a team?<br><span style="color:#93c5fd;font-weight:600;">Explore Enterprise &rarr;</span></span>
           </a>
@@ -2043,7 +2065,7 @@ iframe {
           </div>
         </div>
       </div>
-      <a href="#pricing" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid rgba(212,175,55,0.4);border-radius:10px;text-decoration:none;">
+      <a href="/contact.html" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid rgba(212,175,55,0.4);border-radius:10px;text-decoration:none;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.7" aria-hidden="true"><path d="M12 3l2 2-2 2-2-2z"/><circle cx="9" cy="10" r="2.6"/><path d="M3.5 20c0-3 2.5-5.4 5.5-5.4s5.5 2.4 5.5 5.4"/><circle cx="17.5" cy="11" r="2"/><path d="M15.5 20c0-2.4 1.4-4.4 3.5-5"/></svg>
         <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading a team?<br><span style="color:#d4af37;font-weight:600;">Explore Enterprise &rarr;</span></span>
       </a>
@@ -2072,10 +2094,10 @@ iframe {
       </div>
     </div>
   </div>
-  <a href="/contact.html" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid rgba(45,212,191,0.4);border-radius:10px;text-decoration:none;">
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="1.7" aria-hidden="true"><path d="M4 21V5a1 1 0 011-1h7a1 1 0 011 1v16"/><path d="M13 9h6a1 1 0 011 1v11"/><path d="M2 21h20"/><path d="M7 8h2M7 12h2M7 16h2M16 13h1M16 17h1"/></svg>
-    <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading an enterprise?<br><span style="color:#2dd4bf;font-weight:600;">Let&apos;s Talk &rarr;</span></span>
-  </a>
+  <!-- No bottom "Explore Enterprise" style CTA here on purpose: this card
+       IS Enterprise, and the "Transform Your Organization" button above
+       already links to /contact.html, so a second identical link would be
+       redundant. -->
 </div>
       </div>
     </div>
