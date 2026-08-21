@@ -54,7 +54,37 @@
       gap: 0.65rem;
       text-decoration: none;
     }
-    .logo-link img { width: 40px; height: 40px; border-radius: 8px; }
+    .logo-link .logo-icon-wrap {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      flex: 0 0 64px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-link .logo-icon-wrap::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(212,175,55,0.5), transparent 70%);
+      animation: navLogoGlowPulse 2.6s ease-in-out infinite;
+      z-index: 0;
+      pointer-events: none;
+    }
+    @keyframes navLogoGlowPulse {
+      0%, 100% { opacity: 0.55; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.12); }
+    }
+    .logo-link img {
+      position: relative;
+      z-index: 1;
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      display: block;
+    }
     .logo-link span {
       font-family: 'Barlow Condensed', sans-serif;
       letter-spacing: 0.1em;
@@ -215,10 +245,10 @@
 <body>
   <div class="top-bar">
     <div class="top-bar-inner">
-      <a href="/" class="logo-link">
-        <img src="digital-jd-logo.png" alt="Digital JD Logo" />
-        <span>Digital JD</span>
-      </a>
+  <a href="/" class="logo-link">
+  <span class="logo-icon-wrap"><img src="digital-jd-logo.png" alt="Digital JD Logo" /></span>
+  <span>Digital JD</span>
+  </a>
     </div>
   </div>
 

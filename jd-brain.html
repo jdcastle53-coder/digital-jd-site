@@ -258,11 +258,24 @@ var supabase = window.supabase;
     }
 
     .analysis-body {
-      color: var(--text);
-      font-size: 16px;
-      line-height: 1.65;
-      white-space: pre-wrap;
-    }
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  }
+
+  .workshop-link {
+  color: var(--gold);
+  text-decoration: underline;
+  text-decoration-color: rgba(212,175,55,0.5);
+  cursor: pointer;
+  font-weight: 600;
+  }
+
+  .workshop-link:hover, .workshop-link:focus-visible {
+  text-decoration-color: var(--gold);
+  outline: none;
+  }
 
     .msg {
       margin-bottom: 12px;
@@ -552,40 +565,44 @@ var supabase = window.supabase;
 
     .cta-full-btn {
       flex: 1 1 260px;
-      background: linear-gradient(180deg, #f6d36b, #d4af37);
-      color: #14233f;
-      border: none;
+      background: linear-gradient(180deg, #101c33, #0b1223);
+      color: #f6d36b;
+      border: 1px solid rgba(212,175,55,0.7);
       border-radius: 12px;
       padding: 14px 20px;
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 800;
       font-family: Georgia, serif;
       cursor: pointer;
-      box-shadow: 0 10px 24px rgba(212,175,55,0.35);
-      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      box-shadow: 0 0 0 1px rgba(212,175,55,0.15) inset, 0 10px 24px rgba(212,175,55,0.18);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease;
     }
     .cta-full-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 14px 30px rgba(212,175,55,0.5);
+      border-color: #d4af37;
+      background: linear-gradient(180deg, #142441, #0d1730);
+      box-shadow: 0 0 0 1px rgba(212,175,55,0.3) inset, 0 14px 30px rgba(212,175,55,0.3);
     }
 
     .send-btn {
       flex: 1 1 200px;
-      background: linear-gradient(180deg, var(--blue-1), var(--blue-2));
-      color: #ffffff;
-      border: none;
+      background: linear-gradient(180deg, #101c33, #0b1223);
+      color: #bcd0ff;
+      border: 1px solid rgba(96,148,250,0.6);
       border-radius: 12px;
       padding: 14px 20px;
       font-size: 15px;
-      font-weight: 700;
+      font-weight: 800;
       font-family: Georgia, serif;
       cursor: pointer;
-      box-shadow: 0 10px 24px rgba(37,99,235,0.35);
-      transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+      box-shadow: 0 0 0 1px rgba(96,148,250,0.15) inset, 0 10px 24px rgba(37,99,235,0.18);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease, background 0.15s ease, opacity 0.15s ease;
     }
     .send-btn:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 14px 30px rgba(37,99,235,0.5);
+      border-color: #6094fa;
+      background: linear-gradient(180deg, #16244a, #0d1730);
+      box-shadow: 0 0 0 1px rgba(96,148,250,0.3) inset, 0 14px 30px rgba(37,99,235,0.3);
     }
     .send-btn:active:not(:disabled) { transform: translateY(0); }
     .send-btn:disabled { opacity: 0.55; cursor: not-allowed; }
@@ -758,7 +775,7 @@ var supabase = window.supabase;
         <div class="action-row">
           <button id="sendBtn" class="send-btn" title="Dr. Castle asks a few clarifying questions first, then gives a fully-grounded recommendation">Get Deeper Insight</button>
           <button id="quickAnswerBtn" type="button" class="quick-btn" title="Skip the follow-up questions and get an immediate, surface-level answer to exactly what you asked">Initial Opinion</button>
-          <button type="button" class="cta-full-btn" onclick="window.location.href='https://digitaljd.org/#pricing'">Get on board with Digital JD</button>
+          <button type="button" class="cta-full-btn" onclick="window.location.href='https://digitaljd.org/#pricing'">Explore Membership Plans</button>
         </div>
       </div>
     </section>
@@ -824,6 +841,29 @@ var supabase = window.supabase;
       workshopBtn.setAttribute('aria-selected', !advisorActive ? 'true' : 'false');
 
       updateComposerForStage();
+    }
+
+    // Called when the user clicks the "Executive Content Workshop" mention
+    // inside an analysis result's Communication Draft section. Switches the
+    // mode toggle to Workshop, then scrolls/focuses the composer so the
+    // click visibly does something instead of appearing to do nothing.
+    function goToWorkshopMode() {
+      setMode('workshop');
+      const composer = document.getElementById('composerPanel');
+      if (composer) {
+        composer.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+      const input = document.getElementById('userInput');
+      if (input) {
+        setTimeout(() => input.focus(), 300);
+      }
+    }
+
+    function escapeHtml(str) {
+      return str
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
     }
 
     function addMessage(text, role) {
@@ -1012,7 +1052,17 @@ var supabase = window.supabase;
 
         const body = document.createElement('div');
         body.classList.add('analysis-body');
-        body.textContent = s.body;
+        // The Communication Draft section sometimes mentions "Executive
+        // Content Workshop" as a pointer to the other mode. Make that
+        // specific phrase an actual clickable link (was previously plain
+        // text via textContent, so clicking it visibly did nothing) — every
+        // other character is still HTML-escaped first so nothing else in
+        // the AI's response text can inject markup.
+        const escaped = escapeHtml(s.body);
+        body.innerHTML = escaped.replace(
+          /Executive Content Workshop/g,
+          '<span class="workshop-link" role="link" tabindex="0" onclick="goToWorkshopMode()" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();goToWorkshopMode();}">Executive Content Workshop</span>'
+        );
         card.appendChild(body);
 
         panel.appendChild(card);
