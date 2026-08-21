@@ -70,7 +70,30 @@
     gap: 14px;
   }
   .brand-left { display: flex; align-items: center; gap: 12px; }
-  .brand-icon { width: 58px; height: 58px; flex: 0 0 58px; }
+  .brand-icon {
+    position: relative;
+    width: 64px;
+    height: 64px;
+    flex: 0 0 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .brand-icon::after {
+    content: "";
+    position: absolute;
+    inset: -6px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(212,175,55,0.5), transparent 70%);
+    animation: brandLogoGlowPulse 2.6s ease-in-out infinite;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .brand-icon img { position: relative; z-index: 1; }
+  @keyframes brandLogoGlowPulse {
+    0%, 100% { opacity: 0.55; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.12); }
+  }
   .brand-name {
     font-family: Georgia, serif;
     font-weight: 700;
