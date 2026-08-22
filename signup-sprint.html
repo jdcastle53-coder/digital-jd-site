@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Digital JD Executive Sprint Signup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Create your account to start your 7-day Digital JD Executive Sprint." />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;600;700&family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+  <style>
+    :root {
+      --black: #040608;
+      --navy: #070d1a;
+      --deep: #0a1628;
+      --cyan: #00b4d8;
+      --cyan-bright: #00e5ff;
+      --white: #f0f4f8;
+      --white-dim: rgba(240,244,248,0.85);
+      --white-faint: rgba(240,244,248,0.08);
+      --gold: #c9a84c;
+      --gold-bright: #f6d36b;
+      --gold-dim: rgba(201,168,76,0.2);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--black);
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(0,180,216,0.10), transparent 45%),
+        radial-gradient(circle at 85% 90%, rgba(201,168,76,0.10), transparent 45%);
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-weight: 300;
+      min-height: 100vh;
+    }
+    a { color: var(--cyan); }
+
+    .top-bar {
+      display: flex;
+      justify-content: center;
+      padding: 1.75rem 1.5rem 0;
+    }
+    .top-bar-inner {
+      width: 100%;
+      max-width: 1100px;
+    }
+    .logo-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+    }
+    .logo-link .logo-icon-wrap {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      flex: 0 0 64px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-link .logo-icon-wrap::after {
+      content: "";
+      position: absolute;
+      inset: -6px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(212,175,55,0.5), transparent 70%);
+      animation: navLogoGlowPulse 2.6s ease-in-out infinite;
+      z-index: 0;
+      pointer-events: none;
+    }
+    @keyframes navLogoGlowPulse {
+      0%, 100% { opacity: 0.55; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.12); }
+    }
+    .logo-link img {
+      position: relative;
+      z-index: 1;
+      width: 64px;
+      height: 64px;
+      object-fit: contain;
+      display: block;
+    }
+    .logo-link span {
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.1em;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      text-transform: uppercase;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem;
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 3rem;
+      align-items: center;
+      min-height: calc(100vh - 90px);
+    }
+    @media (max-width: 860px) {
+      main { grid-template-columns: 1fr; padding-top: 2rem; gap: 2.5rem; }
+    }
+
+    .intro-eyebrow {
+      font-family: 'Barlow Condensed', sans-serif;
+      letter-spacing: 0.25em;
+      font-size: 0.8rem;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .intro h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 2.6rem;
+      line-height: 1.15;
+      color: var(--white);
+    }
+    .intro h1 em {
+      color: var(--gold);
+      font-style: italic;
+    }
+    .intro h1 em.sprint-seven {
+      font-weight: 700;
+      font-size: calc(1em + 2pt);
+    }
+    .intro p {
+      margin-top: 1.1rem;
+      color: var(--white-dim);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      max-width: 30rem;
+    }
+    .intro-note {
+      margin-top: 1.75rem;
+      padding: 1rem 1.25rem;
+      border: 1px solid var(--gold-dim);
+      border-radius: 8px;
+      background: var(--white-faint);
+      max-width: 30rem;
+    }
+    .intro-note p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--white-dim);
+      line-height: 1.55;
+    }
+
+    .card {
+      background: var(--deep);
+      border: 1px solid var(--gold-dim);
+      border-radius: 14px;
+      padding: 2.25rem;
+      box-shadow: 0 30px 70px rgba(0,0,0,0.55);
+    }
+    .card h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      font-size: 1.6rem;
+      color: var(--white);
+    }
+    .card > p {
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--white-dim);
+      line-height: 1.55;
+    }
+
+    form { margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1.1rem; }
+    label { display: block; }
+    label span {
+      display: block;
+      font-size: 0.82rem;
+      color: var(--white-dim);
+      margin-bottom: 0.4rem;
+      letter-spacing: 0.02em;
+    }
+    label span .hint { color: rgba(240,244,248,0.45); }
+    input {
+      width: 100%;
+      background: var(--navy);
+      border: 1px solid rgba(240,244,248,0.15);
+      border-radius: 8px;
+      padding: 0.8rem 1rem;
+      color: var(--white);
+      font-family: 'Barlow', sans-serif;
+      font-size: 0.95rem;
+    }
+    input::placeholder { color: rgba(240,244,248,0.35); }
+    input:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 3px rgba(0,180,216,0.18);
+    }
+
+    #status {
+      font-size: 0.88rem;
+      color: var(--white-dim);
+      min-height: 1.2em;
+    }
+    #status.is-error { color: #ff8a8a; }
+
+    .btn-row { display: flex; flex-direction: column; gap: 0.85rem; margin-top: 0.25rem; }
+    .btn-gold, .btn-outline {
+      width: 100%;
+      border: none;
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .btn-gold {
+      background: linear-gradient(180deg, var(--gold-bright), #c9941a);
+      color: #1a1200;
+      box-shadow: 0 6px 0 #8a6410, 0 10px 18px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.6);
+    }
+    .btn-gold:active { transform: translateY(4px); box-shadow: 0 2px 0 #8a6410, 0 4px 8px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.6); }
+    .btn-outline {
+      background: transparent;
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+    }
+    .btn-outline:hover { background: rgba(0,180,216,0.1); }
+
+    .forgot-row { text-align: center; margin-top: 0.25rem; }
+    .forgot-row button {
+      background: none;
+      border: none;
+      color: var(--white-dim);
+      font-size: 0.85rem;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+    .forgot-row button:hover { color: var(--gold-bright); }
+  </style>
+</head>
+<body>
+  <div class="top-bar">
+    <div class="top-bar-inner">
+  <a href="/" class="logo-link">
+  <span class="logo-icon-wrap"><img src="digital-jd-logo.png" alt="Digital JD Logo" /></span>
+  <span>Digital JD</span>
+  </a>
+    </div>
+  </div>
+
+  <main>
+    <section class="intro">
+      <div class="intro-eyebrow">Intelligent Leadership System</div>
+      <h1>Welcome to the <em class="sprint-seven">7</em>-Day Sprint</h1>
+      <p>Create your account below to activate the JD Brain experience. Your 7-day trial includes full Pro-level access, starting the moment you sign in.</p>
+      <div class="intro-note">
+        <p>Need access for longer? You can extend a user&#39;s expiration in your Supabase dashboard at any time.</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Create your Sprint account</h2>
+      <p>Enter your details below to activate your 7-day Sprint. Already have an account? Use the same email to sign in instead.</p>
+
+      <form id="authForm">
+        <label>
+          <span>Full name <span class="hint">(for new accounts)</span></span>
+          <input id="name" type="text" autocomplete="name" placeholder="Jane Doe" />
+        </label>
+        <label>
+          <span>Email</span>
+          <input id="email" type="email" required autocomplete="email" placeholder="you@company.com" />
+        </label>
+        <label>
+          <span>Password</span>
+          <input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="••••••••" />
+        </label>
+
+        <div id="status"></div>
+
+        <div class="btn-row">
+          <button type="button" id="signUpBtn" class="btn-gold">Create Account</button>
+          <button type="button" id="signInBtn" class="btn-outline">Sign In</button>
+        </div>
+
+        <div class="forgot-row">
+          <button type="button" id="forgotBtn">Forgot your password?</button>
+        </div>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const statusEl = document.getElementById("status");
+    const signInBtn = document.getElementById("signInBtn");
+    const signUpBtn = document.getElementById("signUpBtn");
+
+    function setStatus(message, isError) {
+      statusEl.textContent = message;
+      statusEl.className = isError ? "is-error" : "";
+    }
+
+    async function handleSignIn() {
+      setStatus("Signing in...");
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const result = await window.Auth.client.auth.signInWithPassword({ email, password });
+
+      if (result.error) {
+        setStatus(result.error.message, true);
+        return;
+      }
+
+      const session = await window.Auth.requireActiveSession();
+      if (session) window.location.href = "jd-brain.html";
+    }
+
+    async function handleSignUp() {
+      setStatus("Creating account...");
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (!name) {
+        setStatus("Please enter your full name to create an account.", true);
+        return;
+      }
+
+      const result = await window.Auth.client.auth.signUp({
+        email,
+        password,
+        options: {
+          // Store the name in Supabase user metadata (matches the legacy signup).
+          data: { name: name, full_name: name },
+          // Land email-confirmation clicks on the Sprint welcome letter,
+          // not straight on the dashboard, on whatever origin this page is
+          // served from.
+          emailRedirectTo: window.location.origin + "/welcome-sprint.html",
+        },
+      });
+
+      if (result.error) {
+        setStatus(result.error.message, true);
+        return;
+      }
+
+      if (!result.data.session) {
+        setStatus("Check your email to confirm, then sign in.");
+        return;
+      }
+
+      // Email confirmation is disabled for this Supabase project, so a
+      // session comes back immediately. Still route through the welcome
+      // letter so every Sprint signup sees it once.
+      await window.Auth.ensureExpiry(result.data.session);
+      window.location.href = "welcome-sprint.html";
+    }
+
+    async function handleForgotPassword() {
+      const email = document.getElementById("email").value.trim();
+      if (!email) {
+        setStatus("Enter your email above first, then click \u201CForgot your password?\u201D again.", true);
+        return;
+      }
+      setStatus("Sending reset link...");
+      const redirectTo = window.location.origin + "/reset-password.html";
+      const result = await window.Auth.client.auth.resetPasswordForEmail(email, { redirectTo });
+      if (result.error) {
+        setStatus(result.error.message, true);
+        return;
+      }
+      setStatus("Check your email for a link to reset your password.");
+    }
+
+    const forgotBtn = document.getElementById("forgotBtn");
+
+    signInBtn.addEventListener("click", handleSignIn);
+    signUpBtn.addEventListener("click", handleSignUp);
+    forgotBtn.addEventListener("click", handleForgotPassword);
+  </script>
+</body>
+</html>
