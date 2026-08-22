@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Digital JD - Executive-grade AI leadership coaching",
   "main": "api/jd-brain-gateway.js",
-  "scripts": {
-    "dev": "vercel dev"
-  },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
     "@upstash/redis": "^1.38.0",
