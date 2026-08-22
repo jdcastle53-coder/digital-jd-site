@@ -2174,9 +2174,10 @@ iframe {
   <script>
     function openModal() {
       // Interim (Bluehost static page): signup happens on the Vercel app so the
-      // Supabase session is created on the app origin. Link out instead of
+      // Supabase session is created on the app origin. Link out to the
+      // Sprint-specific signup page (not the generic signin.html) instead of
       // opening the old inline modal.
-      window.location.href = 'https://digital-jd-site.vercel.app/signin.html';
+      window.location.href = 'https://digital-jd-site.vercel.app/signup-sprint.html';
     }
 
    function closeModal() {
@@ -2204,9 +2205,10 @@ function submitLogin() {
 
   
     function submitSprint() {
-  // Interim: signup happens on the Vercel app (signin.html captures name +
-  // email + password and creates the Supabase account on the app origin).
-  window.location.href = 'https://digital-jd-site.vercel.app/signin.html';
+  // Interim: signup happens on the Vercel app (signup-sprint.html captures
+  // name + email + password and creates the Supabase account on the app
+  // origin, with copy written for first-time Sprint signups).
+  window.location.href = 'https://digital-jd-site.vercel.app/signup-sprint.html';
 }
 
     document.addEventListener('keydown', function(e) {
