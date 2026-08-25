@@ -782,7 +782,12 @@ var supabase = window.supabase;
   </div>
 
   <script>
-    let conversationId = null;
+    // Within-conversation memory: keep the same conversationId across a page
+    // refresh (tab close still starts fresh, matching sessionStorage semantics)
+    // so JD Brain can keep recalling earlier turns instead of losing them the
+    // moment the page reloads.
+    const CONVERSATION_ID_KEY = 'jdBrainConversationId';
+    let conversationId = sessionStorage.getItem(CONVERSATION_ID_KEY) || null;
     let isSending = false;
     let currentMode = 'advisor';
     // Two-step advisor flow: 'new' -> user describes a situation and (in
@@ -1146,6 +1151,7 @@ var supabase = window.supabase;
             .select()
             .single();
           conversationId = data ? data.id : null;
+          if (conversationId) sessionStorage.setItem(CONVERSATION_ID_KEY, conversationId);
         }
 
         if (conversationId) {
@@ -1166,7 +1172,7 @@ var supabase = window.supabase;
         const response = await fetch('/api/jd-brain-gateway', {
           method: 'POST',
           headers: await jdBrainHeaders(),
-          body: JSON.stringify({ message: requestMessage, mode: requestMode })
+          body: JSON.stringify({ message: requestMessage, mode: requestMode, conversationId })
         });
 
         if (response.status === 401 || response.status === 402) {
