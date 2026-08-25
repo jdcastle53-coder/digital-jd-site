@@ -81,6 +81,42 @@ async function fetchConversationHistory(supabase, conversationId, userId) {
   }
 }
 
+/* =========================================================
+   LONG-TERM MEMORY (Feature 2 — read side)
+   Recalls durable facts about the user (role, company, recurring
+   situations, past advice) captured in EARLIER conversations, so JD
+   Brain can act like an advisor who remembers you across sessions —
+   not just within one chat.
+   - RLS on user_memory_facts already restricts reads to auth.uid(),
+     but the gateway uses the service-role key and filters by userId
+     explicitly, so it never depends on RLS alone.
+   - Fails OPEN on any DB error: same as conversation history, this is
+     an enhancement, never a reason to block or degrade the answer.
+========================================================= */
+async function fetchUserMemoryFacts(supabase, userId) {
+  if (!supabase || !userId) return [];
+  try {
+    const { data: rows, error } = await supabase
+      .from("user_memory_facts")
+      .select("fact, category")
+      .eq("user_id", userId)
+      .eq("status", "active")
+      .order("created_at", { ascending: false })
+      .limit(20);
+    if (error || !Array.isArray(rows)) return [];
+    return rows.map(r => String(r.fact || "").trim()).filter(Boolean);
+  } catch (_e) {
+    return [];
+  }
+}
+
+function buildMemoryBlock(facts) {
+  if (!facts || facts.length === 0) return "";
+  return `\nWHAT YOU ALREADY KNOW ABOUT THIS PERSON (from prior conversations)
+${facts.map(f => `- ${f}`).join("\n")}
+Use this naturally, as an advisor who remembers a returning client would. Do NOT print this list back to them, do NOT announce that you "recall" or "remember" things explicitly, and do NOT treat anything here as more certain than what they tell you today.\n`;
+}
+
 /* ---------- Knowledge base (loaded once at cold start) ---------- */
 let KB = null;
 let KB_ERROR = null;
@@ -473,6 +509,15 @@ export default async function handler(req, res) {
     await log("INFO", "history_loaded", { conversationId, turns: conversationHistory.length });
   }
 
+  // Long-term memory: recall durable facts from ANY prior conversation,
+  // regardless of which conversationId this request is on.
+  let memoryFacts = [];
+  if (access.ok && access.userId) {
+    memoryFacts = await fetchUserMemoryFacts(supabase, access.userId);
+    await log("INFO", "memory_facts_loaded", { facts: memoryFacts.length });
+  }
+  const memoryBlock = buildMemoryBlock(memoryFacts);
+
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
   await log("INFO", "api_key_check", { apiKeyExists: !!OPENAI_API_KEY });
   if (!OPENAI_API_KEY) {
@@ -491,6 +536,7 @@ export default async function handler(req, res) {
       await log("INFO", "research_fetched", { paperCount: papers.length });
       systemPrompt = buildSystemPrompt(message, formatResearchForPrompt(papers));
     }
+    if (memoryBlock) systemPrompt += `\n${memoryBlock}`;
 
     await log("INFO", "openai_request_started", { model: CONFIG.openaiModel, mode: mode || "advisory" });
     const response = await fetch(CONFIG.openaiUrl, {
