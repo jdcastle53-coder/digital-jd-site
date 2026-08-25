@@ -29,12 +29,57 @@ const CONFIG = {
   researchUrl: "https://api.semanticscholar.org/graph/v1/paper/search",
   researchFields: "Psychology,Business,Economics",
   maxConcepts: 14,
+  // Within-conversation memory: how many prior turns to feed back in, and
+  // how much of each to keep, so history can't blow the token budget.
+  maxHistoryMessages: 12,
+  maxHistoryCharsPerMessage: 1500,
 };
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const getSupabaseClient = () =>
   supabaseUrl && supabaseServiceKey ? createClient(supabaseUrl, supabaseServiceKey) : null;
+
+/* =========================================================
+   WITHIN-CONVERSATION MEMORY (Feature 1 — read side)
+   Loads prior turns of THIS conversation so JD Brain doesn't re-ask
+   questions already answered earlier in the same session.
+   - Ownership is verified server-side (conversation.user_id === caller's
+     userId) before any messages are read, so one user can never pull
+     another user's conversation by guessing/passing its id.
+   - Fails OPEN on any DB error: memory is an enhancement, never a
+     reason to block or degrade the actual answer.
+========================================================= */
+async function fetchConversationHistory(supabase, conversationId, userId) {
+  if (!supabase || !conversationId || !userId) return [];
+  try {
+    const { data: convo, error: convoErr } = await supabase
+      .from("conversations")
+      .select("id, user_id")
+      .eq("id", conversationId)
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (convoErr || !convo) return []; // not found, or belongs to someone else
+
+    const { data: rows, error: msgErr } = await supabase
+      .from("messages")
+      .select("role, content, created_at")
+      .eq("conversation_id", conversationId)
+      .order("created_at", { ascending: false })
+      .limit(CONFIG.maxHistoryMessages);
+    if (msgErr || !Array.isArray(rows)) return [];
+
+    return rows
+      .reverse() // oldest first, matching real conversation order
+      .filter(r => r.role === "user" || r.role === "assistant")
+      .map(r => ({
+        role: r.role,
+        content: String(r.content || "").slice(0, CONFIG.maxHistoryCharsPerMessage),
+      }));
+  } catch (_e) {
+    return [];
+  }
+}
 
 /* ---------- Knowledge base (loaded once at cold start) ---------- */
 let KB = null;
@@ -362,6 +407,7 @@ export default async function handler(req, res) {
   const body = req.body || {};
   const message = (body.message || body.prompt || body.input || body.query || "").trim();
   const mode = (body.mode || "").trim();
+  const conversationId = (body.conversationId || "").trim() || null;
 
   await log("INFO", "message_validation", { messageExists: !!message, messageLength: message.length, mode: mode || "advisory" });
   if (!message) {
@@ -419,6 +465,14 @@ export default async function handler(req, res) {
   }
   await log("INFO", "access_granted", { path: rlKind, degradedRateLimit: !!rl.degraded, userId: access.userId || null });
 
+  // Within-conversation memory: only for authenticated callers with a
+  // conversationId (the demo path has no account, so no history to load).
+  let conversationHistory = [];
+  if (access.ok && conversationId) {
+    conversationHistory = await fetchConversationHistory(supabase, conversationId, access.userId);
+    await log("INFO", "history_loaded", { conversationId, turns: conversationHistory.length });
+  }
+
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
   await log("INFO", "api_key_check", { apiKeyExists: !!OPENAI_API_KEY });
   if (!OPENAI_API_KEY) {
@@ -446,6 +500,7 @@ export default async function handler(req, res) {
         model: CONFIG.openaiModel,
         messages: [
           { role: "system", content: systemPrompt },
+          ...conversationHistory,
           { role: "user", content: buildUserMessage(message, body) },
         ],
         temperature: CONFIG.temperature,
