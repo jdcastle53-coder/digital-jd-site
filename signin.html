@@ -311,12 +311,53 @@
       const result = await window.Auth.client.auth.signInWithPassword({ email, password });
 
       if (result.error) {
+        // "Email not confirmed" most often happens when the one-time
+        // confirmation link never actually completed (a mail app or
+        // security scanner previews/opens the link before the user taps
+        // it, which consumes the single-use token). Give a real recovery
+        // path instead of a dead-end raw error.
+        if (/email not confirmed/i.test(result.error.message)) {
+          renderUnconfirmedRecovery(email);
+          return;
+        }
         setStatus(result.error.message, true);
         return;
       }
 
       const session = await window.Auth.requireActiveSession();
       if (session) window.location.href = "jd-brain.html";
+    }
+
+    function renderUnconfirmedRecovery(email) {
+      statusEl.innerHTML = "";
+      statusEl.className = "is-error";
+      const msg = document.createElement("div");
+      msg.textContent = "Your email hasn't been confirmed yet. This can happen if the confirmation link was opened by your mail app before you tapped it.";
+      statusEl.appendChild(msg);
+      const resendBtn = document.createElement("button");
+      resendBtn.type = "button";
+      resendBtn.textContent = "Resend confirmation email";
+      resendBtn.className = "btn-outline";
+      resendBtn.style.marginTop = "0.75rem";
+      resendBtn.addEventListener("click", async function () {
+        if (!email) {
+          setStatus("Enter your email above first, then click \u201CResend confirmation email\u201D again.", true);
+          return;
+        }
+        resendBtn.disabled = true;
+        resendBtn.textContent = "Sending...";
+        const result = await window.Auth.client.auth.resend({
+          type: "signup",
+          email: email,
+          options: { emailRedirectTo: window.location.origin + "/welcome-sprint.html" },
+        });
+        if (result.error) {
+          setStatus(result.error.message, true);
+          return;
+        }
+        setStatus("Confirmation email sent. Check your inbox and tap the new link.");
+      });
+      statusEl.appendChild(resendBtn);
     }
 
     async function handleSignUp() {
