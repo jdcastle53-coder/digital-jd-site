@@ -278,128 +278,131 @@ var supabase = window.supabase;
     return 'Elevated Risk';
   }
 
-  /* ---------- Executive-style circular gauge, modeled on the reference
-     dial art: gold rim, navy bezel, cream face, five-zone rainbow band,
-     gold hub, navy needle, "Risk Assessment" legend inside the face. ---------- */
-  function polar(cx, cy, r, angleDeg) {
-    const rad = (angleDeg * Math.PI) / 180;
-    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  /* ---------- Executive-style circular gauge \u2014 faithful port of JD's
+     reference implementation (needle angle formula, fixed label angles,
+     ring geometry, and nameplate) so the dial art matches exactly. ---------- */
+  const GAUGE_SIZE_MAP = { small: 260, medium: 360, large: 500 };
+
+  // Bearing convention: 0deg = straight up (12 o'clock), increasing
+  // clockwise. This keeps 0% at bottom-left, the midpoint at top-center,
+  // and 100% at bottom-right, matching the reference dial exactly.
+  function polarToCartesian(cx, cy, r, bearingDeg) {
+    const a = (bearingDeg * Math.PI) / 180;
+    return { x: cx + r * Math.sin(a), y: cy - r * Math.cos(a) };
   }
 
-  const GAUGE_START_ANGLE = 135; // bottom-left
-  const GAUGE_END_ANGLE = 405;   // bottom-right (135 + 270 sweep)
-
-  function angleForValue(pct) {
-    const clamped = Math.max(0, Math.min(100, pct == null ? 0 : pct));
-    return GAUGE_START_ANGLE + (clamped / 100) * (GAUGE_END_ANGLE - GAUGE_START_ANGLE);
-  }
-
-  function arcPath(cx, cy, r, startAngle, endAngle) {
-    const start = polar(cx, cy, r, startAngle);
-    const end = polar(cx, cy, r, endAngle);
-    const largeArc = Math.abs(endAngle - startAngle) > 180 ? 1 : 0;
-    return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 1 ${end.x} ${end.y}`;
+  function describeArc(cx, cy, r, startBearing, endBearing) {
+    const start = polarToCartesian(cx, cy, r, startBearing);
+    const end = polarToCartesian(cx, cy, r, endBearing);
+    const largeArcFlag = Math.abs(endBearing - startBearing) > 180 ? '1' : '0';
+    return ['M', start.x, start.y, 'A', r, r, 0, largeArcFlag, 1, end.x, end.y].join(' ');
   }
 
   let gaugeUid = 0;
 
   function buildDomainGaugeSvg(pct, opts) {
     opts = opts || {};
-    const size = opts.large ? 300 : 232;
+    const px = GAUGE_SIZE_MAP[opts.size || 'medium'];
     const uid = 'g' + (gaugeUid++);
-    const cx = size / 2;
-    const cy = size / 2;
-    const rOuter = size / 2 - 3;
-    const rNavy = rOuter - 8;
-    const rGoldInner = rNavy - 12;
-    const rFace = rGoldInner - 4;
-    const rBand = rFace - 16;
-    const bandWidth = size * 0.075;
+    const cx = 250;
+    const cy = 250;
     const hasData = pct != null;
-    const needleAngle = hasData ? angleForValue(pct) : GAUGE_START_ANGLE;
-    const needleColor = hasData ? '#0d1a33' : '#5b6577';
-
-    const zoneLabels = [
-      { from: 0, to: 20, label: 'Very Low' },
-      { from: 20, to: 40, label: 'Low' },
-      { from: 40, to: 60, label: 'Moderate' },
-      { from: 60, to: 80, label: 'High' },
-      { from: 80, to: 100, label: 'Critical' },
-    ];
+    const value = hasData ? pct : 0;
+    const needleAngle = -125 + (value / 100) * 250; // 0%=bottom-left, 50%=top, 100%=bottom-right
+    const needleTip = polarToCartesian(cx, cy, 145, needleAngle);
 
     let ticks = '';
-    for (let i = 0; i <= 20; i++) {
-      const a = angleForValue((i / 20) * 100);
-      const major = i % 5 === 0;
-      const p1 = polar(cx, cy, rBand - bandWidth / 2 - 2, a);
-      const p2 = polar(cx, cy, rBand - bandWidth / 2 - (major ? 9 : 5), a);
-      ticks += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="#5a4a26" stroke-width="${major ? 1.6 : 1}" opacity="0.55" />`;
+    for (let i = 0; i < 25; i++) {
+      const angle = -125 + (i / 24) * 250;
+      const major = i % 4 === 0;
+      const p1 = polarToCartesian(cx, cy, major ? 154 : 164, angle);
+      const p2 = polarToCartesian(cx, cy, 176, angle);
+      ticks += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="${major ? '#c99a2e' : '#0f2d58'}" stroke-width="${major ? 5 : 2.2}" stroke-linecap="round" />`;
     }
 
+    const labelData = [
+      { text: 'Very Low', angle: -100 },
+      { text: 'Low', angle: -50 },
+      { text: 'Moderate', angle: 0 },
+      { text: 'High', angle: 50 },
+      { text: 'Critical', angle: 100 },
+    ];
     let labelsHtml = '';
-    for (const z of zoneLabels) {
-      const mid = (z.from + z.to) / 2;
-      const a = angleForValue(mid);
-      const p = polar(cx, cy, rBand + bandWidth / 2 + (opts.large ? 16 : 13), a);
-      const tangent = a + 90;
-      labelsHtml += `<text x="${p.x}" y="${p.y}" fill="#fdf6e3" font-size="${opts.large ? 11 : 9}" font-family="Georgia, serif" font-weight="700" text-anchor="middle" dominant-baseline="middle" transform="rotate(${tangent} ${p.x} ${p.y})" style="text-shadow:0 1px 2px rgba(0,0,0,0.6);">${z.label}</text>`;
+    for (const item of labelData) {
+      const p = polarToCartesian(cx, cy, 185, item.angle);
+      labelsHtml += `<text x="${p.x}" y="${p.y}" fill="#ffffff" font-size="${item.text === 'Moderate' ? 18 : 16}" font-weight="800" text-anchor="middle" dominant-baseline="middle" style="paint-order:stroke;stroke:rgba(0,0,0,0.18);stroke-width:2;">${item.text}</text>`;
     }
 
-    const needleLen = rBand - bandWidth / 2 - 14;
-    const tip = polar(cx, cy, needleLen, needleAngle);
-    const baseL = polar(cx, cy, 9, needleAngle + 90);
-    const baseR = polar(cx, cy, 9, needleAngle - 90);
-    const tailTip = polar(cx, cy, 16, needleAngle + 180);
+    const needleColor = hasData ? null : '#5b6577';
 
     return `
-      <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="${hasData ? pct + ' percent risk' : 'no data yet'}">
+      <svg viewBox="0 0 500 500" width="${px}" height="${px}" role="img" aria-label="${hasData ? pct + ' percent risk' : 'no data yet'}">
         <defs>
-          <radialGradient id="${uid}-gold" cx="35%" cy="30%" r="75%">
-            <stop offset="0%" stop-color="#f9edb7" />
-            <stop offset="45%" stop-color="#d4af37" />
-            <stop offset="100%" stop-color="#8a6a1c" />
+          <radialGradient id="${uid}-face" cx="45%" cy="35%" r="75%">
+            <stop offset="0%" stop-color="#fff7d8" />
+            <stop offset="58%" stop-color="#f5d991" />
+            <stop offset="100%" stop-color="#d9b85f" />
           </radialGradient>
-          <radialGradient id="${uid}-navy" cx="35%" cy="30%" r="75%">
-            <stop offset="0%" stop-color="#243a68" />
-            <stop offset="60%" stop-color="#132449" />
-            <stop offset="100%" stop-color="#060f24" />
-          </radialGradient>
-          <radialGradient id="${uid}-face" cx="42%" cy="34%" r="75%">
-            <stop offset="0%" stop-color="#f5ead0" />
-            <stop offset="70%" stop-color="#e7d5a3" />
-            <stop offset="100%" stop-color="#cdb27e" />
-          </radialGradient>
-          <radialGradient id="${uid}-hub" cx="35%" cy="30%" r="80%">
-            <stop offset="0%" stop-color="#fdf3c4" />
-            <stop offset="50%" stop-color="#d4af37" />
-            <stop offset="100%" stop-color="#7a5c17" />
-          </radialGradient>
-          <linearGradient id="${uid}-band" x1="0%" y1="50%" x2="100%" y2="50%">
-            <stop offset="0%" stop-color="#3730a3" />
-            <stop offset="20%" stop-color="#2563eb" />
-            <stop offset="40%" stop-color="#22c55e" />
-            <stop offset="60%" stop-color="#eab308" />
-            <stop offset="80%" stop-color="#f97316" />
-            <stop offset="100%" stop-color="#dc2626" />
+          <linearGradient id="${uid}-spectrum" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#7b00ff" />
+            <stop offset="16%" stop-color="#164dff" />
+            <stop offset="32%" stop-color="#00bfff" />
+            <stop offset="48%" stop-color="#2fd35d" />
+            <stop offset="64%" stop-color="#ffe51e" />
+            <stop offset="80%" stop-color="#ff8a16" />
+            <stop offset="100%" stop-color="#b00020" />
           </linearGradient>
+          <linearGradient id="${uid}-navy" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1a4d88" />
+            <stop offset="45%" stop-color="#0c2f5e" />
+            <stop offset="100%" stop-color="#061b3b" />
+          </linearGradient>
+          <linearGradient id="${uid}-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#fff1a8" />
+            <stop offset="22%" stop-color="#e8b84f" />
+            <stop offset="50%" stop-color="#9a6112" />
+            <stop offset="75%" stop-color="#e2ad3b" />
+            <stop offset="100%" stop-color="#fff0a0" />
+          </linearGradient>
+          <radialGradient id="${uid}-hub" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#fff1a6" />
+            <stop offset="38%" stop-color="#e3ae3a" />
+            <stop offset="70%" stop-color="#b77615" />
+            <stop offset="100%" stop-color="#6f4108" />
+          </radialGradient>
+          <filter id="${uid}-shadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="9" stdDeviation="9" flood-color="#000000" flood-opacity="0.22" />
+          </filter>
         </defs>
 
-        <circle cx="${cx}" cy="${cy}" r="${rOuter}" fill="url(#${uid}-gold)" />
-        <circle cx="${cx}" cy="${cy}" r="${rNavy}" fill="url(#${uid}-navy)" />
-        <circle cx="${cx}" cy="${cy}" r="${rGoldInner}" fill="url(#${uid}-gold)" />
-        <circle cx="${cx}" cy="${cy}" r="${rFace}" fill="url(#${uid}-face)" />
+        <circle cx="${cx}" cy="${cy}" r="231" fill="#000" opacity="0.12" filter="url(#${uid}-shadow)" />
 
-        <path d="${arcPath(cx, cy, rBand, GAUGE_START_ANGLE, GAUGE_END_ANGLE)}" stroke="url(#${uid}-band)" stroke-width="${bandWidth}" fill="none" stroke-linecap="butt" />
-        ${ticks}
+        <circle cx="${cx}" cy="${cy}" r="228" fill="url(#${uid}-gold)" />
+        <circle cx="${cx}" cy="${cy}" r="220" fill="url(#${uid}-navy)" />
+        <circle cx="${cx}" cy="${cy}" r="207" fill="url(#${uid}-gold)" />
+        <circle cx="${cx}" cy="${cy}" r="199" fill="#071b38" />
+
+        <circle cx="${cx}" cy="${cy}" r="191" fill="url(#${uid}-face)" stroke="url(#${uid}-gold)" stroke-width="5" />
+
+        <path d="${describeArc(cx, cy, 176, -125, 125)}" fill="none" stroke="url(#${uid}-spectrum)" stroke-width="55" stroke-linecap="butt" />
+        <path d="${describeArc(cx, cy, 148, -125, 125)}" fill="none" stroke="#e3b54d" stroke-width="4" />
+
         ${labelsHtml}
+        ${ticks}
 
-        <text x="${cx}" y="${cy + rFace * 0.42}" fill="#12233f" font-size="${opts.large ? 20 : 15}" font-family="Georgia, serif" font-weight="800" text-anchor="middle">Risk</text>
-        <text x="${cx}" y="${cy + rFace * 0.42 + (opts.large ? 22 : 17)}" fill="#12233f" font-size="${opts.large ? 20 : 15}" font-family="Georgia, serif" font-weight="800" text-anchor="middle">Assessment</text>
-        <line x1="${cx - 14}" y1="${cy + rFace * 0.62}" x2="${cx + 14}" y2="${cy + rFace * 0.62}" stroke="#8a6a1c" stroke-width="1.5" />
+        <polygon points="${cx + 6},${cy + 8} ${needleTip.x + 8},${needleTip.y + 8} ${cx - 14},${cy + 16}" fill="#000" opacity="0.16" />
+        <polygon points="${cx - 10},${cy + 8} ${needleTip.x},${needleTip.y} ${cx + 10},${cy + 8}" fill="${needleColor || '#d59d2f'}" />
+        <polygon points="${cx - 6},${cy + 6} ${needleTip.x - 3},${needleTip.y + 3} ${cx + 6},${cy + 6}" fill="${needleColor || `url(#${uid}-navy)`}" />
 
-        <path d="M ${baseL.x} ${baseL.y} L ${tip.x} ${tip.y} L ${baseR.x} ${baseR.y} L ${tailTip.x} ${tailTip.y} Z" fill="${needleColor}" />
-        <circle cx="${cx}" cy="${cy}" r="${opts.large ? 15 : 12}" fill="url(#${uid}-hub)" stroke="#5c4413" stroke-width="1" />
-        <circle cx="${cx - 3}" cy="${cy - 3}" r="${opts.large ? 4 : 3}" fill="#fff8dd" opacity="0.85" />
+        <circle cx="${cx}" cy="${cy}" r="39" fill="#0a2b58" stroke="#d1a03a" stroke-width="5" />
+        <circle cx="${cx}" cy="${cy}" r="30" fill="url(#${uid}-hub)" stroke="#ffd66c" stroke-width="2" />
+
+        <text x="${cx}" y="350" text-anchor="middle" fill="#0b2b58" font-size="34" font-weight="800" font-family="Arial, Helvetica, sans-serif">Risk</text>
+        <text x="${cx}" y="389" text-anchor="middle" fill="#0b2b58" font-size="29" font-weight="800" font-family="Arial, Helvetica, sans-serif">Assessment</text>
+
+        <line x1="190" y1="414" x2="236" y2="414" stroke="#c9972f" stroke-width="3" />
+        <circle cx="${cx}" cy="414" r="5" fill="#c9972f" />
+        <line x1="264" y1="414" x2="310" y2="414" stroke="#c9972f" stroke-width="3" />
       </svg>`;
   }
 
@@ -428,16 +431,16 @@ var supabase = window.supabase;
       return { domain: d, avg, index: i + 1 };
     });
 
-    // Mirror the reference layout when there are exactly six domains:
-    // top row = small / large-center / small, bottom row = three equal.
+    // Mirror the reference layout exactly when there are six domains:
+    // top row = small / large-center / small, bottom row = three medium.
     if (cells.length === 6) {
       const top = [cells[0], cells[1], cells[2]];
       const bottom = [cells[3], cells[4], cells[5]];
       const topHtml = top.map((c, i) =>
-        domainGaugeCellHtml(c.domain, c.avg, { index: c.index, large: i === 1 })
+        domainGaugeCellHtml(c.domain, c.avg, { index: c.index, size: i === 1 ? 'large' : 'small' })
       ).join('');
       const bottomHtml = bottom.map((c) =>
-        domainGaugeCellHtml(c.domain, c.avg, { index: c.index, large: false })
+        domainGaugeCellHtml(c.domain, c.avg, { index: c.index, size: 'medium' })
       ).join('');
       return `
         <div class="domain-gauge-grid">
@@ -446,7 +449,7 @@ var supabase = window.supabase;
         </div>`;
     }
 
-    const html = cells.map((c) => domainGaugeCellHtml(c.domain, c.avg, { index: c.index, large: false })).join('');
+    const html = cells.map((c) => domainGaugeCellHtml(c.domain, c.avg, { index: c.index, size: 'medium' })).join('');
     return `<div class="domain-gauge-grid"><div class="gauge-row">${html}</div></div>`;
   }
 
