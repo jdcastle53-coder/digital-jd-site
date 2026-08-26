@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <title>Executive Dashboard - Digital JD</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Organization-wide leadership risk gauge with drill-down by department and individual across six risk domains." />
+  <meta name="description" content="Organization-wide leadership risk gauges with drill-down by department and individual across six risk domains." />
   <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="auth.js"></script>
@@ -20,37 +20,44 @@ var supabase = window.supabase;
 
   <style>
     :root {
-      --bg: #0f172a;
-      --panel: #111c34;
-      --panel-2: #16213d;
-      --border: rgba(255,255,255,0.08);
-      --text: #e2e8f0;
+      --bg-deep: #060b18;
+      --bg-mid: #0c1730;
+      --panel: #0f1c38;
+      --panel-2: #0a1428;
+      --border: rgba(212,175,55,0.18);
+      --text: #eef1f8;
       --muted: #9fb0cc;
       --gold: #d4af37;
-      --blue-1: #2563eb;
-      --blue-2: #1d4ed8;
+      --gold-bright: #f3d576;
       --input: #0b1223;
-      --shadow: 0 18px 48px rgba(0,0,0,0.32);
+      --shadow: 0 24px 64px rgba(0,0,0,0.55);
       --risk-low: #22c55e;
       --risk-mid: #f59e0b;
       --risk-high: #ef4444;
+      --face-cream: #ecdcb0;
+      --face-cream-2: #d8c391;
+      --navy-deep: #0a1730;
+      --navy-mid: #16264a;
     }
     * { box-sizing: border-box; }
     html, body {
       margin: 0; padding: 0;
-      background: linear-gradient(180deg, #081121 0%, #0f172a 100%);
+      background:
+        radial-gradient(ellipse 900px 500px at 50% -10%, rgba(212,175,55,0.10), transparent 60%),
+        radial-gradient(ellipse 1100px 700px at 50% 110%, rgba(37,80,180,0.16), transparent 60%),
+        linear-gradient(180deg, var(--bg-deep) 0%, var(--bg-mid) 50%, var(--bg-deep) 100%);
       color: var(--text);
       font-family: Georgia, "Times New Roman", serif;
       min-height: 100%;
     }
-    body { display: flex; justify-content: center; padding: 16px 12px 32px; }
-    .shell { width: 100%; max-width: 1100px; }
+    body { display: flex; justify-content: center; padding: 16px 12px 40px; }
+    .shell { width: 100%; max-width: 1180px; }
     .app {
       position: relative;
-      background: rgba(255,255,255,0.02);
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
       border: 1px solid var(--border);
       border-radius: 22px;
-      box-shadow: var(--shadow);
+      box-shadow: var(--shadow), inset 0 0 0 1px rgba(212,175,55,0.06);
       overflow: hidden;
     }
     .app::before {
@@ -64,16 +71,16 @@ var supabase = window.supabase;
     @keyframes signalLine { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
     .app-top {
       display: flex; align-items: center; justify-content: space-between;
-      padding: 12px 20px; border-bottom: 1px solid var(--border);
-      background: rgba(255,255,255,0.02); flex-wrap: wrap; gap: 12px;
+      padding: 14px 22px; border-bottom: 1px solid var(--border);
+      background: rgba(0,0,0,0.15); flex-wrap: wrap; gap: 12px;
     }
     .page-title-stack { display: flex; flex-direction: column; gap: 0; line-height: 1.2; }
-    .page-title { color: var(--gold); font-size: 17px; font-weight: 700; letter-spacing: 0.01em; }
+    .page-title { color: var(--gold-bright); font-size: 18px; font-weight: 700; letter-spacing: 0.02em; }
     .page-subtitle { color: var(--muted); font-size: 12px; }
     .app-top-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .home-link { color: var(--muted); text-decoration: none; font-size: 13px; padding: 8px 4px; white-space: nowrap; }
-    .home-link:hover { color: var(--text); }
-    .content { padding: 24px 22px 28px; }
+    .home-link:hover { color: var(--gold-bright); }
+    .content { padding: 28px 20px 36px; }
 
     .state-panel { text-align: center; padding: 48px 20px; color: var(--muted); }
     .locked-card {
@@ -95,7 +102,7 @@ var supabase = window.supabase;
     .cta-full-btn:hover { transform: translateY(-1px); }
 
     .tab-row {
-      display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+      display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; justify-content: center;
     }
     .tab-btn {
       background: transparent;
@@ -109,15 +116,15 @@ var supabase = window.supabase;
       transition: all 0.15s ease;
     }
     .tab-btn.active {
-      background: rgba(212,175,55,0.12);
-      border-color: rgba(212,175,55,0.5);
+      background: rgba(212,175,55,0.14);
+      border-color: rgba(212,175,55,0.55);
       color: #f6d36b;
     }
     .tab-btn:hover { color: var(--text); }
 
     .selector-row {
-      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
-      margin-bottom: 20px;
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: center;
+      margin-bottom: 8px;
     }
     .selector-row select {
       background: var(--input); color: var(--text);
@@ -127,36 +134,44 @@ var supabase = window.supabase;
     }
     .selector-label { color: var(--muted); font-size: 12px; }
 
-    .dashboard-grid {
-      display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start;
-    }
-    .gauge-panel {
-      background: linear-gradient(180deg, var(--panel), var(--panel-2));
-      border: 1px solid var(--border);
-      border-radius: 16px; padding: 24px;
-      flex: 0 0 340px;
-      display: flex; flex-direction: column; align-items: center;
-    }
-    .gauge-title { color: var(--text); font-size: 15px; font-weight: 700; margin-bottom: 4px; text-align: center; }
-    .gauge-sub { color: var(--muted); font-size: 12px; margin-bottom: 12px; text-align: center; }
-    .gauge-value-label { font-size: 34px; font-weight: 800; margin-top: -6px; }
-    .gauge-status-label { font-size: 13px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; margin-top: 2px; }
-    .gauge-no-data { color: var(--muted); font-size: 13px; text-align: center; padding: 40px 10px; }
+    .view-caption { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 22px; }
+    .view-caption strong { color: var(--gold-bright); }
 
-    .domain-panel {
-      background: linear-gradient(180deg, var(--panel), var(--panel-2));
-      border: 1px solid var(--border);
-      border-radius: 16px; padding: 22px;
-      flex: 1 1 380px;
-      min-width: 280px;
+    /* ---------- Gauge grid, laid out to mirror the reference: stacked on
+       mobile, 3-across / large-center on wider screens ---------- */
+    .domain-gauge-grid {
+      display: flex; flex-direction: column; align-items: center; gap: 40px;
+      margin: 0 auto;
     }
-    .domain-panel h2 { color: var(--text); font-size: 15px; margin: 0 0 16px; }
-    .domain-row { margin-bottom: 14px; }
-    .domain-row-top { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
-    .domain-row-name { color: var(--text); }
-    .domain-row-pct { color: var(--muted); font-weight: 700; }
-    .domain-bar-track { height: 8px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
-    .domain-bar-fill { height: 100%; border-radius: 999px; transition: width 0.4s ease; }
+    .gauge-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: end; gap: 30px 26px; }
+    .domain-gauge-cell { display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .gauge-dial-wrap { filter: drop-shadow(0 16px 30px rgba(0,0,0,0.6)); position: relative; }
+    .gauge-nameplate {
+      margin-top: -10px;
+      background: linear-gradient(180deg, #17264a, #0a1122);
+      border: 2px solid var(--gold);
+      border-radius: 10px;
+      padding: 7px 20px;
+      display: flex; align-items: center; gap: 8px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
+      position: relative;
+      z-index: 1;
+      white-space: nowrap;
+    }
+    .gauge-nameplate .num { color: var(--gold-bright); font-weight: 800; font-size: 15px; }
+    .gauge-nameplate .name { color: #f4f1e6; font-weight: 700; font-size: 14px; letter-spacing: 0.01em; }
+    .gauge-nameplate::before, .gauge-nameplate::after {
+      content: ""; position: absolute; width: 6px; height: 6px; border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #f6e7a8, #a97e1f);
+      top: 50%; transform: translateY(-50%);
+    }
+    .gauge-nameplate::before { left: 7px; }
+    .gauge-nameplate::after { right: 7px; }
+    .gauge-no-data-caption { color: var(--muted); font-size: 11px; margin-top: 6px; text-align: center; }
+
+    @media (min-width: 760px) {
+      .gauge-row.top { align-items: flex-end; }
+    }
 
     .setup-note {
       background: rgba(212,175,55,0.08);
@@ -250,11 +265,10 @@ var supabase = window.supabase;
     }[c]));
   }
 
-  function riskColor(pct) {
-    if (pct == null) return '#64748b';
-    if (pct <= 33) return 'var(--risk-low)';
-    if (pct <= 66) return 'var(--risk-mid)';
-    return 'var(--risk-high)';
+  function riskColorHex(pct) {
+    if (pct <= 33) return '#22c55e';
+    if (pct <= 66) return '#f59e0b';
+    return '#ef4444';
   }
 
   function riskStatusLabel(pct) {
@@ -264,7 +278,9 @@ var supabase = window.supabase;
     return 'Elevated Risk';
   }
 
-  /* ---------- Gauge (tachometer-style, 0% bottom-left to 100% bottom-right) ---------- */
+  /* ---------- Executive-style circular gauge, modeled on the reference
+     dial art: gold rim, navy bezel, cream face, five-zone rainbow band,
+     gold hub, navy needle, "Risk Assessment" legend inside the face. ---------- */
   function polar(cx, cy, r, angleDeg) {
     const rad = (angleDeg * Math.PI) / 180;
     return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
@@ -285,87 +301,153 @@ var supabase = window.supabase;
     return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 1 ${end.x} ${end.y}`;
   }
 
-  function buildGaugeSvg(pct) {
-    const size = 260;
-    const cx = size / 2;
-    const cy = size / 2 + 20;
-    const r = 95;
+  let gaugeUid = 0;
 
-    const zones = [
-      { from: 0, to: 33, color: 'var(--risk-low)' },
-      { from: 33, to: 66, color: 'var(--risk-mid)' },
-      { from: 66, to: 100, color: 'var(--risk-high)' },
+  function buildDomainGaugeSvg(pct, opts) {
+    opts = opts || {};
+    const size = opts.large ? 300 : 232;
+    const uid = 'g' + (gaugeUid++);
+    const cx = size / 2;
+    const cy = size / 2;
+    const rOuter = size / 2 - 3;
+    const rNavy = rOuter - 8;
+    const rGoldInner = rNavy - 12;
+    const rFace = rGoldInner - 4;
+    const rBand = rFace - 16;
+    const bandWidth = size * 0.075;
+    const hasData = pct != null;
+    const needleAngle = hasData ? angleForValue(pct) : GAUGE_START_ANGLE;
+    const needleColor = hasData ? '#0d1a33' : '#5b6577';
+
+    const zoneLabels = [
+      { from: 0, to: 20, label: 'Very Low' },
+      { from: 20, to: 40, label: 'Low' },
+      { from: 40, to: 60, label: 'Moderate' },
+      { from: 60, to: 80, label: 'High' },
+      { from: 80, to: 100, label: 'Critical' },
     ];
 
-    let zonesHtml = '';
-    for (const z of zones) {
-      const a1 = angleForValue(z.from);
-      const a2 = angleForValue(z.to);
-      zonesHtml += `<path d="${arcPath(cx, cy, r, a1, a2)}" stroke="${z.color}" stroke-width="16" fill="none" stroke-linecap="butt" opacity="0.85" />`;
+    let ticks = '';
+    for (let i = 0; i <= 20; i++) {
+      const a = angleForValue((i / 20) * 100);
+      const major = i % 5 === 0;
+      const p1 = polar(cx, cy, rBand - bandWidth / 2 - 2, a);
+      const p2 = polar(cx, cy, rBand - bandWidth / 2 - (major ? 9 : 5), a);
+      ticks += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="#5a4a26" stroke-width="${major ? 1.6 : 1}" opacity="0.55" />`;
     }
 
-    const needleAngle = pct == null ? GAUGE_START_ANGLE : angleForValue(pct);
-    const needleTip = polar(cx, cy, r - 22, needleAngle);
-    const needleColor = pct == null ? '#64748b' : riskColorHex(pct);
+    let labelsHtml = '';
+    for (const z of zoneLabels) {
+      const mid = (z.from + z.to) / 2;
+      const a = angleForValue(mid);
+      const p = polar(cx, cy, rBand + bandWidth / 2 + (opts.large ? 16 : 13), a);
+      const tangent = a + 90;
+      labelsHtml += `<text x="${p.x}" y="${p.y}" fill="#fdf6e3" font-size="${opts.large ? 11 : 9}" font-family="Georgia, serif" font-weight="700" text-anchor="middle" dominant-baseline="middle" transform="rotate(${tangent} ${p.x} ${p.y})" style="text-shadow:0 1px 2px rgba(0,0,0,0.6);">${z.label}</text>`;
+    }
+
+    const needleLen = rBand - bandWidth / 2 - 14;
+    const tip = polar(cx, cy, needleLen, needleAngle);
+    const baseL = polar(cx, cy, 9, needleAngle + 90);
+    const baseR = polar(cx, cy, 9, needleAngle - 90);
+    const tailTip = polar(cx, cy, 16, needleAngle + 180);
 
     return `
-      <svg width="${size}" height="${size / 2 + 60}" viewBox="0 0 ${size} ${size / 2 + 60}">
-        <path d="${arcPath(cx, cy, r, GAUGE_START_ANGLE, GAUGE_END_ANGLE)}" stroke="rgba(255,255,255,0.08)" stroke-width="18" fill="none" />
-        ${zonesHtml}
-        <line x1="${cx}" y1="${cy}" x2="${needleTip.x}" y2="${needleTip.y}" stroke="${needleColor}" stroke-width="4" stroke-linecap="round" />
-        <circle cx="${cx}" cy="${cy}" r="8" fill="${needleColor}" />
-        <text x="${polar(cx, cy, r + 22, GAUGE_START_ANGLE).x}" y="${polar(cx, cy, r + 22, GAUGE_START_ANGLE).y}" fill="var(--muted)" font-size="11" font-family="Georgia, serif" text-anchor="middle">0%</text>
-        <text x="${polar(cx, cy, r + 24, GAUGE_END_ANGLE).x}" y="${polar(cx, cy, r + 24, GAUGE_END_ANGLE).y}" fill="var(--muted)" font-size="11" font-family="Georgia, serif" text-anchor="middle">100%</text>
+      <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" role="img" aria-label="${hasData ? pct + ' percent risk' : 'no data yet'}">
+        <defs>
+          <radialGradient id="${uid}-gold" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#f9edb7" />
+            <stop offset="45%" stop-color="#d4af37" />
+            <stop offset="100%" stop-color="#8a6a1c" />
+          </radialGradient>
+          <radialGradient id="${uid}-navy" cx="35%" cy="30%" r="75%">
+            <stop offset="0%" stop-color="#243a68" />
+            <stop offset="60%" stop-color="#132449" />
+            <stop offset="100%" stop-color="#060f24" />
+          </radialGradient>
+          <radialGradient id="${uid}-face" cx="42%" cy="34%" r="75%">
+            <stop offset="0%" stop-color="#f5ead0" />
+            <stop offset="70%" stop-color="#e7d5a3" />
+            <stop offset="100%" stop-color="#cdb27e" />
+          </radialGradient>
+          <radialGradient id="${uid}-hub" cx="35%" cy="30%" r="80%">
+            <stop offset="0%" stop-color="#fdf3c4" />
+            <stop offset="50%" stop-color="#d4af37" />
+            <stop offset="100%" stop-color="#7a5c17" />
+          </radialGradient>
+          <linearGradient id="${uid}-band" x1="0%" y1="50%" x2="100%" y2="50%">
+            <stop offset="0%" stop-color="#3730a3" />
+            <stop offset="20%" stop-color="#2563eb" />
+            <stop offset="40%" stop-color="#22c55e" />
+            <stop offset="60%" stop-color="#eab308" />
+            <stop offset="80%" stop-color="#f97316" />
+            <stop offset="100%" stop-color="#dc2626" />
+          </linearGradient>
+        </defs>
+
+        <circle cx="${cx}" cy="${cy}" r="${rOuter}" fill="url(#${uid}-gold)" />
+        <circle cx="${cx}" cy="${cy}" r="${rNavy}" fill="url(#${uid}-navy)" />
+        <circle cx="${cx}" cy="${cy}" r="${rGoldInner}" fill="url(#${uid}-gold)" />
+        <circle cx="${cx}" cy="${cy}" r="${rFace}" fill="url(#${uid}-face)" />
+
+        <path d="${arcPath(cx, cy, rBand, GAUGE_START_ANGLE, GAUGE_END_ANGLE)}" stroke="url(#${uid}-band)" stroke-width="${bandWidth}" fill="none" stroke-linecap="butt" />
+        ${ticks}
+        ${labelsHtml}
+
+        <text x="${cx}" y="${cy + rFace * 0.42}" fill="#12233f" font-size="${opts.large ? 20 : 15}" font-family="Georgia, serif" font-weight="800" text-anchor="middle">Risk</text>
+        <text x="${cx}" y="${cy + rFace * 0.42 + (opts.large ? 22 : 17)}" fill="#12233f" font-size="${opts.large ? 20 : 15}" font-family="Georgia, serif" font-weight="800" text-anchor="middle">Assessment</text>
+        <line x1="${cx - 14}" y1="${cy + rFace * 0.62}" x2="${cx + 14}" y2="${cy + rFace * 0.62}" stroke="#8a6a1c" stroke-width="1.5" />
+
+        <path d="M ${baseL.x} ${baseL.y} L ${tip.x} ${tip.y} L ${baseR.x} ${baseR.y} L ${tailTip.x} ${tailTip.y} Z" fill="${needleColor}" />
+        <circle cx="${cx}" cy="${cy}" r="${opts.large ? 15 : 12}" fill="url(#${uid}-hub)" stroke="#5c4413" stroke-width="1" />
+        <circle cx="${cx - 3}" cy="${cy - 3}" r="${opts.large ? 4 : 3}" fill="#fff8dd" opacity="0.85" />
       </svg>`;
   }
 
-  function riskColorHex(pct) {
-    if (pct <= 33) return '#22c55e';
-    if (pct <= 66) return '#f59e0b';
-    return '#ef4444';
+  function domainGaugeCellHtml(domain, avg, opts) {
+    opts = opts || {};
+    const pct = avg == null ? null : Math.round(((5 - avg) / 4) * 100);
+    return `
+      <div class="domain-gauge-cell">
+        <div class="gauge-dial-wrap">${buildDomainGaugeSvg(pct, opts)}</div>
+        <div class="gauge-nameplate">
+          <span class="num">${opts.index}</span>
+          <span class="name">${escapeHtml(domain.label)}</span>
+        </div>
+        ${pct == null ? '<div class="gauge-no-data-caption">No data yet</div>' : ''}
+      </div>`;
   }
 
-  function renderGaugePanel(title, sub, pct) {
-    if (pct == null) {
+  function renderDomainGaugeGrid(domainAverages) {
+    const domains = dashboardData.domains;
+    if (!domains || domains.length === 0) {
+      return `<div class="state-panel">No risk domains configured yet.</div>`;
+    }
+
+    const cells = domains.map((d, i) => {
+      const avg = domainAverages ? domainAverages[d.key] : null;
+      return { domain: d, avg, index: i + 1 };
+    });
+
+    // Mirror the reference layout when there are exactly six domains:
+    // top row = small / large-center / small, bottom row = three equal.
+    if (cells.length === 6) {
+      const top = [cells[0], cells[1], cells[2]];
+      const bottom = [cells[3], cells[4], cells[5]];
+      const topHtml = top.map((c, i) =>
+        domainGaugeCellHtml(c.domain, c.avg, { index: c.index, large: i === 1 })
+      ).join('');
+      const bottomHtml = bottom.map((c) =>
+        domainGaugeCellHtml(c.domain, c.avg, { index: c.index, large: false })
+      ).join('');
       return `
-        <div class="gauge-panel">
-          <div class="gauge-title">${escapeHtml(title)}</div>
-          <div class="gauge-sub">${escapeHtml(sub)}</div>
-          <div class="gauge-no-data">No submitted risk assessments yet for this view.</div>
+        <div class="domain-gauge-grid">
+          <div class="gauge-row top">${topHtml}</div>
+          <div class="gauge-row bottom">${bottomHtml}</div>
         </div>`;
     }
-    const color = riskColorHex(pct);
-    return `
-      <div class="gauge-panel">
-        <div class="gauge-title">${escapeHtml(title)}</div>
-        <div class="gauge-sub">${escapeHtml(sub)}</div>
-        ${buildGaugeSvg(pct)}
-        <div class="gauge-value-label" style="color:${color};">${pct}%</div>
-        <div class="gauge-status-label" style="color:${color};">${riskStatusLabel(pct)}</div>
-      </div>`;
-  }
 
-  function renderDomainPanel(domainAverages) {
-    const domainMeta = dashboardData.domains;
-    const rows = domainMeta.map((d) => {
-      const avg = domainAverages ? domainAverages[d.key] : null;
-      const pct = avg == null ? null : Math.round(((5 - avg) / 4) * 100);
-      const color = pct == null ? '#64748b' : riskColorHex(pct);
-      return `
-        <div class="domain-row">
-          <div class="domain-row-top">
-            <span class="domain-row-name">${escapeHtml(d.label)}</span>
-            <span class="domain-row-pct">${pct == null ? '\u2014' : pct + '%'}</span>
-          </div>
-          <div class="domain-bar-track"><div class="domain-bar-fill" style="width:${pct == null ? 0 : pct}%; background:${color};"></div></div>
-        </div>`;
-    }).join('');
-
-    return `
-      <div class="domain-panel">
-        <h2>Risk by Domain</h2>
-        ${rows}
-      </div>`;
+    const html = cells.map((c) => domainGaugeCellHtml(c.domain, c.avg, { index: c.index, large: false })).join('');
+    return `<div class="domain-gauge-grid"><div class="gauge-row">${html}</div></div>`;
   }
 
   function setupNoteHtml() {
@@ -393,10 +475,7 @@ var supabase = window.supabase;
           <span>You haven&rsquo;t set up your organization yet. Create departments and add your team to see risk data here.</span>
           <a href="org-admin.html">Set up organization &rarr;</a>
         </div>
-        <div class="dashboard-grid">
-          ${renderGaugePanel('Company Overview', 'No organization set up yet', null)}
-          ${renderDomainPanel(null)}
-        </div>`;
+        ${renderDomainGaugeGrid(null)}`;
       return;
     }
 
@@ -404,11 +483,12 @@ var supabase = window.supabase;
 
     if (activeTab === 'company') {
       const c = dashboardData.company;
+      const caption = c
+        ? `<strong>Company Overview</strong> &mdash; ${c.submittedCount} of ${c.memberCount} people submitted`
+        : `<strong>Company Overview</strong> &mdash; no data yet`;
       body = `
-        <div class="dashboard-grid">
-          ${renderGaugePanel('Company Overview', c ? c.submittedCount + ' of ' + c.memberCount + ' people submitted' : 'No data yet', c ? c.riskPercent : null)}
-          ${renderDomainPanel(c ? c.domainAverages : null)}
-        </div>`;
+        <div class="view-caption">${caption}</div>
+        ${renderDomainGaugeGrid(c ? c.domainAverages : null)}`;
     }
 
     if (activeTab === 'department') {
@@ -419,17 +499,17 @@ var supabase = window.supabase;
       const selected = selectedDepartmentId ? depts.find((d) => d.id === selectedDepartmentId) : null;
       const gaugeData = selected || dashboardData.company;
       const title = selected ? escapeHtml(selected.name) : 'All Departments (combined)';
-      const sub = gaugeData ? (gaugeData.submittedCount + ' of ' + gaugeData.memberCount + ' people submitted') : 'No data yet';
+      const caption = gaugeData
+        ? `<strong>${title}</strong> &mdash; ${gaugeData.submittedCount} of ${gaugeData.memberCount} people submitted`
+        : `<strong>${title}</strong> &mdash; no data yet`;
 
       body = `
         <div class="selector-row">
           <span class="selector-label">Viewing:</span>
           <select id="deptSelect">${options}</select>
         </div>
-        <div class="dashboard-grid">
-          ${renderGaugePanel(title, sub, gaugeData ? gaugeData.riskPercent : null)}
-          ${renderDomainPanel(gaugeData ? gaugeData.domainAverages : null)}
-        </div>`;
+        <div class="view-caption">${caption}</div>
+        ${renderDomainGaugeGrid(gaugeData ? gaugeData.domainAverages : null)}`;
     }
 
     if (activeTab === 'individual') {
@@ -444,19 +524,19 @@ var supabase = window.supabase;
         .join('');
 
       const selected = selectedIndividualUserId ? dashboardData.individuals.find((i) => i.userId === selectedIndividualUserId) : null;
-      let gaugePct, title, sub, domainAverages;
+      let title, caption, domainAverages;
       if (selected) {
         title = escapeHtml(selected.email);
-        sub = selected.hasSubmitted ? 'Latest submitted assessment' : 'No submission yet';
-        gaugePct = selected.hasSubmitted ? selected.riskPercent : null;
+        caption = `<strong>${title}</strong> &mdash; ${selected.hasSubmitted ? 'latest submitted assessment' : 'no submission yet'}`;
         domainAverages = selected.hasSubmitted ? selected.domainAverages : null;
       } else {
         const combined = individualDeptFilter
           ? dashboardData.departments.find((d) => d.id === individualDeptFilter)
           : dashboardData.company;
         title = individualDeptFilter ? (dashboardData.departments.find((d) => d.id === individualDeptFilter)?.name || 'Selected Department') + ' (combined)' : 'All Individuals (combined)';
-        sub = combined ? (combined.submittedCount + ' of ' + combined.memberCount + ' people submitted') : 'No data yet';
-        gaugePct = combined ? combined.riskPercent : null;
+        caption = combined
+          ? `<strong>${escapeHtml(title)}</strong> &mdash; ${combined.submittedCount} of ${combined.memberCount} people submitted`
+          : `<strong>${escapeHtml(title)}</strong> &mdash; no data yet`;
         domainAverages = combined ? combined.domainAverages : null;
       }
 
@@ -467,10 +547,8 @@ var supabase = window.supabase;
           <span class="selector-label">Individual:</span>
           <select id="indivSelect">${indivOptions}</select>
         </div>
-        <div class="dashboard-grid">
-          ${renderGaugePanel(title, sub, gaugePct)}
-          ${renderDomainPanel(domainAverages)}
-        </div>`;
+        <div class="view-caption">${caption}</div>
+        ${renderDomainGaugeGrid(domainAverages)}`;
     }
 
     contentEl.innerHTML = tabRowHtml() + setupNoteHtml() + body;
