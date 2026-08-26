@@ -581,9 +581,14 @@ var supabase = window.supabase;
     els.nextBtn.disabled = true;
     els.nextBtn.textContent = 'Saving…';
 
+    const allScores = Object.values(answers);
+    const overallAvgForStorage = allScores.length
+      ? allScores.reduce(function (a, b) { return a + b; }, 0) / allScores.length
+      : null;
+
     const { data: assessment, error: aErr } = await supabase
       .from('risk_assessments')
-      .insert({ user_id: session.user.id, completed_at: new Date().toISOString() })
+      .insert({ user_id: session.user.id, overall_score: overallAvgForStorage })
       .select('id')
       .single();
 

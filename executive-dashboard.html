@@ -1,0 +1,520 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Executive Dashboard - Digital JD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Organization-wide leadership risk gauge with drill-down by department and individual across six risk domains." />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+  <script>
+window.supabase = (window.Auth && window.Auth.client)
+  ? window.Auth.client
+  : window.supabase.createClient(
+      "https://hiejaayyeprfnrrukbam.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZWphYXl5ZXByZm5ycnVrYmFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5NDI3OTAsImV4cCI6MjA4NjUxODc5MH0._gOINPPuGvuXMpEm_qv_cSkwemt7wvFl6QDADknq4Bg"
+    );
+var supabase = window.supabase;
+  </script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111c34;
+      --panel-2: #16213d;
+      --border: rgba(255,255,255,0.08);
+      --text: #e2e8f0;
+      --muted: #9fb0cc;
+      --gold: #d4af37;
+      --blue-1: #2563eb;
+      --blue-2: #1d4ed8;
+      --input: #0b1223;
+      --shadow: 0 18px 48px rgba(0,0,0,0.32);
+      --risk-low: #22c55e;
+      --risk-mid: #f59e0b;
+      --risk-high: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: linear-gradient(180deg, #081121 0%, #0f172a 100%);
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      min-height: 100%;
+    }
+    body { display: flex; justify-content: center; padding: 16px 12px 32px; }
+    .shell { width: 100%; max-width: 1100px; }
+    .app {
+      position: relative;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .app::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, #d4af37, #60a5fa, #d4af37, transparent);
+      background-size: 200% 100%;
+      animation: signalLine 5s linear infinite;
+      z-index: 2;
+    }
+    @keyframes signalLine { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
+    .app-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02); flex-wrap: wrap; gap: 12px;
+    }
+    .page-title-stack { display: flex; flex-direction: column; gap: 0; line-height: 1.2; }
+    .page-title { color: var(--gold); font-size: 17px; font-weight: 700; letter-spacing: 0.01em; }
+    .page-subtitle { color: var(--muted); font-size: 12px; }
+    .app-top-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .home-link { color: var(--muted); text-decoration: none; font-size: 13px; padding: 8px 4px; white-space: nowrap; }
+    .home-link:hover { color: var(--text); }
+    .content { padding: 24px 22px 28px; }
+
+    .state-panel { text-align: center; padding: 48px 20px; color: var(--muted); }
+    .locked-card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid rgba(212,175,55,0.32);
+      border-radius: 16px; padding: 32px 28px; text-align: center;
+      max-width: 560px; margin: 20px auto 0;
+    }
+    .locked-title { color: #f6d36b; font-size: 19px; font-weight: 800; margin-bottom: 10px; }
+    .locked-body { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+    .cta-full-btn {
+      background: linear-gradient(180deg, #101c33, #0b1223);
+      color: #f6d36b; border: 1px solid rgba(212,175,55,0.7);
+      border-radius: 12px; padding: 14px 24px; font-size: 15px; font-weight: 800;
+      font-family: Georgia, serif; cursor: pointer;
+      box-shadow: 0 0 0 1px rgba(212,175,55,0.15) inset, 0 10px 24px rgba(212,175,55,0.18);
+      transition: transform 0.15s ease;
+    }
+    .cta-full-btn:hover { transform: translateY(-1px); }
+
+    .tab-row {
+      display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .tab-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 999px;
+      padding: 9px 18px;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: Georgia, serif;
+      transition: all 0.15s ease;
+    }
+    .tab-btn.active {
+      background: rgba(212,175,55,0.12);
+      border-color: rgba(212,175,55,0.5);
+      color: #f6d36b;
+    }
+    .tab-btn:hover { color: var(--text); }
+
+    .selector-row {
+      display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+      margin-bottom: 20px;
+    }
+    .selector-row select {
+      background: var(--input); color: var(--text);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 9px 12px; font-family: Georgia, serif; font-size: 13px;
+      min-width: 180px;
+    }
+    .selector-label { color: var(--muted); font-size: 12px; }
+
+    .dashboard-grid {
+      display: flex; gap: 24px; flex-wrap: wrap; align-items: flex-start;
+    }
+    .gauge-panel {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px;
+      flex: 0 0 340px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .gauge-title { color: var(--text); font-size: 15px; font-weight: 700; margin-bottom: 4px; text-align: center; }
+    .gauge-sub { color: var(--muted); font-size: 12px; margin-bottom: 12px; text-align: center; }
+    .gauge-value-label { font-size: 34px; font-weight: 800; margin-top: -6px; }
+    .gauge-status-label { font-size: 13px; font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase; margin-top: 2px; }
+    .gauge-no-data { color: var(--muted); font-size: 13px; text-align: center; padding: 40px 10px; }
+
+    .domain-panel {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 22px;
+      flex: 1 1 380px;
+      min-width: 280px;
+    }
+    .domain-panel h2 { color: var(--text); font-size: 15px; margin: 0 0 16px; }
+    .domain-row { margin-bottom: 14px; }
+    .domain-row-top { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+    .domain-row-name { color: var(--text); }
+    .domain-row-pct { color: var(--muted); font-weight: 700; }
+    .domain-bar-track { height: 8px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; }
+    .domain-bar-fill { height: 100%; border-radius: 999px; transition: width 0.4s ease; }
+
+    .setup-note {
+      background: rgba(212,175,55,0.08);
+      border: 1px solid rgba(212,175,55,0.28);
+      border-radius: 12px; padding: 14px 16px; margin-bottom: 20px;
+      color: var(--muted); font-size: 13px; line-height: 1.6;
+      display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+    }
+    .setup-note a { color: #f6d36b; text-decoration: none; font-weight: 700; white-space: nowrap; }
+    .setup-note a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="app">
+      <div class="app-top">
+        <div class="app-top-left">
+          <div class="page-title-stack">
+            <div class="page-title">Executive Dashboard</div>
+            <div class="page-subtitle">Leadership risk, company-wide</div>
+          </div>
+        </div>
+        <div class="app-top-right">
+          <a href="jd-brain.html" class="home-link">Back to Digital JD</a>
+          <a href="org-admin.html" class="home-link">Organization Setup</a>
+        </div>
+      </div>
+
+      <div class="content" id="content">
+        <div class="state-panel" id="loadingState">Loading&hellip;</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+(async function () {
+  const contentEl = document.getElementById('content');
+
+  function renderLocked() {
+    contentEl.innerHTML = `
+      <div class="locked-card">
+        <div class="locked-title">Executive Feature</div>
+        <div class="locked-body">
+          The Executive Dashboard is available on the Digital JD Executive plan.
+        </div>
+        <a href="index.html#pricing"><button class="cta-full-btn">Explore Plans</button></a>
+      </div>`;
+  }
+
+  function renderError(message) {
+    contentEl.innerHTML = `<div class="state-panel">${message}</div>`;
+  }
+
+  let session;
+  try {
+    const { data } = await supabase.auth.getSession();
+    session = data.session;
+  } catch (e) {
+    return renderError('Could not check your session. Please refresh and try again.');
+  }
+
+  if (!session) {
+    window.location.href = 'signin.html?next=executive-dashboard.html';
+    return;
+  }
+
+  const meta = session.user.user_metadata || {};
+  if (meta.plan !== 'executive') {
+    renderLocked();
+    return;
+  }
+
+  let dashboardData = null;
+  let activeTab = 'company'; // 'company' | 'department' | 'individual'
+  let selectedDepartmentId = null; // null = all departments combined
+  let selectedIndividualUserId = null; // null = all individuals combined
+  let individualDeptFilter = null;
+
+  async function loadData() {
+    const res = await fetch('/api/dashboard-data', {
+      headers: { Authorization: 'Bearer ' + session.access_token },
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Could not load dashboard data.');
+    return json;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+  }
+
+  function riskColor(pct) {
+    if (pct == null) return '#64748b';
+    if (pct <= 33) return 'var(--risk-low)';
+    if (pct <= 66) return 'var(--risk-mid)';
+    return 'var(--risk-high)';
+  }
+
+  function riskStatusLabel(pct) {
+    if (pct == null) return 'No data yet';
+    if (pct <= 33) return 'Healthy';
+    if (pct <= 66) return 'Watch';
+    return 'Elevated Risk';
+  }
+
+  /* ---------- Gauge (tachometer-style, 0% bottom-left to 100% bottom-right) ---------- */
+  function polar(cx, cy, r, angleDeg) {
+    const rad = (angleDeg * Math.PI) / 180;
+    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  }
+
+  const GAUGE_START_ANGLE = 135; // bottom-left
+  const GAUGE_END_ANGLE = 405;   // bottom-right (135 + 270 sweep)
+
+  function angleForValue(pct) {
+    const clamped = Math.max(0, Math.min(100, pct == null ? 0 : pct));
+    return GAUGE_START_ANGLE + (clamped / 100) * (GAUGE_END_ANGLE - GAUGE_START_ANGLE);
+  }
+
+  function arcPath(cx, cy, r, startAngle, endAngle) {
+    const start = polar(cx, cy, r, startAngle);
+    const end = polar(cx, cy, r, endAngle);
+    const largeArc = Math.abs(endAngle - startAngle) > 180 ? 1 : 0;
+    return `M ${start.x} ${start.y} A ${r} ${r} 0 ${largeArc} 1 ${end.x} ${end.y}`;
+  }
+
+  function buildGaugeSvg(pct) {
+    const size = 260;
+    const cx = size / 2;
+    const cy = size / 2 + 20;
+    const r = 95;
+
+    const zones = [
+      { from: 0, to: 33, color: 'var(--risk-low)' },
+      { from: 33, to: 66, color: 'var(--risk-mid)' },
+      { from: 66, to: 100, color: 'var(--risk-high)' },
+    ];
+
+    let zonesHtml = '';
+    for (const z of zones) {
+      const a1 = angleForValue(z.from);
+      const a2 = angleForValue(z.to);
+      zonesHtml += `<path d="${arcPath(cx, cy, r, a1, a2)}" stroke="${z.color}" stroke-width="16" fill="none" stroke-linecap="butt" opacity="0.85" />`;
+    }
+
+    const needleAngle = pct == null ? GAUGE_START_ANGLE : angleForValue(pct);
+    const needleTip = polar(cx, cy, r - 22, needleAngle);
+    const needleColor = pct == null ? '#64748b' : riskColorHex(pct);
+
+    return `
+      <svg width="${size}" height="${size / 2 + 60}" viewBox="0 0 ${size} ${size / 2 + 60}">
+        <path d="${arcPath(cx, cy, r, GAUGE_START_ANGLE, GAUGE_END_ANGLE)}" stroke="rgba(255,255,255,0.08)" stroke-width="18" fill="none" />
+        ${zonesHtml}
+        <line x1="${cx}" y1="${cy}" x2="${needleTip.x}" y2="${needleTip.y}" stroke="${needleColor}" stroke-width="4" stroke-linecap="round" />
+        <circle cx="${cx}" cy="${cy}" r="8" fill="${needleColor}" />
+        <text x="${polar(cx, cy, r + 22, GAUGE_START_ANGLE).x}" y="${polar(cx, cy, r + 22, GAUGE_START_ANGLE).y}" fill="var(--muted)" font-size="11" font-family="Georgia, serif" text-anchor="middle">0%</text>
+        <text x="${polar(cx, cy, r + 24, GAUGE_END_ANGLE).x}" y="${polar(cx, cy, r + 24, GAUGE_END_ANGLE).y}" fill="var(--muted)" font-size="11" font-family="Georgia, serif" text-anchor="middle">100%</text>
+      </svg>`;
+  }
+
+  function riskColorHex(pct) {
+    if (pct <= 33) return '#22c55e';
+    if (pct <= 66) return '#f59e0b';
+    return '#ef4444';
+  }
+
+  function renderGaugePanel(title, sub, pct) {
+    if (pct == null) {
+      return `
+        <div class="gauge-panel">
+          <div class="gauge-title">${escapeHtml(title)}</div>
+          <div class="gauge-sub">${escapeHtml(sub)}</div>
+          <div class="gauge-no-data">No submitted risk assessments yet for this view.</div>
+        </div>`;
+    }
+    const color = riskColorHex(pct);
+    return `
+      <div class="gauge-panel">
+        <div class="gauge-title">${escapeHtml(title)}</div>
+        <div class="gauge-sub">${escapeHtml(sub)}</div>
+        ${buildGaugeSvg(pct)}
+        <div class="gauge-value-label" style="color:${color};">${pct}%</div>
+        <div class="gauge-status-label" style="color:${color};">${riskStatusLabel(pct)}</div>
+      </div>`;
+  }
+
+  function renderDomainPanel(domainAverages) {
+    const domainMeta = dashboardData.domains;
+    const rows = domainMeta.map((d) => {
+      const avg = domainAverages ? domainAverages[d.key] : null;
+      const pct = avg == null ? null : Math.round(((5 - avg) / 4) * 100);
+      const color = pct == null ? '#64748b' : riskColorHex(pct);
+      return `
+        <div class="domain-row">
+          <div class="domain-row-top">
+            <span class="domain-row-name">${escapeHtml(d.label)}</span>
+            <span class="domain-row-pct">${pct == null ? '\u2014' : pct + '%'}</span>
+          </div>
+          <div class="domain-bar-track"><div class="domain-bar-fill" style="width:${pct == null ? 0 : pct}%; background:${color};"></div></div>
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="domain-panel">
+        <h2>Risk by Domain</h2>
+        ${rows}
+      </div>`;
+  }
+
+  function setupNoteHtml() {
+    if (dashboardData.hasOrg && (dashboardData.departments.length > 0 || dashboardData.individuals.length > 1)) return '';
+    return `
+      <div class="setup-note">
+        <span>Add departments and teammates to unlock department and company-wide comparisons.</span>
+        <a href="org-admin.html">Set up organization &rarr;</a>
+      </div>`;
+  }
+
+  function tabRowHtml() {
+    return `
+      <div class="tab-row">
+        <button class="tab-btn ${activeTab === 'company' ? 'active' : ''}" data-tab="company">Company Overview</button>
+        <button class="tab-btn ${activeTab === 'department' ? 'active' : ''}" data-tab="department">By Department</button>
+        <button class="tab-btn ${activeTab === 'individual' ? 'active' : ''}" data-tab="individual">By Individual</button>
+      </div>`;
+  }
+
+  function render() {
+    if (!dashboardData.hasOrg) {
+      contentEl.innerHTML = `
+        <div class="setup-note">
+          <span>You haven&rsquo;t set up your organization yet. Create departments and add your team to see risk data here.</span>
+          <a href="org-admin.html">Set up organization &rarr;</a>
+        </div>
+        <div class="dashboard-grid">
+          ${renderGaugePanel('Company Overview', 'No organization set up yet', null)}
+          ${renderDomainPanel(null)}
+        </div>`;
+      return;
+    }
+
+    let body = '';
+
+    if (activeTab === 'company') {
+      const c = dashboardData.company;
+      body = `
+        <div class="dashboard-grid">
+          ${renderGaugePanel('Company Overview', c ? c.submittedCount + ' of ' + c.memberCount + ' people submitted' : 'No data yet', c ? c.riskPercent : null)}
+          ${renderDomainPanel(c ? c.domainAverages : null)}
+        </div>`;
+    }
+
+    if (activeTab === 'department') {
+      const depts = dashboardData.departments;
+      const options = ['<option value="">All Departments (combined)</option>']
+        .concat(depts.map((d) => `<option value="${d.id}" ${d.id === selectedDepartmentId ? 'selected' : ''}>${escapeHtml(d.name)}</option>`))
+        .join('');
+      const selected = selectedDepartmentId ? depts.find((d) => d.id === selectedDepartmentId) : null;
+      const gaugeData = selected || dashboardData.company;
+      const title = selected ? escapeHtml(selected.name) : 'All Departments (combined)';
+      const sub = gaugeData ? (gaugeData.submittedCount + ' of ' + gaugeData.memberCount + ' people submitted') : 'No data yet';
+
+      body = `
+        <div class="selector-row">
+          <span class="selector-label">Viewing:</span>
+          <select id="deptSelect">${options}</select>
+        </div>
+        <div class="dashboard-grid">
+          ${renderGaugePanel(title, sub, gaugeData ? gaugeData.riskPercent : null)}
+          ${renderDomainPanel(gaugeData ? gaugeData.domainAverages : null)}
+        </div>`;
+    }
+
+    if (activeTab === 'individual') {
+      const depts = dashboardData.departments;
+      const deptOptions = ['<option value="">All Departments</option>']
+        .concat(depts.map((d) => `<option value="${d.id}" ${d.id === individualDeptFilter ? 'selected' : ''}>${escapeHtml(d.name)}</option>`))
+        .join('');
+
+      const filteredIndividuals = dashboardData.individuals.filter((i) => !individualDeptFilter || i.departmentId === individualDeptFilter);
+      const indivOptions = ['<option value="">All Individuals (combined)</option>']
+        .concat(filteredIndividuals.map((i) => `<option value="${i.userId}" ${i.userId === selectedIndividualUserId ? 'selected' : ''}>${escapeHtml(i.email)}${i.hasSubmitted ? '' : ' (no submission yet)'}</option>`))
+        .join('');
+
+      const selected = selectedIndividualUserId ? dashboardData.individuals.find((i) => i.userId === selectedIndividualUserId) : null;
+      let gaugePct, title, sub, domainAverages;
+      if (selected) {
+        title = escapeHtml(selected.email);
+        sub = selected.hasSubmitted ? 'Latest submitted assessment' : 'No submission yet';
+        gaugePct = selected.hasSubmitted ? selected.riskPercent : null;
+        domainAverages = selected.hasSubmitted ? selected.domainAverages : null;
+      } else {
+        const combined = individualDeptFilter
+          ? dashboardData.departments.find((d) => d.id === individualDeptFilter)
+          : dashboardData.company;
+        title = individualDeptFilter ? (dashboardData.departments.find((d) => d.id === individualDeptFilter)?.name || 'Selected Department') + ' (combined)' : 'All Individuals (combined)';
+        sub = combined ? (combined.submittedCount + ' of ' + combined.memberCount + ' people submitted') : 'No data yet';
+        gaugePct = combined ? combined.riskPercent : null;
+        domainAverages = combined ? combined.domainAverages : null;
+      }
+
+      body = `
+        <div class="selector-row">
+          <span class="selector-label">Department:</span>
+          <select id="indivDeptSelect">${deptOptions}</select>
+          <span class="selector-label">Individual:</span>
+          <select id="indivSelect">${indivOptions}</select>
+        </div>
+        <div class="dashboard-grid">
+          ${renderGaugePanel(title, sub, gaugePct)}
+          ${renderDomainPanel(domainAverages)}
+        </div>`;
+    }
+
+    contentEl.innerHTML = tabRowHtml() + setupNoteHtml() + body;
+
+    document.querySelectorAll('[data-tab]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        activeTab = btn.getAttribute('data-tab');
+        render();
+      });
+    });
+
+    const deptSelect = document.getElementById('deptSelect');
+    if (deptSelect) {
+      deptSelect.addEventListener('change', () => {
+        selectedDepartmentId = deptSelect.value || null;
+        render();
+      });
+    }
+
+    const indivDeptSelect = document.getElementById('indivDeptSelect');
+    if (indivDeptSelect) {
+      indivDeptSelect.addEventListener('change', () => {
+        individualDeptFilter = indivDeptSelect.value || null;
+        selectedIndividualUserId = null;
+        render();
+      });
+    }
+
+    const indivSelect = document.getElementById('indivSelect');
+    if (indivSelect) {
+      indivSelect.addEventListener('change', () => {
+        selectedIndividualUserId = indivSelect.value || null;
+        render();
+      });
+    }
+  }
+
+  try {
+    dashboardData = await loadData();
+    render();
+  } catch (e) {
+    renderError(e.message || 'Could not load dashboard data.');
+  }
+})();
+  </script>
+</body>
+</html>
