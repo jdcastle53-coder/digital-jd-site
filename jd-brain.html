@@ -782,7 +782,20 @@ var supabase = window.supabase;
   </div>
 
   <script>
-    let conversationId = null;
+    // Within-conversation memory: keep the same conversationId across a page
+    // refresh (tab close still starts fresh, matching sessionStorage semantics)
+    // so JD Brain can keep recalling earlier turns instead of losing them the
+    // moment the page reloads.
+    const CONVERSATION_ID_KEY = 'jdBrainConversationId';
+    // These two travel WITH conversationId in sessionStorage: without them, a
+    // refresh mid-clarify-flow would restore the id but forget the app was
+    // waiting on answers to questions no longer visible on screen, causing
+    // the next message to be misrouted back into "ask clarifying questions"
+    // (see restoreConversationTranscript, which re-renders the visible
+    // transcript so this state actually makes sense to the user again).
+    const CONVERSATION_STAGE_KEY = 'jdBrainConversationStage';
+    const PENDING_SITUATION_KEY = 'jdBrainPendingSituation';
+    let conversationId = sessionStorage.getItem(CONVERSATION_ID_KEY) || null;
     let isSending = false;
     let currentMode = 'advisor';
     // Two-step advisor flow: 'new' -> user describes a situation and (in
@@ -791,8 +804,8 @@ var supabase = window.supabase;
     // 'awaiting_answers' -> the user is responding to those questions; the
     // NEXT send combines the original situation + their answers and asks for
     // the real, grounded advice.
-    let conversationStage = 'new';
-    let pendingSituation = '';
+    let conversationStage = sessionStorage.getItem(CONVERSATION_STAGE_KEY) || 'new';
+    let pendingSituation = sessionStorage.getItem(PENDING_SITUATION_KEY) || '';
 
     function updateComposerForStage() {
       const composerPanel = document.getElementById('composerPanel');
@@ -864,6 +877,32 @@ var supabase = window.supabase;
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;');
+    }
+
+    // On a fresh page load with a conversationId already in sessionStorage
+    // (i.e. a refresh, not a new tab/session), re-render the visible
+    // transcript from the messages table so the screen matches the state
+    // conversationStage/pendingSituation were just restored to above —
+    // otherwise the chat looks empty while the app silently expects an
+    // answer to questions the user can no longer see.
+    async function restoreConversationTranscript() {
+      if (!conversationId || !window.supabase) return;
+      try {
+        const { data: rows, error } = await window.supabase
+          .from('messages')
+          .select('role, content, created_at')
+          .eq('conversation_id', conversationId)
+          .order('created_at', { ascending: true });
+        if (error || !Array.isArray(rows) || rows.length === 0) return;
+        for (const row of rows) {
+          if (row.role === 'user' || row.role === 'assistant') {
+            addMessage(row.content || '', row.role);
+          }
+        }
+      } catch (_e) {
+        // Restoring the transcript is a nicety, never a blocker — if it
+        // fails, the chat just starts visually empty, same as before.
+      }
     }
 
     function addMessage(text, role) {
@@ -1146,6 +1185,7 @@ var supabase = window.supabase;
             .select()
             .single();
           conversationId = data ? data.id : null;
+          if (conversationId) sessionStorage.setItem(CONVERSATION_ID_KEY, conversationId);
         }
 
         if (conversationId) {
@@ -1166,7 +1206,7 @@ var supabase = window.supabase;
         const response = await fetch('/api/jd-brain-gateway', {
           method: 'POST',
           headers: await jdBrainHeaders(),
-          body: JSON.stringify({ message: requestMessage, mode: requestMode })
+          body: JSON.stringify({ message: requestMessage, mode: requestMode, conversationId })
         });
 
         if (response.status === 401 || response.status === 402) {
@@ -1203,6 +1243,8 @@ var supabase = window.supabase;
           // Hold the situation and wait for the user's answers before advising.
           pendingSituation = text;
           conversationStage = 'awaiting_answers';
+          sessionStorage.setItem(PENDING_SITUATION_KEY, pendingSituation);
+          sessionStorage.setItem(CONVERSATION_STAGE_KEY, conversationStage);
         } else {
           // Render the final advice as separate labeled sections (Situational
           // Analysis / JD Insight / Execution Plan, etc.) and scroll so the
@@ -1223,6 +1265,8 @@ var supabase = window.supabase;
           // Opinion / Workshop request — either way, the topic is closed.
           pendingSituation = '';
           conversationStage = 'new';
+          sessionStorage.removeItem(PENDING_SITUATION_KEY);
+          sessionStorage.removeItem(CONVERSATION_STAGE_KEY);
         }
 
         if (conversationId) {
@@ -1439,6 +1483,7 @@ var supabase = window.supabase;
       if (quickAnswerBtn) quickAnswerBtn.addEventListener('click', () => sendMessage(true));
 
       updateComposerForStage();
+      restoreConversationTranscript();
 
       setupDictation();
 

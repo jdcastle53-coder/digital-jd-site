@@ -1,6 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { readFileSync } from "fs";
 import { join } from "path";
+import { waitUntil } from "@vercel/functions";
 import { verifyAccess, checkRateLimit, getClientIp } from "./_lib/gateway-security.js";
 
 // Allow the function enough time to run research + a full-length generation.
@@ -29,12 +30,162 @@ const CONFIG = {
   researchUrl: "https://api.semanticscholar.org/graph/v1/paper/search",
   researchFields: "Psychology,Business,Economics",
   maxConcepts: 14,
+  // Within-conversation memory: how many prior turns to feed back in, and
+  // how much of each to keep, so history can't blow the token budget.
+  maxHistoryMessages: 12,
+  maxHistoryCharsPerMessage: 1500,
 };
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const getSupabaseClient = () =>
   supabaseUrl && supabaseServiceKey ? createClient(supabaseUrl, supabaseServiceKey) : null;
+
+/* =========================================================
+   WITHIN-CONVERSATION MEMORY (Feature 1 — read side)
+   Loads prior turns of THIS conversation so JD Brain doesn't re-ask
+   questions already answered earlier in the same session.
+   - Ownership is verified server-side (conversation.user_id === caller's
+     userId) before any messages are read, so one user can never pull
+     another user's conversation by guessing/passing its id.
+   - Fails OPEN on any DB error: memory is an enhancement, never a
+     reason to block or degrade the actual answer.
+========================================================= */
+async function fetchConversationHistory(supabase, conversationId, userId) {
+  if (!supabase || !conversationId || !userId) return [];
+  try {
+    const { data: convo, error: convoErr } = await supabase
+      .from("conversations")
+      .select("id, user_id")
+      .eq("id", conversationId)
+      .eq("user_id", userId)
+      .maybeSingle();
+    if (convoErr || !convo) return []; // not found, or belongs to someone else
+
+    const { data: rows, error: msgErr } = await supabase
+      .from("messages")
+      .select("role, content, created_at")
+      .eq("conversation_id", conversationId)
+      .order("created_at", { ascending: false })
+      .limit(CONFIG.maxHistoryMessages);
+    if (msgErr || !Array.isArray(rows)) return [];
+
+    return rows
+      .reverse() // oldest first, matching real conversation order
+      .filter(r => r.role === "user" || r.role === "assistant")
+      .map(r => ({
+        role: r.role,
+        content: String(r.content || "").slice(0, CONFIG.maxHistoryCharsPerMessage),
+      }));
+  } catch (_e) {
+    return [];
+  }
+}
+
+/* =========================================================
+   LONG-TERM MEMORY (Feature 2 — read side)
+   Recalls durable facts about the user (role, company, recurring
+   situations, past advice) captured in EARLIER conversations, so JD
+   Brain can act like an advisor who remembers you across sessions —
+   not just within one chat.
+   - RLS on user_memory_facts already restricts reads to auth.uid(),
+     but the gateway uses the service-role key and filters by userId
+     explicitly, so it never depends on RLS alone.
+   - Fails OPEN on any DB error: same as conversation history, this is
+     an enhancement, never a reason to block or degrade the answer.
+========================================================= */
+async function fetchUserMemoryFacts(supabase, userId) {
+  if (!supabase || !userId) return [];
+  try {
+    const { data: rows, error } = await supabase
+      .from("user_memory_facts")
+      .select("fact, category")
+      .eq("user_id", userId)
+      .eq("status", "active")
+      .order("created_at", { ascending: false })
+      .limit(20);
+    if (error || !Array.isArray(rows)) return [];
+    return rows.map(r => String(r.fact || "").trim()).filter(Boolean);
+  } catch (_e) {
+    return [];
+  }
+}
+
+function buildMemoryBlock(facts) {
+  if (!facts || facts.length === 0) return "";
+  return `\nWHAT YOU ALREADY KNOW ABOUT THIS PERSON (from prior conversations)
+${facts.map(f => `- ${f}`).join("\n")}
+Use this naturally, as an advisor who remembers a returning client would. Do NOT print this list back to them, do NOT announce that you "recall" or "remember" things explicitly, and do NOT treat anything here as more certain than what they tell you today.\n`;
+}
+
+/* =========================================================
+   LONG-TERM MEMORY (Feature 2 — write side)
+   After each turn, ask a cheap, small model to pull out 0-3 durable
+   facts worth remembering across sessions (role, company, recurring
+   situation, standing advice) — never transient chit-chat. Runs via
+   waitUntil AFTER the reply is already sent, so it adds zero latency
+   to what the user waits for, and a failure here can never break or
+   delay the actual answer.
+========================================================= */
+async function extractAndStoreMemoryFacts({ supabase, userId, conversationId, userMessage, assistantReply, apiKey }) {
+  if (!supabase || !userId || !apiKey) return;
+  try {
+    const extractionPrompt = `From this single exchange between a user and an executive leadership coach, extract 0 to 3 durable facts worth remembering about the USER across future sessions — things like their role, company, industry, a recurring challenge, a standing preference, or advice already given that should not be repeated as if new.
+
+Do NOT extract: greetings, one-off details irrelevant to future coaching, or anything already generic/obvious. If nothing is worth remembering, return an empty array.
+
+Respond with ONLY a JSON array of short strings (max ~15 words each), e.g. ["Manages a 12-person engineering team at a healthcare startup", "Prefers direct, low-jargon feedback"]. No prose, no markdown fences.
+
+USER: ${userMessage.slice(0, 2000)}
+COACH REPLY: ${assistantReply.slice(0, 2000)}`;
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+    let res;
+    try {
+      res = await fetch(CONFIG.openaiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${apiKey}` },
+        body: JSON.stringify({
+          model: CONFIG.openaiModel,
+          messages: [{ role: "user", content: extractionPrompt }],
+          temperature: 0,
+          max_tokens: 200,
+        }),
+        signal: controller.signal,
+      });
+    } finally {
+      clearTimeout(timeout);
+    }
+    if (!res.ok) return;
+
+    const decoded = await res.json();
+    const raw = (decoded.choices?.[0]?.message?.content || "").trim();
+    if (!raw) return;
+
+    let facts;
+    try {
+      facts = JSON.parse(raw.replace(/^```(?:json)?/i, "").replace(/```$/, "").trim());
+    } catch (_e) {
+      return; // malformed extraction output — skip silently, never throw
+    }
+    if (!Array.isArray(facts) || facts.length === 0) return;
+
+    const rows = facts
+      .filter(f => typeof f === "string" && f.trim().length > 0 && f.trim().length <= 300)
+      .slice(0, 3)
+      .map(f => ({
+        user_id: userId,
+        fact: f.trim(),
+        source_conversation_id: conversationId || null,
+      }));
+    if (rows.length === 0) return;
+
+    await supabase.from("user_memory_facts").insert(rows);
+  } catch (_e) {
+    // Never let memory extraction affect the user-facing request.
+  }
+}
 
 /* ---------- Knowledge base (loaded once at cold start) ---------- */
 let KB = null;
@@ -362,6 +513,7 @@ export default async function handler(req, res) {
   const body = req.body || {};
   const message = (body.message || body.prompt || body.input || body.query || "").trim();
   const mode = (body.mode || "").trim();
+  const conversationId = (body.conversationId || "").trim() || null;
 
   await log("INFO", "message_validation", { messageExists: !!message, messageLength: message.length, mode: mode || "advisory" });
   if (!message) {
@@ -419,6 +571,23 @@ export default async function handler(req, res) {
   }
   await log("INFO", "access_granted", { path: rlKind, degradedRateLimit: !!rl.degraded, userId: access.userId || null });
 
+  // Within-conversation memory: only for authenticated callers with a
+  // conversationId (the demo path has no account, so no history to load).
+  let conversationHistory = [];
+  if (access.ok && conversationId) {
+    conversationHistory = await fetchConversationHistory(supabase, conversationId, access.userId);
+    await log("INFO", "history_loaded", { conversationId, turns: conversationHistory.length });
+  }
+
+  // Long-term memory: recall durable facts from ANY prior conversation,
+  // regardless of which conversationId this request is on.
+  let memoryFacts = [];
+  if (access.ok && access.userId) {
+    memoryFacts = await fetchUserMemoryFacts(supabase, access.userId);
+    await log("INFO", "memory_facts_loaded", { facts: memoryFacts.length });
+  }
+  const memoryBlock = buildMemoryBlock(memoryFacts);
+
   const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
   await log("INFO", "api_key_check", { apiKeyExists: !!OPENAI_API_KEY });
   if (!OPENAI_API_KEY) {
@@ -437,6 +606,7 @@ export default async function handler(req, res) {
       await log("INFO", "research_fetched", { paperCount: papers.length });
       systemPrompt = buildSystemPrompt(message, formatResearchForPrompt(papers));
     }
+    if (memoryBlock) systemPrompt += `\n${memoryBlock}`;
 
     await log("INFO", "openai_request_started", { model: CONFIG.openaiModel, mode: mode || "advisory" });
     const response = await fetch(CONFIG.openaiUrl, {
@@ -446,6 +616,7 @@ export default async function handler(req, res) {
         model: CONFIG.openaiModel,
         messages: [
           { role: "system", content: systemPrompt },
+          ...conversationHistory,
           { role: "user", content: buildUserMessage(message, body) },
         ],
         temperature: CONFIG.temperature,
@@ -488,6 +659,23 @@ export default async function handler(req, res) {
       citationCount: citations.length,
     });
     await log("INFO", "request_completed", { status: 200, durationMs: duration });
+
+    // Long-term memory (write side): runs AFTER the response below is sent —
+    // waitUntil keeps the function alive just for this background work
+    // without making the user wait on it. Only for signed-in users; never
+    // runs on the unauthenticated demo path.
+    if (access.ok && access.userId) {
+      waitUntil(
+        extractAndStoreMemoryFacts({
+          supabase,
+          userId: access.userId,
+          conversationId,
+          userMessage: message,
+          assistantReply: reply,
+          apiKey: OPENAI_API_KEY,
+        })
+      );
+    }
 
     // { reply } keeps jd-brain.html working; extra fields are additive.
     return res.status(200).json({
