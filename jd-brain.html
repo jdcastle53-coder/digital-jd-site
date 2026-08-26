@@ -1503,22 +1503,52 @@ var supabase = window.supabase;
       }
     }
 
-    window.addEventListener('load', () => {
+    window.addEventListener('load', async () => {
+      let session = null;
       if (window.Auth && window.Auth.enabled) {
-        window.Auth.requireActiveSession();
+        session = await window.Auth.requireActiveSession();
       }
 
+      // Two account types share this page: paid Membership accounts (created
+      // by api/stripe-webhook.js, user_metadata.membership === true) and
+      // free Sprint/trial accounts (user_metadata.trial === true, no Stripe
+      // customer exists for them at all). The badge and the button next to
+      // it must reflect which one this is — showing "Subscription Active"
+      // with a "Manage Subscription" button that then says "No subscription
+      // found" for a Sprint account is contradictory and confusing.
+      const meta = (session && session.user && session.user.user_metadata) || {};
+      const isMembership = !!meta.membership;
+
       const statusEl = document.getElementById('systemStatus');
-      if (statusEl) statusEl.textContent = 'Subscription Active';
+      const manageSubscriptionButton = document.getElementById('manageSubscriptionButton');
+
+      if (statusEl) {
+        if (isMembership) {
+          const planLabel = meta.plan ? meta.plan.charAt(0).toUpperCase() + meta.plan.slice(1) : '';
+          statusEl.textContent = (planLabel ? planLabel + ' ' : '') + 'Membership Active';
+        } else {
+          statusEl.textContent = 'Sprint Active';
+        }
+      }
+
+      if (manageSubscriptionButton) {
+        if (isMembership) {
+          manageSubscriptionButton.textContent = 'Manage Subscription';
+          manageSubscriptionButton.addEventListener('click', openBillingPortal);
+        } else {
+          // Sprint accounts have no Stripe customer to manage — send them to
+          // the same pricing section the in-chat "Explore Membership Plans"
+          // button already uses, instead of a dead-end billing portal call.
+          manageSubscriptionButton.textContent = 'Explore Plans';
+          manageSubscriptionButton.addEventListener('click', () => {
+            window.location.href = 'https://digitaljd.org/#pricing';
+          });
+        }
+      }
 
       const signOutButton = document.getElementById('signOutButton');
       if (signOutButton && window.Auth && window.Auth.enabled) {
         signOutButton.addEventListener('click', () => window.Auth.signOut());
-      }
-
-      const manageSubscriptionButton = document.getElementById('manageSubscriptionButton');
-      if (manageSubscriptionButton) {
-        manageSubscriptionButton.addEventListener('click', openBillingPortal);
       }
 
       const sendBtn = document.getElementById('sendBtn');
