@@ -4,7 +4,7 @@
   "description": "Digital JD - Executive-grade AI leadership coaching",
   "main": "api/jd-brain-gateway.js",
   "scripts": {
-    "dev": "vercel dev"
+    "dev": "vercel dev --token=$VERCEL_TOKEN --yes"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",
