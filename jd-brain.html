@@ -894,11 +894,27 @@ var supabase = window.supabase;
           .eq('conversation_id', conversationId)
           .order('created_at', { ascending: true });
         if (error || !Array.isArray(rows) || rows.length === 0) return;
-        for (const row of rows) {
-          if (row.role === 'user' || row.role === 'assistant') {
-            addMessage(row.content || '', row.role);
+
+        const isMidClarify = conversationStage === 'awaiting_answers';
+        const lastIndex = rows.length - 1;
+        rows.forEach((row, i) => {
+          if (row.role !== 'user' && row.role !== 'assistant') return;
+          // The most recent assistant message, when we're still waiting on
+          // answers, IS the clarifying-questions list — rebuild it as the
+          // interactive question/answer panel (same as the live flow), not
+          // a plain read-only bubble, so there's somewhere to type again.
+          if (isMidClarify && i === lastIndex && row.role === 'assistant') {
+            const questions = parseClarifyingQuestions(row.content || '');
+            const introBubble = addMessage('', 'assistant');
+            if (questions.length >= 2) {
+              renderClarifyingPanel(questions, introBubble);
+            } else {
+              introBubble.innerText = row.content || '';
+            }
+            return;
           }
-        }
+          addMessage(row.content || '', row.role);
+        });
       } catch (_e) {
         // Restoring the transcript is a nicety, never a blocker — if it
         // fails, the chat just starts visually empty, same as before.
