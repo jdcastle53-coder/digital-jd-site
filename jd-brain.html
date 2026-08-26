@@ -728,8 +728,9 @@ var supabase = window.supabase;
         </div>
 
         <div class="app-top-right">
-          <a href="jd-brain.html" class="home-link">Home</a>
-          <a href="risk-assessment.html" class="home-link">Risk Assessment</a>
+  <a href="jd-brain.html" class="home-link">Home</a>
+  <a href="risk-assessment.html" class="home-link">Risk Assessment</a>
+  <a href="executive-dashboard.html" class="home-link" id="executiveDashboardLink" style="display:none;">Executive Dashboard</a>
           <span class="status-pill">
             <span class="dot"></span>
             <span id="systemStatus">Loading...</span>
@@ -1522,6 +1523,10 @@ var supabase = window.supabase;
 
       const statusEl = document.getElementById('systemStatus');
       const manageSubscriptionButton = document.getElementById('manageSubscriptionButton');
+      const executiveDashboardLink = document.getElementById('executiveDashboardLink');
+      if (executiveDashboardLink && meta.plan === 'executive') {
+        executiveDashboardLink.style.display = '';
+      }
 
       if (statusEl) {
         if (isMembership) {

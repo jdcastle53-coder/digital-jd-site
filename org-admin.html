@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Organization Setup - Digital JD</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Create departments and assign team members so the Executive Dashboard can show risk data by department." />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+  <script>
+window.supabase = (window.Auth && window.Auth.client)
+  ? window.Auth.client
+  : window.supabase.createClient(
+      "https://hiejaayyeprfnrrukbam.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhpZWphYXl5ZXByZm5ycnVrYmFtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA5NDI3OTAsImV4cCI6MjA4NjUxODc5MH0._gOINPPuGvuXMpEm_qv_cSkwemt7wvFl6QDADknq4Bg"
+    );
+var supabase = window.supabase;
+  </script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #111c34;
+      --panel-2: #16213d;
+      --border: rgba(255,255,255,0.08);
+      --text: #e2e8f0;
+      --muted: #9fb0cc;
+      --gold: #d4af37;
+      --blue-1: #2563eb;
+      --blue-2: #1d4ed8;
+      --input: #0b1223;
+      --shadow: 0 18px 48px rgba(0,0,0,0.32);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0; padding: 0;
+      background: linear-gradient(180deg, #081121 0%, #0f172a 100%);
+      color: var(--text);
+      font-family: Georgia, "Times New Roman", serif;
+      min-height: 100%;
+    }
+    body { display: flex; justify-content: center; padding: 16px 12px 32px; }
+    .shell { width: 100%; max-width: 900px; }
+    .app {
+      position: relative;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .app::before {
+      content: "";
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, #d4af37, #60a5fa, #d4af37, transparent);
+      background-size: 200% 100%;
+      animation: signalLine 5s linear infinite;
+      z-index: 2;
+    }
+    @keyframes signalLine { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
+    .app-top {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 20px; border-bottom: 1px solid var(--border);
+      background: rgba(255,255,255,0.02); flex-wrap: wrap; gap: 12px;
+    }
+    .app-top-left { display: flex; align-items: center; gap: 14px; min-width: 0; }
+    .page-title-stack { display: flex; flex-direction: column; gap: 0; line-height: 1.2; }
+    .page-title { color: var(--gold); font-size: 17px; font-weight: 700; letter-spacing: 0.01em; }
+    .page-subtitle { color: var(--muted); font-size: 12px; }
+    .app-top-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .home-link { color: var(--muted); text-decoration: none; font-size: 13px; padding: 8px 4px; white-space: nowrap; }
+    .home-link:hover { color: var(--text); }
+    .content { padding: 24px 22px 28px; }
+
+    .state-panel { text-align: center; padding: 48px 20px; color: var(--muted); }
+    .locked-card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid rgba(212,175,55,0.32);
+      border-radius: 16px; padding: 32px 28px; text-align: center;
+      max-width: 560px; margin: 20px auto 0;
+    }
+    .locked-title { color: #f6d36b; font-size: 19px; font-weight: 800; margin-bottom: 10px; }
+    .locked-body { color: var(--muted); font-size: 14px; line-height: 1.6; margin-bottom: 20px; }
+    .cta-full-btn {
+      background: linear-gradient(180deg, #101c33, #0b1223);
+      color: #f6d36b; border: 1px solid rgba(212,175,55,0.7);
+      border-radius: 12px; padding: 14px 24px; font-size: 15px; font-weight: 800;
+      font-family: Georgia, serif; cursor: pointer;
+      box-shadow: 0 0 0 1px rgba(212,175,55,0.15) inset, 0 10px 24px rgba(212,175,55,0.18);
+      transition: transform 0.15s ease;
+    }
+    .cta-full-btn:hover { transform: translateY(-1px); }
+
+    .intro-card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 26px 24px; margin-bottom: 20px;
+    }
+    .intro-card h1 { color: var(--gold); font-size: 22px; margin: 0 0 10px; }
+    .intro-card p { color: var(--muted); font-size: 14px; line-height: 1.6; margin: 0; }
+
+    .panel {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 22px; margin-bottom: 18px;
+    }
+    .panel h2 { color: var(--text); font-size: 16px; margin: 0 0 14px; }
+
+    .form-row { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+    .form-row input, .form-row select {
+      flex: 1; min-width: 160px;
+      background: var(--input); color: var(--text);
+      border: 1px solid var(--border); border-radius: 10px;
+      padding: 10px 12px; font-family: Georgia, serif; font-size: 14px;
+    }
+    .btn-primary {
+      background: linear-gradient(180deg, var(--blue-1), var(--blue-2));
+      color: #fff; border: none; border-radius: 10px;
+      padding: 10px 18px; font-size: 14px; font-weight: 700;
+      font-family: Georgia, serif; cursor: pointer; white-space: nowrap;
+    }
+    .btn-primary:hover { filter: brightness(1.08); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .hint { color: var(--muted); font-size: 12px; margin-top: 6px; }
+    .msg { font-size: 13px; margin-top: 10px; }
+    .msg.ok { color: #86efac; }
+    .msg.err { color: #fca5a5; }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+    th, td { text-align: left; padding: 10px 8px; border-bottom: 1px solid var(--border); font-size: 13px; }
+    th { color: var(--muted); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: 0.04em; }
+    td { color: var(--text); }
+    .dept-select-cell select { width: 100%; }
+    .remove-link {
+      color: #fca5a5; background: none; border: none; cursor: pointer;
+      font-family: Georgia, serif; font-size: 12px; text-decoration: underline;
+      padding: 0;
+    }
+    .empty-note { color: var(--muted); font-size: 13px; padding: 12px 0; }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="app">
+      <div class="app-top">
+        <div class="app-top-left">
+          <div class="page-title-stack">
+            <div class="page-title">Organization Setup</div>
+            <div class="page-subtitle">Departments &amp; team assignment</div>
+          </div>
+        </div>
+        <div class="app-top-right">
+          <a href="jd-brain.html" class="home-link">Back to Digital JD</a>
+          <a href="executive-dashboard.html" class="home-link">Executive Dashboard</a>
+        </div>
+      </div>
+
+      <div class="content" id="content">
+        <div class="state-panel" id="loadingState">Loading&hellip;</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+(async function () {
+  const contentEl = document.getElementById('content');
+
+  function renderLocked() {
+    contentEl.innerHTML = `
+      <div class="locked-card">
+        <div class="locked-title">Executive Feature</div>
+        <div class="locked-body">
+          Organization setup and the Executive Dashboard are available on the
+          Digital JD Executive plan.
+        </div>
+        <a href="index.html#pricing"><button class="cta-full-btn">Explore Plans</button></a>
+      </div>`;
+  }
+
+  function renderError(message) {
+    contentEl.innerHTML = `<div class="state-panel">${message}</div>`;
+  }
+
+  let session;
+  try {
+    const { data } = await supabase.auth.getSession();
+    session = data.session;
+  } catch (e) {
+    return renderError('Could not check your session. Please refresh and try again.');
+  }
+
+  if (!session) {
+    window.location.href = 'signin.html?next=org-admin.html';
+    return;
+  }
+
+  const meta = session.user.user_metadata || {};
+  if (meta.plan !== 'executive') {
+    renderLocked();
+    return;
+  }
+
+  let state = { departments: [], members: [] };
+
+  async function callApi(body) {
+    const res = await fetch('/api/org-admin', {
+      method: body ? 'POST' : 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + session.access_token,
+      },
+      body: body ? JSON.stringify(body) : undefined,
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || 'Something went wrong.');
+    return json;
+  }
+
+  async function loadData() {
+    const data = await callApi(null);
+    state.departments = data.departments || [];
+    state.members = data.members || [];
+    render();
+  }
+
+  function deptOptionsHtml(selectedId) {
+    let html = '<option value="">Unassigned</option>';
+    for (const d of state.departments) {
+      html += `<option value="${d.id}" ${d.id === selectedId ? 'selected' : ''}>${escapeHtml(d.name)}</option>`;
+    }
+    return html;
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (c) => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+    }[c]));
+  }
+
+  function render() {
+    const deptRows = state.departments.length
+      ? state.departments.map((d) => `<tr><td>${escapeHtml(d.name)}</td></tr>`).join('')
+      : '';
+
+    const memberRows = state.members.length
+      ? state.members.map((m) => `
+          <tr>
+            <td>${escapeHtml(m.email)}</td>
+            <td class="dept-select-cell">
+              <select data-membership-id="${m.id}" class="dept-assign-select">
+                ${deptOptionsHtml(m.department_id)}
+              </select>
+            </td>
+            <td>${m.role === 'admin' ? 'Admin (you)' : 'Member'}</td>
+            <td>${m.role === 'admin' ? '' : `<button class="remove-link" data-remove-id="${m.id}">Remove</button>`}</td>
+          </tr>`).join('')
+      : '<tr><td colspan="4" class="empty-note">No team members assigned yet. Add one below by email.</td></tr>';
+
+    contentEl.innerHTML = `
+      <div class="intro-card">
+        <h1>Set up your organization</h1>
+        <p>Create departments and add your team by email so the Executive Dashboard
+        can show risk scores by department, alongside the company-wide and individual views.
+        Team members must already have a Digital JD account before you can add them here.</p>
+      </div>
+
+      <div class="panel">
+        <h2>Departments</h2>
+        <table>
+          <thead><tr><th>Name</th></tr></thead>
+          <tbody>${deptRows || '<tr><td class="empty-note">No departments yet &mdash; add one below.</td></tr>'}</tbody>
+        </table>
+        <div class="form-row" style="margin-top:14px;">
+          <input type="text" id="newDeptName" placeholder="e.g. Engineering, Sales, Operations" />
+          <button class="btn-primary" id="addDeptBtn">Add Department</button>
+        </div>
+        <div class="msg" id="deptMsg"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Team Members</h2>
+        <table>
+          <thead><tr><th>Email</th><th>Department</th><th>Role</th><th></th></tr></thead>
+          <tbody>${memberRows}</tbody>
+        </table>
+        <div class="form-row" style="margin-top:14px;">
+          <input type="email" id="newMemberEmail" placeholder="teammate@company.com" />
+          <select id="newMemberDept">${deptOptionsHtml(null)}</select>
+          <button class="btn-primary" id="addMemberBtn">Add Member</button>
+        </div>
+        <div class="hint">The person must have already signed up for Digital JD with this email.</div>
+        <div class="msg" id="memberMsg"></div>
+      </div>
+    `;
+
+    document.getElementById('addDeptBtn').addEventListener('click', onAddDept);
+    document.getElementById('addMemberBtn').addEventListener('click', onAddMember);
+    document.querySelectorAll('.dept-assign-select').forEach((sel) => {
+      sel.addEventListener('change', onReassign);
+    });
+    document.querySelectorAll('[data-remove-id]').forEach((btn) => {
+      btn.addEventListener('click', onRemove);
+    });
+  }
+
+  async function onAddDept() {
+    const input = document.getElementById('newDeptName');
+    const msg = document.getElementById('deptMsg');
+    const name = input.value.trim();
+    if (!name) { msg.textContent = 'Enter a department name.'; msg.className = 'msg err'; return; }
+    try {
+      await callApi({ action: 'create_department', name });
+      input.value = '';
+      msg.textContent = '';
+      await loadData();
+    } catch (e) {
+      msg.textContent = e.message;
+      msg.className = 'msg err';
+    }
+  }
+
+  async function onAddMember() {
+    const emailInput = document.getElementById('newMemberEmail');
+    const deptSelect = document.getElementById('newMemberDept');
+    const msg = document.getElementById('memberMsg');
+    const email = emailInput.value.trim();
+    if (!email) { msg.textContent = 'Enter an email address.'; msg.className = 'msg err'; return; }
+    try {
+      await callApi({ action: 'assign_member', email, departmentId: deptSelect.value || null });
+      emailInput.value = '';
+      msg.textContent = 'Added.';
+      msg.className = 'msg ok';
+      await loadData();
+    } catch (e) {
+      msg.textContent = e.message;
+      msg.className = 'msg err';
+    }
+  }
+
+  async function onReassign(evt) {
+    const membershipId = evt.target.getAttribute('data-membership-id');
+    const departmentId = evt.target.value || null;
+    const row = evt.target.closest('tr');
+    const email = row.querySelector('td').textContent;
+    try {
+      await callApi({ action: 'assign_member', email, departmentId });
+      await loadData();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  async function onRemove(evt) {
+    const membershipId = evt.target.getAttribute('data-remove-id');
+    if (!confirm('Remove this person from the organization?')) return;
+    try {
+      await callApi({ action: 'remove_member', membershipId });
+      await loadData();
+    } catch (e) {
+      alert(e.message);
+    }
+  }
+
+  try {
+    await loadData();
+  } catch (e) {
+    renderError(e.message || 'Could not load organization data.');
+  }
+})();
+  </script>
+</body>
+</html>
