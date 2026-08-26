@@ -211,20 +211,15 @@ var supabase = window.supabase;
       animation: fadeSlideUp 0.5s ease 0.12s both;
     }
 
+    /* Grows naturally with the conversation and lets the PAGE scroll (like a
+       normal chat page), rather than being capped at a fixed vh and boxed
+       into its own inner scrollbar — that made the whole app feel like a
+       small window floating inside the browser instead of using the screen. */
     .chat-output {
       height: auto;
       min-height: 40px;
-      max-height: 46vh;
-      overflow-y: auto;
       padding-right: 6px;
       scroll-behavior: smooth;
-    }
-
-    /* On desktop there's plenty of vertical room — use more of it so the
-       finished analysis (Situational Analysis / JD Insight / Execution Plan)
-       is visible at once instead of being squeezed into a small scroll box. */
-    @media (min-width: 900px) {
-      .chat-output { max-height: 68vh; }
     }
 
     /* Final-analysis result: each section (Situational Analysis, JD Insight,
@@ -795,6 +790,10 @@ var supabase = window.supabase;
     // transcript so this state actually makes sense to the user again).
     const CONVERSATION_STAGE_KEY = 'jdBrainConversationStage';
     const PENDING_SITUATION_KEY = 'jdBrainPendingSituation';
+    // In-progress typed answers to the clarifying-question inputs (JSON array,
+    // one string per question, same order as rendered). Saved on every
+    // keystroke so a refresh mid-answer doesn't wipe out what was typed.
+    const CLARIFY_ANSWERS_KEY = 'jdBrainClarifyAnswers';
     let conversationId = sessionStorage.getItem(CONVERSATION_ID_KEY) || null;
     let isSending = false;
     let currentMode = 'advisor';
@@ -981,6 +980,28 @@ var supabase = window.supabase;
       panel.classList.add('clarify-panel');
       panel.id = 'activeClarifyPanel';
 
+      // Restore whatever was typed before a refresh (if any), one string per
+      // question in the same order they're rendered.
+      let savedAnswers = [];
+      try {
+        savedAnswers = JSON.parse(sessionStorage.getItem(CLARIFY_ANSWERS_KEY) || '[]');
+      } catch (_e) {
+        savedAnswers = [];
+      }
+
+      // Every keystroke in any answer field re-saves the full set — cheap at
+      // this scale (max ~4-6 short strings) and keeps all fields in sync
+      // without a separate save path per field.
+      const persistAnswers = () => {
+        const values = Array.from(panel.querySelectorAll('.clarify-answer-input')).map(inp => inp.value);
+        try {
+          sessionStorage.setItem(CLARIFY_ANSWERS_KEY, JSON.stringify(values));
+        } catch (_e) {
+          // Best-effort only — losing in-progress answers on a storage error
+          // is no worse than the original behavior.
+        }
+      };
+
       questions.forEach((q, i) => {
         const card = document.createElement('div');
         card.classList.add('clarify-card');
@@ -1001,7 +1022,11 @@ var supabase = window.supabase;
         answerInput.classList.add('clarify-answer-input');
         answerInput.placeholder = 'Type your answer here...';
         answerInput.dataset.question = q;
+        if (typeof savedAnswers[i] === 'string' && savedAnswers[i]) {
+          answerInput.value = savedAnswers[i];
+        }
         answerInput.setAttribute('aria-label', 'Your answer to question ' + (i + 1) + ': ' + q);
+        answerInput.addEventListener('input', persistAnswers);
         answerInput.addEventListener('keydown', (e) => {
           if (e.key === 'Enter' && !e.isComposing && e.keyCode !== 229) {
             e.preventDefault();
@@ -1261,6 +1286,9 @@ var supabase = window.supabase;
           conversationStage = 'awaiting_answers';
           sessionStorage.setItem(PENDING_SITUATION_KEY, pendingSituation);
           sessionStorage.setItem(CONVERSATION_STAGE_KEY, conversationStage);
+          // Brand new situation just started — drop any leftover typed
+          // answers from a previous, now-closed topic.
+          sessionStorage.removeItem(CLARIFY_ANSWERS_KEY);
         } else {
           // Render the final advice as separate labeled sections (Situational
           // Analysis / JD Insight / Execution Plan, etc.) and scroll so the
@@ -1283,6 +1311,7 @@ var supabase = window.supabase;
           conversationStage = 'new';
           sessionStorage.removeItem(PENDING_SITUATION_KEY);
           sessionStorage.removeItem(CONVERSATION_STAGE_KEY);
+          sessionStorage.removeItem(CLARIFY_ANSWERS_KEY);
         }
 
         if (conversationId) {
