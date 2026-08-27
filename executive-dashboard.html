@@ -367,12 +367,6 @@ var supabase = window.supabase;
               return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${longTick ? '#b77a05' : '#12283b'}" stroke-width="${longTick ? 4 : 2.5}" stroke-linecap="round" />`;
             }).join('')}
 
-            <text x="115" y="198" fill="white" font-size="17" font-weight="800" text-anchor="middle" transform="rotate(-67 115 198)">Very Low</text>
-            <text x="154" y="107" fill="white" font-size="18" font-weight="800" text-anchor="middle" transform="rotate(-38 154 107)">Low</text>
-            <text x="250" y="66" fill="white" font-size="18" font-weight="800" text-anchor="middle">Moderate</text>
-            <text x="346" y="107" fill="white" font-size="18" font-weight="800" text-anchor="middle" transform="rotate(38 346 107)">High</text>
-            <text x="390" y="200" fill="white" font-size="18" font-weight="800" text-anchor="middle" transform="rotate(68 390 200)">Critical</text>
-
             <g transform="rotate(${needleAngle} 250 240)">
               <path d="M242 242 L250 84 L258 242 Z" fill="url(#gold-${uid})" />
               <path d="M245 240 L250 90 L255 240 Z" fill="url(#needle-${uid})" />
