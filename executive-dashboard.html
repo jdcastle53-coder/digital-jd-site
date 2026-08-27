@@ -352,7 +352,7 @@ var supabase = window.supabase;
             <circle cx="250" cy="240" r="192" fill="url(#gold-${uid})" />
             <circle cx="250" cy="240" r="181" fill="url(#face-${uid})" />
 
-            <path d="M 96 318 A 177 177 0 0 1 404 318" fill="none" stroke="url(#spectrum-${uid})" stroke-width="48" />
+            <path d="M 96 318 A 177 177 0 1 1 404 318" fill="none" stroke="url(#spectrum-${uid})" stroke-width="48" />
 
             ${Array.from({ length: 21 }).map((_, i) => {
               const angle = -120 + i * 12;
