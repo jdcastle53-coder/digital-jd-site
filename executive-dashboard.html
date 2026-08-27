@@ -329,6 +329,15 @@ var supabase = window.supabase;
               <stop offset="55%" stop-color="#073868" />
               <stop offset="100%" stop-color="#03121f" />
             </linearGradient>
+            <linearGradient id="spectrum-${uid}" x1="96" y1="318" x2="404" y2="318" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#5b21c9" />
+              <stop offset="15%" stop-color="#3a5ce0" />
+              <stop offset="32%" stop-color="#0ea5e9" />
+              <stop offset="50%" stop-color="#22c55e" />
+              <stop offset="66%" stop-color="#eab308" />
+              <stop offset="82%" stop-color="#f97316" />
+              <stop offset="100%" stop-color="#dc2626" />
+            </linearGradient>
             <filter id="shadow-${uid}" x="-30%" y="-30%" width="160%" height="180%">
               <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#000" flood-opacity="0.25" />
             </filter>
@@ -343,11 +352,7 @@ var supabase = window.supabase;
             <circle cx="250" cy="240" r="192" fill="url(#gold-${uid})" />
             <circle cx="250" cy="240" r="181" fill="url(#face-${uid})" />
 
-            <path d="M 96 318 A 177 177 0 0 1 113 128" fill="none" stroke="#4423d8" stroke-width="48" />
-            <path d="M 113 128 A 177 177 0 0 1 184 74" fill="none" stroke="#0574e8" stroke-width="48" />
-            <path d="M 184 74 A 177 177 0 0 1 316 74" fill="none" stroke="#25c76f" stroke-width="48" />
-            <path d="M 316 74 A 177 177 0 0 1 387 128" fill="none" stroke="#ffb30f" stroke-width="48" />
-            <path d="M 387 128 A 177 177 0 0 1 404 318" fill="none" stroke="#cb0619" stroke-width="48" />
+            <path d="M 96 318 A 177 177 0 0 1 404 318" fill="none" stroke="url(#spectrum-${uid})" stroke-width="48" />
 
             <path d="M 97 318 A 177 177 0 0 1 404 318" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="4" />
             <path d="M 117 305 A 155 155 0 0 1 383 305" fill="none" stroke="#fff8dd" stroke-width="4" />
