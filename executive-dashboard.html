@@ -354,6 +354,26 @@ var supabase = window.supabase;
 
             <path d="M 96 318 A 177 177 0 1 1 404 318" fill="none" stroke="url(#spectrum-${uid})" stroke-width="48" />
 
+            <g opacity="0.30" fill="none" stroke="#7fa1bd" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M205 300 L205 278 C190 269 180 255 180 240 C180 228 186 219 194 211 C195 172 217 148 249 145 C282 142 305 164 308 199 L308 300" />
+              <path d="M220 214 L220 180 L231 169" />
+              <path d="M238 211 L238 162" />
+              <path d="M258 211 L258 156" />
+              <path d="M276 214 L276 173 L288 161" />
+              <path d="M220 214 L239 232" />
+              <path d="M238 211 L252 224" />
+              <path d="M258 211 L244 224" />
+              <path d="M276 214 L258 232" />
+              <circle cx="231" cy="169" r="5.5" />
+              <circle cx="238" cy="162" r="5.5" />
+              <circle cx="258" cy="156" r="5.5" />
+              <circle cx="288" cy="161" r="5.5" />
+              <circle cx="220" cy="214" r="5.5" />
+              <circle cx="238" cy="211" r="5.5" />
+              <circle cx="258" cy="211" r="5.5" />
+              <circle cx="276" cy="214" r="5.5" />
+            </g>
+
             ${Array.from({ length: 21 }).map((_, i) => {
               const angle = -120 + i * 12;
               const radians = (angle * Math.PI) / 180;
@@ -368,14 +388,15 @@ var supabase = window.supabase;
             }).join('')}
 
             <g transform="rotate(${needleAngle} 250 240)">
-              <path d="M242 242 L250 84 L258 242 Z" fill="url(#gold-${uid})" />
-              <path d="M245 240 L250 90 L255 240 Z" fill="url(#needle-${uid})" />
-              <circle cx="250" cy="100" r="3.5" fill="#e9ac32" />
+              <path d="M232 247 L250 79 L268 247 L258 239 L250 105 L242 239 Z" fill="url(#gold-${uid})" />
+              <path d="M239 244 L250 94 L261 244 L254 236 L250 121 L246 236 Z" fill="url(#needle-${uid})" />
+              <path d="M246 228 L250 126 L254 228 L250 217 Z" fill="#f3c658" opacity="0.75" />
             </g>
 
-            <circle cx="250" cy="240" r="31" fill="url(#navy-${uid})" stroke="#c88b16" stroke-width="4" />
-            <circle cx="250" cy="240" r="23" fill="url(#gold-${uid})" stroke="#5f3b05" stroke-width="2" />
-            <circle cx="243" cy="232" r="7" fill="rgba(255,255,255,.45)" />
+            <circle cx="250" cy="240" r="38" fill="url(#gold-${uid})" stroke="#795009" stroke-width="2" />
+            <circle cx="250" cy="240" r="30" fill="url(#navy-${uid})" stroke="#e6b746" stroke-width="3" />
+            <circle cx="250" cy="240" r="23" fill="url(#gold-${uid})" stroke="#664009" stroke-width="2" />
+            <circle cx="243" cy="232" r="7" fill="rgba(255,255,255,.40)" />
 
             <text x="250" y="344" fill="#072347" font-size="26" font-weight="900" text-anchor="middle">Risk Assessment</text>
 
