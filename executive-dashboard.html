@@ -330,12 +330,14 @@ var supabase = window.supabase;
               <stop offset="100%" stop-color="#03121f" />
             </linearGradient>
             <linearGradient id="spectrum-${uid}" x1="96" y1="318" x2="404" y2="318" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#5b21c9" />
-              <stop offset="15%" stop-color="#3a5ce0" />
-              <stop offset="32%" stop-color="#0ea5e9" />
+              <stop offset="0%" stop-color="#6d28d9" />
+              <stop offset="14%" stop-color="#4338ca" />
+              <stop offset="27%" stop-color="#2563eb" />
+              <stop offset="38%" stop-color="#0ea5e9" />
               <stop offset="50%" stop-color="#22c55e" />
-              <stop offset="66%" stop-color="#eab308" />
-              <stop offset="82%" stop-color="#f97316" />
+              <stop offset="62%" stop-color="#a3e635" />
+              <stop offset="72%" stop-color="#eab308" />
+              <stop offset="85%" stop-color="#f97316" />
               <stop offset="100%" stop-color="#dc2626" />
             </linearGradient>
             <filter id="shadow-${uid}" x="-30%" y="-30%" width="160%" height="180%">
@@ -360,19 +362,18 @@ var supabase = window.supabase;
               const angle = -120 + i * 12;
               const radians = (angle * Math.PI) / 180;
               const longTick = i % 5 === 0;
-              const r1 = longTick ? 137 : 144;
-              const r2 = 157;
+              const r1 = longTick ? 128 : 139;
+              const r2 = 151;
               const x1 = 250 + r1 * Math.sin(radians);
               const y1 = 240 - r1 * Math.cos(radians);
               const x2 = 250 + r2 * Math.sin(radians);
               const y2 = 240 - r2 * Math.cos(radians);
-              return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${longTick ? '#b77a05' : '#12283b'}" stroke-width="${longTick ? 4 : 2.5}" stroke-linecap="round" />`;
+              return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="#0c2038" stroke-width="${longTick ? 3.5 : 2}" stroke-linecap="round" opacity="${longTick ? 0.85 : 0.55}" />`;
             }).join('')}
 
             <g transform="rotate(${needleAngle} 250 240)">
-              <path d="M232 247 L250 79 L268 247 L258 239 L250 105 L242 239 Z" fill="url(#gold-${uid})" />
-              <path d="M239 244 L250 94 L261 244 L254 236 L250 121 L246 236 Z" fill="url(#needle-${uid})" />
-              <path d="M246 228 L250 126 L254 228 L250 217 Z" fill="#f3c658" opacity="0.75" />
+              <path d="M239 240 L250 82 L261 240 Z" fill="url(#gold-${uid})" />
+              <path d="M243.5 240 L250 96 L256.5 240 Z" fill="url(#needle-${uid})" />
             </g>
 
             <circle cx="250" cy="240" r="38" fill="url(#gold-${uid})" stroke="#795009" stroke-width="2" />
