@@ -137,40 +137,42 @@ var supabase = window.supabase;
     .view-caption { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 22px; }
     .view-caption strong { color: var(--gold-bright); }
 
-    /* ---------- Gauge grid, laid out to mirror the reference: stacked on
-       mobile, 3-across / large-center on wider screens ---------- */
+    /* ---------- Gauge grid, ported from JD's reference dashboard layout:
+       top row small/large-center/small, bottom row three equal, both
+       transparent so the navy/gold page backdrop shows through. ---------- */
     .domain-gauge-grid {
-      display: flex; flex-direction: column; align-items: center; gap: 40px;
+      width: 100%;
       margin: 0 auto;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 15px 0 10px;
     }
-    .gauge-row { display: flex; flex-wrap: wrap; justify-content: center; align-items: end; gap: 30px 26px; }
-    .domain-gauge-cell { display: flex; flex-direction: column; align-items: center; gap: 0; }
-    .gauge-dial-wrap { filter: drop-shadow(0 16px 30px rgba(0,0,0,0.6)); position: relative; }
-    .gauge-nameplate {
-      margin-top: -10px;
-      background: linear-gradient(180deg, #17264a, #0a1122);
-      border: 2px solid var(--gold);
-      border-radius: 10px;
-      padding: 7px 20px;
-      display: flex; align-items: center; gap: 8px;
-      box-shadow: 0 8px 18px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.08);
-      position: relative;
-      z-index: 1;
-      white-space: nowrap;
+    .gauge-row {
+      width: 100%;
+      max-width: 1450px;
+      display: grid;
+      grid-template-columns: 1fr 1.45fr 1fr;
+      justify-items: center;
+      align-items: end;
+      column-gap: 35px;
     }
-    .gauge-nameplate .num { color: var(--gold-bright); font-weight: 800; font-size: 15px; }
-    .gauge-nameplate .name { color: #f4f1e6; font-weight: 700; font-size: 14px; letter-spacing: 0.01em; }
-    .gauge-nameplate::before, .gauge-nameplate::after {
-      content: ""; position: absolute; width: 6px; height: 6px; border-radius: 50%;
-      background: radial-gradient(circle at 30% 30%, #f6e7a8, #a97e1f);
-      top: 50%; transform: translateY(-50%);
+    .gauge-row.bottom {
+      margin-top: 115px;
+      grid-template-columns: repeat(3, 1fr);
     }
-    .gauge-nameplate::before { left: 7px; }
-    .gauge-nameplate::after { right: 7px; }
-    .gauge-no-data-caption { color: var(--muted); font-size: 11px; margin-top: 6px; text-align: center; }
+    .domain-gauge-cell { background: transparent; width: 100%; display: flex; justify-content: center; }
+    .gauge-no-data-caption { color: var(--muted); font-size: 11px; margin-top: -8px; text-align: center; }
 
-    @media (min-width: 760px) {
-      .gauge-row.top { align-items: flex-end; }
+    @media (max-width: 1000px) {
+      .gauge-row { column-gap: 15px; }
+      .gauge-row.bottom { margin-top: 80px; }
+    }
+    @media (max-width: 750px) {
+      .gauge-row { display: flex; flex-direction: column; align-items: center; gap: 45px; }
+      .gauge-row.bottom { margin-top: 70px; }
+      .domain-gauge-cell { width: min(330px, 94vw) !important; }
     }
 
     .setup-note {
@@ -279,131 +281,127 @@ var supabase = window.supabase;
   }
 
   /* ---------- Executive-style circular gauge \u2014 faithful port of JD's
-     reference implementation (needle angle formula, fixed label angles,
-     ring geometry, and nameplate) so the dial art matches exactly. ---------- */
-  const GAUGE_SIZE_MAP = { small: 260, medium: 360, large: 500 };
-
-  // Bearing convention: 0deg = straight up (12 o'clock), increasing
-  // clockwise. This keeps 0% at bottom-left, the midpoint at top-center,
-  // and 100% at bottom-right, matching the reference dial exactly.
-  function polarToCartesian(cx, cy, r, bearingDeg) {
-    const a = (bearingDeg * Math.PI) / 180;
-    return { x: cx + r * Math.sin(a), y: cy - r * Math.cos(a) };
-  }
-
-  function describeArc(cx, cy, r, startBearing, endBearing) {
-    const start = polarToCartesian(cx, cy, r, startBearing);
-    const end = polarToCartesian(cx, cy, r, endBearing);
-    const largeArcFlag = Math.abs(endBearing - startBearing) > 180 ? '1' : '0';
-    return ['M', start.x, start.y, 'A', r, r, 0, largeArcFlag, 1, end.x, end.y].join(' ');
-  }
+     RiskGauge React component (same paths, gradients, needle formula,
+     digital readout, and baked-in nameplate) translated to a template
+     string so it can run on this vanilla-JS page. ---------- */
+  function clamp(n, min, max) { return Math.min(Math.max(n, min), max); }
 
   let gaugeUid = 0;
 
-  function buildDomainGaugeSvg(pct, opts) {
+  function buildDomainGaugeSvg(name, pct, opts) {
     opts = opts || {};
-    const px = GAUGE_SIZE_MAP[opts.size || 'medium'];
-    const uid = 'g' + (gaugeUid++);
-    const cx = 250;
-    const cy = 250;
+    const uid = 'gauge' + (gaugeUid++);
     const hasData = pct != null;
-    const value = hasData ? pct : 0;
-    const needleAngle = -125 + (value / 100) * 250; // 0%=bottom-left, 50%=top, 100%=bottom-right
-    const needleTip = polarToCartesian(cx, cy, 145, needleAngle);
-
-    let ticks = '';
-    for (let i = 0; i < 25; i++) {
-      const angle = -125 + (i / 24) * 250;
-      const major = i % 4 === 0;
-      const p1 = polarToCartesian(cx, cy, major ? 154 : 164, angle);
-      const p2 = polarToCartesian(cx, cy, 176, angle);
-      ticks += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" stroke="${major ? '#c99a2e' : '#0f2d58'}" stroke-width="${major ? 5 : 2.2}" stroke-linecap="round" />`;
-    }
-
-    const labelData = [
-      { text: 'Very Low', angle: -100 },
-      { text: 'Low', angle: -50 },
-      { text: 'Moderate', angle: 0 },
-      { text: 'High', angle: 50 },
-      { text: 'Critical', angle: 100 },
-    ];
-    let labelsHtml = '';
-    for (const item of labelData) {
-      const p = polarToCartesian(cx, cy, 185, item.angle);
-      labelsHtml += `<text x="${p.x}" y="${p.y}" fill="#ffffff" font-size="${item.text === 'Moderate' ? 18 : 16}" font-weight="800" text-anchor="middle" dominant-baseline="middle" style="paint-order:stroke;stroke:rgba(0,0,0,0.18);stroke-width:2;">${item.text}</text>`;
-    }
-
-    const needleColor = hasData ? null : '#5b6577';
+    const score = clamp(hasData ? pct : 0, 0, 100);
+    const needleAngle = -120 + score * 2.4; // 0=far left, 50=straight up, 100=far right
+    const size = opts.large ? 430 : 300;
+    const safeName = escapeHtml(name);
 
     return `
-      <svg viewBox="0 0 500 500" width="${px}" height="${px}" role="img" aria-label="${hasData ? pct + ' percent risk' : 'no data yet'}">
-        <defs>
-          <radialGradient id="${uid}-face" cx="45%" cy="35%" r="75%">
-            <stop offset="0%" stop-color="#fff7d8" />
-            <stop offset="58%" stop-color="#f5d991" />
-            <stop offset="100%" stop-color="#d9b85f" />
-          </radialGradient>
-          <linearGradient id="${uid}-spectrum" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#7b00ff" />
-            <stop offset="16%" stop-color="#164dff" />
-            <stop offset="32%" stop-color="#00bfff" />
-            <stop offset="48%" stop-color="#2fd35d" />
-            <stop offset="64%" stop-color="#ffe51e" />
-            <stop offset="80%" stop-color="#ff8a16" />
-            <stop offset="100%" stop-color="#b00020" />
-          </linearGradient>
-          <linearGradient id="${uid}-navy" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#1a4d88" />
-            <stop offset="45%" stop-color="#0c2f5e" />
-            <stop offset="100%" stop-color="#061b3b" />
-          </linearGradient>
-          <linearGradient id="${uid}-gold" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#fff1a8" />
-            <stop offset="22%" stop-color="#e8b84f" />
-            <stop offset="50%" stop-color="#9a6112" />
-            <stop offset="75%" stop-color="#e2ad3b" />
-            <stop offset="100%" stop-color="#fff0a0" />
-          </linearGradient>
-          <radialGradient id="${uid}-hub" cx="35%" cy="30%" r="75%">
-            <stop offset="0%" stop-color="#fff1a6" />
-            <stop offset="38%" stop-color="#e3ae3a" />
-            <stop offset="70%" stop-color="#b77615" />
-            <stop offset="100%" stop-color="#6f4108" />
-          </radialGradient>
-          <filter id="${uid}-shadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="9" stdDeviation="9" flood-color="#000000" flood-opacity="0.22" />
-          </filter>
-        </defs>
+      <div class="risk-gauge-wrapper" style="width:${size}px;max-width:100%;">
+        <svg viewBox="0 0 500 590" width="100%" height="auto" role="img" aria-label="${safeName} risk assessment ${hasData ? score : 'no data'}" style="display:block;overflow:visible;">
+          <defs>
+            <linearGradient id="navy-${uid}" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#061b35" />
+              <stop offset="35%" stop-color="#0c3e72" />
+              <stop offset="65%" stop-color="#062746" />
+              <stop offset="100%" stop-color="#020d1c" />
+            </linearGradient>
+            <linearGradient id="gold-${uid}" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#fff1a8" />
+              <stop offset="18%" stop-color="#e4a92b" />
+              <stop offset="45%" stop-color="#fff0a0" />
+              <stop offset="70%" stop-color="#b36a05" />
+              <stop offset="100%" stop-color="#ffd967" />
+            </linearGradient>
+            <radialGradient id="face-${uid}" cx="45%" cy="35%" r="70%">
+              <stop offset="0%" stop-color="#fff9e5" />
+              <stop offset="65%" stop-color="#f8df9f" />
+              <stop offset="100%" stop-color="#e3b756" />
+            </radialGradient>
+            <linearGradient id="display-${uid}" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#143b60" />
+              <stop offset="45%" stop-color="#031b33" />
+              <stop offset="100%" stop-color="#010b15" />
+            </linearGradient>
+            <linearGradient id="needle-${uid}" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#020d19" />
+              <stop offset="55%" stop-color="#073868" />
+              <stop offset="100%" stop-color="#03121f" />
+            </linearGradient>
+            <filter id="shadow-${uid}" x="-30%" y="-30%" width="160%" height="180%">
+              <feDropShadow dx="0" dy="8" stdDeviation="7" flood-color="#000" flood-opacity="0.25" />
+            </filter>
+            <filter id="smallShadow-${uid}" x="-30%" y="-30%" width="160%" height="180%">
+              <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.35" />
+            </filter>
+          </defs>
 
-        <circle cx="${cx}" cy="${cy}" r="231" fill="#000" opacity="0.12" filter="url(#${uid}-shadow)" />
+          <g filter="url(#shadow-${uid})">
+            <circle cx="250" cy="240" r="213" fill="url(#gold-${uid})" />
+            <circle cx="250" cy="240" r="204" fill="url(#navy-${uid})" />
+            <circle cx="250" cy="240" r="192" fill="url(#gold-${uid})" />
+            <circle cx="250" cy="240" r="181" fill="url(#face-${uid})" />
 
-        <circle cx="${cx}" cy="${cy}" r="228" fill="url(#${uid}-gold)" />
-        <circle cx="${cx}" cy="${cy}" r="220" fill="url(#${uid}-navy)" />
-        <circle cx="${cx}" cy="${cy}" r="207" fill="url(#${uid}-gold)" />
-        <circle cx="${cx}" cy="${cy}" r="199" fill="#071b38" />
+            <path d="M 96 318 A 177 177 0 0 1 113 128" fill="none" stroke="#4423d8" stroke-width="48" />
+            <path d="M 113 128 A 177 177 0 0 1 184 74" fill="none" stroke="#0574e8" stroke-width="48" />
+            <path d="M 184 74 A 177 177 0 0 1 316 74" fill="none" stroke="#25c76f" stroke-width="48" />
+            <path d="M 316 74 A 177 177 0 0 1 387 128" fill="none" stroke="#ffb30f" stroke-width="48" />
+            <path d="M 387 128 A 177 177 0 0 1 404 318" fill="none" stroke="#cb0619" stroke-width="48" />
 
-        <circle cx="${cx}" cy="${cy}" r="191" fill="url(#${uid}-face)" stroke="url(#${uid}-gold)" stroke-width="5" />
+            <path d="M 97 318 A 177 177 0 0 1 404 318" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="4" />
+            <path d="M 117 305 A 155 155 0 0 1 383 305" fill="none" stroke="#fff8dd" stroke-width="4" />
 
-        <path d="${describeArc(cx, cy, 176, -125, 125)}" fill="none" stroke="url(#${uid}-spectrum)" stroke-width="55" stroke-linecap="butt" />
-        <path d="${describeArc(cx, cy, 148, -125, 125)}" fill="none" stroke="#e3b54d" stroke-width="4" />
+            ${Array.from({ length: 21 }).map((_, i) => {
+              const angle = -120 + i * 12;
+              const radians = (angle * Math.PI) / 180;
+              const longTick = i % 5 === 0;
+              const r1 = longTick ? 137 : 144;
+              const r2 = 157;
+              const x1 = 250 + r1 * Math.sin(radians);
+              const y1 = 240 - r1 * Math.cos(radians);
+              const x2 = 250 + r2 * Math.sin(radians);
+              const y2 = 240 - r2 * Math.cos(radians);
+              return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${longTick ? '#b77a05' : '#12283b'}" stroke-width="${longTick ? 4 : 2.5}" stroke-linecap="round" />`;
+            }).join('')}
 
-        ${labelsHtml}
-        ${ticks}
+            <text x="115" y="198" fill="white" font-size="17" font-weight="800" text-anchor="middle" transform="rotate(-67 115 198)">Very Low</text>
+            <text x="154" y="107" fill="white" font-size="18" font-weight="800" text-anchor="middle" transform="rotate(-38 154 107)">Low</text>
+            <text x="250" y="66" fill="white" font-size="18" font-weight="800" text-anchor="middle">Moderate</text>
+            <text x="346" y="107" fill="white" font-size="18" font-weight="800" text-anchor="middle" transform="rotate(38 346 107)">High</text>
+            <text x="390" y="200" fill="white" font-size="18" font-weight="800" text-anchor="middle" transform="rotate(68 390 200)">Critical</text>
 
-        <polygon points="${cx + 6},${cy + 8} ${needleTip.x + 8},${needleTip.y + 8} ${cx - 14},${cy + 16}" fill="#000" opacity="0.16" />
-        <polygon points="${cx - 10},${cy + 8} ${needleTip.x},${needleTip.y} ${cx + 10},${cy + 8}" fill="${needleColor || '#d59d2f'}" />
-        <polygon points="${cx - 6},${cy + 6} ${needleTip.x - 3},${needleTip.y + 3} ${cx + 6},${cy + 6}" fill="${needleColor || `url(#${uid}-navy)`}" />
+            <g transform="rotate(${needleAngle} 250 240)">
+              <path d="M242 242 L250 84 L258 242 Z" fill="url(#gold-${uid})" />
+              <path d="M245 240 L250 90 L255 240 Z" fill="url(#needle-${uid})" />
+              <circle cx="250" cy="100" r="3.5" fill="#e9ac32" />
+            </g>
 
-        <circle cx="${cx}" cy="${cy}" r="39" fill="#0a2b58" stroke="#d1a03a" stroke-width="5" />
-        <circle cx="${cx}" cy="${cy}" r="30" fill="url(#${uid}-hub)" stroke="#ffd66c" stroke-width="2" />
+            <circle cx="250" cy="240" r="31" fill="url(#navy-${uid})" stroke="#c88b16" stroke-width="4" />
+            <circle cx="250" cy="240" r="23" fill="url(#gold-${uid})" stroke="#5f3b05" stroke-width="2" />
+            <circle cx="243" cy="232" r="7" fill="rgba(255,255,255,.45)" />
 
-        <text x="${cx}" y="350" text-anchor="middle" fill="#0b2b58" font-size="34" font-weight="800" font-family="Arial, Helvetica, sans-serif">Risk</text>
-        <text x="${cx}" y="389" text-anchor="middle" fill="#0b2b58" font-size="29" font-weight="800" font-family="Arial, Helvetica, sans-serif">Assessment</text>
+            <text x="250" y="344" fill="#072347" font-size="26" font-weight="900" text-anchor="middle">Risk Assessment</text>
 
-        <line x1="190" y1="414" x2="236" y2="414" stroke="#c9972f" stroke-width="3" />
-        <circle cx="${cx}" cy="414" r="5" fill="#c9972f" />
-        <line x1="264" y1="414" x2="310" y2="414" stroke="#c9972f" stroke-width="3" />
-      </svg>`;
+            <g filter="url(#smallShadow-${uid})">
+              <rect x="185" y="365" width="130" height="64" rx="7" fill="url(#gold-${uid})" />
+              <rect x="192" y="372" width="116" height="50" rx="4" fill="url(#display-${uid})" />
+              <rect x="197" y="376" width="106" height="10" rx="3" fill="rgba(255,255,255,.08)" />
+              <circle cx="198" cy="397" r="3" fill="#f4c148" />
+              <circle cx="302" cy="397" r="3" fill="#f4c148" />
+              <text x="250" y="411" fill="#ffe474" font-size="43" font-weight="700" text-anchor="middle" font-family="'Courier New', monospace" letter-spacing="2">${hasData ? score : '\u2013'}</text>
+            </g>
+          </g>
+
+          <g filter="url(#smallShadow-${uid})">
+            <path d="M105 475 L395 475 L410 490 L410 540 L395 555 L105 555 L90 540 L90 490 Z" fill="url(#gold-${uid})" />
+            <path d="M111 483 L389 483 L401 495 L401 535 L389 547 L111 547 L99 535 L99 495 Z" fill="url(#navy-${uid})" />
+            <circle cx="112" cy="515" r="5" fill="#eeb73c" />
+            <circle cx="388" cy="515" r="5" fill="#eeb73c" />
+            <text x="250" y="527" fill="white" font-size="31" font-weight="800" text-anchor="middle">${safeName}</text>
+          </g>
+        </svg>
+      </div>`;
   }
 
   function domainGaugeCellHtml(domain, avg, opts) {
@@ -411,12 +409,7 @@ var supabase = window.supabase;
     const pct = avg == null ? null : Math.round(((5 - avg) / 4) * 100);
     return `
       <div class="domain-gauge-cell">
-        <div class="gauge-dial-wrap">${buildDomainGaugeSvg(pct, opts)}</div>
-        <div class="gauge-nameplate">
-          <span class="num">${opts.index}</span>
-          <span class="name">${escapeHtml(domain.label)}</span>
-        </div>
-        ${pct == null ? '<div class="gauge-no-data-caption">No data yet</div>' : ''}
+        ${buildDomainGaugeSvg(domain.label, pct, { large: opts.large })}
       </div>`;
   }
 
@@ -426,21 +419,21 @@ var supabase = window.supabase;
       return `<div class="state-panel">No risk domains configured yet.</div>`;
     }
 
-    const cells = domains.map((d, i) => {
+    const cells = domains.map((d) => {
       const avg = domainAverages ? domainAverages[d.key] : null;
-      return { domain: d, avg, index: i + 1 };
+      return { domain: d, avg };
     });
 
     // Mirror the reference layout exactly when there are six domains:
-    // top row = small / large-center / small, bottom row = three medium.
+    // top row = small / large-center / small, bottom row = three equal.
     if (cells.length === 6) {
       const top = [cells[0], cells[1], cells[2]];
       const bottom = [cells[3], cells[4], cells[5]];
       const topHtml = top.map((c, i) =>
-        domainGaugeCellHtml(c.domain, c.avg, { index: c.index, size: i === 1 ? 'large' : 'small' })
+        domainGaugeCellHtml(c.domain, c.avg, { large: i === 1 })
       ).join('');
       const bottomHtml = bottom.map((c) =>
-        domainGaugeCellHtml(c.domain, c.avg, { index: c.index, size: 'medium' })
+        domainGaugeCellHtml(c.domain, c.avg, { large: false })
       ).join('');
       return `
         <div class="domain-gauge-grid">
@@ -449,7 +442,7 @@ var supabase = window.supabase;
         </div>`;
     }
 
-    const html = cells.map((c) => domainGaugeCellHtml(c.domain, c.avg, { index: c.index, size: 'medium' })).join('');
+    const html = cells.map((c) => domainGaugeCellHtml(c.domain, c.avg, { large: false })).join('');
     return `<div class="domain-gauge-grid"><div class="gauge-row">${html}</div></div>`;
   }
 
