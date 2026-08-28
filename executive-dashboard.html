@@ -280,71 +280,65 @@ var supabase = window.supabase;
     return 'Elevated Risk';
   }
 
-  /* ---------- Executive-style circular gauge \u2014 faithful port of JD's
-     RiskGauge React component (same paths, gradients, needle formula,
-     digital readout, and baked-in nameplate) translated to a template
-     string so it can run on this vanilla-JS page. ---------- */
+  /* ---------- Executive-style thermometer gauge \u2014 rebuilt to match
+     JD's approved reference image exactly: arched gold/navy tombstone
+     frame, fixed "Risk Assessment" title, vertical 5-band color tube
+     (violet\u2192blue\u2192green\u2192orange\u2192red, bottom to top) capped with a
+     round bulb, tick-marked 0\u2013100 scale on the left, color-matched
+     risk labels on the right, faint JD head/circuit watermark behind
+     the tube, gold/navy digital readout below the tube, and a separate
+     gold/navy nameplate banner beneath the frame carrying the
+     department name. Do not redesign, simplify, or approximate. ---------- */
   function clamp(n, min, max) { return Math.min(Math.max(n, min), max); }
-
-  /* describeArc / polarToCartesian \u2014 exact port of the approved
-     RiskGauge React component's arc-drawing math. Do not modify. */
-  function gaugePolarToCartesian(cx, cy, radius, angleInDegrees) {
-    const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180;
-    return {
-      x: cx + radius * Math.cos(angleInRadians),
-      y: cy + radius * Math.sin(angleInRadians),
-    };
-  }
-
-  function gaugeDescribeArc(cx, cy, radius, startAngle, endAngle) {
-    const start = gaugePolarToCartesian(cx, cy, radius, endAngle);
-    const end = gaugePolarToCartesian(cx, cy, radius, startAngle);
-    const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
-    return ['M', start.x, start.y, 'A', radius, radius, 0, largeArcFlag, 0, end.x, end.y].join(' ');
-  }
 
   let gaugeUid = 0;
 
-  /* ---------- Approved RiskGauge component, ported verbatim from JD's
-     React source (paths, gradients, needle formula, watermark, digital
-     readout) \u2014 identical geometry, only def ids are namespaced with
-     a uid so multiple gauges can render on one page. Do not redesign,
-     simplify, or approximate any part of this. ---------- */
+  function gaugeTombstoneShape(x0, x1, bottomY, straightTopY, domeApexY, cornerR, fill) {
+    const width = x1 - x0;
+    const cx = (x0 + x1) / 2;
+    const domeRy = straightTopY - domeApexY;
+    const domeRx = width / 2;
+    return `<rect x="${x0}" y="${straightTopY}" width="${width}" height="${bottomY - straightTopY}" rx="${cornerR}" fill="${fill}" />` +
+      `<ellipse cx="${cx}" cy="${straightTopY}" rx="${domeRx}" ry="${domeRy}" fill="${fill}" />`;
+  }
+
   function buildDomainGaugeSvg(name, pct, opts) {
     opts = opts || {};
     const uid = 'gauge' + (gaugeUid++);
     const hasData = pct != null;
     const score = clamp(hasData ? pct : 0, 0, 100);
-    const needleAngle = -120 + (score / 100) * 240;
-    const size = opts.large ? 430 : 300;
+    const size = opts.large ? 400 : 280;
     const safeName = escapeHtml(name);
-    const cx = 250;
-    const cy = 245;
+    const cx = 170;
 
-    const spectrumSegments = [
-      { start: -120, end: -72, color: '#4324D6' },
-      { start: -72, end: -24, color: '#0879E8' },
-      { start: -24, end: 24, color: '#27CA69' },
-      { start: 24, end: 72, color: '#FFB10C' },
-      { start: 72, end: 120, color: '#C90919' },
-    ].map(seg => `<path d="${gaugeDescribeArc(cx, cy, 176, seg.start, seg.end)}" fill="none" stroke="${seg.color}" stroke-width="45" />`).join('');
+    const bandColors = ['#C90919', '#FFB10C', '#27CA69', '#0879E8', '#4324D6']; // Critical\u2192High\u2192Moderate\u2192Low\u2192VeryLow, top to bottom
+    const labelColors = ['#B3081A', '#C96A0A', '#1E8A4C', '#0B62B0', '#2E2A8C'];
+    const labels = ['Critical', 'High', 'Moderate', 'Low', 'Very Low'];
+    const scaleNumbers = [100, 80, 60, 40, 20, 0];
 
-    const tickMarks = Array.from({ length: 21 }).map((_, i) => {
-      const angle = -120 + i * 12;
-      const radians = (angle * Math.PI) / 180;
-      const major = i % 5 === 0;
-      const innerRadius = major ? 136 : 143;
-      const outerRadius = 155;
-      const x1 = cx + innerRadius * Math.sin(radians);
-      const y1 = cy - innerRadius * Math.cos(radians);
-      const x2 = cx + outerRadius * Math.sin(radians);
-      const y2 = cy - outerRadius * Math.cos(radians);
-      return `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${major ? '#D39A21' : '#26333A'}" stroke-width="${major ? 4 : 2.5}" stroke-linecap="round" />`;
+    const tubeX0 = 141, tubeX1 = 199, tubeWidth = tubeX1 - tubeX0; // inner face bounds
+    const tubeTopY = 171, tubeBottomY = 460; // bulb center; leaves room below for the digital readout
+    const bandBoundaries = Array.from({ length: 6 }).map((_, i) => tubeTopY + (i * (tubeBottomY - tubeTopY)) / 5);
+
+    const bandRects = bandColors.map((color, i) =>
+      `<rect x="${tubeX0}" y="${bandBoundaries[i]}" width="${tubeWidth}" height="${bandBoundaries[i + 1] - bandBoundaries[i]}" fill="${color}" />`
+    ).join('');
+
+    const ticksAndNumbers = scaleNumbers.map((n, i) => {
+      const y = bandBoundaries[i];
+      return `<line x1="118" y1="${y}" x2="138" y2="${y}" stroke="#152A45" stroke-width="2.5" stroke-linecap="round" />` +
+        `<text x="112" y="${y + 6}" fill="#12253F" font-size="19" font-weight="700" text-anchor="end" font-family="Arial, Helvetica, sans-serif">${n}</text>`;
+    }).join('');
+
+    const rightLabels = labels.map((label, i) => {
+      const y = (bandBoundaries[i] + bandBoundaries[i + 1]) / 2;
+      return `<line x1="206" y1="${y}" x2="222" y2="${y}" stroke="${labelColors[i]}" stroke-width="2.5" stroke-linecap="round" />` +
+        `<text x="228" y="${y + 6}" fill="${labelColors[i]}" font-size="18" font-weight="800" text-anchor="start" font-family="Arial, Helvetica, sans-serif">${escapeHtml(label)}</text>`;
     }).join('');
 
     return `
       <div class="risk-gauge-wrapper" style="width:${size}px;max-width:100%;">
-        <svg viewBox="0 0 500 590" width="100%" height="auto" role="img" aria-label="${safeName} risk assessment ${hasData ? score : 'no data'}" style="display:block;overflow:visible;">
+        <svg viewBox="0 0 340 665" width="100%" height="auto" role="img" aria-label="${safeName} risk assessment ${hasData ? score : 'no data'}" style="display:block;overflow:visible;">
           <defs>
             <linearGradient id="gold-${uid}" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#FFF4B0" />
@@ -373,16 +367,11 @@ var supabase = window.supabase;
               <stop offset="43%" stop-color="#062441" />
               <stop offset="100%" stop-color="#010A12" />
             </linearGradient>
-            <linearGradient id="needle-${uid}" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="#0C4479" />
-              <stop offset="50%" stop-color="#031A31" />
-              <stop offset="100%" stop-color="#0A3965" />
-            </linearGradient>
+            <clipPath id="tubeClip-${uid}">
+              <rect x="${tubeX0}" y="${tubeTopY}" width="${tubeWidth}" height="${tubeBottomY - tubeTopY}" rx="29" />
+            </clipPath>
             <filter id="mainShadow-${uid}" x="-30%" y="-30%" width="160%" height="170%">
               <feDropShadow dx="0" dy="7" stdDeviation="7" flood-color="#000000" flood-opacity="0.24" />
-            </filter>
-            <filter id="hubShadow-${uid}" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="1" dy="4" stdDeviation="4" flood-color="#000000" flood-opacity="0.38" />
             </filter>
             <filter id="smallShadow-${uid}" x="-30%" y="-30%" width="160%" height="180%">
               <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000" flood-opacity="0.35" />
@@ -390,16 +379,15 @@ var supabase = window.supabase;
           </defs>
 
           <g filter="url(#mainShadow-${uid})">
-            <circle cx="${cx}" cy="${cy}" r="232" fill="url(#gold-${uid})" />
-            <circle cx="${cx}" cy="${cy}" r="224" fill="url(#navy-${uid})" />
-            <circle cx="${cx}" cy="${cy}" r="208" fill="url(#gold-${uid})" />
-            <circle cx="${cx}" cy="${cy}" r="199" fill="url(#face-${uid})" />
+            ${gaugeTombstoneShape(8, 332, 584, 210, 30, 30, `url(#gold-${uid})`)}
+            ${gaugeTombstoneShape(17, 323, 576, 215, 42, 26, `url(#navy-${uid})`)}
+            ${gaugeTombstoneShape(26, 314, 568, 220, 54, 22, `url(#gold-${uid})`)}
+            ${gaugeTombstoneShape(35, 305, 560, 225, 66, 18, `url(#face-${uid})`)}
 
-            ${spectrumSegments}
+            <text x="${cx}" y="98" fill="#0A2E52" font-size="28" font-weight="900" text-anchor="middle" font-family="Arial, Helvetica, sans-serif">Risk</text>
+            <text x="${cx}" y="130" fill="#0A2E52" font-size="28" font-weight="900" text-anchor="middle" font-family="Arial, Helvetica, sans-serif">Assessment</text>
 
-            <path d="${gaugeDescribeArc(cx, cy, 153, -120, 120)}" fill="none" stroke="#E8B542" stroke-width="3" />
-
-            <g transform="translate(0 2)" fill="none" stroke="#7FA1BD" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.34">
+            <g transform="translate(${cx} 330) scale(0.5) translate(-255 -235)" fill="none" stroke="#7FB3E0" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.46">
               <path d="M220 317 L220 299 C205 291 194 279 190 265 L181 258 C176 254 177 247 182 242 L190 232 C190 194 209 161 241 151 C270 142 302 151 319 175 C329 189 334 207 333 228 L333 317" />
               <path d="M255 226 L255 166" />
               <circle cx="255" cy="159" r="6" />
@@ -421,36 +409,31 @@ var supabase = window.supabase;
               <circle cx="284" cy="232" r="5" />
             </g>
 
-            ${tickMarks}
-
-            <text x="98" y="254" fill="#FFFFFF" font-size="20" font-weight="800" text-anchor="middle" transform="rotate(-72 98 254)">Very Low</text>
-            <text x="147" y="122" fill="#FFFFFF" font-size="21" font-weight="800" text-anchor="middle" transform="rotate(-37 147 122)">Low</text>
-            <text x="250" y="77" fill="#FFFFFF" font-size="21" font-weight="800" text-anchor="middle">Moderate</text>
-            <text x="352" y="122" fill="#FFFFFF" font-size="21" font-weight="800" text-anchor="middle" transform="rotate(37 352 122)">High</text>
-            <text x="404" y="254" fill="#FFFFFF" font-size="21" font-weight="800" text-anchor="middle" transform="rotate(72 404 254)">Critical</text>
-
-            <g transform="rotate(${needleAngle} ${cx} ${cy})">
-              <path d="M229 252 L250 75 L271 252 L260 244 L250 103 L240 244 Z" fill="url(#gold-${uid})" />
-              <path d="M236 248 L250 89 L264 248 L257 241 L250 116 L243 241 Z" fill="url(#needle-${uid})" />
-              <path d="M246 226 L250 126 L254 226 L250 216 Z" fill="#F4D987" />
-              <path d="M248 221 L250 118 L252 221 L250 214 Z" fill="#F5C74C" opacity="0.8" />
+            <rect x="${tubeX0 - 5}" y="${tubeTopY - 5}" width="${tubeWidth + 10}" height="${tubeBottomY - tubeTopY + 10}" rx="34" fill="url(#gold-${uid})" />
+            <g clip-path="url(#tubeClip-${uid})">
+              ${bandRects}
             </g>
 
-            <g filter="url(#hubShadow-${uid})">
-              <circle cx="${cx}" cy="${cy}" r="41" fill="url(#gold-${uid})" stroke="#815108" stroke-width="2" />
-              <circle cx="${cx}" cy="${cy}" r="33" fill="url(#navy-${uid})" stroke="#EFC65D" stroke-width="3" />
-              <circle cx="${cx}" cy="${cy}" r="25" fill="url(#gold-${uid})" stroke="#6E4305" stroke-width="2" />
-              <ellipse cx="241" cy="235" rx="9" ry="7" fill="rgba(255,255,255,0.34)" />
-            </g>
+            <circle cx="${cx}" cy="${tubeBottomY}" r="44" fill="url(#gold-${uid})" />
+            <circle cx="${cx}" cy="${tubeBottomY}" r="40" fill="#4324D6" />
+            <ellipse cx="${cx - 12}" cy="${tubeBottomY - 12}" rx="10" ry="7" fill="rgba(255,255,255,0.35)" />
 
-            <text x="250" y="376" fill="#06264A" font-size="30" font-weight="900" text-anchor="middle" font-family="Arial, Helvetica, sans-serif">${safeName}</text>
+            ${ticksAndNumbers}
+            ${rightLabels}
 
-            <path d="M176 391 L324 391 L337 403 L337 447 L324 459 L176 459 L163 447 L163 403 Z" fill="url(#gold-${uid})" />
-            <path d="M181 398 L319 398 L329 407 L329 443 L319 452 L181 452 L171 443 L171 407 Z" fill="url(#display-${uid})" />
-            <path d="M181 403 L319 403" stroke="rgba(255,255,255,.12)" stroke-width="4" stroke-linecap="round" />
-            <circle cx="178" cy="425" r="4" fill="#E8B33A" />
-            <circle cx="322" cy="425" r="4" fill="#E8B33A" />
-            <text x="250" y="444" fill="#FFD75B" font-size="48" font-weight="600" text-anchor="middle" font-family="'Courier New', monospace" letter-spacing="2">${hasData ? score : '\u2013'}</text>
+            <path d="M45 605 L295 605 L307 615 L307 645 L295 655 L45 655 L33 645 L33 615 Z" fill="url(#gold-${uid})" />
+            <path d="M51 611 L289 611 L299 619 L299 641 L289 649 L51 649 L41 641 L41 619 Z" fill="url(#navy-${uid})" />
+            <circle cx="44" cy="630" r="3.5" fill="#E8B33A" />
+            <circle cx="296" cy="630" r="3.5" fill="#E8B33A" />
+            <text x="${cx}" y="638" fill="#FFFFFF" font-size="24" font-weight="800" text-anchor="middle" font-family="Arial, Helvetica, sans-serif">${safeName}</text>
+          </g>
+
+          <g filter="url(#smallShadow-${uid})">
+            <path d="M125 515 L215 515 L225 525 L225 545 L215 555 L125 555 L115 545 L115 525 Z" fill="url(#gold-${uid})" />
+            <path d="M130 520 L210 520 L217 527 L217 543 L210 550 L130 550 L123 543 L123 527 Z" fill="url(#display-${uid})" />
+            <circle cx="121" cy="535" r="3" fill="#E8B33A" />
+            <circle cx="219" cy="535" r="3" fill="#E8B33A" />
+            <text x="${cx}" y="544" fill="#FFD75B" font-size="30" font-weight="600" text-anchor="middle" font-family="'Courier New', monospace" letter-spacing="2">${hasData ? score : '\u2013'}</text>
           </g>
         </svg>
       </div>`;
