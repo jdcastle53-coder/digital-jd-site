@@ -333,12 +333,12 @@ var supabase = window.supabase;
     const rightLabels = labels.map((label, i) => {
       const y = (bandBoundaries[i] + bandBoundaries[i + 1]) / 2;
       return `<line x1="206" y1="${y}" x2="222" y2="${y}" stroke="${labelColors[i]}" stroke-width="2.5" stroke-linecap="round" />` +
-        `<text x="228" y="${y + 6}" fill="${labelColors[i]}" font-size="18" font-weight="800" text-anchor="start" font-family="Arial, Helvetica, sans-serif">${escapeHtml(label)}</text>`;
+        `<text x="228" y="${y + 5}" fill="${labelColors[i]}" font-size="15" font-weight="800" text-anchor="start" font-family="Arial, Helvetica, sans-serif">${escapeHtml(label)}</text>`;
     }).join('');
 
     return `
       <div class="risk-gauge-wrapper" style="width:${size}px;max-width:100%;">
-        <svg viewBox="0 0 340 665" width="100%" height="auto" role="img" aria-label="${safeName} risk assessment ${hasData ? score : 'no data'}" style="display:block;overflow:visible;">
+        <svg viewBox="0 0 360 665" width="100%" height="auto" role="img" aria-label="${safeName} risk assessment ${hasData ? score : 'no data'}" style="display:block;overflow:visible;">
           <defs>
             <linearGradient id="gold-${uid}" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stop-color="#FFF4B0" />
@@ -387,31 +387,30 @@ var supabase = window.supabase;
             <text x="${cx}" y="98" fill="#0A2E52" font-size="28" font-weight="900" text-anchor="middle" font-family="Arial, Helvetica, sans-serif">Risk</text>
             <text x="${cx}" y="130" fill="#0A2E52" font-size="28" font-weight="900" text-anchor="middle" font-family="Arial, Helvetica, sans-serif">Assessment</text>
 
-            <g transform="translate(${cx} 330) scale(0.5) translate(-255 -235)" fill="none" stroke="#7FB3E0" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.46">
-              <path d="M220 317 L220 299 C205 291 194 279 190 265 L181 258 C176 254 177 247 182 242 L190 232 C190 194 209 161 241 151 C270 142 302 151 319 175 C329 189 334 207 333 228 L333 317" />
-              <path d="M255 226 L255 166" />
-              <circle cx="255" cy="159" r="6" />
-              <path d="M240 220 L240 184 L229 173" />
-              <circle cx="225" cy="169" r="6" />
-              <path d="M225 230 L213 218 L213 200" />
-              <circle cx="213" cy="193" r="6" />
-              <path d="M270 220 L270 184 L282 172" />
-              <circle cx="286" cy="168" r="6" />
-              <path d="M284 232 L300 215 L300 197" />
-              <circle cx="300" cy="190" r="6" />
-              <path d="M225 230 L245 250" />
-              <circle cx="225" cy="230" r="5" />
-              <path d="M240 220 L255 235" />
-              <circle cx="240" cy="220" r="5" />
-              <path d="M270 220 L255 235" />
-              <circle cx="270" cy="220" r="5" />
-              <path d="M284 232 L264 252" />
-              <circle cx="284" cy="232" r="5" />
-            </g>
-
             <rect x="${tubeX0 - 5}" y="${tubeTopY - 5}" width="${tubeWidth + 10}" height="${tubeBottomY - tubeTopY + 10}" rx="34" fill="url(#gold-${uid})" />
             <g clip-path="url(#tubeClip-${uid})">
               ${bandRects}
+              <g transform="translate(${cx} 315) scale(0.42) translate(-255 -235)" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" opacity="0.4">
+                <path d="M220 317 L220 299 C205 291 194 279 190 265 L181 258 C176 254 177 247 182 242 L190 232 C190 194 209 161 241 151 C270 142 302 151 319 175 C329 189 334 207 333 228 L333 317" />
+                <path d="M255 226 L255 166" />
+                <circle cx="255" cy="159" r="6" />
+                <path d="M240 220 L240 184 L229 173" />
+                <circle cx="225" cy="169" r="6" />
+                <path d="M225 230 L213 218 L213 200" />
+                <circle cx="213" cy="193" r="6" />
+                <path d="M270 220 L270 184 L282 172" />
+                <circle cx="286" cy="168" r="6" />
+                <path d="M284 232 L300 215 L300 197" />
+                <circle cx="300" cy="190" r="6" />
+                <path d="M225 230 L245 250" />
+                <circle cx="225" cy="230" r="5" />
+                <path d="M240 220 L255 235" />
+                <circle cx="240" cy="220" r="5" />
+                <path d="M270 220 L255 235" />
+                <circle cx="270" cy="220" r="5" />
+                <path d="M284 232 L264 252" />
+                <circle cx="284" cy="232" r="5" />
+              </g>
             </g>
 
             <circle cx="${cx}" cy="${tubeBottomY}" r="44" fill="url(#gold-${uid})" />
