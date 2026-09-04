@@ -4,6 +4,12 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Situational Analysis and Recommendation | Digital JD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+/>
 <style>
   * {
     box-sizing: border-box;
@@ -53,13 +59,19 @@
     border-radius: 50%;
     display: grid;
     place-items: center;
-    color: #43a6ff;
-    font-size: 42px;
+    overflow: hidden;
     background:
       radial-gradient(circle, rgba(54,129,255,.55) 0%, rgba(15,39,74,.4) 45%, transparent 72%);
     box-shadow:
       0 0 22px rgba(65,141,255,.65),
       0 0 36px rgba(225,171,23,.35);
+  }
+
+  .head-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
   }
 
   .brand-copy {
@@ -610,7 +622,9 @@
 
   <header class="topbar">
     <div class="brand">
-      <div class="head-logo">&#9673;</div>
+      <div class="head-logo">
+        <img src="digital-jd-logo.png" alt="Digital JD Bluehead Logo" class="head-logo-img" />
+      </div>
       <div class="brand-copy">
         <div class="brand-title">
           Intelligent
@@ -683,7 +697,16 @@
 
     <section class="content">
       <div class="hero">
-        <div class="hero-icon">&#10022;</div>
+        <div class="hero-icon">
+          <svg width="52" height="52" viewBox="0 0 24 24" fill="none" stroke="#ffc11a" stroke-width="1.5" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <polygon points="14.5,9.5 12,15 9.5,14.5 12,9" fill="#ffc11a" stroke="none" />
+            <circle cx="12" cy="3.2" r=".9" fill="#ffc11a" stroke="none" />
+            <circle cx="12" cy="20.8" r=".9" fill="#ffc11a" stroke="none" />
+            <circle cx="3.2" cy="12" r=".9" fill="#ffc11a" stroke="none" />
+            <circle cx="20.8" cy="12" r=".9" fill="#ffc11a" stroke="none" />
+          </svg>
+        </div>
 
         <div>
           <h1>SITUATIONAL ANALYSIS AND RECOMMENDATION</h1>
@@ -701,7 +724,13 @@
       <div class="body-grid">
         <div class="main-card">
           <div class="section-title-row">
-            <div class="section-icon">&#9636;</div>
+            <div class="section-icon">
+              <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#4a9cff" stroke-width="1.6" aria-hidden="true">
+                <path d="M7 3h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
+                <path d="M14 3v4h4" />
+                <path d="M8.5 12h7M8.5 15.5h7M8.5 8.5h4" />
+              </svg>
+            </div>
 
             <div>
               <div class="section-title">
@@ -752,7 +781,13 @@
           </div>
 
           <div class="secure-box">
-            <div class="secure-icon">&#9635;</div>
+            <div class="secure-icon">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#50a0ff" stroke-width="1.7" aria-hidden="true">
+                <rect x="5" y="11" width="14" height="9" rx="1.6" />
+                <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+                <circle cx="12" cy="15.3" r="1.15" fill="#50a0ff" stroke="none" />
+              </svg>
+            </div>
 
             <div>
               <div class="small-blue-title">
@@ -768,32 +803,61 @@
 
         <aside class="tips-card">
           <div class="tips-head">
-            <span>&#128161;</span>
+            <span>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffbf00" stroke-width="1.7" aria-hidden="true">
+                <path d="M9 18h6M10 21h4" />
+                <path d="M12 3a6 6 0 0 0-3.5 10.9c.35.26.5.63.5 1.03V16h6v-1.07c0-.4.15-.77.5-1.03A6 6 0 0 0 12 3z" />
+              </svg>
+            </span>
             <span>HELPFUL TIPS</span>
           </div>
 
           <div class="tip">
-            <div class="tip-check">&#10003;</div>
+            <div class="tip-check">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffc400" stroke-width="2.4" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
             <div>Be specific about the people involved and their roles.</div>
           </div>
           <div class="tip">
-            <div class="tip-check">&#10003;</div>
+            <div class="tip-check">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffc400" stroke-width="2.4" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
             <div>Describe the impact this situation is having.</div>
           </div>
           <div class="tip">
-            <div class="tip-check">&#10003;</div>
+            <div class="tip-check">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffc400" stroke-width="2.4" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
             <div>Include any actions you've already taken.</div>
           </div>
           <div class="tip">
-            <div class="tip-check">&#10003;</div>
+            <div class="tip-check">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffc400" stroke-width="2.4" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
             <div>Share what outcome you're hoping to achieve.</div>
           </div>
           <div class="tip">
-            <div class="tip-check">&#10003;</div>
+            <div class="tip-check">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffc400" stroke-width="2.4" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
             <div>Mention any constraints or limitations you're facing.</div>
           </div>
           <div class="tip">
-            <div class="tip-check">&#10003;</div>
+            <div class="tip-check">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffc400" stroke-width="2.4" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
             <div>The more context you provide, the more valuable your recommendation will be.</div>
           </div>
         </aside>
