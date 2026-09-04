@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Situational Analysis and Recommendation | Digital JD</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #020a12;
+    color: #f7f7f3;
+    font-family: Inter, Arial, Helvetica, sans-serif;
+  }
+
+  button,
+  textarea {
+    font: inherit;
+  }
+
+  .page-shell {
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 5% 5%, rgba(215,163,17,.09), transparent 18%),
+      radial-gradient(circle at 50% 0%, rgba(22,86,160,.08), transparent 28%),
+      linear-gradient(180deg, #020a12 0%, #03111c 100%);
+    border: 3px solid #172534;
+    color: #f4f1e8;
+  }
+
+  .topbar {
+    height: 122px;
+    display: grid;
+    grid-template-columns: 285px 1fr;
+    align-items: center;
+    border-bottom: 1px solid rgba(219,164,20,.22);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding-left: 44px;
+  }
+
+  .head-logo {
+    width: 78px;
+    height: 78px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #43a6ff;
+    font-size: 42px;
+    background:
+      radial-gradient(circle, rgba(54,129,255,.55) 0%, rgba(15,39,74,.4) 45%, transparent 72%);
+    box-shadow:
+      0 0 22px rgba(65,141,255,.65),
+      0 0 36px rgba(225,171,23,.35);
+  }
+
+  .brand-copy {
+    line-height: 1.02;
+  }
+
+  .brand-title {
+    color: #f3b913;
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 700;
+    font-size: 28px;
+  }
+
+  .brand-sub {
+    margin-top: 8px;
+    color: #28c7e7;
+    font-size: 18px;
+  }
+
+  .nav {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 38px;
+    padding-right: 46px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 19px;
+  }
+
+  .nav-link {
+    color: #f2eee4;
+  }
+
+  .pill {
+    height: 52px;
+    padding: 0 26px;
+    border-radius: 22px;
+    border: 1px solid;
+    background: #071425;
+    color: #fff;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+  }
+
+  .pill-blue {
+    border-color: #1e86ff;
+    box-shadow: inset 0 0 12px rgba(30,134,255,.12);
+  }
+
+  .pill-gold {
+    border-color: #e5a800;
+    color: #f5b90d;
+  }
+
+  .blue-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #4c8cff;
+    display: inline-block;
+    margin-right: 10px;
+    box-shadow: 0 0 10px rgba(76,140,255,.8);
+  }
+
+  .app-grid {
+    display: grid;
+    grid-template-columns: 270px minmax(0, 1fr);
+    min-height: calc(100vh - 122px);
+  }
+
+  .sidebar {
+    border-right: 1px solid #1e3246;
+    padding: 24px 18px 20px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step-list {
+    flex: 1;
+    border: 1px solid #233647;
+    border-radius: 10px;
+    padding: 20px 18px;
+    background: rgba(0,8,16,.48);
+  }
+
+  .step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    min-height: 80px;
+    position: relative;
+  }
+
+  .step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 27px;
+    top: 44px;
+    bottom: -10px;
+    border-left: 2px dotted rgba(64,153,222,.65);
+  }
+
+  .step-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid #9e8e79;
+    display: grid;
+    place-items: center;
+    font-size: 24px;
+    font-family: Georgia, serif;
+    color: #fff;
+    background: #08121c;
+    z-index: 2;
+  }
+
+  .step.active .step-circle {
+    border-color: #ffc400;
+    color: #ffc400;
+    box-shadow:
+      0 0 14px #ffc400,
+      0 0 26px rgba(255,196,0,.38);
+  }
+
+  .step-title {
+    padding-top: 7px;
+    white-space: pre-line;
+    color: #4698ef;
+    font-size: 17px;
+    line-height: 1.18;
+    font-weight: 500;
+  }
+
+  .step.active .step-title {
+    color: #ffc400;
+    font-weight: 700;
+  }
+
+  .back-home {
+    margin-top: 18px;
+    min-height: 58px;
+    border-radius: 9px;
+    border: 1px solid #2a78d0;
+    color: #56a9ff;
+    background: #06111f;
+    font-size: 18px;
+    text-align: left;
+    padding: 0 22px;
+    cursor: pointer;
+  }
+
+  .content {
+    padding: 0 22px 26px;
+    min-width: 0;
+  }
+
+  .hero {
+    margin-top: 14px;
+    min-height: 136px;
+    border-radius: 10px;
+    border: 1px solid #286bc6;
+    background:
+      linear-gradient(100deg, rgba(8,31,63,.98), rgba(9,44,88,.96));
+    display: flex;
+    align-items: center;
+    padding: 22px 30px;
+    box-shadow: inset 0 0 25px rgba(36,100,190,.12);
+  }
+
+  .hero-icon {
+    width: 84px;
+    color: #ffc11a;
+    font-size: 60px;
+    text-align: center;
+    margin-right: 24px;
+  }
+
+  .hero h1 {
+    margin: 0 0 9px;
+    color: #ffbd14;
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  .hero p {
+    margin: 4px 0;
+    font-size: 17px;
+    color: #f5f2eb;
+  }
+
+  .body-grid {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 292px;
+    gap: 18px;
+  }
+
+  .main-card,
+  .tips-card {
+    border: 1px solid #344251;
+    border-radius: 11px;
+    background: rgba(4,14,23,.85);
+  }
+
+  .main-card {
+    padding: 24px 20px 18px;
+  }
+
+  .section-title-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .section-icon {
+    color: #4a9cff;
+    font-size: 42px;
+    line-height: 1;
+  }
+
+  .section-title {
+    font-size: 21px;
+    font-weight: 700;
+    margin-bottom: 7px;
+  }
+
+  .section-desc {
+    font-size: 16px;
+    line-height: 1.45;
+    color: #f4f0e9;
+  }
+
+  .input-row {
+    display: grid;
+    grid-template-columns: minmax(0,1fr) 126px;
+    gap: 16px;
+  }
+
+  .textarea-wrap {
+    min-width: 0;
+  }
+
+  .textarea {
+    width: 100%;
+    min-height: 310px;
+    resize: vertical;
+    border-radius: 8px;
+    border: 1px solid #3a83d9;
+    background:
+      linear-gradient(135deg, rgba(8,21,35,.96), rgba(14,31,49,.96));
+    color: #fff;
+    padding: 18px;
+    outline: none;
+    font-size: 18px;
+    line-height: 1.5;
+  }
+
+  .textarea::placeholder {
+    color: #b6b7b9;
+  }
+
+  .count {
+    text-align: right;
+    padding-top: 8px;
+    font-size: 15px;
+    color: #eeeae3;
+  }
+
+  .dictate-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 10px;
+  }
+
+  .dictate {
+    width: 118px;
+    min-height: 52px;
+    border: 1px solid #2e8df7;
+    border-radius: 9px;
+    background: linear-gradient(#1f6dd5, #164ca3);
+    color: white;
+    font-size: 18px;
+    box-shadow: inset 0 0 14px rgba(255,255,255,.08);
+    cursor: pointer;
+  }
+
+  .dictate-note {
+    margin-top: 13px;
+    color: #fff;
+    font-size: 15px;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  .example-box {
+    margin-top: 14px;
+    border: 1px solid #26384a;
+    border-radius: 9px;
+    background: rgba(7,19,30,.8);
+    padding: 16px 18px;
+  }
+
+  .small-blue-title {
+    color: #559bff;
+    font-size: 15px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .prompt-list {
+    margin: 0;
+    padding-left: 17px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .secure-box {
+    margin-top: 12px;
+    border: 1px solid #26384a;
+    border-radius: 9px;
+    padding: 12px 18px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(5,15,25,.78);
+  }
+
+  .secure-icon {
+    color: #50a0ff;
+    font-size: 30px;
+  }
+
+  .secure-copy {
+    color: #f3efe7;
+    font-size: 14px;
+  }
+
+  .tips-card {
+    padding: 24px 20px;
+  }
+
+  .tips-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ffbf00;
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 16px;
+  }
+
+  .tip {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+    padding: 15px 0;
+    border-bottom: 1px solid #283849;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+
+  .tip:last-child {
+    border-bottom: 0;
+  }
+
+  .tip-check {
+    color: #ffc400;
+    font-size: 22px;
+  }
+
+  .bottom-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 16px;
+  }
+
+  .continue-btn {
+    min-width: 500px;
+    min-height: 66px;
+    border-radius: 12px;
+    border: 3px solid #fff0a2;
+    background:
+      linear-gradient(180deg, #ffd54a 0%, #ffba08 58%, #e59b00 100%);
+    color: #12100a;
+    font-size: 22px;
+    font-weight: 800;
+    padding: 0 28px;
+    box-shadow:
+      0 4px 0 #8c5f00,
+      0 0 0 3px #f7b500,
+      0 0 18px rgba(255,191,0,.9),
+      inset 0 2px 5px rgba(255,255,255,.72);
+    cursor: pointer;
+    transition:
+      transform .08s ease,
+      box-shadow .08s ease;
+  }
+
+  .continue-btn:active {
+    transform: translateY(4px);
+    box-shadow:
+      0 1px 0 #8c5f00,
+      0 0 0 3px #f7b500,
+      0 0 10px rgba(255,191,0,.65),
+      inset 0 2px 5px rgba(255,255,255,.5);
+  }
+
+  @media (max-width: 1050px) {
+    .topbar {
+      grid-template-columns: 230px 1fr;
+    }
+
+    .brand {
+      padding-left: 18px;
+    }
+
+    .nav {
+      gap: 14px;
+      padding-right: 18px;
+    }
+
+    .app-grid {
+      grid-template-columns: 220px minmax(0,1fr);
+    }
+
+    .body-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tips-card {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: 0 20px;
+    }
+
+    .tips-head {
+      grid-column: 1 / -1;
+    }
+
+    .continue-btn {
+      min-width: 100%;
+    }
+  }
+
+  @media (max-width: 760px) {
+    .topbar {
+      height: auto;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .brand {
+      padding-left: 0;
+    }
+
+    .nav {
+      padding-right: 0;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .nav-link {
+      display: none;
+    }
+
+    .app-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .sidebar {
+      border-right: 0;
+      border-bottom: 1px solid #1e3246;
+    }
+
+    .step-list {
+      display: flex;
+      overflow-x: auto;
+      gap: 16px;
+    }
+
+    .step {
+      min-width: 130px;
+      display: block;
+    }
+
+    .step:not(:last-child)::after {
+      display: none;
+    }
+
+    .step-title {
+      font-size: 13px;
+    }
+
+    .back-home {
+      display: none;
+    }
+
+    .content {
+      padding: 0 12px 18px;
+    }
+
+    .hero {
+      padding: 18px;
+    }
+
+    .hero-icon {
+      width: 48px;
+      font-size: 40px;
+      margin-right: 12px;
+    }
+
+    .hero h1 {
+      font-size: 22px;
+    }
+
+    .hero p {
+      font-size: 15px;
+    }
+
+    .input-row {
+      grid-template-columns: 1fr;
+    }
+
+    .dictate-area {
+      align-items: stretch;
+    }
+
+    .dictate {
+      width: 100%;
+    }
+
+    .tips-card {
+      display: block;
+    }
+
+    .continue-btn {
+      min-width: 100%;
+      font-size: 18px;
+    }
+  }
+</style>
+</head>
+<body>
+<main class="page-shell">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="head-logo">&#9673;</div>
+      <div class="brand-copy">
+        <div class="brand-title">
+          Intelligent
+          <br />
+          Leadership
+          <br />
+          System
+        </div>
+        <div class="brand-sub">DigitalJD</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <span class="nav-link">Home</span>
+      <span class="nav-link">Risk Assessment</span>
+
+      <button class="pill pill-blue" type="button">
+        <span class="blue-dot"></span>
+        Sprint Active
+      </button>
+
+      <button class="pill pill-gold" type="button">Explore Plans</button>
+      <button class="pill pill-gold" type="button">Sign out</button>
+    </nav>
+  </header>
+
+  <div class="app-grid">
+    <aside class="sidebar">
+      <div class="step-list">
+        <div class="step active">
+          <div class="step-circle">1</div>
+          <div class="step-title">SITUATIONAL&#10;ANALYSIS</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">2</div>
+          <div class="step-title">CHOOSE YOUR&#10;DEPTH</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">3</div>
+          <div class="step-title">DIGITAL JD&#10;INSIGHT</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">4</div>
+          <div class="step-title">DECISION&#10;OPTIONS</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">5</div>
+          <div class="step-title">YOUR&#10;EXECUTION PLAN</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">6</div>
+          <div class="step-title">WHAT TO SAY</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">7</div>
+          <div class="step-title">WHAT TO WATCH</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">8</div>
+          <div class="step-title">PROGRESS&#10;ASSESSMENT</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">9</div>
+          <div class="step-title">DECISION &amp;&#10;DASHBOARD</div>
+        </div>
+      </div>
+
+      <button class="back-home" type="button">&#8592; &nbsp;&nbsp; Back to Home</button>
+    </aside>
+
+    <section class="content">
+      <div class="hero">
+        <div class="hero-icon">&#10022;</div>
+
+        <div>
+          <h1>SITUATIONAL ANALYSIS AND RECOMMENDATION</h1>
+          <p>
+            Describe your current situation and get Digital JD&apos;s initial
+            analysis and recommendation.
+          </p>
+          <p>
+            The more detail you provide, the better Digital JD can understand
+            and help.
+          </p>
+        </div>
+      </div>
+
+      <div class="body-grid">
+        <div class="main-card">
+          <div class="section-title-row">
+            <div class="section-icon">&#9636;</div>
+
+            <div>
+              <div class="section-title">
+                Current Situational Details
+              </div>
+
+              <div class="section-desc">
+                Provide a clear and detailed description of your current
+                situation. Include relevant people, goals, challenges, and
+                any specific concerns.
+              </div>
+            </div>
+          </div>
+
+          <div class="input-row">
+            <div class="textarea-wrap">
+              <textarea
+                id="situationInput"
+                class="textarea"
+                maxlength="4000"
+                placeholder="Type or dictate your situation here..."
+              ></textarea>
+
+              <div class="count"><span id="charCount">0</span> / 4000 characters</div>
+            </div>
+
+            <div class="dictate-area">
+              <button class="dictate" type="button" id="dictateBtn">&#127908; Dictate</button>
+              <div class="dictate-note">
+                Click to use
+                <br />
+                your microphone
+              </div>
+            </div>
+          </div>
+
+          <div class="example-box">
+            <div class="small-blue-title">EXAMPLE PROMPTS</div>
+
+            <ul class="prompt-list">
+              <li>One of my key executives has developed an attitude that is hurting the leadership team.</li>
+              <li>I need to make a tough decision about a long-time client relationship.</li>
+              <li>My sales team is not hitting targets and I'm not sure why.</li>
+              <li>I'm considering a major organizational change and need to think it through.</li>
+              <li>There is conflict between two departments that is affecting overall performance.</li>
+              <li>I want to improve accountability and follow-through across my leadership team.</li>
+            </ul>
+          </div>
+
+          <div class="secure-box">
+            <div class="secure-icon">&#9635;</div>
+
+            <div>
+              <div class="small-blue-title">
+                YOUR INFORMATION IS SECURE
+              </div>
+              <div class="secure-copy">
+                All information you provide is confidential and used only to
+                generate your personalized analysis and recommendations.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="tips-card">
+          <div class="tips-head">
+            <span>&#128161;</span>
+            <span>HELPFUL TIPS</span>
+          </div>
+
+          <div class="tip">
+            <div class="tip-check">&#10003;</div>
+            <div>Be specific about the people involved and their roles.</div>
+          </div>
+          <div class="tip">
+            <div class="tip-check">&#10003;</div>
+            <div>Describe the impact this situation is having.</div>
+          </div>
+          <div class="tip">
+            <div class="tip-check">&#10003;</div>
+            <div>Include any actions you've already taken.</div>
+          </div>
+          <div class="tip">
+            <div class="tip-check">&#10003;</div>
+            <div>Share what outcome you're hoping to achieve.</div>
+          </div>
+          <div class="tip">
+            <div class="tip-check">&#10003;</div>
+            <div>Mention any constraints or limitations you're facing.</div>
+          </div>
+          <div class="tip">
+            <div class="tip-check">&#10003;</div>
+            <div>The more context you provide, the more valuable your recommendation will be.</div>
+          </div>
+        </aside>
+      </div>
+
+      <div class="bottom-row">
+        <button class="continue-btn" type="button" id="continueBtn">
+          Continue to Choose Your Level of Analysis &nbsp;&nbsp; &#8594;
+        </button>
+      </div>
+    </section>
+  </div>
+
+</main>
+
+<script>
+  // Visual-parity build only. Navigation, dictation, and data hookups
+  // intentionally NOT wired yet -- pending sign-off on this page's look,
+  // per the page-by-page workflow.
+  var situationInput = document.getElementById('situationInput');
+  var charCount = document.getElementById('charCount');
+  situationInput.addEventListener('input', function () {
+    charCount.textContent = situationInput.value.length;
+  });
+</script>
+
+</body>
+</html>
