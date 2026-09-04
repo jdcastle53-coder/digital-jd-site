@@ -27,8 +27,18 @@
     font: inherit;
   }
 
+  .stage {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
   .page-shell {
-    min-height: 100vh;
+    width: 1200px;
+    flex-shrink: 0;
+    transform-origin: top center;
     background:
       radial-gradient(circle at 6% 5%, rgba(231,175,16,.13), transparent 18%),
       radial-gradient(circle at 48% 0%, rgba(25,85,161,.08), transparent 32%),
@@ -142,8 +152,7 @@
 
   .app-grid {
     display: grid;
-    grid-template-columns: 290px minmax(0, 1fr);
-    min-height: calc(100vh - 122px);
+    grid-template-columns: 250px minmax(0, 1fr);
   }
 
   /* =========================================================
@@ -163,12 +172,16 @@
     border: 1px solid #263949;
     border-radius: 10px;
     background: rgba(0,8,16,.48);
+    display: flex;
+    flex-direction: column;
   }
 
   .step {
+    flex: 1;
     min-height: 82px;
     display: grid;
     grid-template-columns: 60px 1fr;
+    align-content: center;
     position: relative;
   }
 
@@ -313,7 +326,6 @@
      ========================================================= */
 
   .principles-card {
-    min-height: 590px;
     padding: 20px 22px;
     border: 2px solid #2a9fff;
     box-shadow: inset 0 0 24px rgba(25,110,206,.07);
@@ -436,7 +448,6 @@
   }
 
   .analysis-box {
-    min-height: 400px;
     padding: 18px 20px;
     border: 2px solid #2b94ef;
     border-radius: 11px;
@@ -623,22 +634,17 @@
   }
 
   /* =========================================================
-     FIXED-WIDTH LAYOUT
-     This page is built to a fixed desktop composition, matching
-     the approved design exactly. On narrower windows it scrolls
-     horizontally rather than reflowing/stacking into a different
-     layout.
+     SCALE-TO-FIT
+     This page is built to a fixed 1200px design canvas so every
+     box keeps the exact proportions of the approved design. The
+     .stage wrapper below uniformly scales that canvas down (via
+     JS) to fit narrower windows without reflowing or cropping it,
+     and never scales it up past its natural 1200px size.
      ========================================================= */
-
-  .page-shell {
-    min-width: 1280px;
-  }
-  html, body {
-    overflow-x: auto;
-  }
 </style>
 </head>
 <body>
+<div class="stage">
 <main class="page-shell">
 
   <header class="topbar">
@@ -956,5 +962,30 @@
     </section>
   </div>
 </main>
+</div>
+<script>
+  (function () {
+    var stage = document.querySelector(".stage");
+    var shell = document.querySelector(".page-shell");
+
+    function fitStage() {
+      shell.style.transform = "none";
+      var naturalWidth = shell.offsetWidth;
+      var naturalHeight = shell.offsetHeight;
+      var scale = Math.min(stage.clientWidth / naturalWidth, 1);
+      shell.style.transform = "scale(" + scale + ")";
+      stage.style.height = naturalHeight * scale + "px";
+    }
+
+    fitStage();
+    window.addEventListener("resize", fitStage);
+    window.addEventListener("load", fitStage);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(fitStage);
+    }
+    setTimeout(fitStage, 300);
+    setTimeout(fitStage, 1000);
+  })();
+</script>
 </body>
 </html>
