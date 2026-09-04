@@ -483,8 +483,8 @@
     padding-top: 10px;
     border-top: 1px solid #a97600;
     color: #ffffff;
-    font-size: 15px;
-    line-height: 1.45;
+    font-size: 22.5px;
+    line-height: 1.4;
     font-weight: 600;
   }
 
@@ -519,12 +519,12 @@
   }
 
   .standout-item {
-    min-height: 46px;
+    min-height: 60px;
     display: grid;
     grid-template-columns: 36px 1fr;
     align-items: center;
     gap: 10px;
-    padding: 4px 14px;
+    padding: 8px 14px;
     border-right: 1px solid #a16d00;
   }
 
@@ -544,8 +544,10 @@
 
   .standout-copy {
     color: #ffffff;
-    font-size: 12.5px;
+    font-size: 16px;
     line-height: 1.32;
+    font-weight: 500;
+    text-shadow: 0 0 1px rgba(255,255,255,.25);
   }
 
   /* =========================================================
@@ -583,7 +585,7 @@
   }
 
   .outcome-card {
-    min-height: 100px;
+    min-height: 118px;
     border: 1px solid #36526e;
     border-radius: 9px;
     background:
@@ -651,8 +653,10 @@
 
   .outcome-text {
     color: #ffffff;
-    font-size: 12px;
-    line-height: 1.35;
+    font-size: 15.5px;
+    line-height: 1.3;
+    font-weight: 500;
+    text-shadow: 0 0 1px rgba(255,255,255,.25);
   }
 
   /* =========================================================
@@ -667,18 +671,45 @@
     margin-top: 14px;
   }
 
+  .previous-btn,
+  .continue-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
   .previous-btn {
     min-height: 64px;
     padding: 0 24px;
-    border: 2px solid #2a79d2;
-    border-radius: 11px;
+    border: 3px solid #bfe0ff;
+    border-radius: 13px;
     background:
-      linear-gradient(180deg, rgba(4,19,34,.97), rgba(3,13,24,.98));
-    color: #59aaff;
+      linear-gradient(180deg, #7ec2ff 0%, #3f96f2 44%, #1f74d8 73%, #145aab 100%);
+    color: #05131f;
     font-size: 18px;
-    font-weight: 500;
-    text-align: left;
+    font-weight: 800;
     cursor: pointer;
+    box-shadow:
+      0 5px 0 #0d3d75,
+      0 0 0 3px #3f8ee0,
+      0 0 20px rgba(63,148,242,.75),
+      inset 0 2px 7px rgba(255,255,255,.75),
+      inset 0 -3px 6px rgba(10,50,90,.36);
+    transition: transform .08s ease, box-shadow .08s ease;
+  }
+
+  .previous-btn:hover {
+    filter: brightness(1.04);
+  }
+
+  .previous-btn:active {
+    transform: translateY(5px);
+    box-shadow:
+      0 1px 0 #0d3d75,
+      0 0 0 3px #3f8ee0,
+      0 0 12px rgba(63,148,242,.55),
+      inset 0 3px 7px rgba(10,50,90,.3);
   }
 
   .continue-btn {
@@ -917,7 +948,7 @@
           </div>
           <div class="recommend-label">Recommended Path:</div>
           <div class="recommend-path">Option B — Formal Behavioral Intervention.</div>
-          <div class="recommend-footer">Best balance of outcome, risk, and opportunity.</div>
+          <div class="recommend-footer">Best balance of outcome, risk, and opportunity. This path gives you the greatest probability of success.</div>
         </aside>
 
       </div>
