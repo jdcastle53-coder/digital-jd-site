@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Situational Analysis and Recommendation | Digital JD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #020912;
+    color: #ffffff;
+    font-family: Inter, Arial, Helvetica, sans-serif;
+  }
+
+  button {
+    font: inherit;
+  }
+
+  .stage {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .page-shell {
+    width: 1200px;
+    flex-shrink: 0;
+    transform-origin: top center;
+    background:
+      radial-gradient(circle at 6% 5%, rgba(231,175,16,.13), transparent 18%),
+      radial-gradient(circle at 48% 0%, rgba(25,85,161,.08), transparent 32%),
+      linear-gradient(180deg, #020912 0%, #03111d 100%);
+    border: 3px solid #172433;
+    color: #f8f5ee;
+  }
+
+  /* =========================================================
+     TOP HEADER
+     ========================================================= */
+
+  .topbar {
+    height: 122px;
+    display: grid;
+    grid-template-columns: 305px 1fr;
+    align-items: center;
+    border-bottom: 1px solid rgba(222,166,18,.18);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    padding-left: 42px;
+  }
+
+  .head-logo {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+      radial-gradient(circle, rgba(42,117,223,.56) 0%, rgba(9,37,67,.55) 46%, transparent 72%);
+    box-shadow:
+      0 0 20px rgba(49,132,255,.72),
+      0 0 36px rgba(236,177,19,.42);
+  }
+
+  .head-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .brand-copy {
+    line-height: 1.02;
+  }
+
+  .brand-title {
+    color: #f4b914;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .brand-sub {
+    margin-top: 8px;
+    color: #26c7e9;
+    font-size: 18px;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 35px;
+    padding-right: 42px;
+    font-size: 18px;
+  }
+
+  .nav-link {
+    color: #f7f1e7;
+  }
+
+  .nav-pill {
+    height: 50px;
+    padding: 0 25px;
+    border-radius: 22px;
+    border: 1px solid;
+    background: #071321;
+    font-size: 18px;
+    color: #fff;
+  }
+
+  .nav-pill-blue {
+    border-color: #2689ff;
+    color: #ffffff;
+  }
+
+  .nav-pill-gold {
+    border-color: #e6a800;
+    color: #f6bb13;
+  }
+
+  .blue-dot {
+    width: 11px;
+    height: 11px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 10px;
+    background: #4d91ff;
+    box-shadow: 0 0 10px rgba(77,145,255,.85);
+  }
+
+  /* =========================================================
+     EXERCISE BANNER
+     ========================================================= */
+
+  .exercise-banner {
+    margin: 16px 22px 0;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border: 1px solid #2b4a63;
+    border-radius: 10px;
+    background: rgba(6,17,29,.72);
+  }
+
+  .exercise-banner-title {
+    color: #ffffff;
+    font-size: 19px;
+    font-weight: 700;
+  }
+
+  .exercise-banner-icon {
+    display: grid;
+    place-items: center;
+    color: #4d9cf3;
+  }
+
+  /* =========================================================
+     MAIN PAGE LAYOUT
+     ========================================================= */
+
+  .app-grid {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+  }
+
+  /* =========================================================
+     LEFT SIDEBAR
+     ========================================================= */
+
+  .sidebar {
+    padding: 16px 14px 20px;
+    border-right: 1px solid #213244;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step-panel {
+    flex: 1;
+    padding: 18px 17px;
+    border: 1px solid #263949;
+    border-radius: 10px;
+    background: rgba(0,8,16,.48);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step {
+    flex: 1;
+    min-height: 82px;
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    align-content: center;
+    position: relative;
+  }
+
+  .step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 28px;
+    top: 48px;
+    bottom: -11px;
+    border-left: 2px dotted rgba(59,161,227,.72);
+  }
+
+  .step-circle {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #9f8f7a;
+    background: #07121c;
+    display: grid;
+    place-items: center;
+    z-index: 2;
+    color: #ffffff;
+    font-size: 24px;
+  }
+
+  .step.complete .step-circle {
+    border-color: #a79c8f;
+  }
+
+  .step.active .step-circle {
+    border-color: #ffc400;
+    color: #ffc400;
+    box-shadow:
+      0 0 12px #ffc400,
+      0 0 28px rgba(255,196,0,.45);
+  }
+
+  .step-check {
+    position: absolute;
+    right: -13px;
+    top: 9px;
+    width: 20px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+  }
+
+  .step-title {
+    padding-top: 8px;
+    white-space: pre-line;
+    color: #4d9cf3;
+    font-size: 17px;
+    line-height: 1.18;
+    font-weight: 500;
+  }
+
+  .step.active .step-title {
+    color: #ffc400;
+    font-weight: 800;
+  }
+
+  .back-btn {
+    min-height: 58px;
+    margin-top: 17px;
+    padding: 0 23px;
+    border: 1px solid #2b7bd3;
+    border-radius: 9px;
+    background: #06111f;
+    color: #57aaff;
+    font-size: 18px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  /* =========================================================
+     MAIN CONTENT
+     ========================================================= */
+
+  .content {
+    min-width: 0;
+    padding: 18px 22px 26px;
+  }
+
+  .page-heading {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-height: 88px;
+    margin-bottom: 12px;
+  }
+
+  .heading-icon {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    border: 2px solid #ffbf00;
+    display: grid;
+    place-items: center;
+    color: #ffd01e;
+    box-shadow:
+      0 0 12px rgba(255,193,0,.6),
+      inset 0 0 15px rgba(255,193,0,.08);
+  }
+
+  .heading-copy h1 {
+    margin: 0 0 6px;
+    color: #ffc319;
+    font-size: 36px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: .2px;
+  }
+
+  .heading-copy p {
+    margin: 0;
+    color: #ffffff;
+    font-size: 20px;
+    line-height: 1.35;
+    font-weight: 600;
+  }
+
+  /* =========================================================
+     TOP DECISION GRID
+     ========================================================= */
+
+  .top-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 14px;
+  }
+
+  .options-card {
+    border: 1px solid #35485d;
+    border-radius: 11px;
+    background: rgba(4,15,27,.94);
+    overflow: hidden;
+  }
+
+  .option-header,
+  .option-row {
+    display: grid;
+    grid-template-columns: 1.7fr 1.2fr 1.25fr 1.05fr;
+    align-items: center;
+    column-gap: 12px;
+  }
+
+  .option-header {
+    min-height: 36px;
+    padding: 0 16px;
+    border-bottom: 1px solid #304256;
+    color: #4e9fff;
+    font-size: 11.5px;
+    font-weight: 800;
+    letter-spacing: .3px;
+  }
+
+  .option-row {
+    min-height: 46px;
+    padding: 8px 16px;
+    border-bottom: 1px solid #293c50;
+    color: #ffffff;
+    font-size: 13px;
+  }
+
+  .option-row:last-child {
+    border-bottom: 0;
+  }
+
+  .option-row.selected {
+    position: relative;
+    background:
+      linear-gradient(90deg, rgba(79,58,0,.58), rgba(32,30,9,.46));
+    box-shadow:
+      inset 0 0 0 2px #f4b600,
+      inset 0 0 20px rgba(255,194,0,.12);
+  }
+
+  .option-name-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .letter-circle {
+    width: 27px;
+    height: 27px;
+    flex: 0 0 27px;
+    border-radius: 50%;
+    border: 2px solid #398bdb;
+    display: grid;
+    place-items: center;
+    color: #5caeff;
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  .selected .letter-circle {
+    border-color: #ffc400;
+    color: #ffc400;
+  }
+
+  .view-red { color: #ff4b42; }
+  .view-green { color: #7ee55b; }
+  .view-gold { color: #ffc400; }
+  .view-blue { color: #66aaff; }
+  .view-purple { color: #c67af4; }
+
+  /* RECOMMENDATION */
+
+  .recommend-card {
+    border: 2px solid #d79c00;
+    border-radius: 11px;
+    background:
+      linear-gradient(180deg, rgba(28,26,8,.68), rgba(13,19,22,.92));
+    padding: 14px 16px;
+    box-shadow:
+      0 0 15px rgba(223,161,0,.28),
+      inset 0 0 17px rgba(223,161,0,.05);
+  }
+
+  .recommend-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #a97600;
+    color: #ffc219;
+    font-size: 14px;
+    line-height: 1.2;
+    font-weight: 800;
+  }
+
+  .recommend-icon {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    border-radius: 50%;
+    border: 2px solid #ffc000;
+    display: grid;
+    place-items: center;
+    color: #ffc400;
+  }
+
+  .recommend-label {
+    margin-top: 12px;
+    color: #ffffff;
+    font-size: 12.5px;
+  }
+
+  .recommend-path {
+    margin-top: 6px;
+    color: #ffc019;
+    font-size: 16px;
+    line-height: 1.25;
+    font-weight: 800;
+  }
+
+  .recommend-footer {
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid #a97600;
+    color: #ffffff;
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+
+  /* =========================================================
+     WHY IT STANDS OUT
+     ========================================================= */
+
+  .standout {
+    margin-top: 14px;
+    border: 1px solid #35485d;
+    border-radius: 11px;
+    background: rgba(4,15,27,.94);
+    padding: 0 18px 14px;
+  }
+
+  .section-strip-title {
+    width: max-content;
+    margin: -1px auto 0;
+    padding: 0 16px;
+    transform: translateY(-2px);
+    color: #ffc21a;
+    background: #03111d;
+    font-size: 15px;
+    font-weight: 800;
+  }
+
+  .standout-grid {
+    margin-top: 14px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+  }
+
+  .standout-item {
+    min-height: 70px;
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    border-right: 1px solid #a16d00;
+  }
+
+  .standout-item:last-child {
+    border-right: 0;
+  }
+
+  .standout-icon {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #357fce;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    color: #5ca8ff;
+  }
+
+  .standout-copy {
+    color: #ffffff;
+    font-size: 12.5px;
+    line-height: 1.35;
+  }
+
+  /* =========================================================
+     WHAT EACH CHOICE LEADS TO
+     ========================================================= */
+
+  .outcomes-wrap {
+    margin-top: 14px;
+  }
+
+  .outcomes-title-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+  }
+
+  .gold-line {
+    height: 2px;
+    flex: 1;
+    background: #b77900;
+  }
+
+  .outcomes-title {
+    color: #ffc21a;
+    font-size: 15px;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .outcomes-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+  }
+
+  .outcome-card {
+    min-height: 100px;
+    border: 1px solid #36526e;
+    border-radius: 9px;
+    background:
+      linear-gradient(180deg, rgba(7,23,39,.95), rgba(4,16,29,.98));
+    padding: 10px 12px;
+  }
+
+  .outcome-card.selected {
+    border-color: #dca000;
+    box-shadow: inset 0 0 18px rgba(220,160,0,.07);
+  }
+
+  .outcome-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .outcome-letter {
+    width: 27px;
+    height: 27px;
+    flex: 0 0 27px;
+    border-radius: 50%;
+    border: 2px solid #4c91d9;
+    display: grid;
+    place-items: center;
+    color: #69adf5;
+    font-size: 13px;
+  }
+
+  .outcome-card.selected .outcome-letter {
+    border-color: #ffc400;
+    color: #ffc400;
+  }
+
+  .outcome-title {
+    color: #4f9fff;
+    font-size: 13px;
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  .outcome-body {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 8px;
+    align-items: start;
+  }
+
+  .outcome-icon {
+    width: 34px;
+    height: 34px;
+    border: 2px solid #347fce;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    color: #5aa8ff;
+  }
+
+  .outcome-card.selected .outcome-icon {
+    border-color: #ffc400;
+    color: #ffc400;
+  }
+
+  .outcome-text {
+    color: #ffffff;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  /* =========================================================
+     BOTTOM BUTTONS
+     ========================================================= */
+
+  .bottom-actions {
+    display: grid;
+    grid-template-columns: 330px 1fr 520px;
+    align-items: center;
+    gap: 22px;
+    margin-top: 14px;
+  }
+
+  .previous-btn {
+    min-height: 64px;
+    padding: 0 24px;
+    border: 2px solid #2a79d2;
+    border-radius: 11px;
+    background:
+      linear-gradient(180deg, rgba(4,19,34,.97), rgba(3,13,24,.98));
+    color: #59aaff;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .continue-btn {
+    min-height: 68px;
+    padding: 0 30px;
+    border: 3px solid #fff0a5;
+    border-radius: 13px;
+    background:
+      linear-gradient(180deg, #ffe05b 0%, #ffc21c 44%, #f5ad00 73%, #d78e00 100%);
+    color: #120f08;
+    font-size: 27px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow:
+      0 5px 0 #805300,
+      0 0 0 3px #f7b700,
+      0 0 20px rgba(255,193,0,.95),
+      inset 0 2px 7px rgba(255,255,255,.83),
+      inset 0 -3px 6px rgba(138,86,0,.36);
+    transition: transform .08s ease, box-shadow .08s ease;
+  }
+
+  .continue-btn:hover {
+    filter: brightness(1.04);
+  }
+
+  .continue-btn:active {
+    transform: translateY(5px);
+    box-shadow:
+      0 1px 0 #805300,
+      0 0 0 3px #f7b700,
+      0 0 12px rgba(255,193,0,.68),
+      inset 0 3px 7px rgba(112,69,0,.28);
+  }
+
+  /* =========================================================
+     SCALE-TO-FIT
+     This page is built to a fixed 1200px design canvas so every
+     box keeps the exact proportions of the approved design. The
+     .stage wrapper below uniformly scales that canvas down (via
+     JS) to fit narrower windows without reflowing or cropping it,
+     and never scales it up past its natural 1200px size.
+     ========================================================= */
+</style>
+</head>
+<body>
+<div class="stage">
+<main class="page-shell">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="head-logo">
+        <img src="digital-jd-logo.png" alt="Digital JD Bluehead Logo" class="head-logo-img" />
+      </div>
+      <div class="brand-copy">
+        <div class="brand-title">
+          Intelligent
+          <br />
+          Leadership
+          <br />
+          System
+        </div>
+        <div class="brand-sub">DigitalJD</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <span class="nav-link">Home</span>
+      <span class="nav-link">Risk Assessment</span>
+      <button class="nav-pill nav-pill-blue" type="button">
+        <span class="blue-dot"></span>
+        Sprint Active
+      </button>
+      <button class="nav-pill nav-pill-gold" type="button">Explore Plans</button>
+      <button class="nav-pill nav-pill-gold" type="button">Sign out</button>
+    </nav>
+  </header>
+
+  <div class="exercise-banner">
+    <div class="exercise-banner-title">Situational Analysis and Recommendation</div>
+    <div class="exercise-banner-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4d9cf3" stroke-width="1.8" aria-hidden="true">
+        <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="app-grid">
+
+    <aside class="sidebar">
+      <div class="step-panel">
+        <div class="step complete">
+          <div class="step-circle">
+            1
+            <span class="step-check">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39db73" stroke-width="3" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+          <div class="step-title">SITUATIONAL&#10;ANALYSIS</div>
+        </div>
+        <div class="step complete">
+          <div class="step-circle">
+            2
+            <span class="step-check">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39db73" stroke-width="3" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+          <div class="step-title">CHOOSE YOUR&#10;LEVEL OF ANALYSIS</div>
+        </div>
+        <div class="step complete">
+          <div class="step-circle">
+            3
+            <span class="step-check">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39db73" stroke-width="3" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+          <div class="step-title">DIGITAL JD&#10;INSIGHTS</div>
+        </div>
+        <div class="step active">
+          <div class="step-circle">4</div>
+          <div class="step-title">DECISION&#10;OPTIONS</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">5</div>
+          <div class="step-title">YOUR&#10;EXECUTION PLAN</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">6</div>
+          <div class="step-title">WHAT TO SAY</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">7</div>
+          <div class="step-title">WHAT TO WATCH</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">8</div>
+          <div class="step-title">PROGRESS&#10;ASSESSMENT</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">9</div>
+          <div class="step-title">DECISION &amp;&#10;DASHBOARD</div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="content">
+
+      <div class="page-heading">
+        <div class="heading-icon">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffd01e" stroke-width="1.7" aria-hidden="true">
+            <path d="M8 6l-4 4 4 4M4 10h9M16 6l4 4-4 4M20 10h-9" />
+          </svg>
+        </div>
+        <div class="heading-copy">
+          <h1>DECISION OPTIONS</h1>
+          <p>Select the course of action that best fits your situation.</p>
+        </div>
+      </div>
+
+      <div class="top-grid">
+
+        <section class="options-card">
+          <div class="option-header">
+            <div>OPTION</div>
+            <div>PRIMARY BENEFIT</div>
+            <div>PRIMARY RISK</div>
+            <div>DIGITAL JD VIEW</div>
+          </div>
+
+          <div class="option-row">
+            <div class="option-name-wrap">
+              <div class="letter-circle">A</div>
+              <div>Continue Informal Coaching</div>
+            </div>
+            <div>Low confrontation</div>
+            <div>Pattern likely continues</div>
+            <div class="view-red">&#10007; Not Recommended</div>
+          </div>
+
+          <div class="option-row selected">
+            <div class="option-name-wrap">
+              <div class="letter-circle">B</div>
+              <div>Formal Behavioral Intervention</div>
+            </div>
+            <div>Addresses root issue</div>
+            <div>Short-term conflict</div>
+            <div class="view-green">&#10003; Recommended</div>
+          </div>
+
+          <div class="option-row">
+            <div class="option-name-wrap">
+              <div class="letter-circle">C</div>
+              <div>Restructure Responsibilities</div>
+            </div>
+            <div>Retain technical value</div>
+            <div>May not correct behavior</div>
+            <div class="view-gold">&#8212; Possible</div>
+          </div>
+
+          <div class="option-row">
+            <div class="option-name-wrap">
+              <div class="letter-circle">D</div>
+              <div>Executive Coaching + Intervention</div>
+            </div>
+            <div>Builds capability</div>
+            <div>More time and commitment</div>
+            <div class="view-blue">&#9733; Strong Alternative</div>
+          </div>
+
+          <div class="option-row">
+            <div class="option-name-wrap">
+              <div class="letter-circle">E</div>
+              <div>Separation</div>
+            </div>
+            <div>Protects team culture</div>
+            <div>Lose valuable executive</div>
+            <div class="view-purple">&#9675; Contingency</div>
+          </div>
+        </section>
+
+        <aside class="recommend-card">
+          <div class="recommend-heading">
+            <div class="recommend-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffc400" stroke-width="1.8" aria-hidden="true">
+                <circle cx="12" cy="12" r="8" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="12" cy="12" r="0.6" fill="#ffc400" />
+              </svg>
+            </div>
+            <div>DIGITAL JD RECOMMENDATION</div>
+          </div>
+          <div class="recommend-label">Recommended Path:</div>
+          <div class="recommend-path">Option B — Formal Behavioral Intervention.</div>
+          <div class="recommend-footer">Best balance of outcome, risk, and opportunity.</div>
+        </aside>
+
+      </div>
+
+      <section class="standout">
+        <div class="section-strip-title">WHY THIS OPTION STANDS OUT</div>
+        <div class="standout-grid">
+          <div class="standout-item">
+            <div class="standout-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5ca8ff" stroke-width="1.7" aria-hidden="true">
+                <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" />
+              </svg>
+            </div>
+            <div class="standout-copy"><strong>1.</strong>&nbsp;Protects the team while preserving the leader if improvement occurs.</div>
+          </div>
+          <div class="standout-item">
+            <div class="standout-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5ca8ff" stroke-width="1.7" aria-hidden="true">
+                <path d="M9 4h6v3H9zM6 7h12v14H6z M9.5 12.5l2 2 4-4" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <div class="standout-copy"><strong>2.</strong>&nbsp;Converts a vague attitude issue into measurable behavioral accountability.</div>
+          </div>
+          <div class="standout-item">
+            <div class="standout-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5ca8ff" stroke-width="1.7" aria-hidden="true">
+                <path d="M6 3v18M6 4h11l-2.5 3L17 10H6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <div class="standout-copy"><strong>3.</strong>&nbsp;Creates a clear checkpoint for retain, refocus, or escalate decisions.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="outcomes-wrap">
+        <div class="outcomes-title-row">
+          <div class="gold-line"></div>
+          <div class="outcomes-title">WHAT EACH CHOICE LEADS TO</div>
+          <div class="gold-line"></div>
+        </div>
+        <div class="outcomes-grid">
+
+          <div class="outcome-card">
+            <div class="outcome-top">
+              <div class="outcome-letter">A</div>
+              <div class="outcome-title">Informal Coaching</div>
+            </div>
+            <div class="outcome-body">
+              <div class="outcome-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5aa8ff" stroke-width="1.7" aria-hidden="true">
+                  <circle cx="9" cy="8" r="3" /><path d="M3 20c0-3 2.5-5 6-5s6 2 6 5M16 8a3 3 0 1 1 0 5.9M22 20c0-2.5-2-4.3-4.5-4.9" />
+                </svg>
+              </div>
+              <div class="outcome-text">Minimal disruption, low odds of lasting change.</div>
+            </div>
+          </div>
+
+          <div class="outcome-card selected">
+            <div class="outcome-top">
+              <div class="outcome-letter">B</div>
+              <div class="outcome-title">Formal Intervention</div>
+            </div>
+            <div class="outcome-body">
+              <div class="outcome-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffc400" stroke-width="1.7" aria-hidden="true">
+                  <path d="M9 4h6v3H9zM6 7h12v14H6z" /><path d="M9.5 12.5l2 2 4-4" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="outcome-text">Clear structure, measurable change plan.</div>
+            </div>
+          </div>
+
+          <div class="outcome-card">
+            <div class="outcome-top">
+              <div class="outcome-letter">C</div>
+              <div class="outcome-title">Restructure Role</div>
+            </div>
+            <div class="outcome-body">
+              <div class="outcome-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5aa8ff" stroke-width="1.7" aria-hidden="true">
+                  <circle cx="12" cy="5" r="2" /><circle cx="6" cy="19" r="2" /><circle cx="18" cy="19" r="2" /><path d="M12 7v5M12 12L6 17M12 12l6 5" />
+                </svg>
+              </div>
+              <div class="outcome-text">Reduced team friction, partial solution.</div>
+            </div>
+          </div>
+
+          <div class="outcome-card">
+            <div class="outcome-top">
+              <div class="outcome-letter">D</div>
+              <div class="outcome-title">Coaching + Intervention</div>
+            </div>
+            <div class="outcome-body">
+              <div class="outcome-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5aa8ff" stroke-width="1.7" aria-hidden="true">
+                  <path d="M4 18l6-6 4 4 6-8" stroke-linecap="round" stroke-linejoin="round" /><path d="M15 8h5v5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="outcome-text">Higher support, slower path.</div>
+            </div>
+          </div>
+
+          <div class="outcome-card">
+            <div class="outcome-top">
+              <div class="outcome-letter">E</div>
+              <div class="outcome-title">Separation</div>
+            </div>
+            <div class="outcome-body">
+              <div class="outcome-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#5aa8ff" stroke-width="1.7" aria-hidden="true">
+                  <path d="M6 3h9v18H6z" /><path d="M15 12h4M17 10l2 2-2 2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="outcome-text">Fast protection, highest talent loss.</div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <div class="bottom-actions">
+        <button class="previous-btn" type="button">&#8592; &nbsp;&nbsp; Back to Digital JD Insights</button>
+        <div></div>
+        <button class="continue-btn" type="button">Continue to Your Execution Plan &nbsp;&nbsp; &rarr;</button>
+      </div>
+
+    </section>
+  </div>
+</main>
+</div>
+<script>
+  (function () {
+    var stage = document.querySelector(".stage");
+    var shell = document.querySelector(".page-shell");
+
+    function fitStage() {
+      shell.style.transform = "none";
+      var naturalWidth = shell.offsetWidth;
+      var naturalHeight = shell.offsetHeight;
+      var scale = Math.min(stage.clientWidth / naturalWidth, 1);
+      shell.style.transform = "scale(" + scale + ")";
+      stage.style.height = naturalHeight * scale + "px";
+    }
+
+    fitStage();
+    window.addEventListener("resize", fitStage);
+    window.addEventListener("load", fitStage);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(fitStage);
+    }
+    setTimeout(fitStage, 300);
+    setTimeout(fitStage, 1000);
+  })();
+</script>
+</body>
+</html>
