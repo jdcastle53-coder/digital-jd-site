@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Digital JD Insights | Digital JD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #020912;
+    color: #ffffff;
+    font-family: Inter, Arial, Helvetica, sans-serif;
+  }
+
+  button {
+    font: inherit;
+  }
+
+  .page-shell {
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 6% 5%, rgba(231,175,16,.13), transparent 18%),
+      radial-gradient(circle at 48% 0%, rgba(25,85,161,.08), transparent 32%),
+      linear-gradient(180deg, #020912 0%, #03111d 100%);
+    border: 3px solid #172433;
+    color: #f8f5ee;
+  }
+
+  /* =========================================================
+     TOP HEADER
+     ========================================================= */
+
+  .topbar {
+    height: 122px;
+    display: grid;
+    grid-template-columns: 305px 1fr;
+    align-items: center;
+    border-bottom: 1px solid rgba(222,166,18,.18);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    padding-left: 42px;
+  }
+
+  .head-logo {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+      radial-gradient(circle, rgba(42,117,223,.56) 0%, rgba(9,37,67,.55) 46%, transparent 72%);
+    box-shadow:
+      0 0 20px rgba(49,132,255,.72),
+      0 0 36px rgba(236,177,19,.42);
+  }
+
+  .head-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .brand-copy {
+    line-height: 1.02;
+  }
+
+  .brand-title {
+    color: #f4b914;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  .brand-sub {
+    margin-top: 8px;
+    color: #26c7e9;
+    font-size: 18px;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 35px;
+    padding-right: 42px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+  }
+
+  .nav-link {
+    color: #f7f1e7;
+  }
+
+  .nav-pill {
+    height: 50px;
+    padding: 0 25px;
+    border-radius: 22px;
+    border: 1px solid;
+    background: #071321;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 18px;
+    color: #fff;
+  }
+
+  .nav-pill-blue {
+    border-color: #2689ff;
+    color: #ffffff;
+  }
+
+  .nav-pill-gold {
+    border-color: #e6a800;
+    color: #f6bb13;
+  }
+
+  .blue-dot {
+    width: 11px;
+    height: 11px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 10px;
+    background: #4d91ff;
+    box-shadow: 0 0 10px rgba(77,145,255,.85);
+  }
+
+  /* =========================================================
+     MAIN PAGE LAYOUT
+     ========================================================= */
+
+  .app-grid {
+    display: grid;
+    grid-template-columns: 290px minmax(0, 1fr);
+    min-height: calc(100vh - 122px);
+  }
+
+  /* =========================================================
+     LEFT SIDEBAR
+     ========================================================= */
+
+  .sidebar {
+    padding: 16px 14px 20px;
+    border-right: 1px solid #213244;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step-panel {
+    flex: 1;
+    padding: 18px 17px;
+    border: 1px solid #263949;
+    border-radius: 10px;
+    background: rgba(0,8,16,.48);
+  }
+
+  .step {
+    min-height: 82px;
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    position: relative;
+  }
+
+  .step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 28px;
+    top: 48px;
+    bottom: -11px;
+    border-left: 2px dotted rgba(59,161,227,.72);
+  }
+
+  .step-circle {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #9f8f7a;
+    background: #07121c;
+    display: grid;
+    place-items: center;
+    z-index: 2;
+    color: #ffffff;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 24px;
+  }
+
+  .step.complete .step-circle {
+    border-color: #a79c8f;
+  }
+
+  .step.active .step-circle {
+    border-color: #ffc400;
+    color: #ffc400;
+    box-shadow:
+      0 0 12px #ffc400,
+      0 0 28px rgba(255,196,0,.45);
+  }
+
+  .step-check {
+    position: absolute;
+    right: -13px;
+    top: 9px;
+    width: 20px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+  }
+
+  .step-title {
+    padding-top: 8px;
+    white-space: pre-line;
+    color: #4d9cf3;
+    font-size: 17px;
+    line-height: 1.18;
+    font-weight: 500;
+  }
+
+  .step.active .step-title {
+    color: #ffc400;
+    font-weight: 800;
+  }
+
+  .back-btn {
+    min-height: 58px;
+    margin-top: 17px;
+    padding: 0 23px;
+    border: 1px solid #2b7bd3;
+    border-radius: 9px;
+    background: #06111f;
+    color: #57aaff;
+    font-size: 18px;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  /* =========================================================
+     MAIN CONTENT
+     ========================================================= */
+
+  .content {
+    min-width: 0;
+    padding: 20px 22px 26px;
+  }
+
+  .page-heading {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    min-height: 88px;
+    margin-bottom: 8px;
+  }
+
+  .heading-icon {
+    width: 74px;
+    height: 74px;
+    border-radius: 50%;
+    border: 2px solid #ffbf00;
+    display: grid;
+    place-items: center;
+    color: #ffd01e;
+    box-shadow:
+      0 0 12px rgba(255,193,0,.6),
+      inset 0 0 15px rgba(255,193,0,.08);
+  }
+
+  .heading-copy h1 {
+    margin: 0 0 6px;
+    color: #ffc319;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 36px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: .2px;
+  }
+
+  .heading-copy p {
+    margin: 0;
+    color: #ffffff;
+    font-size: 22px;
+    line-height: 1.35;
+    font-weight: 600;
+  }
+
+  /* =========================================================
+     MAIN CONTENT GRID
+     ========================================================= */
+
+  .insight-grid {
+    display: grid;
+    grid-template-columns: 44% 56%;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .card {
+    border-radius: 11px;
+    background:
+      linear-gradient(180deg, rgba(3,14,25,.96), rgba(4,18,31,.96));
+  }
+
+  /* =========================================================
+     LEFT PRINCIPLES CARD
+     ========================================================= */
+
+  .principles-card {
+    min-height: 590px;
+    padding: 20px 22px;
+    border: 2px solid #2a9fff;
+    box-shadow: inset 0 0 24px rgba(25,110,206,.07);
+  }
+
+  .card-heading {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 9px;
+  }
+
+  .card-heading-icon {
+    width: 54px;
+    height: 54px;
+    display: grid;
+    place-items: center;
+    border: 2px solid #469cff;
+    border-radius: 8px;
+    color: #5ca8ff;
+  }
+
+  .card-heading-title {
+    color: #519fff;
+    font-size: 26px;
+    font-weight: 800;
+  }
+
+  .principle {
+    display: grid;
+    grid-template-columns: 76px 1fr;
+    align-items: center;
+    min-height: 102px;
+    border-bottom: 1px solid rgba(54,124,190,.64);
+  }
+
+  .principle:last-child {
+    border-bottom: 0;
+  }
+
+  .principle-icon-box {
+    width: 62px;
+    height: 62px;
+    border: 2px solid #347fce;
+    border-radius: 8px;
+    display: grid;
+    place-items: center;
+    color: #5da9ff;
+  }
+
+  .principle-copy {
+    min-width: 0;
+  }
+
+  .principle-name {
+    margin-bottom: 4px;
+    color: #4c9cf8;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.25;
+  }
+
+  .principle-text {
+    color: #ffffff;
+    font-size: 19px;
+    line-height: 1.35;
+    font-weight: 500;
+  }
+
+  /* =========================================================
+     RIGHT SIDE
+     ========================================================= */
+
+  .right-column {
+    min-width: 0;
+  }
+
+  .synthesis-card {
+    min-height: 174px;
+    border: 2px solid #dca000;
+    padding: 21px 27px;
+    background:
+      linear-gradient(90deg, rgba(29,31,9,.57), rgba(19,24,13,.49));
+    box-shadow: inset 0 0 22px rgba(228,164,0,.07);
+  }
+
+  .synthesis-heading {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #ffc414;
+    font-size: 23px;
+    font-weight: 700;
+  }
+
+  .synthesis-icon {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+  }
+
+  .synthesis-statement {
+    max-width: 720px;
+    margin: 16px auto 0;
+    text-align: center;
+    color: #ffd118;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 26px;
+    line-height: 1.24;
+    font-weight: 800;
+  }
+
+  /* Evidence + Digital JD sees */
+
+  .analysis-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 14px;
+  }
+
+  .analysis-box {
+    min-height: 400px;
+    padding: 18px 20px;
+    border: 2px solid #2b94ef;
+    border-radius: 11px;
+    background:
+      linear-gradient(180deg, rgba(4,15,28,.98), rgba(4,18,31,.98));
+  }
+
+  .analysis-title {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 15px;
+    color: #53a2ff;
+    font-size: 23px;
+    font-weight: 800;
+  }
+
+  .analysis-icon {
+    min-width: 48px;
+    width: 48px;
+    height: 48px;
+    display: grid;
+    place-items: center;
+    border: 2px solid #397fce;
+    border-radius: 9px;
+    color: #6cafef;
+  }
+
+  .bullet-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .bullet-list li {
+    display: grid;
+    grid-template-columns: 16px 1fr;
+    gap: 8px;
+    margin-bottom: 13px;
+    color: #ffffff;
+    font-size: 19px;
+    line-height: 1.32;
+    font-weight: 500;
+  }
+
+  .blue-bullet {
+    margin-top: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #5ba7ff;
+    box-shadow: 0 0 8px rgba(91,167,255,.7);
+  }
+
+  /* =========================================================
+     INSIGHT SUMMARY
+     ========================================================= */
+
+  .summary-card {
+    grid-column: 1 / -1;
+    margin-top: 0;
+    padding: 16px 20px 18px;
+    border: 1px solid #385064;
+    border-radius: 11px;
+    background: rgba(4,16,28,.91);
+  }
+
+  .summary-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    margin-bottom: 14px;
+    color: #519fff;
+    font-size: 24px;
+    font-weight: 800;
+  }
+
+  .summary-heading-icon {
+    width: 29px;
+    height: 29px;
+    display: grid;
+    place-items: center;
+  }
+
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+
+  .summary-item {
+    min-height: 92px;
+    border: 1px solid #346b9d;
+    border-radius: 8px;
+    background:
+      linear-gradient(180deg, rgba(8,29,51,.94), rgba(6,21,38,.96));
+    display: grid;
+    grid-template-columns: 75px 1fr;
+    align-items: center;
+    padding: 9px 15px;
+  }
+
+  .summary-icon-box {
+    width: 61px;
+    height: 61px;
+    display: grid;
+    place-items: center;
+    border: 2px solid #337ccb;
+    border-radius: 9px;
+    color: #61acff;
+  }
+
+  .summary-label {
+    color: #529df5;
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .summary-value {
+    color: #ffffff;
+    font-size: 18px;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+
+  /* =========================================================
+     BOTTOM NAVIGATION
+     ========================================================= */
+
+  .bottom-actions {
+    display: grid;
+    grid-template-columns: 330px 1fr 520px;
+    align-items: center;
+    gap: 22px;
+    margin-top: 14px;
+  }
+
+  .previous-btn {
+    min-height: 64px;
+    padding: 0 24px;
+    border: 2px solid #2a79d2;
+    border-radius: 11px;
+    background:
+      linear-gradient(180deg, rgba(4,19,34,.97), rgba(3,13,24,.98));
+    color: #59aaff;
+    font-size: 18px;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .continue-btn {
+    min-height: 68px;
+    padding: 0 30px;
+    border: 3px solid #fff0a5;
+    border-radius: 13px;
+    background:
+      linear-gradient(180deg, #ffe05b 0%, #ffc21c 44%, #f5ad00 73%, #d78e00 100%);
+    color: #120f08;
+    font-size: 27px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow:
+      0 5px 0 #805300,
+      0 0 0 3px #f7b700,
+      0 0 20px rgba(255,193,0,.95),
+      inset 0 2px 7px rgba(255,255,255,.83),
+      inset 0 -3px 6px rgba(138,86,0,.36);
+    transition: transform .08s ease, box-shadow .08s ease;
+  }
+
+  .continue-btn:hover {
+    filter: brightness(1.04);
+  }
+
+  .continue-btn:active {
+    transform: translateY(5px);
+    box-shadow:
+      0 1px 0 #805300,
+      0 0 0 3px #f7b700,
+      0 0 12px rgba(255,193,0,.68),
+      inset 0 3px 7px rgba(112,69,0,.28);
+  }
+
+  /* =========================================================
+     RESPONSIVE / MOBILE
+     ========================================================= */
+
+  @media (max-width: 1250px) {
+    .topbar { grid-template-columns: 250px 1fr; }
+    .brand { padding-left: 20px; }
+    .nav { padding-right: 20px; gap: 14px; }
+    .app-grid { grid-template-columns: 230px minmax(0, 1fr); }
+    .insight-grid { grid-template-columns: 1fr; }
+    .principles-card { min-height: auto; }
+    .summary-card { grid-column: auto; }
+    .bottom-actions { grid-template-columns: 300px 1fr 440px; }
+  }
+
+  @media (max-width: 900px) {
+    .analysis-row { grid-template-columns: 1fr; }
+    .summary-grid { grid-template-columns: 1fr; }
+    .bottom-actions { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 760px) {
+    .topbar {
+      height: auto;
+      grid-template-columns: 1fr;
+      gap: 15px;
+      padding: 16px;
+    }
+    .brand { padding-left: 0; }
+    .nav {
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      padding-right: 0;
+      gap: 9px;
+    }
+    .nav-link { display: none; }
+    .app-grid { grid-template-columns: 1fr; }
+    .sidebar { border-right: 0; border-bottom: 1px solid #203347; }
+    .step-panel { display: flex; gap: 18px; overflow-x: auto; }
+    .step { min-width: 150px; display: block; }
+    .step:not(:last-child)::after { display: none; }
+    .step-title { font-size: 13px; }
+    .back-btn { display: none; }
+    .content { padding: 15px 12px 20px; }
+    .page-heading { align-items: flex-start; gap: 12px; }
+    .heading-icon { width: 54px; height: 54px; }
+    .heading-copy h1 { font-size: 27px; }
+    .heading-copy p { font-size: 18px; }
+    .principles-card, .analysis-box, .synthesis-card { padding-left: 16px; padding-right: 16px; }
+    .principle { grid-template-columns: 58px 1fr; }
+    .principle-icon-box { width: 48px; height: 48px; }
+    .principle-name { font-size: 16px; }
+    .principle-text { font-size: 17px; }
+    .analysis-title { font-size: 20px; }
+    .bullet-list li { font-size: 17px; }
+    .synthesis-statement { font-size: 22px; }
+    .continue-btn { width: 100%; font-size: 21px; }
+    .previous-btn { width: 100%; }
+  }
+</style>
+</head>
+<body>
+<main class="page-shell">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="head-logo">
+        <img src="digital-jd-logo.png" alt="Digital JD Bluehead Logo" class="head-logo-img" />
+      </div>
+      <div class="brand-copy">
+        <div class="brand-title">
+          Intelligent
+          <br />
+          Leadership
+          <br />
+          System
+        </div>
+        <div class="brand-sub">DigitalJD</div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <span class="nav-link">Home</span>
+      <span class="nav-link">Risk Assessment</span>
+      <button class="nav-pill nav-pill-blue" type="button">
+        <span class="blue-dot"></span>
+        Sprint Active
+      </button>
+      <button class="nav-pill nav-pill-gold" type="button">Explore Plans</button>
+      <button class="nav-pill nav-pill-gold" type="button">Sign out</button>
+    </nav>
+  </header>
+
+  <div class="app-grid">
+
+    <aside class="sidebar">
+      <div class="step-panel">
+        <div class="step complete">
+          <div class="step-circle">
+            1
+            <span class="step-check">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39db73" stroke-width="3" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+          <div class="step-title">SITUATIONAL&#10;ANALYSIS</div>
+        </div>
+        <div class="step complete">
+          <div class="step-circle">
+            2
+            <span class="step-check">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39db73" stroke-width="3" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+          <div class="step-title">CHOOSE YOUR&#10;LEVEL OF ANALYSIS</div>
+        </div>
+        <div class="step active">
+          <div class="step-circle">3</div>
+          <div class="step-title">DIGITAL JD&#10;INSIGHTS</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">4</div>
+          <div class="step-title">DECISION&#10;OPTIONS</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">5</div>
+          <div class="step-title">YOUR&#10;EXECUTION PLAN</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">6</div>
+          <div class="step-title">WHAT TO SAY</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">7</div>
+          <div class="step-title">WHAT TO WATCH</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">8</div>
+          <div class="step-title">PROGRESS&#10;ASSESSMENT</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">9</div>
+          <div class="step-title">DECISION &amp;&#10;DASHBOARD</div>
+        </div>
+      </div>
+
+      <button class="back-btn" type="button">&#8592; &nbsp;&nbsp; Back to Situational Analysis</button>
+    </aside>
+
+    <section class="content">
+
+      <div class="page-heading">
+        <div class="heading-icon">
+          <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#ffd01e" stroke-width="1.7" aria-hidden="true">
+            <path d="M9 18h6M10 21h4" />
+            <path d="M12 3a6 6 0 0 0-3.5 10.9c.35.26.5.63.5 1.03V16h6v-1.07c0-.4.15-.77.5-1.03A6 6 0 0 0 12 3z" />
+          </svg>
+        </div>
+        <div class="heading-copy">
+          <h1>DIGITAL JD INSIGHTS</h1>
+          <p>Why Digital JD sees the situation this way.</p>
+        </div>
+      </div>
+
+      <div class="insight-grid">
+
+        <section class="card principles-card">
+          <div class="card-heading">
+            <div class="card-heading-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#5ca8ff" stroke-width="1.6" aria-hidden="true">
+                <path d="M4 21h16M5 21V9.5M9 21V9.5M15 21V9.5M19 21V9.5M3 9.5L12 4l9 5.5M6 9.5h12" />
+              </svg>
+            </div>
+            <div class="card-heading-title">Leadership Principles Applied</div>
+          </div>
+
+          <div class="principle">
+            <div class="principle-icon-box">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5da9ff" stroke-width="1.6" aria-hidden="true">
+                <circle cx="9" cy="8" r="3" />
+                <path d="M2 20c0-3.3 2.9-6 7-6s7 2.7 7 6" />
+                <circle cx="17" cy="9" r="2.4" />
+                <path d="M15.5 14.2c2.7.4 4.5 2.5 4.5 5.8" />
+              </svg>
+            </div>
+            <div class="principle-copy">
+              <div class="principle-name">Lencioni &mdash; Team Accountability:</div>
+              <div class="principle-text">Behavior is damaging trust and peer accountability.</div>
+            </div>
+          </div>
+
+          <div class="principle">
+            <div class="principle-icon-box">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5da9ff" stroke-width="1.6" aria-hidden="true">
+                <path d="M12 20.5s-7.5-4.4-9.6-9.3C.9 7.7 3 4.5 6.3 4.5c2 0 3.4 1.1 4.2 2.5.8-1.4 2.2-2.5 4.2-2.5 3.3 0 5.4 3.2 3.9 6.7-2.1 4.9-9.6 9.3-9.6 9.3z" />
+              </svg>
+            </div>
+            <div class="principle-copy">
+              <div class="principle-name">Goleman &mdash; Emotional Intelligence:</div>
+              <div class="principle-text">Strong performance does not offset harmful leadership behavior.</div>
+            </div>
+          </div>
+
+          <div class="principle">
+            <div class="principle-icon-box">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5da9ff" stroke-width="1.6" aria-hidden="true">
+                <path d="M12 3l7 3v6c0 5-3.5 7.7-7 9-3.5-1.3-7-4-7-9V6z" />
+                <path d="M9 12l2.2 2.2L15.5 9.5" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <div class="principle-copy">
+              <div class="principle-name">Edmondson &mdash; Psychological Safety:</div>
+              <div class="principle-text">Critical or dismissive behavior suppresses candor and learning.</div>
+            </div>
+          </div>
+
+          <div class="principle">
+            <div class="principle-icon-box">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5da9ff" stroke-width="1.6" aria-hidden="true">
+                <path d="M3 17l6-6 4 4 7-8" />
+                <path d="M14 6h6v6" />
+              </svg>
+            </div>
+            <div class="principle-copy">
+              <div class="principle-name">Drucker &mdash; Management Effectiveness:</div>
+              <div class="principle-text">Individual contribution must support overall organizational effectiveness.</div>
+            </div>
+          </div>
+
+          <div class="principle">
+            <div class="principle-icon-box">
+              <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5da9ff" stroke-width="1.6" aria-hidden="true">
+                <path d="M4 4v5h5" />
+                <path d="M20 20v-5h-5" />
+                <path d="M4.6 15A8 8 0 0 0 19 9" />
+                <path d="M19.4 9A8 8 0 0 0 5 15" />
+              </svg>
+            </div>
+            <div class="principle-copy">
+              <div class="principle-name">Kotter &mdash; Leading Change:</div>
+              <div class="principle-text">Corrective change requires urgency, structure, and visible follow-through.</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="right-column">
+
+          <div class="card synthesis-card">
+            <div class="synthesis-heading">
+              <span class="synthesis-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#ffc414" stroke-width="1.6" aria-hidden="true">
+                  <path d="M9.5 4.5a3 3 0 0 0-3 3v.3A3.2 3.2 0 0 0 5 13.3v.4A3.3 3.3 0 0 0 6.6 19.9a3 3 0 0 0 2.9 2.1c1.7 0 3-1.3 3-3V7.3a2.8 2.8 0 0 0-3-2.8z" />
+                  <path d="M14.5 4.5a3 3 0 0 1 3 3v.3a3.2 3.2 0 0 1 1.5 5.5v.4a3.3 3.3 0 0 1-1.6 5.2 3 3 0 0 1-2.9 2.1c-1.7 0-3-1.3-3-3V7.3a2.8 2.8 0 0 1 3-2.8z" />
+                </svg>
+              </span>
+              <span>Digital JD Synthesis</span>
+            </div>
+            <div class="synthesis-statement">
+              This has moved beyond an attitude problem.
+              <br />
+              It is now a leadership-performance
+              <br />
+              and organizational-trust problem.
+            </div>
+          </div>
+
+          <div class="analysis-row">
+
+            <div class="analysis-box">
+              <div class="analysis-title">
+                <div class="analysis-icon">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6cafef" stroke-width="1.8" aria-hidden="true">
+                    <circle cx="11" cy="11" r="6.5" />
+                    <path d="M20 20l-4.5-4.5" stroke-linecap="round" />
+                  </svg>
+                </div>
+                <span>What the Evidence Suggests</span>
+              </div>
+              <ul class="bullet-list">
+                <li><span class="blue-bullet"></span><span>Behavior has already been addressed twice.</span></li>
+                <li><span class="blue-bullet"></span><span>Improvement lasted about one day.</span></li>
+                <li><span class="blue-bullet"></span><span>Two other executives independently raised concerns.</span></li>
+                <li><span class="blue-bullet"></span><span>The executive appears increasingly isolated.</span></li>
+                <li><span class="blue-bullet"></span><span>Another informal conversation alone is unlikely to create sustained change.</span></li>
+              </ul>
+            </div>
+
+            <div class="analysis-box">
+              <div class="analysis-title">
+                <div class="analysis-icon">
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6cafef" stroke-width="1.8" aria-hidden="true">
+                    <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                </div>
+                <span>What Digital JD Sees</span>
+              </div>
+              <ul class="bullet-list">
+                <li><span class="blue-bullet"></span><span>The issue is affecting more than one relationship.</span></li>
+                <li><span class="blue-bullet"></span><span>Team confidence may erode if standards are not enforced.</span></li>
+                <li><span class="blue-bullet"></span><span>Retaining talent still matters, but not at any cost.</span></li>
+                <li><span class="blue-bullet"></span><span>The situation now requires structure, not another casual conversation.</span></li>
+              </ul>
+            </div>
+
+          </div>
+
+        </section>
+
+        <section class="summary-card">
+          <div class="summary-heading">
+            <span class="summary-heading-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#519fff" stroke-width="1.6" aria-hidden="true">
+                <path d="M7 3h7l4 4v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
+                <path d="M14 3v4h4" />
+                <path d="M8.5 12h7M8.5 15.5h7M8.5 8.5h4" />
+              </svg>
+            </span>
+            <span>Insight Summary</span>
+          </div>
+
+          <div class="summary-grid">
+
+            <div class="summary-item">
+              <div class="summary-icon-box">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#61acff" stroke-width="1.6" aria-hidden="true">
+                  <circle cx="12" cy="12" r="8" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="12" cy="12" r="0.9" fill="#61acff" stroke="none" />
+                </svg>
+              </div>
+              <div>
+                <div class="summary-label">Primary Issue</div>
+                <div class="summary-value">Leadership-performance<br />breakdown</div>
+              </div>
+            </div>
+
+            <div class="summary-item">
+              <div class="summary-icon-box">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#61acff" stroke-width="1.6" aria-hidden="true">
+                  <path d="M12 3.5l9 16h-18z" stroke-linejoin="round" />
+                  <path d="M12 10v3.5" stroke-linecap="round" />
+                  <circle cx="12" cy="16.5" r="0.9" fill="#61acff" stroke="none" />
+                </svg>
+              </div>
+              <div>
+                <div class="summary-label">Risk Signal</div>
+                <div class="summary-value">Team trust<br />deterioration</div>
+              </div>
+            </div>
+
+            <div class="summary-item">
+              <div class="summary-icon-box">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#61acff" stroke-width="1.6" aria-hidden="true">
+                  <circle cx="12" cy="12" r="2.8" />
+                  <path d="M12 3.5v2.4M12 18.1v2.4M20.5 12h-2.4M5.9 12H3.5M17.8 6.2l-1.7 1.7M7.9 16.1l-1.7 1.7M17.8 17.8l-1.7-1.7M7.9 7.9L6.2 6.2" stroke-linecap="round" />
+                </svg>
+              </div>
+              <div>
+                <div class="summary-label">Likely Need</div>
+                <div class="summary-value">Structured<br />intervention</div>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+      </div>
+
+      <div class="bottom-actions">
+        <button class="previous-btn" type="button">&#8592; &nbsp;&nbsp; Back to Situational Analysis</button>
+        <div></div>
+        <button class="continue-btn" type="button">Move to Decision Options &nbsp;&nbsp; &rarr;</button>
+      </div>
+
+    </section>
+  </div>
+</main>
+</body>
+</html>
