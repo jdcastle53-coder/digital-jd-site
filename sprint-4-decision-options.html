@@ -431,11 +431,15 @@
   /* RECOMMENDATION */
 
   .recommend-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
     border: 2px solid #d79c00;
     border-radius: 11px;
     background:
       linear-gradient(180deg, rgba(28,26,8,.68), rgba(13,19,22,.92));
-    padding: 12px 13px;
+    padding: 14px 13px;
     box-shadow:
       0 0 15px rgba(223,161,0,.28),
       inset 0 0 17px rgba(223,161,0,.05);
@@ -444,19 +448,19 @@
   .recommend-heading {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding-bottom: 8px;
+    gap: 10px;
+    padding-bottom: 10px;
     border-bottom: 1px solid #a97600;
     color: #ffc219;
-    font-size: 12.5px;
+    font-size: 17px;
     line-height: 1.2;
     font-weight: 800;
   }
 
   .recommend-icon {
-    width: 30px;
-    height: 30px;
-    flex: 0 0 30px;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
     border-radius: 50%;
     border: 2px solid #ffc000;
     display: grid;
@@ -465,7 +469,6 @@
   }
 
   .recommend-label {
-    margin-top: 10px;
     color: #ffffff;
     font-size: 11.5px;
   }
@@ -473,19 +476,19 @@
   .recommend-path {
     margin-top: 5px;
     color: #ffc019;
-    font-size: 14.5px;
+    font-size: 19.5px;
     line-height: 1.25;
     font-weight: 800;
   }
 
   .recommend-footer {
-    margin-top: 10px;
     padding-top: 9px;
     border-top: 1px solid #a97600;
     color: #ffffff;
     font-size: 19px;
     line-height: 1.38;
     font-weight: 600;
+    font-style: italic;
   }
 
   /* =========================================================
@@ -507,7 +510,7 @@
     transform: translateY(-2px);
     color: #ffc21a;
     background: #03111d;
-    font-size: 15px;
+    font-size: 22.5px;
     font-weight: 800;
   }
 
@@ -573,7 +576,7 @@
 
   .outcomes-title {
     color: #ffc21a;
-    font-size: 15px;
+    font-size: 22.5px;
     font-weight: 800;
     white-space: nowrap;
   }
@@ -948,8 +951,10 @@
             </div>
             <div>DIGITAL JD RECOMMENDATION</div>
           </div>
-          <div class="recommend-label">Recommended Path:</div>
-          <div class="recommend-path">Option B — Formal Behavioral Intervention.</div>
+          <div class="recommend-middle">
+            <div class="recommend-label">Recommended Path:</div>
+            <div class="recommend-path">Option B — Formal Behavioral Intervention.</div>
+          </div>
           <div class="recommend-footer">Best balance of outcome, risk, and opportunity. This path gives you the greatest probability of success.</div>
         </aside>
 
