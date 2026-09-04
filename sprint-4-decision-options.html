@@ -88,19 +88,16 @@
   }
 
   .brand-copy {
-    line-height: 1.02;
+    display: flex;
+    height: 84px;
+    align-items: center;
   }
 
   .brand-title {
     color: #f4b914;
-    font-size: 28px;
+    font-size: 26px;
+    line-height: 1.08;
     font-weight: 700;
-  }
-
-  .brand-sub {
-    margin-top: 8px;
-    color: #26c7e9;
-    font-size: 18px;
   }
 
   .nav {
@@ -352,7 +349,7 @@
   .option-header,
   .option-row {
     display: grid;
-    grid-template-columns: 1.7fr 1.2fr 1.25fr 1.05fr;
+    grid-template-columns: 1.55fr 1.05fr 1.15fr 1.35fr;
     align-items: center;
     column-gap: 12px;
   }
@@ -410,6 +407,19 @@
   .selected .letter-circle {
     border-color: #ffc400;
     color: #ffc400;
+  }
+
+  .view-red,
+  .view-green,
+  .view-gold,
+  .view-blue,
+  .view-purple {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+    font-size: 12px;
+    font-weight: 700;
   }
 
   .view-red { color: #ff4b42; }
@@ -473,8 +483,9 @@
     padding-top: 10px;
     border-top: 1px solid #a97600;
     color: #ffffff;
-    font-size: 12.5px;
-    line-height: 1.4;
+    font-size: 15px;
+    line-height: 1.45;
+    font-weight: 600;
   }
 
   /* =========================================================
@@ -508,12 +519,12 @@
   }
 
   .standout-item {
-    min-height: 70px;
+    min-height: 46px;
     display: grid;
-    grid-template-columns: 50px 1fr;
+    grid-template-columns: 36px 1fr;
     align-items: center;
-    gap: 12px;
-    padding: 0 16px;
+    gap: 10px;
+    padding: 4px 14px;
     border-right: 1px solid #a16d00;
   }
 
@@ -522,8 +533,8 @@
   }
 
   .standout-icon {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border: 2px solid #357fce;
     border-radius: 50%;
     display: grid;
@@ -534,7 +545,7 @@
   .standout-copy {
     color: #ffffff;
     font-size: 12.5px;
-    line-height: 1.35;
+    line-height: 1.32;
   }
 
   /* =========================================================
@@ -730,7 +741,6 @@
           <br />
           System
         </div>
-        <div class="brand-sub">DigitalJD</div>
       </div>
     </div>
 
