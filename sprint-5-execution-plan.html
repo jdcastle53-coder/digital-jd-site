@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Situational Analysis and Recommendation | Digital JD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #020912;
+    color: #ffffff;
+    font-family: Inter, Arial, Helvetica, sans-serif;
+  }
+
+  button {
+    font: inherit;
+  }
+
+  .stage {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .page-shell {
+    width: 1200px;
+    flex-shrink: 0;
+    transform-origin: top center;
+    background:
+      radial-gradient(circle at 6% 5%, rgba(231,175,16,.13), transparent 18%),
+      radial-gradient(circle at 48% 0%, rgba(25,85,161,.08), transparent 32%),
+      linear-gradient(180deg, #020912 0%, #03111d 100%);
+    border: 3px solid #172433;
+    color: #f8f5ee;
+  }
+
+  /* =========================================================
+     TOP HEADER
+     ========================================================= */
+
+  .topbar {
+    height: 122px;
+    display: grid;
+    grid-template-columns: 305px 1fr;
+    align-items: center;
+    border-bottom: 1px solid rgba(222,166,18,.18);
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    padding-left: 42px;
+  }
+
+  .head-logo {
+    width: 84px;
+    height: 84px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+      radial-gradient(circle, rgba(42,117,223,.56) 0%, rgba(9,37,67,.55) 46%, transparent 72%);
+    box-shadow:
+      0 0 20px rgba(49,132,255,.72),
+      0 0 36px rgba(236,177,19,.42);
+  }
+
+  .head-logo-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+  }
+
+  .brand-copy {
+    display: flex;
+    height: 84px;
+    align-items: center;
+  }
+
+  .brand-title {
+    color: #f4b914;
+    font-size: 26px;
+    line-height: 1.08;
+    font-weight: 700;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 35px;
+    padding-right: 42px;
+    font-size: 18px;
+  }
+
+  .nav-link {
+    color: #f7f1e7;
+  }
+
+  .nav-pill {
+    height: 50px;
+    padding: 0 25px;
+    border-radius: 22px;
+    border: 1px solid;
+    background: #071321;
+    font-size: 18px;
+    color: #fff;
+  }
+
+  .nav-pill-blue {
+    border-color: #2689ff;
+    color: #ffffff;
+  }
+
+  .nav-pill-gold {
+    border-color: #e6a800;
+    color: #f6bb13;
+  }
+
+  .blue-dot {
+    width: 11px;
+    height: 11px;
+    display: inline-block;
+    border-radius: 50%;
+    margin-right: 10px;
+    background: #4d91ff;
+    box-shadow: 0 0 10px rgba(77,145,255,.85);
+  }
+
+  /* =========================================================
+     EXERCISE BANNER
+     ========================================================= */
+
+  .exercise-banner {
+    margin: 16px 22px 0;
+    min-height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    border: 1px solid #2b4a63;
+    border-radius: 10px;
+    background: rgba(6,17,29,.72);
+  }
+
+  .exercise-banner-title {
+    color: #ffffff;
+    font-size: 19px;
+    font-weight: 700;
+  }
+
+  .exercise-banner-icon {
+    display: grid;
+    place-items: center;
+    color: #4d9cf3;
+  }
+
+  /* =========================================================
+     MAIN PAGE LAYOUT
+     ========================================================= */
+
+  .app-grid {
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr);
+  }
+
+  /* =========================================================
+     LEFT SIDEBAR
+     ========================================================= */
+
+  .sidebar {
+    padding: 16px 14px 20px;
+    border-right: 1px solid #213244;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step-panel {
+    flex: 1;
+    padding: 18px 17px;
+    border: 1px solid #263949;
+    border-radius: 10px;
+    background: rgba(0,8,16,.48);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .step {
+    flex: 1;
+    min-height: 82px;
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    align-content: center;
+    position: relative;
+  }
+
+  .step:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 28px;
+    top: 48px;
+    bottom: -11px;
+    border-left: 2px dotted rgba(59,161,227,.72);
+  }
+
+  .step-circle {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid #9f8f7a;
+    background: #07121c;
+    display: grid;
+    place-items: center;
+    z-index: 2;
+    color: #ffffff;
+    font-size: 24px;
+  }
+
+  .step.complete .step-circle {
+    border-color: #a79c8f;
+  }
+
+  .step.active .step-circle {
+    border-color: #ffc400;
+    color: #ffc400;
+    box-shadow:
+      0 0 12px #ffc400,
+      0 0 28px rgba(255,196,0,.45);
+  }
+
+  .step-check {
+    position: absolute;
+    right: -13px;
+    top: 9px;
+    width: 20px;
+    height: 20px;
+    display: grid;
+    place-items: center;
+  }
+
+  .step-title {
+    padding-top: 8px;
+    white-space: pre-line;
+    color: #4d9cf3;
+    font-size: 17px;
+    line-height: 1.18;
+    font-weight: 500;
+  }
+
+  .step.active .step-title {
+    color: #ffc400;
+    font-weight: 800;
+  }
+
+  /* =========================================================
+     MAIN CONTENT
+     ========================================================= */
+
+  .content {
+    min-width: 0;
+    padding: 18px 22px 26px;
+  }
+
+  .page-heading {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 340px;
+    align-items: center;
+    gap: 18px;
+    min-height: 88px;
+    margin-bottom: 16px;
+  }
+
+  .heading-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .heading-icon {
+    width: 74px;
+    height: 74px;
+    flex: 0 0 74px;
+    border-radius: 50%;
+    border: 2px solid #ffbf00;
+    display: grid;
+    place-items: center;
+    color: #ffd01e;
+    box-shadow:
+      0 0 12px rgba(255,193,0,.6),
+      inset 0 0 15px rgba(255,193,0,.08);
+  }
+
+  .heading-copy h1 {
+    margin: 0 0 6px;
+    color: #ffc319;
+    font-size: 34px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: .2px;
+  }
+
+  .heading-copy p {
+    margin: 0;
+    color: #ffffff;
+    font-size: 19px;
+    line-height: 1.35;
+    font-weight: 600;
+  }
+
+  .selected-path {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    align-items: center;
+    gap: 12px;
+    min-height: 74px;
+    padding: 0 16px;
+    border: 1px solid #6b4f43;
+    border-radius: 9px;
+    background: rgba(10,18,29,.82);
+  }
+
+  .selected-path-icon {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    color: #ffc400;
+  }
+
+  .selected-label {
+    color: #d5d0c7;
+    font-size: 13px;
+    margin-bottom: 3px;
+  }
+
+  .selected-value {
+    color: #ffc400;
+    font-size: 15px;
+    line-height: 1.25;
+    font-weight: 700;
+  }
+
+  /* =========================================================
+     SIX-STAGE TIMELINE
+     ========================================================= */
+
+  .timeline {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    border: 1px solid #625238;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(4,15,26,.93);
+  }
+
+  .phase {
+    position: relative;
+    min-height: 322px;
+    padding: 30px 14px 16px;
+    border-right: 1px solid #3a4f66;
+  }
+
+  .phase:last-child {
+    border-right: 0;
+  }
+
+  .phase::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #c88b00;
+  }
+
+  .phase::after {
+    content: "";
+    position: absolute;
+    top: -5px;
+    right: -6px;
+    width: 10px;
+    height: 10px;
+    transform: rotate(45deg);
+    background: #ffc400;
+    box-shadow: 0 0 10px rgba(255,196,0,.7);
+    z-index: 3;
+  }
+
+  .phase:last-child::after {
+    display: none;
+  }
+
+  .phase-number {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #466f9e;
+    background: #0b1930;
+    display: grid;
+    place-items: center;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 700;
+    box-shadow: 0 0 8px rgba(63,132,215,.32);
+    z-index: 4;
+  }
+
+  .phase-title {
+    margin-top: 10px;
+    color: #ffc21a;
+    text-align: center;
+    white-space: pre-line;
+    font-size: 18px;
+    font-weight: 800;
+    line-height: 1.1;
+  }
+
+  .phase-subtitle {
+    min-height: 16px;
+    margin-top: 4px;
+    color: #ffc21a;
+    text-align: center;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .2px;
+  }
+
+  .phase-list {
+    margin: 14px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .phase-list li {
+    display: grid;
+    grid-template-columns: 8px 1fr;
+    gap: 8px;
+    margin-bottom: 11px;
+    color: #ffffff;
+    font-size: 13px;
+    line-height: 1.34;
+  }
+
+  .phase-bullet {
+    width: 6px;
+    height: 6px;
+    margin-top: 6px;
+    border-radius: 50%;
+    background: #5b9fff;
+  }
+
+  .phase-icon {
+    position: absolute;
+    bottom: 14px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    color: #5a9fff;
+  }
+
+  /* =========================================================
+     LOWER PANELS
+     ========================================================= */
+
+  .lower-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.7fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .lower-card {
+    border: 1px solid #5a4b3c;
+    border-radius: 9px;
+    background: rgba(4,15,27,.94);
+    padding: 0 16px 16px;
+  }
+
+  .lower-title {
+    text-align: center;
+    color: #ffc21a;
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: .3px;
+    padding: 11px 0 9px;
+    border-bottom: 1px solid #6d5426;
+  }
+
+  .priority-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .priority-item {
+    min-height: 128px;
+    border: 1px solid #355475;
+    border-radius: 8px;
+    padding: 12px 10px;
+    text-align: center;
+  }
+
+  .priority-icon {
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 8px;
+    border-radius: 50%;
+    border: 2px solid #3d88d5;
+    display: grid;
+    place-items: center;
+    color: #58a6ff;
+  }
+
+  .priority-title {
+    color: #4b9af1;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+
+  .priority-text {
+    color: #ffffff;
+    font-size: 13px;
+    line-height: 1.32;
+    font-weight: 500;
+  }
+
+  .benefit-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    margin-top: 12px;
+  }
+
+  .benefit-item {
+    min-height: 128px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 12px;
+    text-align: center;
+    border-right: 1px solid #7a5b13;
+  }
+
+  .benefit-item:last-child {
+    border-right: 0;
+  }
+
+  .benefit-icon {
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    color: #5ba7ff;
+    margin-bottom: 8px;
+  }
+
+  .benefit-text {
+    color: #ffffff;
+    font-size: 13px;
+    line-height: 1.32;
+    font-weight: 500;
+  }
+
+  /* =========================================================
+     BOTTOM BUTTONS
+     ========================================================= */
+
+  .bottom-actions {
+    margin-top: 18px;
+    display: grid;
+    grid-template-columns: 360px 1fr 420px;
+    gap: 20px;
+    align-items: center;
+  }
+
+  .previous-btn,
+  .continue-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    white-space: nowrap;
+    gap: 10px;
+  }
+
+  .previous-btn {
+    min-height: 64px;
+    padding: 0 24px;
+    border: 3px solid #bfe0ff;
+    border-radius: 13px;
+    background:
+      linear-gradient(180deg, #7ec2ff 0%, #3f96f2 44%, #1f74d8 73%, #145aab 100%);
+    color: #05131f;
+    font-size: 18px;
+    font-weight: 800;
+    cursor: pointer;
+    box-shadow:
+      0 5px 0 #0d3d75,
+      0 0 0 3px #3f8ee0,
+      0 0 20px rgba(63,148,242,.75),
+      inset 0 2px 7px rgba(255,255,255,.75),
+      inset 0 -3px 6px rgba(10,50,90,.36);
+    transition: transform .08s ease, box-shadow .08s ease;
+  }
+
+  .previous-btn:hover {
+    filter: brightness(1.04);
+  }
+
+  .previous-btn:active {
+    transform: translateY(5px);
+    box-shadow:
+      0 1px 0 #0d3d75,
+      0 0 0 3px #3f8ee0,
+      0 0 12px rgba(63,148,242,.55),
+      inset 0 3px 7px rgba(10,50,90,.3);
+  }
+
+  .continue-btn {
+    min-height: 68px;
+    padding: 0 30px;
+    border: 3px solid #fff0a5;
+    border-radius: 13px;
+    background:
+      linear-gradient(180deg, #ffe05b 0%, #ffc21c 44%, #f5ad00 73%, #d78e00 100%);
+    color: #120f08;
+    font-size: 25px;
+    font-weight: 900;
+    cursor: pointer;
+    box-shadow:
+      0 5px 0 #805300,
+      0 0 0 3px #f7b700,
+      0 0 20px rgba(255,193,0,.95),
+      inset 0 2px 7px rgba(255,255,255,.83),
+      inset 0 -3px 6px rgba(138,86,0,.36);
+    transition: transform .08s ease, box-shadow .08s ease;
+  }
+
+  .continue-btn:hover {
+    filter: brightness(1.04);
+  }
+
+  .continue-btn:active {
+    transform: translateY(5px);
+    box-shadow:
+      0 1px 0 #805300,
+      0 0 0 3px #f7b700,
+      0 0 12px rgba(255,193,0,.68),
+      inset 0 3px 7px rgba(112,69,0,.28);
+  }
+
+  /* =========================================================
+     SCALE-TO-FIT
+     This page is built to a fixed 1200px design canvas so every
+     box keeps the exact proportions of the approved design. The
+     .stage wrapper below uniformly scales that canvas down (via
+     JS) to fit narrower windows without reflowing or cropping it,
+     and never scales it up past its natural 1200px size.
+     ========================================================= */
+</style>
+</head>
+<body>
+<div class="stage">
+<main class="page-shell">
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="head-logo">
+        <img src="digital-jd-logo.png" alt="Digital JD Bluehead Logo" class="head-logo-img" />
+      </div>
+      <div class="brand-copy">
+        <div class="brand-title">
+          Intelligent
+          <br />
+          Leadership
+          <br />
+          System
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <span class="nav-link">Home</span>
+      <span class="nav-link">Risk Assessment</span>
+      <button class="nav-pill nav-pill-blue" type="button">
+        <span class="blue-dot"></span>
+        Sprint Active
+      </button>
+      <button class="nav-pill nav-pill-gold" type="button">Explore Plans</button>
+      <button class="nav-pill nav-pill-gold" type="button">Sign out</button>
+    </nav>
+  </header>
+
+  <div class="exercise-banner">
+    <div class="exercise-banner-title">Situational Analysis and Recommendation</div>
+    <div class="exercise-banner-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4d9cf3" stroke-width="1.8" aria-hidden="true">
+        <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" />
+      </svg>
+    </div>
+  </div>
+
+  <div class="app-grid">
+
+    <aside class="sidebar">
+      <div class="step-panel">
+        <div class="step complete">
+          <div class="step-circle">
+            1
+            <span class="step-check">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39db73" stroke-width="3" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+          <div class="step-title">SITUATIONAL&#10;ANALYSIS</div>
+        </div>
+        <div class="step complete">
+          <div class="step-circle">
+            2
+            <span class="step-check">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39db73" stroke-width="3" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+          <div class="step-title">CHOOSE YOUR&#10;LEVEL OF ANALYSIS</div>
+        </div>
+        <div class="step complete">
+          <div class="step-circle">
+            3
+            <span class="step-check">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39db73" stroke-width="3" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+          <div class="step-title">DIGITAL JD&#10;INSIGHTS</div>
+        </div>
+        <div class="step complete">
+          <div class="step-circle">
+            4
+            <span class="step-check">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39db73" stroke-width="3" aria-hidden="true">
+                <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
+          </div>
+          <div class="step-title">DECISION&#10;OPTIONS</div>
+        </div>
+        <div class="step active">
+          <div class="step-circle">5</div>
+          <div class="step-title">YOUR&#10;EXECUTION PLAN</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">6</div>
+          <div class="step-title">WHAT TO SAY</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">7</div>
+          <div class="step-title">WHAT TO WATCH</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">8</div>
+          <div class="step-title">PROGRESS&#10;ASSESSMENT</div>
+        </div>
+        <div class="step">
+          <div class="step-circle">9</div>
+          <div class="step-title">DECISION &amp;&#10;DASHBOARD</div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="content">
+
+      <div class="page-heading">
+        <div class="heading-left">
+          <div class="heading-icon">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffd01e" stroke-width="1.7" aria-hidden="true">
+              <path d="M9 4l-5 2v13l5-2 6 2 5-2V4l-5 2-6-2z" stroke-linecap="round" stroke-linejoin="round" />
+              <path d="M9 4v13M15 6v13" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+          </div>
+          <div class="heading-copy">
+            <h1>YOUR EXECUTION PLAN</h1>
+            <p>Roadmap from now to resolution.</p>
+          </div>
+        </div>
+
+        <div class="selected-path">
+          <div class="selected-path-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ffc400" stroke-width="1.8" aria-hidden="true">
+              <circle cx="6" cy="18" r="2.4" /><circle cx="18" cy="6" r="2.4" />
+              <path d="M8 17c4-1 6-4 6-8" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div>
+            <div class="selected-label">Selected Path:</div>
+            <div class="selected-value">Option B — Formal Behavioral Intervention.</div>
+          </div>
+        </div>
+      </div>
+
+      <section class="timeline">
+
+        <div class="phase">
+          <div class="phase-number">1</div>
+          <div class="phase-title">NOW&ndash;24&#10;HOURS</div>
+          <div class="phase-subtitle">IMMEDIATE ACTION</div>
+          <ul class="phase-list">
+            <li><span class="phase-bullet"></span><span>Document 3 specific examples of behavior</span></li>
+            <li><span class="phase-bullet"></span><span>Define the performance concern in measurable terms</span></li>
+            <li><span class="phase-bullet"></span><span>Prepare for the accountability conversation</span></li>
+          </ul>
+          <div class="phase-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5a9fff" stroke-width="1.7" aria-hidden="true">
+              <rect x="5" y="4" width="14" height="17" rx="1.5" /><path d="M9 2.5h6v3H9z" /><path d="M8.5 11h7M8.5 14.5h7M8.5 18h4" stroke-linecap="round" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-number">2</div>
+          <div class="phase-title">24&ndash;72&#10;HOURS</div>
+          <div class="phase-subtitle">&nbsp;</div>
+          <ul class="phase-list">
+            <li><span class="phase-bullet"></span><span>Schedule and hold the accountability meeting</span></li>
+            <li><span class="phase-bullet"></span><span>State clear expectations</span></li>
+            <li><span class="phase-bullet"></span><span>Confirm the 30-day improvement review</span></li>
+          </ul>
+          <div class="phase-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5a9fff" stroke-width="1.7" aria-hidden="true">
+              <rect x="3.5" y="5" width="17" height="15" rx="1.5" /><path d="M3.5 9.5h17" /><path d="M8 3v4M16 3v4" stroke-linecap="round" />
+              <circle cx="8" cy="13.2" r="1" fill="#5a9fff" stroke="none" /><circle cx="12" cy="13.2" r="1" fill="#5a9fff" stroke="none" /><circle cx="16" cy="13.2" r="1" fill="#5a9fff" stroke="none" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-number">3</div>
+          <div class="phase-title">DAY 4&ndash;30</div>
+          <div class="phase-subtitle">&nbsp;</div>
+          <ul class="phase-list">
+            <li><span class="phase-bullet"></span><span>Monitor interactions and behavior weekly</span></li>
+            <li><span class="phase-bullet"></span><span>Give immediate feedback on setbacks</span></li>
+            <li><span class="phase-bullet"></span><span>Reinforce positive changes quickly</span></li>
+            <li><span class="phase-bullet"></span><span>Track progress indicators</span></li>
+          </ul>
+          <div class="phase-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5a9fff" stroke-width="1.7" aria-hidden="true">
+              <path d="M4 19V13M9.5 19V9M15 19V6M20 19V11" stroke-linecap="round" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-number">4</div>
+          <div class="phase-title">DAY 30&#10;REVIEW</div>
+          <div class="phase-subtitle">&nbsp;</div>
+          <ul class="phase-list">
+            <li><span class="phase-bullet"></span><span>Score progress against indicators</span></li>
+            <li><span class="phase-bullet"></span><span>Decide: continue, refocus, or escalate</span></li>
+            <li><span class="phase-bullet"></span><span>Communicate outcome and next expectations</span></li>
+          </ul>
+          <div class="phase-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5a9fff" stroke-width="1.7" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5" /><path d="M20 20l-4.8-4.8" stroke-linecap="round" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-number">5</div>
+          <div class="phase-title">DAY 31&ndash;90</div>
+          <div class="phase-subtitle">&nbsp;</div>
+          <ul class="phase-list">
+            <li><span class="phase-bullet"></span><span>If improving, reinforce and normalize standards</span></li>
+            <li><span class="phase-bullet"></span><span>If partially improving, refocus coaching on weak areas</span></li>
+            <li><span class="phase-bullet"></span><span>Continue monitoring and documentation</span></li>
+          </ul>
+          <div class="phase-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5a9fff" stroke-width="1.7" aria-hidden="true">
+              <circle cx="9" cy="8" r="3" /><circle cx="17" cy="8.5" r="2.4" />
+              <path d="M3.5 19c0-3.3 2.5-5.5 5.5-5.5s5.5 2.2 5.5 5.5M15 19c0-2.4 1.6-4.2 4-4.5" stroke-linecap="round" />
+            </svg>
+          </div>
+        </div>
+
+        <div class="phase">
+          <div class="phase-number">6</div>
+          <div class="phase-title">DAY 90&ndash;180+</div>
+          <div class="phase-subtitle">&nbsp;</div>
+          <ul class="phase-list">
+            <li><span class="phase-bullet"></span><span>Final evaluation of sustained change</span></li>
+            <li><span class="phase-bullet"></span><span>Decide long-term path: retain, restructure, or separate</span></li>
+            <li><span class="phase-bullet"></span><span>Document the final decision and next steps</span></li>
+          </ul>
+          <div class="phase-icon">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#5a9fff" stroke-width="1.7" aria-hidden="true">
+              <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" />
+            </svg>
+          </div>
+        </div>
+
+      </section>
+
+      <section class="lower-grid">
+
+        <div class="lower-card">
+          <div class="lower-title">EXECUTION PRIORITIES</div>
+          <div class="priority-grid">
+
+            <div class="priority-item">
+              <div class="priority-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.7" aria-hidden="true">
+                  <circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" />
+                </svg>
+              </div>
+              <div class="priority-title">1. CLARITY</div>
+              <div class="priority-text">Define exactly what must change.</div>
+            </div>
+
+            <div class="priority-item">
+              <div class="priority-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.7" aria-hidden="true">
+                  <path d="M12 3v18M5 8l-2.5 5a3 3 0 006 0L6 8h-4M19 8l-2.5 5a3 3 0 006 0L20 8h-4" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M5 8h14M8 21h8" stroke-linecap="round" />
+                </svg>
+              </div>
+              <div class="priority-title">2. CONSISTENCY</div>
+              <div class="priority-text">Respond to behavior immediately and evenly.</div>
+            </div>
+
+            <div class="priority-item">
+              <div class="priority-icon">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.7" aria-hidden="true">
+                  <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="priority-title">3. FOLLOW-THROUGH</div>
+              <div class="priority-text">Make checkpoint decisions on time.</div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="lower-card">
+          <div class="lower-title">WHAT THIS ROADMAP DELIVERS</div>
+          <div class="benefit-grid">
+
+            <div class="benefit-item">
+              <div class="benefit-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ba7ff" stroke-width="1.6" aria-hidden="true">
+                  <path d="M4 20L15 4M10 20l11-16" stroke-linecap="round" />
+                </svg>
+              </div>
+              <div class="benefit-text">Clear sequence from immediate action to long-term resolution</div>
+            </div>
+
+            <div class="benefit-item">
+              <div class="benefit-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ba7ff" stroke-width="1.6" aria-hidden="true">
+                  <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" /><path d="M9 12l2 2 4-4.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="benefit-text">Built-in checkpoints at critical decision points</div>
+            </div>
+
+            <div class="benefit-item">
+              <div class="benefit-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ba7ff" stroke-width="1.6" aria-hidden="true">
+                  <path d="M12 4v16M8 8l4-4 4 4M8 16l4 4 4-4" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="benefit-text">Flexibility based on results</div>
+            </div>
+
+            <div class="benefit-item">
+              <div class="benefit-icon">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#5ba7ff" stroke-width="1.6" aria-hidden="true">
+                  <path d="M12 20s-7-4.3-7-10a4.5 4.5 0 018-2.8A4.5 4.5 0 0121 10c0 5.7-9 10-9 10z" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </div>
+              <div class="benefit-text">Structure without losing humanity</div>
+            </div>
+
+          </div>
+        </div>
+
+      </section>
+
+      <div class="bottom-actions">
+        <button class="previous-btn" type="button">&#8592; &nbsp;&nbsp; Back to Decision Options</button>
+        <div></div>
+        <button class="continue-btn" type="button">Continue to What To Say &nbsp;&nbsp; &rarr;</button>
+      </div>
+
+    </section>
+  </div>
+</main>
+</div>
+<script>
+  (function () {
+    var stage = document.querySelector(".stage");
+    var shell = document.querySelector(".page-shell");
+
+    function fitStage() {
+      shell.style.transform = "none";
+      var naturalWidth = shell.offsetWidth;
+      var naturalHeight = shell.offsetHeight;
+      var scale = Math.min(stage.clientWidth / naturalWidth, 1);
+      shell.style.transform = "scale(" + scale + ")";
+      stage.style.height = naturalHeight * scale + "px";
+    }
+
+    fitStage();
+    window.addEventListener("resize", fitStage);
+    window.addEventListener("load", fitStage);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(fitStage);
+    }
+    setTimeout(fitStage, 300);
+    setTimeout(fitStage, 1000);
+  })();
+</script>
+</body>
+</html>
