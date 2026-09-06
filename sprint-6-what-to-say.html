@@ -300,6 +300,18 @@
       inset 0 0 15px rgba(255,193,0,.08);
   }
 
+  .heading-copy {
+    min-width: 0;
+  }
+
+  .heading-step-label {
+    color: #ffc400;
+    font-size: 14px;
+    font-weight: 900;
+    letter-spacing: .5px;
+    margin-bottom: 4px;
+  }
+
   .heading-line {
     display: flex;
     flex-wrap: wrap;
@@ -394,60 +406,28 @@
 
   /* IF THEY TABLE */
 
-  .if-head {
-    display: grid;
-    grid-template-columns: 1fr 1.6fr;
-    gap: 12px;
-    margin-top: 4px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid #314c69;
+  .if-block {
+    margin-top: 16px;
   }
 
-  .if-head span {
-    color: #4d9cf3;
-    font-size: 11.5px;
-    font-weight: 800;
-    letter-spacing: .3px;
-    text-align: center;
-  }
-
-  .if-row {
-    display: grid;
-    grid-template-columns: 1fr 1.6fr;
-    gap: 12px;
-    align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px solid #24384c;
-  }
-
-  .if-row:last-child {
-    border-bottom: 0;
+  .if-block:first-of-type {
+    margin-top: 14px;
   }
 
   .if-label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    color: #ffc400;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: .4px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #46587a;
+    margin-bottom: 8px;
+  }
+
+  .if-quote {
     color: #ffffff;
     font-size: 13.5px;
-    font-weight: 700;
-  }
-
-  .if-icon {
-    width: 30px;
-    height: 30px;
-    flex: 0 0 30px;
-    border-radius: 50%;
-    border: 2px solid #3e86d3;
-    display: grid;
-    place-items: center;
-    color: #5ba7ff;
-  }
-
-  .if-reply {
-    color: #d9e2ec;
-    font-size: 12.5px;
-    line-height: 1.4;
+    line-height: 1.42;
   }
 
   /* WHAT NOT TO SAY */
@@ -480,112 +460,178 @@
   }
 
   /* =========================================================
-     FULL-WIDTH BARS
+     OBJECTIVES + TONE
      ========================================================= */
 
-  .bar-card {
+  .lower-grid {
     margin-top: 16px;
-    border: 1px solid #6d5426;
-    border-radius: 10px;
-    background: rgba(4,15,27,.94);
-    padding: 0 18px 18px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
   }
 
-  .bar-title {
-    text-align: center;
-    color: #ffc21a;
+  .lower-card {
+    border: 1px solid #37526f;
+    border-radius: 10px;
+    background: linear-gradient(180deg, rgba(4,15,27,.96), rgba(4,18,31,.97));
+    padding: 14px 20px 16px;
+  }
+
+  .lower-heading {
+    color: #4d9cf3;
     font-size: 16px;
     font-weight: 800;
     letter-spacing: .3px;
-    padding: 12px 0 10px;
-    border-bottom: 1px solid #6d5426;
+    padding-bottom: 9px;
+    border-bottom: 2px solid #2d5a8a;
   }
 
-  .objectives-row {
+  .lower-list {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+  }
+
+  .lower-list li {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-    margin-top: 14px;
-  }
-
-  .objective-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-align: left;
-  }
-
-  .objective-icon {
-    width: 36px;
-    height: 36px;
-    flex: 0 0 36px;
-    border-radius: 50%;
-    border: 2px solid #3d88d5;
-    display: grid;
-    place-items: center;
-    color: #58a6ff;
-  }
-
-  .objective-text {
+    grid-template-columns: 20px 1fr;
+    gap: 9px;
+    align-items: start;
+    margin-bottom: 8px;
     color: #ffffff;
-    font-size: 13px;
-    line-height: 1.32;
-    font-weight: 600;
-  }
-
-  .tone-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    margin-top: 14px;
-  }
-
-  .tone-item {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 0 14px;
-    border-right: 1px solid #33465a;
-  }
-
-  .tone-item:last-child {
-    border-right: 0;
-  }
-
-  .tone-icon {
-    width: 34px;
-    height: 34px;
-    flex: 0 0 34px;
-    border-radius: 50%;
-    border: 2px solid #3d88d5;
-    display: grid;
-    place-items: center;
-    color: #58a6ff;
-    margin-top: 2px;
-  }
-
-  .tone-title {
-    color: #4d9cf3;
-    font-size: 14.5px;
-    font-weight: 800;
-    margin-bottom: 3px;
-  }
-
-  .tone-text {
-    color: #ffffff;
-    font-size: 12.5px;
+    font-size: 13.5px;
     line-height: 1.32;
     font-weight: 500;
   }
 
-  .tagline-bar {
+  .lower-check {
+    display: grid;
+    place-items: center;
+    padding-top: 3px;
+  }
+
+  /* =========================================================
+     PROGRESS OBSERVATION LOG
+     ========================================================= */
+
+  .log-section {
     margin-top: 16px;
-    padding: 12px 0;
-    border-top: 1px solid #24384c;
-    border-bottom: 1px solid #24384c;
+    border: 2px solid #e3aa00;
+    border-radius: 11px;
+    background:
+      radial-gradient(circle at 8% 50%, rgba(238,178,0,.10), transparent 25%),
+      linear-gradient(180deg, rgba(5,19,30,.98), rgba(3,14,24,.98));
+    box-shadow: 0 0 16px rgba(255,193,0,.30), inset 0 0 17px rgba(255,193,0,.04);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    align-items: center;
+    gap: 18px;
+    padding: 14px 18px;
+  }
+
+  .log-left {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 14px;
+    align-items: center;
+  }
+
+  .log-icon {
+    color: #ffc400;
+    display: grid;
+    place-items: center;
+  }
+
+  .log-heading-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 5px;
+  }
+
+  .log-title {
+    color: #ffc400;
+    font-size: 16px;
+    font-weight: 900;
+  }
+
+  .required-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 22px;
+    padding: 0 10px;
+    border-radius: 12px;
+    border: 2px solid #ff5a52;
+    color: #ffffff;
+    background: linear-gradient(180deg, #e3221c, #af1713);
+    font-size: 11px;
+    font-weight: 900;
+    box-shadow: inset 0 1px 3px rgba(255,255,255,.25), 0 0 8px rgba(255,47,38,.25);
+  }
+
+  .log-primary-copy {
+    color: #ffffff;
+    font-size: 13px;
+    line-height: 1.35;
+    font-weight: 700;
+  }
+
+  .log-secondary-copy {
+    margin-top: 3px;
+    color: #ffffff;
+    font-size: 11.5px;
+    line-height: 1.3;
+  }
+
+  .log-button-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .log-btn {
+    min-height: 62px;
+    width: 100%;
+    border-radius: 12px;
+    border: 3px solid #fff3a8;
+    background: linear-gradient(180deg, #ffe767 0%, #ffc92d 40%, #f7ad00 75%, #da9000 100%);
+    color: #100d06;
+    font-size: 15px;
+    font-weight: 900;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow:
+      0 5px 0 #7f5300,
+      0 0 0 2px #f8b900,
+      0 0 22px rgba(255,193,0,.90),
+      inset 0 3px 6px rgba(255,255,255,.82),
+      inset 0 -3px 6px rgba(126,76,0,.30);
+    transition: transform .08s ease, box-shadow .08s ease;
+  }
+
+  .log-btn:hover {
+    filter: brightness(1.04);
+  }
+
+  .log-btn:active {
+    transform: translateY(5px);
+    box-shadow:
+      0 1px 0 #7f5300,
+      0 0 0 2px #f8b900,
+      0 0 12px rgba(255,193,0,.6),
+      inset 0 3px 7px rgba(114,69,0,.26);
+  }
+
+  .log-auto-note {
+    color: #f1d887;
     text-align: center;
-    color: #c3ccd6;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 10.5px;
+    line-height: 1.3;
   }
 
   /* =========================================================
@@ -594,35 +640,14 @@
 
   .bottom-actions {
     margin-top: 18px;
-    display: grid;
-    grid-template-columns: 340px minmax(0, 1fr);
+    display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 20px;
   }
 
-  .bottom-right {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    min-width: 0;
-  }
-
-  .bottom-right-buttons {
-    display: flex;
-    gap: 12px;
-    min-width: 0;
-  }
-
-  .bottom-caption {
-    color: #9aa7b3;
-    font-size: 12.5px;
-    text-align: center;
-  }
-
   .previous-btn,
-  .continue-btn,
-  .workshop-btn {
+  .continue-btn {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -664,41 +689,31 @@
       inset 0 3px 7px rgba(10,50,90,.3);
   }
 
-  .continue-btn,
-  .workshop-btn {
-    min-height: 64px;
-    padding: 0 16px;
+  .continue-btn {
+    min-height: 65px;
+    padding: 0 28px;
     border: 3px solid #fff0a5;
-    border-radius: 13px;
+    border-radius: 11px;
     background:
       linear-gradient(180deg, #ffe05b 0%, #ffc21c 44%, #f5ad00 73%, #d78e00 100%);
     color: #120f08;
+    font-size: 24px;
     font-weight: 900;
     cursor: pointer;
     box-shadow:
       0 5px 0 #805300,
       0 0 0 3px #f7b700,
-      0 0 20px rgba(255,193,0,.95),
+      0 0 18px rgba(255,193,0,.78),
       inset 0 2px 7px rgba(255,255,255,.83),
       inset 0 -3px 6px rgba(138,86,0,.36);
     transition: transform .08s ease, box-shadow .08s ease;
   }
 
-  .continue-btn {
-    font-size: 17px;
-  }
-
-  .workshop-btn {
-    font-size: 14px;
-  }
-
-  .continue-btn:hover,
-  .workshop-btn:hover {
+  .continue-btn:hover {
     filter: brightness(1.04);
   }
 
-  .continue-btn:active,
-  .workshop-btn:active {
+  .continue-btn:active {
     transform: translateY(5px);
     box-shadow:
       0 1px 0 #805300,
@@ -844,10 +859,13 @@
             <path d="M4 5h16v11H9l-5 4V5z" stroke-linecap="round" stroke-linejoin="round" />
           </svg>
         </div>
-        <div class="heading-line">
-          <h1>WHAT TO SAY</h1>
-          <span class="heading-dash">&ndash;</span>
-          <span class="heading-sub">How to have the conversation with clarity, firmness, and respect.</span>
+        <div class="heading-copy">
+          <div class="heading-step-label">STEP 6</div>
+          <div class="heading-line">
+            <h1>WHAT TO SAY</h1>
+            <span class="heading-dash">&mdash;</span>
+            <span class="heading-sub">Have the Conversation with Clarity, Firmness, and Respect</span>
+          </div>
         </div>
       </div>
 
@@ -877,58 +895,19 @@
             <span>IF THEY...</span>
           </div>
 
-          <div class="if-head">
-            <span>LIKELY RESPONSE</span>
-            <span>HOW TO REPLY</span>
+          <div class="if-block">
+            <div class="if-label">GET DEFENSIVE</div>
+            <div class="if-quote">&ldquo;I understand this is difficult to hear. My goal is to help you succeed here.&rdquo;</div>
           </div>
 
-          <div class="if-row">
-            <div class="if-label">
-              <span class="if-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5ba7ff" stroke-width="1.8" aria-hidden="true">
-                  <path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" />
-                </svg>
-              </span>
-              <span>Get Defensive</span>
-            </div>
-            <div class="if-reply">I understand this is difficult to hear. My intent is not to criticize you, but to resolve an issue that is impacting the team and our results.</div>
+          <div class="if-block">
+            <div class="if-label">AGREE</div>
+            <div class="if-quote">&ldquo;Thank you. Let&rsquo;s define the specific behaviors and outcomes we will measure.&rdquo;</div>
           </div>
 
-          <div class="if-row">
-            <div class="if-label">
-              <span class="if-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5ba7ff" stroke-width="2" aria-hidden="true">
-                  <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
-                </svg>
-              </span>
-              <span>Agree Quickly</span>
-            </div>
-            <div class="if-reply">Thank you. Let&rsquo;s make sure we are aligned on what will change, how we will measure it, and when we will review progress.</div>
-          </div>
-
-          <div class="if-row">
-            <div class="if-label">
-              <span class="if-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5ba7ff" stroke-width="1.8" aria-hidden="true">
-                  <circle cx="9" cy="8" r="3" /><circle cx="17" cy="9" r="2.4" />
-                  <path d="M4 19c0-3 2.5-5 5-5s5 2 5 5M15 19c.3-2 1.6-3.6 4-3.8" stroke-linecap="round" />
-                </svg>
-              </span>
-              <span>Blame Others</span>
-            </div>
-            <div class="if-reply">I hear your perspective. Regardless of cause, the impact is real, and we need to focus on what you will do differently starting now.</div>
-          </div>
-
-          <div class="if-row">
-            <div class="if-label">
-              <span class="if-icon">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#5ba7ff" stroke-width="1.8" aria-hidden="true">
-                  <circle cx="12" cy="12" r="9" /><path d="M8 12h8" stroke-linecap="round" />
-                </svg>
-              </span>
-              <span>Minimize the Issue</span>
-            </div>
-            <div class="if-reply">I understand it may not feel serious, otherwise the data and feedback show meaningful change is needed.</div>
+          <div class="if-block">
+            <div class="if-label">BLAME OTHERS</div>
+            <div class="if-quote">&ldquo;We&rsquo;ll focus on what you can control and how it impacts the team.&rdquo;</div>
           </div>
         </div>
 
@@ -981,98 +960,60 @@
 
       </section>
 
-      <section class="bar-card">
-        <div class="bar-title">CONVERSATION OBJECTIVES</div>
-        <div class="objectives-row">
-          <div class="objective-item">
-            <span class="objective-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="8" /><circle cx="12" cy="12" r="3" /></svg>
-            </span>
-            <span class="objective-text">State the concern clearly</span>
-          </div>
-          <div class="objective-item">
-            <span class="objective-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.8" aria-hidden="true"><rect x="5" y="4" width="14" height="17" rx="1.5" /><path d="M8 9h8M8 13h8M8 17h5" stroke-linecap="round" /></svg>
-            </span>
-            <span class="objective-text">Define measurable expectations</span>
-          </div>
-          <div class="objective-item">
-            <span class="objective-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.8" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="1.5" /><path d="M4 10h16M8 3v4M16 3v4" stroke-linecap="round" /></svg>
-            </span>
-            <span class="objective-text">Confirm the review date</span>
-          </div>
-          <div class="objective-item">
-            <span class="objective-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.8" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" /></svg>
-            </span>
-            <span class="objective-text">Protect dignity while holding standards</span>
-          </div>
-          <div class="objective-item">
-            <span class="objective-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.8" aria-hidden="true"><path d="M3 12s3-6 9-6 9 6 9 6-3 6-9 6-9-6-9-6z" /><circle cx="12" cy="12" r="2.6" /></svg>
-            </span>
-            <span class="objective-text">Listen intently to words and body language</span>
-          </div>
+      <section class="lower-grid">
+        <div class="lower-card">
+          <div class="lower-heading">CONVERSATION OBJECTIVES</div>
+          <ul class="lower-list">
+            <li><span class="lower-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4d9cf3" stroke-width="3" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span>State the concern clearly.</span></li>
+            <li><span class="lower-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4d9cf3" stroke-width="3" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span>Define the behavior that must change.</span></li>
+            <li><span class="lower-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4d9cf3" stroke-width="3" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span>Explain the impact on the team.</span></li>
+            <li><span class="lower-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4d9cf3" stroke-width="3" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span>Set measurable expectations.</span></li>
+            <li><span class="lower-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4d9cf3" stroke-width="3" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span>Confirm accountability and timing.</span></li>
+          </ul>
+        </div>
+
+        <div class="lower-card">
+          <div class="lower-heading">TONE TO MAINTAIN</div>
+          <ul class="lower-list">
+            <li><span class="lower-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4d9cf3" stroke-width="3" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span>Lead with composure, not emotion.</span></li>
+            <li><span class="lower-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4d9cf3" stroke-width="3" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span>Be direct without being hostile.</span></li>
+            <li><span class="lower-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4d9cf3" stroke-width="3" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span>Stay factual and specific.</span></li>
+            <li><span class="lower-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4d9cf3" stroke-width="3" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span>Keep the focus on behavior and impact.</span></li>
+            <li><span class="lower-check"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#4d9cf3" stroke-width="3" aria-hidden="true"><path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" /></svg></span><span>End with clarity about next steps.</span></li>
+          </ul>
         </div>
       </section>
 
-      <section class="bar-card">
-        <div class="bar-title">TONE TO MAINTAIN</div>
-        <div class="tone-row">
-          <div class="tone-item">
-            <span class="tone-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.8" aria-hidden="true"><path d="M6 12a6 6 0 1112 0" stroke-linecap="round" /><path d="M4 12h16" stroke-linecap="round" /></svg>
-            </span>
-            <div>
-              <div class="tone-title">Calm</div>
-              <div class="tone-text">Lead with composure, not emotion.</div>
-            </div>
+      <section class="log-section">
+        <div class="log-left">
+          <div class="log-icon">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#ffc400" stroke-width="1.6" aria-hidden="true">
+              <rect x="6" y="3" width="12" height="18" rx="1.5" /><path d="M9 8h6M9 12h6M9 16h4" stroke-linecap="round" /><path d="M9 3h6v3H9z" />
+            </svg>
           </div>
-          <div class="tone-item">
-            <span class="tone-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round" /></svg>
-            </span>
-            <div>
-              <div class="tone-title">Direct</div>
-              <div class="tone-text">Be clear and straightforward.</div>
+          <div>
+            <div class="log-heading-row">
+              <span class="log-title">PROGRESS OBSERVATION LOG</span>
+              <span class="required-badge">REQUIRED</span>
             </div>
-          </div>
-          <div class="tone-item">
-            <span class="tone-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="3.2" /><path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6" stroke-linecap="round" /></svg>
-            </span>
-            <div>
-              <div class="tone-title">Respectful</div>
-              <div class="tone-text">Value the person while addressing the issue.</div>
-            </div>
-          </div>
-          <div class="tone-item">
-            <span class="tone-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#58a6ff" stroke-width="1.8" aria-hidden="true"><path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3z" /></svg>
-            </span>
-            <div>
-              <div class="tone-title">Firm</div>
-              <div class="tone-text">Hold the standard with consistency.</div>
-            </div>
+            <div class="log-primary-copy">You must record the conversation, immediate reactions, and any initial observations from today&rsquo;s discussion.</div>
+            <div class="log-secondary-copy">This information will be used in your ongoing Progress Assessment.</div>
           </div>
         </div>
-      </section>
 
-      <div class="tagline-bar">Lead the conversation with clarity, not emotion.</div>
+        <div class="log-button-wrap">
+          <button class="log-btn" type="button">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#100d06" stroke-width="1.8" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1.5" /><path d="M9 8h6M9 12h6M9 16h4" stroke-linecap="round" /></svg>
+            Open Progress Observation Log
+            <span>&rarr;</span>
+          </button>
+          <div class="log-auto-note">Log automatically tagged as: <strong>Step 6 &mdash; Communication</strong><br />(Date and time will be recorded automatically)</div>
+        </div>
+      </section>
 
       <div class="bottom-actions">
         <button class="previous-btn" type="button">&larr; &nbsp;&nbsp; Back to Your Execution Plan</button>
-        <div class="bottom-right">
-          <div class="bottom-right-buttons">
-            <button class="workshop-btn" type="button">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#120f08" stroke-width="1.8" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="1.5" /><path d="M9 8h6M9 12h6M9 16h4" stroke-linecap="round" /></svg>
-              Executive Content Workshop
-            </button>
-            <button class="continue-btn" type="button">Continue to What To Watch &nbsp;&nbsp; &rarr;</button>
-          </div>
-          <div class="bottom-caption">Create emails, letters, memos, or other documentation to follow up and communicate effectively.</div>
-        </div>
+        <button class="continue-btn" type="button">Continue to What to Watch &nbsp;&nbsp; &rarr;</button>
       </div>
 
     </section>
