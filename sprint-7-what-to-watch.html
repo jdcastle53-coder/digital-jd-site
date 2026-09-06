@@ -376,16 +376,15 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 10px;
-    align-items: center;
+    align-items: start;
   }
 
   .indicator-item {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 10px;
-    padding: 4px 10px;
+    padding: 0 10px;
     border-right: 1px solid #2a4763;
-    height: 100%;
   }
 
   .indicator-item:last-child {
@@ -393,28 +392,29 @@
   }
 
   .indicator-icon {
-    width: 38px;
-    height: 38px;
-    flex: 0 0 38px;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 34px;
     border-radius: 50%;
     border: 2px solid #3d88d5;
     display: grid;
     place-items: center;
     color: #58a6ff;
+    margin-top: 2px;
   }
 
   .indicator-title {
     color: #ffffff;
-    font-size: 17.5px;
+    font-size: 19px;
     font-weight: 800;
-    line-height: 1.28;
+    line-height: 1.24;
     margin-bottom: 6px;
   }
 
   .indicator-text {
     color: #cdd8e2;
-    font-size: 15.5px;
-    line-height: 1.42;
+    font-size: 16px;
+    line-height: 1.4;
   }
 
   /* =========================================================
