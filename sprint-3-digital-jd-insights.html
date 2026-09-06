@@ -981,7 +981,9 @@
       shell.style.transform = "none";
       var naturalWidth = shell.offsetWidth;
       var naturalHeight = shell.offsetHeight;
-      var scale = Math.min(stage.clientWidth / naturalWidth, 1);
+      var widthScale = stage.clientWidth / naturalWidth;
+      var heightScale = window.innerHeight / naturalHeight;
+      var scale = Math.min(widthScale, heightScale, 1);
       shell.style.transform = "scale(" + scale + ")";
       stage.style.height = naturalHeight * scale + "px";
     }
