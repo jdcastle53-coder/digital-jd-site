@@ -790,30 +790,37 @@
   .bottom-actions {
     margin-top: 18px;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: space-between;
     gap: 20px;
   }
 
   .previous-btn,
   .continue-btn {
+    flex: 1;
+    min-width: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    white-space: nowrap;
-    gap: 10px;
+    gap: 12px;
+  }
+
+  .btn-lines {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.18;
   }
 
   .previous-btn {
     min-height: 72px;
-    padding: 0 30px;
+    padding: 10px 20px;
     border: 3px solid #bfe0ff;
     border-radius: 13px;
     background:
       linear-gradient(180deg, #7ec2ff 0%, #3f96f2 44%, #1f74d8 73%, #145aab 100%);
     color: #05131f;
-    font-size: 27px;
+    font-size: 18px;
     font-weight: 800;
     cursor: pointer;
     box-shadow:
@@ -840,13 +847,13 @@
 
   .continue-btn {
     min-height: 76px;
-    padding: 0 34px;
+    padding: 10px 24px;
     border: 3px solid #fff0a5;
     border-radius: 11px;
     background:
       linear-gradient(180deg, #ffe05b 0%, #ffc21c 44%, #f5ad00 73%, #d78e00 100%);
     color: #120f08;
-    font-size: 32px;
+    font-size: 21px;
     font-weight: 900;
     cursor: pointer;
     box-shadow:
@@ -1343,8 +1350,8 @@
       </section>
 
       <div class="bottom-actions">
-        <button class="previous-btn" type="button">&larr; &nbsp;&nbsp; Back to Progress Assessment</button>
-        <button class="continue-btn" type="button">Continue to Executive Dashboard</button>
+        <button class="previous-btn" type="button"><span class="btn-arrow">&larr;</span><span class="btn-lines"><span>Back to</span><span>Progress Assessment</span></span></button>
+        <button class="continue-btn" type="button"><span class="btn-lines"><span>Continue to</span><span>Executive Dashboard</span></span></button>
       </div>
 
     </section>
