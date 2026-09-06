@@ -210,6 +210,14 @@
     position: relative;
   }
 
+  .step:first-child {
+    align-content: start;
+  }
+
+  .step:last-child {
+    align-content: end;
+  }
+
   .step:not(:last-child)::after {
     content: "";
     position: absolute;
@@ -247,10 +255,14 @@
 
   .step-check {
     position: absolute;
-    right: -13px;
-    top: 9px;
-    width: 20px;
-    height: 20px;
+    right: -18px;
+    top: -2px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #0f3d22 0%, #082514 100%);
+    border: 2px solid #34ff8f;
+    box-shadow: 0 0 10px rgba(52,255,143,.7);
     display: grid;
     place-items: center;
   }
@@ -809,7 +821,7 @@
           <div class="step-circle">
             1
             <span class="step-check">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39db73" stroke-width="3" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#45ffa0" stroke-width="3.5" aria-hidden="true">
                 <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </span>
@@ -820,7 +832,7 @@
           <div class="step-circle">
             2
             <span class="step-check">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39db73" stroke-width="3" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#45ffa0" stroke-width="3.5" aria-hidden="true">
                 <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </span>
@@ -831,7 +843,7 @@
           <div class="step-circle">
             3
             <span class="step-check">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#39db73" stroke-width="3" aria-hidden="true">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#45ffa0" stroke-width="3.5" aria-hidden="true">
                 <path d="M4.5 12.5l5 5 10-11" stroke-linecap="round" stroke-linejoin="round" />
               </svg>
             </span>
