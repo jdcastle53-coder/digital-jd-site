@@ -638,16 +638,16 @@
     </div>
 
     <nav class="nav">
-      <span class="nav-link">Home</span>
-      <span class="nav-link">Risk Assessment</span>
+      <span class="nav-link" id="homeLink">Home</span>
+      <span class="nav-link" id="riskAssessmentLink">Risk Assessment</span>
 
-      <button class="pill pill-blue" type="button">
+      <button class="pill pill-blue" type="button" id="sprintActiveBtn">
         <span class="blue-dot"></span>
         Sprint Active
       </button>
 
-      <button class="pill pill-gold" type="button">Explore Plans</button>
-      <button class="pill pill-gold" type="button">Sign out</button>
+      <button class="pill pill-gold" type="button" id="explorePlansBtn">Explore Plans</button>
+      <button class="pill pill-gold" type="button" id="signOutBtn">Sign out</button>
     </nav>
   </header>
 
@@ -692,7 +692,7 @@
         </div>
       </div>
 
-      <button class="back-home" type="button">&#8592; &nbsp;&nbsp; Back to Home</button>
+      <button class="back-home" type="button" id="backHomeBtn">&#8592; &nbsp;&nbsp; Back to Home</button>
     </aside>
 
     <section class="content">
@@ -873,16 +873,26 @@
 
 </main>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
 <script>
-  // Visual-parity build only. Navigation, dictation, and data hookups
-  // intentionally NOT wired yet -- pending sign-off on this page's look,
-  // per the page-by-page workflow.
-  var situationInput = document.getElementById('situationInput');
-  var charCount = document.getElementById('charCount');
-  situationInput.addEventListener('input', function () {
-    charCount.textContent = situationInput.value.length;
+  window.DIGITAL_JD_STEP1_CONFIG = {
+    homeUrl: 'index.html',
+    riskAssessmentUrl: null,
+    plansUrl: 'index.html#pricing',
+    step2Url: 'sprint-2-choose-level-of-analysis.html',
+    analyzeEndpoint: '/api/situation-analyze',
+    finalizeEndpoint: '/api/situation-finalize',
+    signOut: async function () {
+      if (window.Auth && window.Auth.enabled) await window.Auth.signOut();
+    },
+  };
+
+  window.addEventListener('load', function () {
+    if (window.Auth && window.Auth.enabled) window.Auth.requireActiveSession();
   });
 </script>
+<script src="js/step1-behavior.js"></script>
 
 </body>
 </html>

@@ -2,6 +2,9 @@
   "functions": {
     "api/jd-brain-gateway.js": {
       "includeFiles": "data/**"
+    },
+    "api/situation-analyze.js": {
+      "includeFiles": "data/**"
     }
   }
 }
