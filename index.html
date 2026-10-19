@@ -450,6 +450,43 @@
       border-color: var(--white);
     }
 
+    .hero-cta-block { display: inline-block; }
+
+    .btn-glow {
+      display: inline-block;
+      filter: drop-shadow(0 0 5px rgba(58,155,255,0.9)) drop-shadow(0 0 14px rgba(58,155,255,0.55));
+    }
+
+    .btn-glow .btn-primary {
+      background: #3a9bff;
+      padding: 3px;
+      color: #0a1228;
+      overflow: visible;
+    }
+
+    .btn-glow .btn-primary::before { display: none; }
+    .btn-glow .btn-primary:hover { box-shadow: none; }
+
+    .btn-glow .btn-primary > span {
+      display: block;
+      padding: 1rem 2.4rem;
+      background: linear-gradient(180deg, #f7dc7a 0%, #e0b73a 48%, #c9941a 100%);
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+
+    .hero-promise {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-weight: 700;
+      font-size: 1.45rem;
+      color: #e0b73a;
+      margin-top: 1.1rem;
+    }
+
     @keyframes btnPulse {
       0%, 100% { box-shadow: 0 0 0 0 rgba(0,180,216,0.4); }
       50% { box-shadow: 0 0 20px 8px rgba(0,180,216,0.2); }
@@ -1801,17 +1838,17 @@ iframe {
       <div class="hero-tagline">Executive Clarity &nbsp;:&nbsp; On Demand</div>
       <p class="hero-descriptor">Digital JD is not a chatbot. It is a structured leadership intelligence system built on decades of executive leadership research — engineered to deliver situational clarity, strategic insight, and executable decisions when it matters most.</p>
       <p class="hero-bridge">Your 7-day Executive Sprint is complimentary. No card. No commitment.</p>
+     <div class="hero-cta-block">
      <div class="hero-cta-group">
-    <button class="btn-primary" onclick="openModal()" style="animation:btnPulse 2.5s ease-in-out infinite;">
-        <span>Your Sprint Starts Now →</span>
-    </button>
+    <span class="btn-glow"><button class="btn-primary" onclick="openModal()">
+        <span>Complimentary Evaluation</span>
+    </button></span>
 
     <a href="#what" class="btn-ghost">Learn the system</a>
 </div>
 
-<p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#c9a84c;margin-top:1rem;">
-    No card. No contract. No commitment. Just clarity.
-</p>
+<p class="hero-promise"><span>No card.</span> <span>No contract.</span> <span>No commitment.</span> <span>Just clarity.</span></p>
+     </div>
     </div>
   </section>
 
