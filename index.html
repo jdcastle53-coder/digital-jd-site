@@ -487,6 +487,13 @@
       margin-top: 1.1rem;
     }
 
+    .sprint-cta { display: flex; flex-direction: column; align-items: stretch; gap: 0.25rem; text-align: center; }
+    .sprint-cta .btn-glow { display: block; }
+    .sprint-cta .btn-glow .btn-primary { width: 100%; }
+    .sprint-cta .btn-glow .btn-primary > span { text-align: center; font-size: 1.2em; }
+    .sprint-cta .hero-promise { justify-content: center; gap: 0.35rem 0.9rem; font-size: 1.2rem; }
+    .sprint-cta .btn-ghost { align-self: center; margin-top: 0.9rem; }
+
     @keyframes btnPulse {
       0%, 100% { box-shadow: 0 0 0 0 rgba(0,180,216,0.4); }
       50% { box-shadow: 0 0 20px 8px rgba(0,180,216,0.2); }
@@ -2030,7 +2037,13 @@ iframe {
             <li>Grounded in Dr. JD Castle&apos;s Ph.D-level organizational research</li>
             <li>Available on desktop and mobile</li>
           </ul>
-          <button class="btn-primary" onclick="openModal()" style="width:100%;justify-content:center;"><span style="font-size:1.2em;">Your Sprint Starts Now →</span></button>
+          <div class="sprint-cta">
+            <span class="btn-glow"><button class="btn-primary" onclick="openModal()">
+              <span>Complimentary Evaluation</span>
+            </button></span>
+            <p class="hero-promise"><span>No card.</span> <span>No contract.</span> <span>No commitment.</span> <span>Just clarity.</span></p>
+            <a href="#what" class="btn-ghost">Learn the system</a>
+          </div>
         </div>
       </div>
     </div>
