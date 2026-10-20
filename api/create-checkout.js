@@ -1,13 +1,31 @@
 import Stripe from "stripe";
 
-// Live price IDs for each Digital JD tier (created in the live Stripe account)
-// Updated 2026-08: new pricing $199 / $399 / $899 per month (all recurring).
-// "founding" = first-50 offer, $99/mo recurring rate locked for life (unchanged price).
-const PRICE_IDS = {
-  essentials: "price_1U3EsHAADeI7ymn398ulRjWF", // $199/mo
-  pro: "price_1U3EsHAADeI7ymn3DPNDuHLs", // $399/mo
-  executive: "price_1U3EsIAADeI7ymn35kw67WTg", // $899/mo
-  founding: "price_1Tj8AdAADeI7ymn3KwYMeDKi", // $99/mo locked for life
+// Live price IDs for the three-tier lineup (Essentials / Executive / Enterprise).
+// Enterprise is sales-led (contact.html) and is intentionally not purchasable here.
+// Each key maps to a recurring Stripe price. `plan` is what gets recorded on the
+// Supabase account (access gates check plan === "executive"), so yearly prices
+// must still resolve to the plain plan name.
+const CHECKOUT_OPTIONS = {
+  essentials: {
+    priceId: "price_1USdTkAADeI7ymn3jLLCORjs", // $399/month
+    plan: "essentials",
+    interval: "month",
+  },
+  essentials_yearly: {
+    priceId: "price_1USdTlAADeI7ymn3ZDwsf4cT", // $3,990/year
+    plan: "essentials",
+    interval: "year",
+  },
+  executive: {
+    priceId: "price_1U3EsIAADeI7ymn35kw67WTg", // $899/month
+    plan: "executive",
+    interval: "month",
+  },
+  executive_yearly: {
+    priceId: "price_1USdTlAADeI7ymn3UufihbcY", // $8,990/year
+    plan: "executive",
+    interval: "year",
+  },
 };
 
 export default async function handler(req, res) {
@@ -26,9 +44,11 @@ export default async function handler(req, res) {
 
   try {
     const { tier, email } = req.body || {};
-    const priceId = PRICE_IDS[tier];
+    const option = Object.prototype.hasOwnProperty.call(CHECKOUT_OPTIONS, tier)
+      ? CHECKOUT_OPTIONS[tier]
+      : null;
 
-    if (!priceId) {
+    if (!option) {
       return res.status(400).json({ error: "Invalid plan selected" });
     }
 
@@ -38,13 +58,13 @@ export default async function handler(req, res) {
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
-      line_items: [{ price: priceId, quantity: 1 }],
+      line_items: [{ price: option.priceId, quantity: 1 }],
       // Pre-fill and bind the customer to the signed-in email when available
-      customer_email: email || undefined,
+      customer_email: typeof email === "string" && email ? email : undefined,
       allow_promotion_codes: true,
       // Recorded so the Stripe webhook (api/stripe-webhook.js) can create
-      // the Supabase account for the correct tier after payment clears.
-      metadata: { tier },
+      // the Supabase account for the correct plan after payment clears.
+      metadata: { tier: option.plan, interval: option.interval },
       success_url: `${origin}/success.html?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/cancel.html`,
     });
