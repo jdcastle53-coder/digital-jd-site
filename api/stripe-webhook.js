@@ -72,6 +72,7 @@ export async function POST(request) {
     // that existing account instead.
     const paidMetadata = {
       plan: tier || "essentials",
+      billing_interval: session.metadata?.interval || "month",
       membership: true,
       trial: false,
       stripe_customer_id: session.customer || null,

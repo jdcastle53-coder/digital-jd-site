@@ -1130,18 +1130,19 @@ font-size:12px;
       border-top: 1px solid rgba(0,180,216,0.08);
     }
 
-  /* Pricing uses a wider inner wrapper than other sections so the four
-     cards spread toward the page edges instead of looking tall & skinny. */
+  /* Pricing uses a wider inner wrapper than other sections so the three
+     cards spread evenly across the page instead of looking tall & skinny. */
   #pricing .section-inner {
-    max-width: 1500px;
+    max-width: 1320px;
     padding-left: 3rem;
     padding-right: 3rem;
   }
   .tiers-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.5rem;
   margin-top: 3.5rem;
+  align-items: stretch;
   }
 
   /* Tier-bullet checkmarks are inline SVGs in the markup (font-independent). */
@@ -1199,7 +1200,7 @@ font-size:12px;
       margin-bottom: 2rem;
       /* Grow to fill slack so the price + button + enterprise cluster
          anchors to the bottom of every card — this aligns the CTA
-         buttons on one line across all four tiers. */
+         buttons on one line across all three tiers. */
       flex: 1 1 auto;
     }
 
@@ -2060,119 +2061,90 @@ iframe {
       <div class="section-label">Access Structure</div>
       <h2 class="section-heading">Built for <em>Sustained</em><br>Executive Performance.</h2>
       <div class="tiers-grid">
-        <div class="tier-card" style="border:3px solid #38bdf8;display:flex;flex-direction:column;">
-          <div class="tier-kicker" style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#38bdf8;margin-bottom:0.5rem;">For Individual Leaders</div>
-          <div class="tier-title" style="text-align:center;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.9rem;line-height:1.05;color:#f3f7fd;">Digital JD<br>Essentials</div>
-          <div style="text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--white-dim);margin:0.8rem 0 1.3rem;">Executive Clarity on Demand</div>
-          <ul class="tier-items" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.85rem;">
-            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Executive Clarity on Demand</li>
-            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Identify the Real Challenge</li>
-            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>PhD-Level Leadership Thinking</li>
-            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Turn Insight into Action</li>
-            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Personalized to Your Situation</li>
-            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Confident Leadership Decisions</li>
-          </ul>
-          <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--white-faint);text-align:center;">
-            <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--cyan);">$199<span style="font-size:1rem;font-weight:300;color:var(--white-dim);">/month</span></div>
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $1,990 / year <span style="color:#d4af37;font-style:italic;">(save $398)</span></div>
-          </div>
-          <div style="margin-top:1.25rem;">
-            <a class="tier-btn tier-btn-lite" href="#" onclick="startCheckout('essentials', event)"
-               style="display:block;text-align:center;background:linear-gradient(135deg,#38bdf8,#2563eb);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 6px 14px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.15);">Start Building Clarity</a>
-          </div>
-          <a href="/contact.html" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid var(--white-faint);border-radius:10px;text-decoration:none;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.7" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15 20c0-2.6 1.6-4.8 4-5.5"/></svg>
-            <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading a team?<br><span style="color:#38bdf8;font-weight:600;">Explore Enterprise &rarr;</span></span>
-          </a>
-        </div>
-
-       <div class="tier-card featured" id="proFoundingCard" style="border:3px solid #e5e7eb;overflow:visible;display:flex;flex-direction:column;">
-          <div class="tier-featured-tag">Most Popular</div>
-          <a class="founding-pill" id="foundingPill" href="#" onclick="startCheckout('founding', event)" style="text-decoration:none;cursor:pointer;">
-            <span class="founding-star">&#9733;</span>
-            First 50 members &mdash; <strong>Lifetime $99</strong>
-          </a>
-          <div class="tier-kicker" style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#93c5fd;margin-bottom:0.5rem;">For Executive Decision Making</div>
-          <div class="tier-title" style="text-align:center;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.9rem;line-height:1.05;color:#f3f7fd;">Digital JD<br>Pro</div>
-          <div style="text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--white-dim);margin:0.8rem 0 1.3rem;">Complete Executive Decision Support</div>
-          <ul class="tier-items" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.85rem;">
-            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Alternative Courses of Action</li>
-            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Risk &amp; Consequence Analysis</li>
-            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Stakeholder Impact</li>
-            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Communication Strategy</li>
-            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Implementation Roadmap</li>
-            <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>90-Day Success Plan</li>
-          </ul>
-          <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(0,180,216,0.2);text-align:center;">
-            <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--cyan);">$399<span style="font-size:1rem;font-weight:300;color:var(--white-dim);">/month</span></div>
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $3,990 / year <span style="color:#d4af37;font-style:italic;">(save $798)</span></div>
-          </div>
-          <div style="margin-top:1.25rem;">
-            <a class="tier-btn tier-btn-core" href="#" onclick="startCheckout('pro', event)"
-               style="display:block;text-align:center;background:linear-gradient(135deg,#38bdf8,#2563eb);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.9rem;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;border:1px solid #d4af37;box-shadow:0 6px 14px rgba(0,0,0,0.25),inset 0 1px 0 rgba(255,255,255,0.15);">Upgrade Your Decisions</a>
-          </div>
-          <a href="/contact.html" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid var(--white-faint);border-radius:10px;text-decoration:none;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#93c5fd" stroke-width="1.7" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15 20c0-2.6 1.6-4.8 4-5.5"/></svg>
-            <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading a team?<br><span style="color:#93c5fd;font-weight:600;">Explore Enterprise &rarr;</span></span>
-          </a>
-        </div>
-
-    <div class="tier-card pro-tier" style="border:3px solid #d4af37;box-shadow:0 0 0 1px #d4af37;display:flex;flex-direction:column;">
-      <div class="tier-kicker" style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#d4af37;margin-bottom:0.5rem;">For Senior Executives</div>
-      <div class="tier-title" style="text-align:center;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.9rem;line-height:1.05;color:#f3f7fd;">Digital JD<br>Executive</div>
-      <div style="text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--gold);margin:0.8rem 0 1.3rem;">Your Executive Leadership Advisor</div>
-      <ul class="tier-items" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.85rem;">
-        <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Leadership Risk Assessment</li>
-        <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Blind Spot Analysis</li>
-        <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Executive Strategy Sessions</li>
-        <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Leadership Network Access</li>
-        <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Executive Dashboard</li>
-        <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>White-Glove Support</li>
-      </ul>
-      <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--white-faint);text-align:center;">
-        <div style="font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:600;color:var(--cyan);">$899<span style="font-size:1rem;font-weight:300;color:var(--white-dim);">/month</span></div>
-        <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.65rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or $8,990 / year <span style="color:#d4af37;font-style:italic;">(save $1,798)</span></div>
-        <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.85rem;color:var(--gold);margin-top:0.8rem;line-height:1.5;">Human executive coaching runs $500-$1,000 per hour. This is the alternative.</div>
-        <div style="margin-top:1.25rem; padding:4px; border:2px solid #d4af37; border-radius:12px;">
-          <div style="border:1px solid #d4af37; border-radius:10px;">
-            <a class="tier-btn tier-btn-pro" href="#" onclick="startCheckout('executive', event)"
-               style="display:block;text-align:center;background:linear-gradient(135deg,#e8c860,#b8891f);color:#1a1204;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.35);">Lead at the Highest Level</a>
-          </div>
-        </div>
-      </div>
-      <a href="/contact.html" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid rgba(212,175,55,0.4);border-radius:10px;text-decoration:none;">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.7" aria-hidden="true"><path d="M12 3l2 2-2 2-2-2z"/><circle cx="9" cy="10" r="2.6"/><path d="M3.5 20c0-3 2.5-5.4 5.5-5.4s5.5 2.4 5.5 5.4"/><circle cx="17.5" cy="11" r="2"/><path d="M15.5 20c0-2.4 1.4-4.4 3.5-5"/></svg>
-        <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading a team?<br><span style="color:#d4af37;font-weight:600;">Explore Enterprise &rarr;</span></span>
-      </a>
+<div class="tier-card" style="border:3px solid #38bdf8;display:flex;flex-direction:column;">
+  <div class="tier-title" style="text-align:center;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.9rem;line-height:1.05;color:#f3f7fd;">Digital JD<br>Essentials</div>
+  <div style="text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--white-dim);margin:0.8rem 0 1.3rem;">Executive Clarity on Demand</div>
+  <ul class="tier-items" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.85rem;">
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Guided Questions to Clarify Your Situation</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Advice Informed by Dr. J.D. Castle&apos;s Expertise</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>55 Expert Leadership Principles</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Focused Analysis of the Situation Presented</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Practical Guidance and a Recommended Approach</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#38bdf8;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Actionable Next Steps</li>
+  </ul>
+  <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--white-faint);text-align:center;">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;color:var(--cyan);">$399<span style="font-size:1rem;font-weight:300;color:var(--white-dim);">/month</span></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or <a href="#" onclick="startCheckout('essentials_yearly', event)" style="color:#38bdf8;text-decoration:underline;text-underline-offset:3px;font-weight:600;">$3,990 / year</a> <span style="color:#d4af37;font-style:italic;">(save $798)</span></div>
+  </div>
+  <div style="margin-top:1.25rem; padding:4px; border:2px solid #38bdf8; border-radius:12px;">
+    <div style="border:1px solid #38bdf8; border-radius:10px;">
+      <a class="tier-btn tier-btn-lite" href="#" onclick="startCheckout('essentials', event)"
+         style="display:block;text-align:center;background:linear-gradient(135deg,#38bdf8,#2563eb);color:#ffffff;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.3);">Start Building Clarity</a>
     </div>
+  </div>
+  <a href="/contact.html" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid var(--white-faint);border-radius:10px;text-decoration:none;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="1.7" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15 20c0-2.6 1.6-4.8 4-5.5"/></svg>
+    <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading a team?<br><span style="color:#38bdf8;font-weight:600;">Explore Enterprise &rarr;</span></span>
+  </a>
+</div>
+
+<div class="tier-card pro-tier" style="border:3px solid #d4af37;box-shadow:0 0 0 1px #d4af37;display:flex;flex-direction:column;">
+  <div class="tier-title" style="text-align:center;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.9rem;line-height:1.05;color:#f3f7fd;">Digital JD<br>Executive</div>
+  <div style="text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--gold);margin:0.8rem 0 1.3rem;">Your Executive Leadership Advisor</div>
+  <ul class="tier-items" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.85rem;">
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Full 19-Step Executive Decision Process</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>15 Expert Categories and 294 Principles Applied Through Decision Families</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>7 Organizational Overlays</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Alternative Paths With User-Confirmed Selection</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Risk, Assumption and Blind Spot Assessment</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Solution Challenge and Effectiveness Testing</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>3 Client Touch Points: Situational Clarity, Solution Selection and Resolution Confirmation</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#d4af37;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Execution Planning and Follow-Through</li>
+  </ul>
+  <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid var(--white-faint);text-align:center;">
+    <div style="font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;color:var(--cyan);">$899<span style="font-size:1rem;font-weight:300;color:var(--white-dim);">/month</span></div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.15em;color:var(--white-dim);text-transform:uppercase;margin-top:0.3rem;">or <a href="#" onclick="startCheckout('executive_yearly', event)" style="color:#d4af37;text-decoration:underline;text-underline-offset:3px;font-weight:600;">$8,990 / year</a> <span style="color:#d4af37;font-style:italic;">(save $1,798)</span></div>
+    <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.85rem;color:var(--gold);margin-top:0.8rem;line-height:1.5;">Human executive coaching runs $500-$1,000 per hour. This is the alternative.</div>
+  </div>
+  <div style="margin-top:1.25rem; padding:4px; border:2px solid #d4af37; border-radius:12px;">
+    <div style="border:1px solid #d4af37; border-radius:10px;">
+      <a class="tier-btn tier-btn-pro" href="#" onclick="startCheckout('executive', event)"
+         style="display:block;text-align:center;background:linear-gradient(135deg,#e8c860,#b8891f);color:#1a1204;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.3);">Lead at the Highest Level</a>
+    </div>
+  </div>
+  <a href="/contact.html" style="margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid rgba(212,175,55,0.4);border-radius:10px;text-decoration:none;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#d4af37" stroke-width="1.7" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15 20c0-2.6 1.6-4.8 4-5.5"/></svg>
+    <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading a team?<br><span style="color:#d4af37;font-weight:600;">Explore Enterprise &rarr;</span></span>
+  </a>
+</div>
 
 <div class="tier-card enterprise-tier" style="border:3px solid #2dd4bf;background:linear-gradient(145deg,rgba(6,40,38,0.96),rgba(3,18,17,0.98));box-shadow:0 0 30px rgba(45,212,191,0.25), inset 0 0 40px rgba(45,212,191,0.07);display:flex;flex-direction:column;">
-  <div class="tier-kicker" style="text-align:center;font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#2dd4bf;margin-bottom:0.5rem;">For Organizations</div>
   <div class="tier-title" style="text-align:center;font-family:'Cormorant Garamond',serif;font-weight:600;font-size:1.9rem;line-height:1.05;color:#f3f7fd;">Digital JD<br>Enterprise</div>
   <div style="text-align:center;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:#7fe7d8;margin:0.8rem 0 1.3rem;">One Leadership System. One Organization.</div>
   <ul class="tier-items" style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:0.85rem;">
-    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#03110f;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Organization-Wide Deployment</li>
-    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#03110f;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Executive Team Alignment</li>
-    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#03110f;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Common Leadership Framework</li>
-    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#03110f;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Department Integration</li>
-    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#03110f;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Enterprise Knowledge Base</li>
-    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#03110f;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Custom AI Deployment</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Organization-Wide Deployment</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Executive Team Alignment</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Common Leadership Framework</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Department Integration</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Enterprise Knowledge Base</li>
+    <li style="display:flex;align-items:center;"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2dd4bf;color:#0a0e17;font-size:11px;font-weight:700;margin-right:11px;flex:0 0 auto;"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 6.2l2.3 2.3L9.6 3.5" stroke="#0a0e17" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Custom AI Deployment</li>
   </ul>
   <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(45,212,191,0.3);text-align:center;">
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:0.75rem;letter-spacing:0.12em;color:var(--white-dim);text-transform:uppercase;line-height:1.7;">
       Built for executive teams, departments, and organizations ready for transformation.
     </div>
-    <div style="margin-top:1.25rem; padding:4px; border:2px solid #2dd4bf; border-radius:12px;">
-      <div style="border:1px solid #2dd4bf; border-radius:10px;">
-        <a class="tier-btn tier-btn-pro" href="/contact.html"
-           style="display:block;text-align:center;background:linear-gradient(135deg,#2dd4bf,#0d9488);color:#03110f;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.3);">Transform Your Organization</a>
-      </div>
+  </div>
+  <div style="margin-top:1.25rem; padding:4px; border:2px solid #2dd4bf; border-radius:12px;">
+    <div style="border:1px solid #2dd4bf; border-radius:10px;">
+      <a class="tier-btn tier-btn-pro" href="/contact.html"
+         style="display:block;text-align:center;background:linear-gradient(135deg,#2dd4bf,#0d9488);color:#03110f;text-decoration:none;font-family:Arial, Helvetica, sans-serif;font-size:0.9rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:0.9rem 1rem;border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.3);">Transform Your Organization</a>
     </div>
   </div>
-  <!-- No bottom "Explore Enterprise" style CTA here on purpose: this card
-       IS Enterprise, and the "Transform Your Organization" button above
-       already links to /contact.html, so a second identical link would be
-       redundant. -->
+  <!-- Invisible copy of the other cards' team link so all three buttons sit on the same line. -->
+  <a href="/contact.html" aria-hidden="true" tabindex="-1" style="visibility:hidden;margin-top:0.9rem;display:flex;align-items:center;gap:10px;padding:0.75rem 0.9rem;border:1px solid var(--white-faint);border-radius:10px;text-decoration:none;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2dd4bf" stroke-width="1.7" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17.5" cy="9" r="2.2"/><path d="M15 20c0-2.6 1.6-4.8 4-5.5"/></svg>
+    <span style="font-family:'Barlow Condensed',sans-serif;font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--white-dim);line-height:1.3;">Leading a team?<br><span style="color:#2dd4bf;font-weight:600;">Explore Enterprise &rarr;</span></span>
+  </a>
 </div>
       </div>
     </div>
@@ -2347,83 +2319,6 @@ async function startCheckout(tier, evt) {
     alert("Could not start checkout. Please try again.");
   }
 }
-</script>
-
-<style>
-  /* ---- FOUNDING MEMBER GOLD PILL (Pro card only) ---- */
-  .founding-pill{
-    position:absolute;
-    top:-18px;
-    left:50%;
-    transform:translateX(-50%) translateY(10px);
-    z-index:5;
-    display:flex;
-    align-items:center;
-    gap:0.5rem;
-    white-space:nowrap;
-    border:1.5px solid #f0c24f;
-    background:
-      radial-gradient(circle at center, rgba(255,195,0,.30), transparent 70%),
-      linear-gradient(180deg,#2a1a05 0%, #090806 100%);
-    box-shadow:
-      0 0 12px rgba(255,210,90,.55),
-      0 0 26px rgba(255,190,0,.30),
-      0 4px 10px rgba(0,0,0,0.4);
-    padding:0.5rem 1.1rem;
-    border-radius:999px;
-    font-family:'Barlow Condensed',sans-serif;
-    font-size:0.8rem;
-    font-weight:700;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-    color:#ffe08c;
-    text-shadow:0 0 10px rgba(255,220,120,.4);
-    opacity:0;
-    pointer-events:none;
-    transition:opacity 0.7s ease, transform 0.7s cubic-bezier(0.22,1,0.36,1);
-  }
-  .founding-pill.show{
-    opacity:1;
-    transform:translateX(-50%) translateY(0);
-    pointer-events:auto;
-  }
-  .founding-pill .founding-star{
-    color:#f0c24f;
-    font-size:0.9rem;
-    filter:drop-shadow(0 0 6px rgba(255,210,90,.6));
-  }
-  .founding-pill strong{ color:#ffffff; font-weight:700; }
-
-  /* On phones the card is narrow: lift the pill fully above the card so it
-     never overlaps the "Most Popular" tag, and add clearance above. */
-  @media (max-width: 640px){
-    #proFoundingCard{ margin-top:2.5rem; }
-    .founding-pill{
-      top:-34px;
-      font-size:0.72rem;
-      padding:0.45rem 0.9rem;
-    }
-  }
-</style>
-
-<script>
-  // Show the Founding Member pill 5 seconds after the Pro card is scrolled into view; it then stays.
-  (function(){
-    var card = document.getElementById('proFoundingCard');
-    var pill = document.getElementById('foundingPill');
-    if (!card || !pill) return;
-    var armed = false;
-    var observer = new IntersectionObserver(function(entries){
-      entries.forEach(function(entry){
-        if (entry.isIntersecting && !armed) {
-          armed = true;
-          setTimeout(function(){ pill.classList.add('show'); }, 5000);
-          observer.disconnect();
-        }
-      });
-    }, { threshold: 0.4 });
-    observer.observe(card);
-  })();
 </script>
 
 </body>
