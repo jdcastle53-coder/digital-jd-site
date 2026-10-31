@@ -1,17 +1,209 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <title>Welcome to Digital JD</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="utf-8" />
+<title>Payment Received | Digital JD</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
+<link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<style>
+  :root {
+    --black: #040608;
+    --navy: #070d1a;
+    --deep: #0a1628;
+    --cyan: #00b4d8;
+    --blue: #4fa8ea;
+    --white: #f0f4f8;
+    --white-dim: rgba(240,244,248,0.82);
+    --gold: #c9a84c;
+    --gold-bright: #ffc700;
+    --gold-soft: #ffe066;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--black); }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+    font-family: 'Barlow', Arial, sans-serif;
+    color: var(--white);
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(0,180,216,0.12), transparent 60%),
+      linear-gradient(180deg, var(--navy), var(--black));
+  }
+  .card {
+    width: 100%;
+    max-width: 560px;
+    background: linear-gradient(160deg, var(--deep) 0%, var(--navy) 100%);
+    border: 1px solid rgba(201,168,76,0.55);
+    border-radius: 10px;
+    box-shadow: 0 0 0 4px rgba(201,168,76,0.08), 0 30px 70px rgba(0,0,0,0.6);
+    padding: 44px 40px 40px;
+    text-align: center;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .brand img { width: 52px; height: 52px; object-fit: contain; }
+  .brand span {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 700;
+    font-size: 30px;
+    color: var(--blue);
+  }
+  .eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 600;
+    font-size: 44px;
+    line-height: 1.1;
+    margin: 0 0 14px;
+    color: var(--white);
+  }
+  h1 em { color: var(--blue); font-style: italic; }
+  .rule {
+    width: 72px;
+    height: 2px;
+    margin: 0 auto 22px;
+    background: linear-gradient(90deg, transparent, var(--gold-bright), transparent);
+  }
+  p { margin: 0 0 14px; font-size: 17px; line-height: 1.6; color: var(--white-dim); }
+  strong { color: var(--white); font-weight: 600; }
+
+  .steps {
+    list-style: none;
+    margin: 24px 0 8px;
+    padding: 0;
+    text-align: left;
+  }
+  .steps li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 0;
+    border-top: 1px solid rgba(201,168,76,0.2);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--white-dim);
+  }
+  .steps li:last-child { border-bottom: 1px solid rgba(201,168,76,0.2); }
+  .step-num {
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid var(--gold-bright);
+    color: var(--gold-bright);
+    font-family: 'Cormorant Garamond', Georgia, serif;
+    font-weight: 700;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 22px;
+    padding: 16px 20px;
+    border-radius: 8px;
+    background: linear-gradient(180deg, #e8b923, #a9740a);
+    color: var(--navy);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 19px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.35);
+  }
+  .btn:hover { filter: brightness(1.06); }
+  .btn:focus-visible, .link:focus-visible { outline: 2px solid var(--cyan); outline-offset: 3px; }
+  .note {
+    margin: 22px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid rgba(201,168,76,0.2);
+    font-size: 15px;
+    color: var(--white-dim);
+  }
+  .link { color: var(--blue); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+  .link:hover { color: var(--cyan); }
+  .small { font-size: 14px; color: rgba(240,244,248,0.6); margin: 14px 0 0; }
+  [hidden] { display: none !important; }
+  @media (max-width: 480px) {
+    .card { padding: 32px 22px 28px; }
+    h1 { font-size: 36px; }
+  }
+</style>
 </head>
-<body class="bg-slate-50 text-slate-900">
-  <div class="max-w-xl mx-auto px-4 py-24 text-center">
-    <h1 class="text-3xl font-extrabold">Payment received.</h1>
-    <p class="mt-3 text-slate-700">Thanks for joining <strong>Digital JD</strong> Membership.</p>
-    <p class="mt-1 text-slate-700">A receipt is on its way. Check your email for a confirmation link — that&#39;s what sets up your account and unlocks your dashboard.</p>
-    <a href="/" class="mt-8 inline-flex items-center rounded-xl bg-slate-900 text-white px-6 py-3 text-sm font-semibold hover:bg-black">Back to home</a>
-  </div>
+<body>
+  <main class="card">
+    <div class="brand">
+      <img src="digital-jd-logo.png" alt="" />
+      <span>Digital JD</span>
+    </div>
+
+    <section id="newCustomer" aria-live="polite">
+      <p class="eyebrow">Payment Received</p>
+      <h1>Thank you. <em>Check your email.</em></h1>
+      <div class="rule"></div>
+      <p>Your payment went through and your <strong>Digital JD Membership</strong> is being set up. A confirmation email is on its way to the address you used at checkout.</p>
+      <ol class="steps">
+        <li><span class="step-num">1</span><span>Open the email from Digital JD and click the <strong>confirmation link</strong>.</span></li>
+        <li><span class="step-num">2</span><span>Read your short <strong>welcome letter</strong> and start your membership.</span></li>
+        <li><span class="step-num">3</span><span>Ask your first leadership question.</span></li>
+      </ol>
+      <p class="small">Don&rsquo;t see it within a few minutes? Check your spam or promotions folder.</p>
+      <p class="note">Already have a Digital JD account? Your membership has been added to it. <a class="link" href="signin.html">Sign in here</a>. No new email is sent for existing accounts.</p>
+    </section>
+
+    <section id="returningCustomer" hidden aria-live="polite">
+      <p class="eyebrow">Payment Received</p>
+      <h1>Welcome back. <em>You&rsquo;re all set.</em></h1>
+      <div class="rule"></div>
+      <p>You already have a Digital JD account, so there is no confirmation email to wait for. Your <strong>Membership</strong> has been added to your account.</p>
+      <a class="btn" href="jd-brain.html">Go to Digital JD</a>
+      <p class="small">Not seeing your new plan? Sign out and back in once to refresh it.</p>
+    </section>
+  </main>
+
+  <script>
+    // A signed-in visitor already has an account, so no confirmation email is
+    // sent (api/stripe-webhook.js upgrades the existing account instead).
+    (async function () {
+      try {
+        if (!window.Auth || !window.Auth.enabled || !window.Auth.client) return;
+        const result = await window.Auth.client.auth.getSession();
+        if (result && result.data && result.data.session) {
+          document.getElementById("newCustomer").hidden = true;
+          document.getElementById("returningCustomer").hidden = false;
+        }
+      } catch (e) {
+        console.warn("[v0] Success page session check failed:", e);
+      }
+    })();
+  </script>
 </body>
 </html>
