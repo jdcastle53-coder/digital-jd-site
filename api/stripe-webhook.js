@@ -85,7 +85,12 @@ export async function POST(request) {
     });
 
     if (inviteError) {
-      const alreadyRegistered = /already registered|already exists/i.test(inviteError.message || "");
+      // Supabase's actual message is "A user with this email address has
+      // already been registered" (code: email_exists, status 422).
+      const alreadyRegistered =
+        inviteError.code === "email_exists" ||
+        inviteError.code === "user_already_exists" ||
+        /already (been )?registered|already exists/i.test(inviteError.message || "");
       if (!alreadyRegistered) {
         console.error("[STRIPE-WEBHOOK] inviteUserByEmail failed:", inviteError.message);
         return new Response(JSON.stringify({ error: "Could not create account" }), {
@@ -97,20 +102,23 @@ export async function POST(request) {
       // Existing account: fetch it and upgrade the plan metadata directly.
       // They're already confirmed, so there's no letter/confirm step —
       // they'll see paid access next time they sign in.
-      const { data: usersPage, error: findError } = await supabaseAdmin.auth.admin.listUsers({
-        page: 1,
-        perPage: 200,
-      });
-      if (findError) {
-        console.error("[STRIPE-WEBHOOK] Could not list users to upgrade existing account:", findError.message);
-        return new Response(JSON.stringify({ error: "Could not upgrade account" }), {
-          status: 500,
-          headers: { "content-type": "application/json" },
+      let match = null;
+      for (let page = 1; page <= 50 && !match; page++) {
+        const { data: usersPage, error: findError } = await supabaseAdmin.auth.admin.listUsers({
+          page,
+          perPage: 200,
         });
+        if (findError) {
+          console.error("[STRIPE-WEBHOOK] Could not list users to upgrade existing account:", findError.message);
+          return new Response(JSON.stringify({ error: "Could not upgrade account" }), {
+            status: 500,
+            headers: { "content-type": "application/json" },
+          });
+        }
+        const users = usersPage?.users || [];
+        match = users.find((u) => (u.email || "").toLowerCase() === email.toLowerCase()) || null;
+        if (users.length < 200) break;
       }
-      const match = (usersPage?.users || []).find(
-        (u) => (u.email || "").toLowerCase() === email.toLowerCase()
-      );
       if (!match) {
         console.error("[STRIPE-WEBHOOK] Supabase reported existing user but none found for", email);
         return new Response(JSON.stringify({ error: "Could not find existing account" }), {
