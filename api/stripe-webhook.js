@@ -5,8 +5,9 @@ import { createClient } from "@supabase/supabase-js";
 // for a Membership signup must NOT exist until Stripe confirms payment.
 // This webhook is the only thing that creates that account. It listens for
 // checkout.session.completed, then invites the paying customer by email —
-// Supabase sends its own confirmation email, and that link lands on
-// welcome-membership.html (only reachable because the account now exists).
+// Supabase sends the confirmation email (the welcome letter itself, see
+// docs/email-templates/invite-welcome-letter.html), and its single button
+// confirms the account and lands the customer directly in jd-brain.html.
 //
 // This uses the Web Standard `fetch` export (not the req/res helper style
 // used by the other files in this folder) so we can read the exact raw
@@ -80,7 +81,7 @@ export async function POST(request) {
     };
 
     const { data: inviteData, error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
-      redirectTo: `${origin}/welcome-membership.html`,
+      redirectTo: `${origin}/jd-brain.html`,
       data: paidMetadata,
     });
 
