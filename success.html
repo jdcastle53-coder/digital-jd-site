@@ -165,7 +165,14 @@
       <span>Digital JD</span>
     </div>
 
-    <section id="newCustomer" aria-live="polite">
+    <section id="checking" aria-live="polite">
+      <p class="eyebrow">Payment Received</p>
+      <h1>One moment<em>&hellip;</em></h1>
+      <div class="rule"></div>
+      <p>Confirming your payment.</p>
+    </section>
+
+    <section id="newCustomer" hidden aria-live="polite">
       <p class="eyebrow">Payment Received</p>
       <h1>Thank you. <em>Check your email.</em></h1>
       <div class="rule"></div>
@@ -183,25 +190,38 @@
       <p class="eyebrow">Payment Received</p>
       <h1>Welcome back. <em>You&rsquo;re all set.</em></h1>
       <div class="rule"></div>
-      <p>You already have a Digital JD account, so there is no confirmation email to wait for. Your <strong>Membership</strong> has been added to your account.</p>
+      <p>You already have a Digital JD account, so there is no confirmation email to wait for. Your <strong id="returningPlan">Membership</strong> has been added to your account.</p>
       <a class="btn" href="jd-brain.html">Go to Digital JD</a>
       <p class="small">Not seeing your new plan? Sign out and back in once to refresh it.</p>
     </section>
   </main>
 
   <script>
-    // A signed-in visitor already has an account, so no confirmation email is
-    // sent (api/stripe-webhook.js upgrades the existing account instead).
+    // Whether an email is coming depends on who PAID (their email on the Stripe
+    // session), not on who is signed in on this browser. api/checkout-status.js
+    // answers that; api/stripe-webhook.js upgrades existing accounts silently.
     (async function () {
+      const show = function (id) {
+        ["checking", "newCustomer", "returningCustomer"].forEach(function (s) {
+          document.getElementById(s).hidden = s !== id;
+        });
+      };
       try {
-        if (!window.Auth || !window.Auth.enabled || !window.Auth.client) return;
-        const result = await window.Auth.client.auth.getSession();
-        if (result && result.data && result.data.session) {
-          document.getElementById("newCustomer").hidden = true;
-          document.getElementById("returningCustomer").hidden = false;
+        const sessionId = new URLSearchParams(window.location.search).get("session_id");
+        if (!sessionId) return show("newCustomer");
+        const res = await fetch("/api/checkout-status?session_id=" + encodeURIComponent(sessionId));
+        if (!res.ok) return show("newCustomer");
+        const data = await res.json();
+        if (data.status === "returning") {
+          if (data.plan) {
+            document.getElementById("returningPlan").textContent = data.plan + " Membership";
+          }
+          return show("returningCustomer");
         }
+        show("newCustomer");
       } catch (e) {
-        console.warn("[v0] Success page session check failed:", e);
+        console.warn("[v0] Success page status check failed:", e);
+        show("newCustomer");
       }
     })();
   </script>
