@@ -83,6 +83,12 @@
     }
 
     const meta = session.user.user_metadata || {};
+
+    // Paid accounts never expire client-side. An upgraded Sprint/trial account
+    // keeps its old 7-day expires_at (the Stripe webhook doesn't clear it), so
+    // without this a paying customer would be sent to expired.html.
+    if (meta.membership === true && meta.trial === false) return session;
+
     const expiresAt = meta.expires_at || (await ensureExpiry(session));
 
     if (!expiresAt || isExpired(expiresAt)) {
