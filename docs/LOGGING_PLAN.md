@@ -1,5 +1,22 @@
 # Step 5 — Initial Supabase Logging Plan
 
+## Monitoring rollout status (2026-11)
+
+Goal: no silent failures, at $0/month, with logs stored in the Supabase
+`application_logs` table (no paid log-drain service).
+
+1. Daily Stripe-vs-Supabase reconciliation — BUILT and merged (PR #42):
+   `api/reconcile.js` + `api/_lib/reconcile-core.js`, scheduled daily at
+   13:00 UTC in `vercel.json`. Logs an ERROR row per payment without a paid
+   account and a `reconcile_completed` heartbeat on every run (no heartbeat
+   for a day means the check did not run). Requires the `CRON_SECRET`
+   environment variable; without it the endpoint returns 500 by design.
+   `CRON_SECRET` is set; production must be redeployed before it takes effect.
+2. Consistent structured logs everywhere, successes included, no emails — PENDING.
+3. Browser error reporting for the silent `catch` blocks — PENDING.
+4. More Stripe webhook events (failed payment, refund, canceled subscription) — PENDING.
+5. Alerts (notification when an ERROR row or a missing heartbeat appears) — NOT STARTED.
+
 Status: Step 5 deliverable (DESIGN portion). Grounded in the real structured
 logger already present in `api/jd-brain-gateway.js`. The LIVE table-verification
 portion is DEFERRED until the v0 sandbox env re-syncs to BAM (Step 2 pending
