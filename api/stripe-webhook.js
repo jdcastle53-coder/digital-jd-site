@@ -21,8 +21,14 @@ export async function POST(request) {
   const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!stripeKey || !webhookSecret || !supabaseUrl || !supabaseServiceRoleKey) {
-    console.error("[STRIPE-WEBHOOK] Missing required server configuration");
-    return new Response(JSON.stringify({ error: "Server configuration error" }), {
+    const missing = [
+      !stripeKey && "STRIPE_ACCESS_TOKEN/STRIPE_SECRET_KEY",
+      !webhookSecret && "STRIPE_WEBHOOK_SECRET",
+      !supabaseUrl && "SUPABASE_URL",
+      !supabaseServiceRoleKey && "SUPABASE_SERVICE_ROLE_KEY",
+    ].filter(Boolean);
+    console.error("[STRIPE-WEBHOOK] Missing required server configuration:", missing.join(", "));
+    return new Response(JSON.stringify({ error: "Server configuration error", missing }), {
       status: 500,
       headers: { "content-type": "application/json" },
     });
