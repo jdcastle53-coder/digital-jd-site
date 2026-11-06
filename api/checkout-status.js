@@ -63,24 +63,6 @@ export async function GET(request) {
     }
 
     const status = decideStatus(match, session.created);
-    if (new URL(request.url).searchParams.get("debug") === "1") {
-      return json({
-        status,
-        plan,
-        debug: {
-          accountFound: Boolean(match),
-          accountCreatedAt: match?.created_at || null,
-          sessionCreatedAt: new Date(session.created * 1000).toISOString(),
-          invitedAt: match?.invited_at || null,
-          emailConfirmedAt: match?.email_confirmed_at || null,
-          lastSignInAt: match?.last_sign_in_at || null,
-          provider: match?.app_metadata?.provider || null,
-          membershipFlag: match?.user_metadata?.membership ?? null,
-          trialFlag: match?.user_metadata?.trial ?? null,
-          paidForThisSession: match?.user_metadata?.stripe_checkout_session_id === session.id,
-        },
-      });
-    }
     return json({ status, plan });
   } catch (error) {
     console.error("[CHECKOUT-STATUS] Unexpected error:", error.message);
