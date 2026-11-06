@@ -50,6 +50,7 @@ export default async function handler(req, res) {
     : null;
 
   let logWritten = true;
+  let logError = null;
   const log = async (level, action, data = {}) => {
     const { message = null, durationMs = null, ...context } = data;
     const entry = {
@@ -63,10 +64,12 @@ export default async function handler(req, res) {
       const { error } = await supabase.from("application_logs").insert(entry);
       if (error) {
         logWritten = false;
+        logError = logError || { code: error.code || null, message: error.message, hint: error.hint || null };
         console.error("[RECONCILE] Failed to write log row:", error.message);
       }
     } catch (dbError) {
       logWritten = false;
+      logError = logError || { code: null, message: dbError.message, hint: null };
       console.error("[RECONCILE] Failed to write log row:", dbError.message);
     }
   };
@@ -119,7 +122,7 @@ export default async function handler(req, res) {
     });
 
     return res.status(200).json({
-      ok: findings.length === 0, lookbackDays, sessionsListed: sessions.length, checked, matched: ok, findings, logWritten,
+      ok: findings.length === 0, lookbackDays, sessionsListed: sessions.length, checked, matched: ok, findings, logWritten, ...(logError && { logError }),
     });
   } catch (error) {
     await log("ERROR", "reconcile_failed", { message: error.message, durationMs: Date.now() - startTime });
