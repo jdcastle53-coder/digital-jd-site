@@ -3,5 +3,11 @@
     "api/jd-brain-gateway.js": {
       "includeFiles": "data/**"
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/reconcile",
+      "schedule": "0 13 * * *"
+    }
+  ]
 }
