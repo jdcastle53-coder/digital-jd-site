@@ -1,5 +1,60 @@
 import Stripe from "stripe";
 import { createClient } from "@supabase/supabase-js";
+import { planSubscriptionUpdate } from "./_lib/subscription-status.js";
+
+function jsonResponse(status, body) {
+  return new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
+}
+
+// Mirrors Stripe's subscription status onto the matching Supabase account.
+// Only records status; enforcing access is a separate step.
+async function handleSubscriptionEvent(event, supabaseAdmin) {
+  const subscription = event.data.object;
+  const customerId = typeof subscription.customer === "string" ? subscription.customer : subscription.customer?.id;
+  if (!customerId) {
+    console.error("[STRIPE-WEBHOOK] Subscription event with no customer", event.id);
+    return jsonResponse(200, { received: true });
+  }
+
+  let match = null;
+  for (let page = 1; page <= 50 && !match; page++) {
+    const { data: usersPage, error: listError } = await supabaseAdmin.auth.admin.listUsers({ page, perPage: 200 });
+    if (listError) {
+      console.error("[STRIPE-WEBHOOK] Could not list users for subscription event:", listError.message);
+      return jsonResponse(500, { error: "Could not look up account" });
+    }
+    const users = usersPage?.users || [];
+    match = users.find((u) => u.user_metadata?.stripe_customer_id === customerId) || null;
+    if (users.length < 200) break;
+  }
+
+  if (!match) {
+    // The account may not exist yet; checkout.session.completed reads the status when it does.
+    console.log("[STRIPE-WEBHOOK] Subscription event for unknown customer, ignored:", event.type, event.id);
+    return jsonResponse(200, { received: true });
+  }
+
+  const plan = planSubscriptionUpdate({
+    metadata: match.user_metadata,
+    subscription,
+    eventType: event.type,
+    eventCreated: event.created,
+  });
+  if (plan.action === "ignore") {
+    console.log("[STRIPE-WEBHOOK] Subscription event ignored:", plan.reason, event.type, "user", match.id);
+    return jsonResponse(200, { received: true });
+  }
+
+  const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(match.id, {
+    user_metadata: { ...match.user_metadata, ...plan.fields },
+  });
+  if (updateError) {
+    console.error("[STRIPE-WEBHOOK] Failed to record subscription status:", updateError.message);
+    return jsonResponse(500, { error: "Could not record subscription status" });
+  }
+  console.log("[STRIPE-WEBHOOK] Recorded subscription status:", plan.fields.subscription_status, "user", match.id);
+  return jsonResponse(200, { received: true });
+}
 
 // Membership payment gate (JD's decision, 2026-08-11): the Supabase account
 // for a Membership signup must NOT exist until Stripe confirms payment.
@@ -49,6 +104,14 @@ export async function POST(request) {
     });
   }
 
+  const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  });
+
+  if (event.type === "customer.subscription.updated" || event.type === "customer.subscription.deleted") {
+    return handleSubscriptionEvent(event, supabaseAdmin);
+  }
+
   if (event.type !== "checkout.session.completed") {
     // Acknowledge everything else so Stripe doesn't retry unrelated events.
     return new Response(JSON.stringify({ received: true }), { status: 200 });
@@ -64,10 +127,6 @@ export async function POST(request) {
     return new Response(JSON.stringify({ received: true }), { status: 200 });
   }
 
-  const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
-  });
-
   const origin =
     request.headers.get("origin") ||
     (request.headers.get("host") ? `https://${request.headers.get("host")}` : "https://digitaljd.org");
@@ -77,6 +136,24 @@ export async function POST(request) {
     // inviteUserByEmail fails clearly with an "already registered" style
     // error when the account exists, which we handle below by upgrading
     // that existing account instead.
+    // Read the subscription's current status from Stripe so it's recorded at
+    // account creation; a subscription event can arrive before the account exists.
+    // A failed lookup must never block account creation.
+    let subscriptionFields = {};
+    if (session.subscription) {
+      try {
+        const subscription = await stripe.subscriptions.retrieve(session.subscription);
+        subscriptionFields = {
+          stripe_subscription_id: subscription.id,
+          subscription_status: subscription.status,
+          subscription_status_at: Math.floor(Date.now() / 1000),
+        };
+      } catch (subscriptionError) {
+        console.error("[STRIPE-WEBHOOK] Could not read subscription status:", subscriptionError.message);
+        subscriptionFields = { stripe_subscription_id: session.subscription };
+      }
+    }
+
     const paidMetadata = {
       plan: tier || "essentials",
       billing_interval: session.metadata?.interval || "month",
@@ -84,6 +161,7 @@ export async function POST(request) {
       trial: false,
       stripe_customer_id: session.customer || null,
       stripe_checkout_session_id: session.id,
+      ...subscriptionFields,
     };
 
     const { data: inviteData, error: inviteError } = await supabaseAdmin.auth.admin.inviteUserByEmail(email, {
