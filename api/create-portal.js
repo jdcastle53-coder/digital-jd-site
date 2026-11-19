@@ -1,14 +1,14 @@
 import Stripe from "stripe";
+import { getStripeAccessToken } from "./_lib/stripe-credentials.js";
 
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // Live secret key is stored under STRIPE_ACCESS_TOKEN; fall back to STRIPE_SECRET_KEY
-  const stripeKey = process.env.STRIPE_ACCESS_TOKEN || process.env.STRIPE_SECRET_KEY;
+  const stripeKey = getStripeAccessToken();
   if (!stripeKey) {
-    console.error("[CREATE-PORTAL] No Stripe secret key set");
+    console.error("[CREATE-PORTAL] STRIPE_ACCESS_TOKEN missing or invalid");
     return res.status(500).json({ error: "Server configuration error" });
   }
 

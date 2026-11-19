@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { getStripeAccessToken } from "./_lib/stripe-credentials.js";
 import { createClient } from "@supabase/supabase-js";
 
 // Tells success.html whether the person who just paid is a brand-new customer
@@ -24,7 +25,7 @@ function json(body, status = 200) {
 }
 
 export async function GET(request) {
-  const stripeKey = process.env.STRIPE_ACCESS_TOKEN || process.env.STRIPE_SECRET_KEY;
+  const stripeKey = getStripeAccessToken();
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!stripeKey || !supabaseUrl || !supabaseServiceRoleKey) {

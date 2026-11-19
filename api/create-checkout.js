@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { getStripeAccessToken } from "./_lib/stripe-credentials.js";
 
 // Live price IDs for the three-tier lineup (Essentials / Executive / Enterprise).
 // Enterprise is sales-led (contact.html) and is intentionally not purchasable here.
@@ -33,10 +34,9 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  // Live secret key is stored under STRIPE_ACCESS_TOKEN; fall back to STRIPE_SECRET_KEY
-  const stripeKey = process.env.STRIPE_ACCESS_TOKEN || process.env.STRIPE_SECRET_KEY;
+  const stripeKey = getStripeAccessToken();
   if (!stripeKey) {
-    console.error("[CREATE-CHECKOUT] No Stripe secret key set");
+    console.error("[CREATE-CHECKOUT] STRIPE_ACCESS_TOKEN missing or invalid");
     return res.status(500).json({ error: "Server configuration error" });
   }
 

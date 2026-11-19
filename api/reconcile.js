@@ -1,4 +1,5 @@
 import Stripe from "stripe";
+import { getStripeAccessToken } from "./_lib/stripe-credentials.js";
 import { createClient } from "@supabase/supabase-js";
 import { timingSafeEqual } from "crypto";
 import { classifyCheckouts } from "./_lib/reconcile-core.js";
@@ -41,7 +42,7 @@ export default async function handler(req, res) {
   const requestId = `req_${startTime}_${Math.random().toString(36).substring(2, 9)}`;
 
   const cronSecret = process.env.CRON_SECRET;
-  const stripeKey = process.env.STRIPE_ACCESS_TOKEN || process.env.STRIPE_SECRET_KEY;
+  const stripeKey = getStripeAccessToken();
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
@@ -87,7 +88,7 @@ export default async function handler(req, res) {
   }
 
   const missing = [
-    !stripeKey && "STRIPE_ACCESS_TOKEN/STRIPE_SECRET_KEY",
+    !stripeKey && "STRIPE_ACCESS_TOKEN",
     !supabaseUrl && "SUPABASE_URL",
     !supabaseServiceKey && "SUPABASE_SERVICE_ROLE_KEY",
   ].filter(Boolean);

@@ -100,8 +100,8 @@ request and keep changes focused on the requested outcome.
   metadata, access gates, and success/welcome pages. Preserve monthly/yearly plan
   mapping and the sales-led Enterprise flow. Do not revive historical plan names
   from migration notes or change prices as part of unrelated work.
-- Preserve the Stripe key lookup: `STRIPE_ACCESS_TOKEN` with
-  `STRIPE_SECRET_KEY` fallback, unless intentionally migrating configuration.
+- Require STRIPE_ACCESS_TOKEN as the Stripe API credential for all billing routes.
+  Production requires a live-mode key.
 - Verify webhook signatures against the exact raw request body. Preserve retry
   safety and check payment settlement before granting paid access; event names
   alone do not establish that delayed payments have settled.

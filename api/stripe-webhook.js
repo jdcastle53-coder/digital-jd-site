@@ -1,10 +1,11 @@
 import Stripe from "stripe";
+import { getStripeAccessToken } from "./_lib/stripe-credentials.js";
 import { createClient } from "@supabase/supabase-js";
 
 // Membership payment gate (JD's decision, 2026-08-11): the Supabase account
 // for a Membership signup must NOT exist until Stripe confirms payment.
 // This webhook is the only thing that creates that account. It listens for
-// checkout.session.completed, then invites the paying customer by email —
+// settled checkout events, then invites the paying customer by email —
 // Supabase sends the confirmation email (the welcome letter itself, see
 // docs/email-templates/invite-welcome-letter.html), and its single button
 // confirms the account and lands the customer directly in jd-brain.html.
@@ -15,14 +16,14 @@ import { createClient } from "@supabase/supabase-js";
 // a body that has been JSON-parsed and re-serialized.
 
 export async function POST(request) {
-  const stripeKey = process.env.STRIPE_ACCESS_TOKEN || process.env.STRIPE_SECRET_KEY;
+  const stripeKey = getStripeAccessToken();
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!stripeKey || !webhookSecret || !supabaseUrl || !supabaseServiceRoleKey) {
     const missing = [
-      !stripeKey && "STRIPE_ACCESS_TOKEN/STRIPE_SECRET_KEY",
+      !stripeKey && "STRIPE_ACCESS_TOKEN",
       !webhookSecret && "STRIPE_WEBHOOK_SECRET",
       !supabaseUrl && "SUPABASE_URL",
       !supabaseServiceRoleKey && "SUPABASE_SERVICE_ROLE_KEY",
@@ -49,12 +50,16 @@ export async function POST(request) {
     });
   }
 
-  if (event.type !== "checkout.session.completed") {
+  if (event.type !== "checkout.session.completed" && event.type !== "checkout.session.async_payment_succeeded") {
     // Acknowledge everything else so Stripe doesn't retry unrelated events.
     return new Response(JSON.stringify({ received: true }), { status: 200 });
   }
 
   const session = event.data.object;
+  if (session.payment_status !== "paid" && session.payment_status !== "no_payment_required") {
+    return new Response(JSON.stringify({ received: true }), { status: 200 });
+  }
+
   const email = session.customer_details?.email || session.customer_email;
   const tier = session.metadata?.tier;
 
