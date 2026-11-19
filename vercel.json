@@ -1,4 +1,5 @@
 {
+  "buildCommand": "node scripts/configure-staging-preview.mjs",
   "functions": {
     "api/jd-brain-gateway.js": {
       "includeFiles": "data/**"

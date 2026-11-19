@@ -40,6 +40,11 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: "Server configuration error" });
   }
 
+  const testMode = /^(sk|rk)_test_/.test(stripeKey);
+  if (process.env.VERCEL_ENV === "preview" && !testMode) {
+    return res.status(503).json({ error: "Preview checkout requires Stripe test mode" });
+  }
+
   const stripe = new Stripe(stripeKey);
 
   try {
@@ -52,13 +57,20 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid plan selected" });
     }
 
+    const priceId = testMode
+      ? process.env[`STRIPE_TEST_PRICE_${tier.toUpperCase()}`]
+      : option.priceId;
+    if (!priceId || !/^price_[A-Za-z0-9]+$/.test(priceId)) {
+      return res.status(503).json({ error: "Checkout price is not configured" });
+    }
+
     const origin =
       req.headers.origin ||
       (req.headers.host ? `https://${req.headers.host}` : "https://digitaljd.org");
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
-      line_items: [{ price: option.priceId, quantity: 1 }],
+      line_items: [{ price: priceId, quantity: 1 }],
       // Pre-fill and bind the customer to the signed-in email when available
       customer_email: typeof email === "string" && email ? email : undefined,
       allow_promotion_codes: true,

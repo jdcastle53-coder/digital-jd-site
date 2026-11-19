@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 // Membership payment gate (JD's decision, 2026-08-11): the Supabase account
 // for a Membership signup must NOT exist until Stripe confirms payment.
 // This webhook is the only thing that creates that account. It listens for
-// checkout.session.completed, then invites the paying customer by email —
+// settled checkout events, then invites the paying customer by email —
 // Supabase sends the confirmation email (the welcome letter itself, see
 // docs/email-templates/invite-welcome-letter.html), and its single button
 // confirms the account and lands the customer directly in jd-brain.html.
@@ -49,12 +49,15 @@ export async function POST(request) {
     });
   }
 
-  if (event.type !== "checkout.session.completed") {
+  if (event.type !== "checkout.session.completed" && event.type !== "checkout.session.async_payment_succeeded") {
     // Acknowledge everything else so Stripe doesn't retry unrelated events.
     return new Response(JSON.stringify({ received: true }), { status: 200 });
   }
 
   const session = event.data.object;
+  if (session.payment_status !== "paid" && session.payment_status !== "no_payment_required") {
+    return new Response(JSON.stringify({ received: true }), { status: 200 });
+  }
   const email = session.customer_details?.email || session.customer_email;
   const tier = session.metadata?.tier;
 
