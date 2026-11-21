@@ -887,8 +887,8 @@ var supabase = window.supabase;
     // otherwise the chat looks empty while the app silently expects an
     // answer to questions the user can no longer see.
     async function restoreConversationTranscript() {
-      if (!conversationId || !window.supabase) return;
       try {
+        if (!conversationId || !window.supabase) return;
         const { data: rows, error } = await window.supabase
           .from('messages')
           .select('role, content, created_at')
@@ -917,9 +917,21 @@ var supabase = window.supabase;
           addMessage(row.content || '', row.role);
         });
       } catch (_e) {
-        // Restoring the transcript is a nicety, never a blocker — if it
-        // fails, the chat just starts visually empty, same as before.
+        // The composer remains available if transcript restoration fails.
+      } finally {
+        if (conversationStage === 'awaiting_answers' && !document.getElementById('activeClarifyPanel')) {
+          resetClarification();
+          updateComposerForStage();
+        }
       }
+    }
+
+    function resetClarification() {
+      pendingSituation = '';
+      conversationStage = 'new';
+      sessionStorage.removeItem(PENDING_SITUATION_KEY);
+      sessionStorage.removeItem(CONVERSATION_STAGE_KEY);
+      sessionStorage.removeItem(CLARIFY_ANSWERS_KEY);
     }
 
     function addMessage(text, role) {
@@ -1266,24 +1278,18 @@ var supabase = window.supabase;
         const aiReply = (data && data.reply) ? data.reply : 'Digital JD returned an empty response. Please try again.';
 
         if (isClarifyStep) {
-          // Render each clarifying question as its own card with its own
-          // answer field, instead of dumping the numbered list as plain text.
           const questions = parseClarifyingQuestions(aiReply);
           if (questions.length >= 2) {
+            sessionStorage.removeItem(CLARIFY_ANSWERS_KEY);
             renderClarifyingPanel(questions, pending);
+            pendingSituation = text;
+            conversationStage = 'awaiting_answers';
+            sessionStorage.setItem(PENDING_SITUATION_KEY, pendingSituation);
+            sessionStorage.setItem(CONVERSATION_STAGE_KEY, conversationStage);
           } else {
-            // Couldn't cleanly parse a numbered list — fall back to plain text
-            // rather than showing a broken or empty panel.
             pending.innerText = aiReply;
+            resetClarification();
           }
-          // Hold the situation and wait for the user's answers before advising.
-          pendingSituation = text;
-          conversationStage = 'awaiting_answers';
-          sessionStorage.setItem(PENDING_SITUATION_KEY, pendingSituation);
-          sessionStorage.setItem(CONVERSATION_STAGE_KEY, conversationStage);
-          // Brand new situation just started — drop any leftover typed
-          // answers from a previous, now-closed topic.
-          sessionStorage.removeItem(CLARIFY_ANSWERS_KEY);
         } else {
           // Render the final advice as separate labeled sections (Situational
           // Analysis / JD Insight / Execution Plan, etc.) and scroll so the
@@ -1302,11 +1308,7 @@ var supabase = window.supabase;
           }
           // Either the full advice was just delivered, or this was an Initial
           // Opinion / Workshop request — either way, the topic is closed.
-          pendingSituation = '';
-          conversationStage = 'new';
-          sessionStorage.removeItem(PENDING_SITUATION_KEY);
-          sessionStorage.removeItem(CONVERSATION_STAGE_KEY);
-          sessionStorage.removeItem(CLARIFY_ANSWERS_KEY);
+          resetClarification();
         }
 
         if (conversationId) {
@@ -1326,21 +1328,10 @@ var supabase = window.supabase;
       }
     }
 
-    let activeDictation = null;
-    let queuedDictation = null;
+    let dictation = null;
 
     function stopDictation(discard = false) {
-      if (discard) queuedDictation = null;
-      const session = activeDictation;
-      if (!session) return;
-      if (discard) session.discard = true;
-      if (session.stopping) return;
-      session.stopping = true;
-      try {
-        session.recognition.stop();
-      } catch {
-        session.finish();
-      }
+      dictation?.stop(discard);
     }
 
     function setupDictation() {
@@ -1349,104 +1340,130 @@ var supabase = window.supabase;
       if (button && input) attachFieldDictation(button, input, true);
     }
 
-    function attachFieldDictation(button, input, isComposer = false) {
-      const idleLabel = isComposer ? 'Dictate' : 'Dictate your answer';
+    function attachFieldDictation(button, input, composer = false) {
       const idleText = button.textContent;
-      button.setAttribute('aria-label', idleLabel);
+      const idleLabel = composer ? 'Dictate' : 'Dictate your answer';
+      button.title = 'Record up to 30 seconds and send the audio to OpenAI for transcription.';
       button.setAttribute('aria-pressed', 'false');
 
-      function start() {
-        if (!button.isConnected || button.disabled || input.disabled) return;
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) {
-          alert('Dictation is unavailable in this browser. Try Chrome or type your answer.');
+      button.addEventListener('click', async () => {
+        if (dictation) {
+          if (dictation.button === button) stopDictation();
+          else alert('Finish the current dictation before using another microphone.');
+          return;
+        }
+        const mimeType = window.MediaRecorder && ['audio/webm;codecs=opus', 'audio/mp4'].find(type => MediaRecorder.isTypeSupported(type));
+        if (!navigator.mediaDevices?.getUserMedia || !mimeType) {
+          alert('Recording is unavailable in this browser. Try Chrome or type your answer.');
           return;
         }
 
-        let recognition;
-        try {
-          recognition = new SpeechRecognition();
-        } catch {
-          alert('Could not initialize browser dictation. Check microphone permissions or try Chrome.');
-          return;
+        const chunks = [];
+        const upload = new AbortController();
+        let stream, recorder, timer;
+        let discarded = false;
+        let stopped = false;
+        const session = { button, stop };
+        dictation = session;
+
+        function status(text, label) {
+          button.textContent = text;
+          button.setAttribute('aria-label', label || text);
         }
-        recognition.continuous = true;
-        recognition.interimResults = true;
-        recognition.lang = 'en-US';
-        const baseText = input.value.trim();
-        const session = { button, recognition, stopping: false, discard: false, finish };
-        activeDictation = session;
-        button.textContent = isComposer ? 'Connecting...' : '...';
-        button.setAttribute('aria-label', 'Connecting to microphone');
-        const startupTimer = setTimeout(() => {
-          if (activeDictation !== session) return;
-          session.discard = true;
-          try { recognition.abort(); } catch {}
-          finish();
-          alert('Browser dictation did not start. Check microphone access for digitaljd.org, then try again.');
-        }, 8000);
 
         function finish() {
-          if (activeDictation !== session) return;
-          clearTimeout(startupTimer);
-          activeDictation = null;
-          button.textContent = idleText;
+          if (dictation !== session) return;
+          clearTimeout(timer);
+          stream?.getTracks().forEach(track => track.stop());
+          status(idleText, idleLabel);
           button.classList.remove('is-listening');
-          button.setAttribute('aria-label', idleLabel);
           button.setAttribute('aria-pressed', 'false');
-          const next = queuedDictation;
-          queuedDictation = null;
-          if (next) next();
+          dictation = null;
         }
 
-        recognition.onstart = () => {
-          if (activeDictation !== session || session.stopping) return;
-          clearTimeout(startupTimer);
-          button.textContent = isComposer ? '\u25A0 Stop' : '\u25A0';
-          button.classList.add('is-listening');
-          button.setAttribute('aria-label', 'Stop dictating');
-          button.setAttribute('aria-pressed', 'true');
-        };
+        function stop(discard) {
+          if (discard) {
+            discarded = true;
+            upload.abort();
+          }
+          if (stopped && !discard) return;
+          stopped = true;
+          clearTimeout(timer);
+          if (recorder?.state === 'recording') {
+            try {
+              recorder.stop();
+            } catch {
+              if (!discarded) alert('Could not finish recording. Try again.');
+              finish();
+            } finally {
+              stream.getTracks().forEach(track => track.stop());
+            }
+          }
+          if (discard || !recorder) finish();
+        }
 
-        recognition.onresult = (event) => {
-          if (activeDictation !== session || session.discard) return;
-          const transcripts = Array.from(event.results, result => result[0].transcript.trim());
-          input.value = [baseText, ...transcripts].filter(Boolean).join(' ');
-        };
+        async function transcribe() {
+          if (discarded || dictation !== session) return;
+          clearTimeout(timer);
+          stream.getTracks().forEach(track => track.stop());
+          status('Transcribing...', 'Transcribing recording');
+          button.classList.remove('is-listening');
+          button.setAttribute('aria-pressed', 'false');
+          try {
+            const audio = new Blob(chunks, { type: mimeType });
+            if (!audio.size) throw new Error('No audio was recorded. Try again.');
+            if (audio.size > 1024 * 1024) throw new Error('The recording is too large. Try a shorter clip.');
+            const audioBase64 = await new Promise((resolve, reject) => {
+              const reader = new FileReader();
+              reader.onload = () => resolve(String(reader.result).split(',')[1]);
+              reader.onerror = reject;
+              reader.readAsDataURL(audio);
+            });
+            const response = await fetch('/api/transcribe', {
+              method: 'POST',
+              headers: await jdBrainHeaders(),
+              body: JSON.stringify({ audio: audioBase64, mimeType }),
+              signal: upload.signal
+            });
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || 'Could not transcribe the recording.');
+            if (!discarded && input.isConnected && !input.disabled) {
+              input.value = [input.value.trim(), data.text].filter(Boolean).join(' ');
+              input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+          } catch (error) {
+            if (!discarded) alert(error.message || 'Could not transcribe the recording.');
+          } finally {
+            finish();
+          }
+        }
 
-        recognition.onend = () => {
-          const endedBeforeStart = activeDictation === session && !session.stopping &&
-            button.getAttribute('aria-pressed') === 'false';
-          finish();
-          if (endedBeforeStart) alert('Browser dictation ended before the microphone started. Try again.');
-        };
-        recognition.onerror = (event) => {
-          if (activeDictation !== session || session.discard || session.stopping) return;
-          finish();
-          const message = {
-            'not-allowed': 'Allow microphone access for this site, then try Dictate again.',
-            'service-not-allowed': 'Speech recognition is blocked. Check your browser settings or try Chrome.',
-            'audio-capture': 'No microphone was detected. Check your microphone and try again.',
-            'no-speech': 'No speech was detected. Click Dictate to try again.',
-            network: 'Speech recognition could not connect. Check your connection and try again.'
-          }[event.error];
-          alert(message || 'Dictation stopped. Try again or type your answer.');
-        };
-
+        status('Connecting...', 'Requesting microphone access');
         try {
-          recognition.start();
-        } catch {
+          stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          if (stopped || dictation !== session) {
+            stream.getTracks().forEach(track => track.stop());
+            return;
+          }
+          recorder = new MediaRecorder(stream, { mimeType, audioBitsPerSecond: 32000 });
+          recorder.ondataavailable = event => { if (event.data.size) chunks.push(event.data); };
+          recorder.onstop = transcribe;
+          recorder.onerror = () => {
+            if (!discarded && dictation === session) alert('Recording failed. Check the microphone and try again.');
+            stop(true);
+          };
+          recorder.start();
+          status(composer ? 'Stop recording' : 'Stop', 'Stop recording and transcribe');
+          button.classList.add('is-listening');
+          button.setAttribute('aria-pressed', 'true');
+          timer = setTimeout(() => stop(false), 30000);
+        } catch (error) {
+          if (!stopped) {
+            alert(error.name === 'NotAllowedError'
+              ? 'Allow microphone access for this site, then try again.'
+              : 'Could not start microphone recording. Check your microphone and try again.');
+          }
           finish();
-          alert('Could not start dictation. Check your microphone and try again.');
-        }
-      }
-
-      button.addEventListener('click', () => {
-        if (activeDictation) {
-          queuedDictation = activeDictation.button === button ? null : start;
-          stopDictation();
-        } else {
-          start();
         }
       });
     }
@@ -1500,6 +1517,7 @@ var supabase = window.supabase;
     }
 
     setupDictation();
+    window.addEventListener('pagehide', () => stopDictation(true));
 
     window.addEventListener('load', async () => {
       let session = null;
