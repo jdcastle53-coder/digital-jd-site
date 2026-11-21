@@ -26,10 +26,10 @@ function notify(text, error = false) {
 async function run(operation) {
   if (busy) return;
   busy = true;
-  notify('Working?');
+  notify('Working...');
   try {
-    await operation();
-    notify('');
+    const message = await operation();
+    notify(typeof message === 'string' ? message : '');
   } catch (error) {
     notify(error.message, true);
   } finally {
@@ -121,8 +121,71 @@ async function saveFields() {
 async function navigate(stage, remember = false) {
   window.JDDictation?.stop(true);
   await saveFields();
+  if (stage === 4 && !current.document.fields[4]?.initialUnderstanding) await generateOpening();
   await command('navigate', { stage, remember });
   render();
+  title.focus();
+}
+
+async function generateOpening() {
+  const fields = current.document.fields;
+  const situation = fields[2]?.situation;
+  const objective = fields[2]?.objective;
+  const depth = fields[3]?.depth;
+  if (!situation || !objective) throw new Error('Enter your situation and objective on Executive Input first.');
+  if (!depth) throw new Error('Choose Snapshot or In-depth first.');
+
+  notify('Digital JD is preparing its initial understanding...');
+  const result = await request('/api/jd-brain-gateway', {
+    message: 'Situation: ' + situation + '\n\nObjective: ' + objective,
+    mode: 'executive_opening',
+    caseScoped: true,
+    depth,
+  });
+  if (!result.reply?.trim()) throw new Error('Digital JD returned no opening insight. Try again.');
+  await command('save', { stage: 4, fields: { initialUnderstanding: result.reply.trim().slice(0, 8000) } });
+}
+
+function showOpening(parent) {
+  const opening = current.document.fields[4]?.initialUnderstanding;
+  if (!opening) {
+    button('Get Digital JD?s initial understanding', async () => {
+      await generateOpening();
+      render();
+      title.focus();
+    }, parent);
+    return false;
+  }
+  const summary = element('section');
+  summary.className = 'opening-insight';
+  const insight = element('p', opening);
+  insight.className = 'answer';
+  summary.append(element('h3', 'Digital JD?s initial understanding'), insight);
+  parent.append(summary);
+  return true;
+}
+
+function depthChoices(form, selected) {
+  const choices = element('fieldset');
+  choices.className = 'depth-choices';
+  choices.append(element('legend', 'Choose your analysis depth'));
+  for (const [value, description] of [
+    ['Snapshot', 'A brief read on the situation and the main issue.'],
+    ['In-depth', 'A closer look at the situation, key tensions, and what still needs to be understood.'],
+  ]) {
+    const label = element('label');
+    const radio = element('input');
+    radio.type = 'radio';
+    radio.name = 'depth';
+    radio.value = value;
+    radio.required = true;
+    radio.checked = selected === value;
+    const copy = element('span');
+    copy.append(element('strong', value), element('small', description));
+    label.append(radio, copy);
+    choices.append(label);
+  }
+  form.append(choices);
 }
 
 function stageFields(stage, parent) {
@@ -130,14 +193,19 @@ function stageFields(stage, parent) {
   const form = element('form');
   const values = current.document.fields[stage.number] || {};
   const options = {
-    depth: ['Snapshot', 'In-depth'],
     clarity: Array.from({ length: 10 }, (_, i) => String(i + 1)),
     nextMove: NEXT_MOVES,
   };
-  for (const [key, label] of stage.fields) field(form, key, label, values[key], options[key]);
+  for (const [key, label] of stage.fields) {
+    if (key === 'depth') depthChoices(form, values.depth);
+    else if (key !== 'initialUnderstanding') field(form, key, label, values[key], options[key]);
+  }
   form.addEventListener('submit', event => {
     event.preventDefault();
-    run(async () => { await saveFields(); render(); });
+    run(async () => {
+      await saveFields();
+      return stage.number === 3 ? 'Analysis depth saved: ' + current.document.fields[3].depth + '.' : 'Changes saved.';
+    });
   });
   const save = element('button', 'Save');
   save.type = 'submit';
@@ -246,6 +314,7 @@ function addDiscussion() {
         record[2]?.situation && 'Situation: ' + record[2].situation,
         record[2]?.objective && 'Objective: ' + record[2].objective,
         record[3]?.depth && 'Analysis depth: ' + record[3].depth,
+        record[4]?.initialUnderstanding && 'Your initial understanding: ' + record[4].initialUnderstanding.slice(0, 1400),
         recent.length && 'Recent discussion:\n' + recent.join('\n'),
       ].filter(Boolean).join('\n').slice(0, 5000);
       const message = input.value.trim();
@@ -282,8 +351,9 @@ function render() {
     const control = button(next.title, () => navigate(next.number), stages);
     if (next.number === stage.number) control.setAttribute('aria-current', 'step');
   }
-  fieldForm = stageFields(stage, content);
-  if ([4, 5, 10, 19].includes(stage.number)) addDiscussion();
+  const canRespond = stage.number !== 4 || showOpening(content);
+  if (canRespond) fieldForm = stageFields(stage, content);
+  if (canRespond && [4, 5, 10, 19].includes(stage.number)) addDiscussion();
   if (stage.number === 8) content.append(element('p', 'Review the facts and assumptions behind your analysis, then compare your options.'));
   if ([13, 14, 15, 17, 18, 21].includes(stage.number)) itemWorkspace('task', [14, 15].includes(stage.number));
   if ([16, 17, 21].includes(stage.number)) itemWorkspace('hurdle', stage.number === 16);

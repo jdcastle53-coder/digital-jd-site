@@ -31,3 +31,10 @@ li { margin-block: .5rem; }
   #workspace:not([hidden]) { grid-template-columns: 1fr; }
   #stages { max-height: 13rem; overflow: auto; }
 }
+
+.depth-choices { display: grid; gap: .6rem; padding: .75rem; border: 1px solid #8196ac; border-radius: .45rem; }
+.depth-choices label { display: flex; align-items: start; gap: .65rem; padding: .65rem; border: 1px solid #c9d6e2; border-radius: .35rem; cursor: pointer; }
+.depth-choices label:has(:checked) { background: #e4edf7; border-color: #47688c; }
+.depth-choices input { width: auto; margin-top: .35rem; }
+.depth-choices small { display: block; font-weight: 400; }
+.opening-insight { margin-block: 1rem; padding: .7rem 1rem; border-left: 4px solid #47688c; background: #f1f6fc; }

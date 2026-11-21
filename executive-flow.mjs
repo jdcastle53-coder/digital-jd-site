@@ -2,7 +2,7 @@
   ['Your Executive Journey', [['question','A question before you begin']]],
   ['Executive Input', [['situation','What is happening?'],['objective','What would you like to achieve?']]],
   ['Analysis Depth', [['depth','Choose Snapshot or In-depth']]],
-  ['Our Conversation', [['response','Answer DJD or correct the understanding']]],
+  ['Our Conversation', [['response','What would you add or correct?'],['initialUnderstanding','Initial Digital JD understanding']]],
   ['Our Conversation', [['understanding','Your confirmed understanding']]],
   ['Understanding Check', [['clarity','Clarity from 1 to 10']]],
   ['Foundations of Your Analysis', [['evidence','Facts, sources, and evidence'],['gaps','Assumptions and missing information']]],

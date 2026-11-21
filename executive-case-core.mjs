@@ -35,7 +35,11 @@ export function applyCommand(current, action, payload = {}, { id, now = new Date
       if (typeof fields !== 'object' || Array.isArray(fields)) fail(400, 'invalid_fields', 'Invalid stage fields.');
       for (const key of Object.keys(fields)) if (!allowed.has(key)) fail(400, 'unknown_field', 'Invalid field for this stage.');
       const values = Object.fromEntries(Object.entries(fields).map(([key,value]) => [key,text(value)]));
+      const changed = Object.entries(values).some(([key, value]) => value !== d.fields[n]?.[key]);
       d.fields[n] = { ...d.fields[n], ...values };
+      if (changed && (n === 2 || n === 3) && d.fields[4]) {
+        delete d.fields[4].initialUnderstanding;
+      }
       if (n === 3 && !['Snapshot','In-depth'].includes(d.fields[n].depth)) fail(400,'invalid_depth','Choose an analysis depth.');
       if (n === 6 && !/^(10|[1-9])$/.test(d.fields[n].clarity)) fail(400,'invalid_clarity','Choose a number from 1 to 10.');
       if (n === 20 && !NEXT_MOVES.includes(d.fields[n].nextMove)) fail(400,'invalid_move','Choose a next move.');
