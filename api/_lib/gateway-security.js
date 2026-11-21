@@ -111,7 +111,22 @@ export async function verifyAccess(req) {
  * strictness for real users.
  * Returns { allowed, remaining, limit, resetSec, degraded }.
  */
-export async function checkRateLimit(kind, identifier) {
+export async function checkRateLimit(kind, identifier, maxWaitMs) {
+  if (maxWaitMs == null) return readRateLimit(kind, identifier);
+  let timer;
+  try {
+    return await Promise.race([
+      readRateLimit(kind, identifier),
+      new Promise(resolve => {
+        timer = setTimeout(() => resolve({ allowed: true, degraded: true }), maxWaitMs);
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function readRateLimit(kind, identifier) {
   const cfg = LIMITS[kind] || LIMITS.user;
   const redis = getRedis();
   if (!redis) {

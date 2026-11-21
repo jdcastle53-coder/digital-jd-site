@@ -25,7 +25,7 @@ export default async function handler(req, res) {
     if (!process.env.OPENAI_API_KEY) {
       return res.status(503).json({ error: "Transcription is temporarily unavailable." });
     }
-    const rate = await checkRateLimit("transcription", access.userId);
+    const rate = await checkRateLimit("transcription", access.userId, 350);
     if (!rate.allowed) {
       return res.status(429).json({ error: "Too many recordings. Wait a few minutes and try again." });
     }

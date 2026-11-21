@@ -1452,7 +1452,7 @@ var supabase = window.supabase;
           await new Promise(resolve => setTimeout(resolve, 180));
           if (closed || !commit()) return '';
           const final = await new Promise(resolve => {
-            const timer = setTimeout(() => resolve(''), 2000);
+            const timer = setTimeout(() => resolve(''), 650);
             resolveFinal = value => { clearTimeout(timer); resolve(value); };
             completeIfReady();
           });
@@ -1483,6 +1483,7 @@ var supabase = window.supabase;
         const chunks = [];
         const upload = new AbortController();
         let stream, recorder, timer, live;
+        let liveCoversStart = false;
         const initialText = input.value.trim();
         let lastValue = input.value;
         function putText(text) {
@@ -1491,7 +1492,6 @@ var supabase = window.supabase;
           input.value = lastValue;
           input.dispatchEvent(new Event('input', { bubbles: true }));
         }
-        let connecting = true;
         let discarded = false;
         let stopped = false;
         const session = { button, stop };
@@ -1531,7 +1531,7 @@ var supabase = window.supabase;
               stream.getTracks().forEach(track => track.stop());
             }
           }
-          if (discard || !recorder || connecting) finish();
+          if (discard || !recorder) finish();
         }
 
         async function transcribe() {
@@ -1542,7 +1542,8 @@ var supabase = window.supabase;
           button.classList.remove('is-listening');
           button.setAttribute('aria-pressed', 'false');
           try {
-            const final = await live?.finish();
+            const final = liveCoversStart ? await live?.finish() : '';
+            live?.close();
             if (discarded) return;
             if (final) {
               putText(final);
@@ -1587,17 +1588,19 @@ var supabase = window.supabase;
             if (!discarded && dictation === session) alert('Recording failed. Check the microphone and try again.');
             stop(true);
           };
+          recorder.start();
           if (window.RTCPeerConnection) {
             try {
+              const recordingStartedAt = performance.now();
               live = connectLiveDictation(stream, putText);
-              await live.ready;
+              live.ready.then(ready => {
+                // Finalize from the full recording if the connection missed the start.
+                liveCoversStart = ready && performance.now() - recordingStartedAt < 200;
+              });
             } catch {
               live?.close();
             }
           }
-          if (stopped || dictation !== session) return;
-          connecting = false;
-          recorder.start();
           status(composer ? 'Stop recording' : 'Stop', 'Stop recording and transcribe');
           button.classList.add('is-listening');
           button.setAttribute('aria-pressed', 'true');

@@ -12,7 +12,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Invalid audio connection offer." });
     }
     if (!process.env.OPENAI_API_KEY) return res.status(503).json({ error: "Live transcription unavailable." });
-    const rate = await checkRateLimit("transcription", access.userId);
+    const rate = await checkRateLimit("transcription", access.userId, 350);
     if (!rate.allowed) return res.status(429).json({ error: "Too many recordings. Try again later." });
 
     const form = new FormData();
