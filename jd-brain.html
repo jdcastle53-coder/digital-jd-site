@@ -1160,6 +1160,7 @@ var supabase = window.supabase;
       const panel = document.getElementById('activeClarifyPanel');
       if (!panel) return;
 
+      stopDictation(true);
       const inputs = Array.from(panel.querySelectorAll('.clarify-answer-input'));
       const qaPairs = inputs.map((inp, i) => {
         const q = inp.dataset.question || '';
@@ -1188,15 +1189,7 @@ var supabase = window.supabase;
       const text = input.value.trim();
       if (!text) return;
 
-      if (recognition && isListening) {
-        isListening = false;
-        try { recognition.stop(); } catch (e) {}
-        const micBtn = document.getElementById('micBtn');
-        if (micBtn) {
-          micBtn.textContent = '🎙️ Dictate';
-          micBtn.classList.remove('is-listening');
-        }
-      }
+      stopDictation(true);
 
       // Was this send answering the clarifying questions from the turn before?
       const isAnsweringClarify = conversationStage === 'awaiting_answers';
@@ -1333,126 +1326,105 @@ var supabase = window.supabase;
       }
     }
 
-    let recognition = null;
-    let isListening = false;
+    let activeDictation = null;
+    let queuedDictation = null;
 
-    function setupDictation() {
-      const micBtn = document.getElementById('micBtn');
-      const userInput = document.getElementById('userInput');
-      if (!micBtn || !userInput) return;
-
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        micBtn.addEventListener('click', () => {
-          alert('Microphone dictation is not supported in this browser. Try Chrome.');
-        });
-        return;
+    function stopDictation(discard = false) {
+      if (discard) queuedDictation = null;
+      const session = activeDictation;
+      if (!session) return;
+      if (discard) session.discard = true;
+      if (session.stopping) return;
+      session.stopping = true;
+      try {
+        session.recognition.stop();
+      } catch {
+        session.finish();
       }
-
-      recognition = new SpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-      recognition.lang = 'en-US';
-
-      let baseText = '';
-
-      recognition.onresult = function (event) {
-        let finalText = '';
-        let interimText = '';
-        for (let i = 0; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          if (event.results[i].isFinal) finalText += transcript + ' ';
-          else interimText += transcript;
-        }
-        userInput.value = (baseText + finalText + interimText).trim();
-      };
-
-      recognition.onend = function () {
-        if (isListening) {
-          try { recognition.start(); } catch (e) {}
-        }
-      };
-
-      recognition.onerror = function (event) {
-        console.log('[v0] Speech recognition error:', event.error);
-      };
-
-      micBtn.addEventListener('click', function () {
-        if (!isListening) {
-          baseText = userInput.value ? userInput.value.trim() + ' ' : '';
-          try {
-            recognition.start();
-            isListening = true;
-            micBtn.textContent = '■ Stop';
-            micBtn.classList.add('is-listening');
-          } catch (e) {}
-        } else {
-          isListening = false;
-          try { recognition.stop(); } catch (e) {}
-          micBtn.textContent = '🎙️ Dictate';
-          micBtn.classList.remove('is-listening');
-        }
-      });
     }
 
-    // Attaches a self-contained dictate button + its own SpeechRecognition
-    // instance to a single input/textarea element. Used for each clarifying
-    // question's answer field, which each need independent start/stop state
-    // (unlike the single shared #micBtn/#userInput pair above).
-    function attachFieldDictation(btnEl, inputEl) {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRecognition) {
-        btnEl.addEventListener('click', () => {
-          alert('Microphone dictation is not supported in this browser. Try Chrome.');
-        });
-        return;
+    function setupDictation() {
+      const button = document.getElementById('micBtn');
+      const input = document.getElementById('userInput');
+      if (button && input) attachFieldDictation(button, input, true);
+    }
+
+    function attachFieldDictation(button, input, isComposer = false) {
+      const idleLabel = isComposer ? 'Dictate' : 'Dictate your answer';
+      const idleText = button.textContent;
+      button.setAttribute('aria-label', idleLabel);
+      button.setAttribute('aria-pressed', 'false');
+
+      function start() {
+        if (!button.isConnected || button.disabled || input.disabled) return;
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+          alert('Dictation is unavailable in this browser. Try Chrome or type your answer.');
+          return;
+        }
+
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
+        const baseText = input.value.trim();
+        const session = { button, recognition, stopping: false, discard: false, finish };
+        activeDictation = session;
+
+        function finish() {
+          if (activeDictation !== session) return;
+          activeDictation = null;
+          button.textContent = idleText;
+          button.classList.remove('is-listening');
+          button.setAttribute('aria-label', idleLabel);
+          button.setAttribute('aria-pressed', 'false');
+          const next = queuedDictation;
+          queuedDictation = null;
+          if (next) next();
+        }
+
+        recognition.onstart = () => {
+          if (activeDictation !== session || session.stopping) return;
+          button.textContent = isComposer ? '\u25A0 Stop' : '\u25A0';
+          button.classList.add('is-listening');
+          button.setAttribute('aria-label', 'Stop dictating');
+          button.setAttribute('aria-pressed', 'true');
+        };
+
+        recognition.onresult = (event) => {
+          if (activeDictation !== session || session.discard) return;
+          const transcripts = Array.from(event.results, result => result[0].transcript.trim());
+          input.value = [baseText, ...transcripts].filter(Boolean).join(' ');
+        };
+
+        recognition.onend = finish;
+        recognition.onerror = (event) => {
+          if (activeDictation !== session || session.discard || session.stopping) return;
+          finish();
+          const message = {
+            'not-allowed': 'Allow microphone access for this site, then try Dictate again.',
+            'service-not-allowed': 'Speech recognition is blocked. Check your browser settings or try Chrome.',
+            'audio-capture': 'No microphone was detected. Check your microphone and try again.',
+            'no-speech': 'No speech was detected. Click Dictate to try again.',
+            network: 'Speech recognition could not connect. Check your connection and try again.'
+          }[event.error];
+          alert(message || 'Dictation stopped. Try again or type your answer.');
+        };
+
+        try {
+          recognition.start();
+        } catch {
+          finish();
+          alert('Could not start dictation. Check your microphone and try again.');
+        }
       }
 
-      const fieldRecognition = new SpeechRecognition();
-      fieldRecognition.continuous = true;
-      fieldRecognition.interimResults = true;
-      fieldRecognition.lang = 'en-US';
-
-      let fieldIsListening = false;
-      let baseText = '';
-
-      fieldRecognition.onresult = function (event) {
-        let finalText = '';
-        let interimText = '';
-        for (let i = 0; i < event.results.length; i++) {
-          const transcript = event.results[i][0].transcript;
-          if (event.results[i].isFinal) finalText += transcript + ' ';
-          else interimText += transcript;
-        }
-        inputEl.value = (baseText + finalText + interimText).trim();
-      };
-
-      fieldRecognition.onend = function () {
-        if (fieldIsListening) {
-          try { fieldRecognition.start(); } catch (e) {}
-        }
-      };
-
-      fieldRecognition.onerror = function (event) {
-        console.log('[v0] Speech recognition error (field):', event.error);
-      };
-
-      btnEl.addEventListener('click', function () {
-        if (!fieldIsListening) {
-          baseText = inputEl.value ? inputEl.value.trim() + ' ' : '';
-          try {
-            fieldRecognition.start();
-            fieldIsListening = true;
-            btnEl.textContent = '■';
-            btnEl.classList.add('is-listening');
-            btnEl.setAttribute('aria-label', 'Stop dictating');
-          } catch (e) {}
+      button.addEventListener('click', () => {
+        if (activeDictation) {
+          queuedDictation = activeDictation.button === button ? null : start;
+          stopDictation();
         } else {
-          fieldIsListening = false;
-          try { fieldRecognition.stop(); } catch (e) {}
-          btnEl.textContent = '🎙️';
-          btnEl.classList.remove('is-listening');
-          btnEl.setAttribute('aria-label', 'Dictate your answer');
+          start();
         }
       });
     }
@@ -1504,6 +1476,8 @@ var supabase = window.supabase;
         if (btn) { btn.disabled = false; btn.textContent = original; }
       }
     }
+
+    setupDictation();
 
     window.addEventListener('load', async () => {
       let session = null;
@@ -1565,8 +1539,6 @@ var supabase = window.supabase;
 
       updateComposerForStage();
       restoreConversationTranscript();
-
-      setupDictation();
 
       const userInput = document.getElementById('userInput');
       if (userInput) {
