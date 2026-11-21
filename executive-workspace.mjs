@@ -121,7 +121,7 @@ async function saveFields() {
 async function navigate(stage, remember = false) {
   window.JDDictation?.stop(true);
   await saveFields();
-  if (stage === 4 && !current.document.fields[4]?.initialUnderstanding) await generateOpening();
+  if ([4, 5].includes(stage) && !current.document.fields[4]?.initialUnderstanding) await generateOpening();
   await command('navigate', { stage, remember });
   render();
   title.focus();
@@ -348,10 +348,17 @@ function render() {
     return;
   }
   for (const next of STAGES) {
-    const control = button(next.title, () => navigate(next.number), stages);
+    const label = next.number === 5 ? 'Confirm understanding' : next.title;
+    const control = button(label, () => navigate(next.number), stages);
     if (next.number === stage.number) control.setAttribute('aria-current', 'step');
   }
-  const canRespond = stage.number !== 4 || showOpening(content);
+  const isConversation = [4, 5].includes(stage.number);
+  const canRespond = !isConversation || showOpening(content);
+  if (stage.number === 5 && canRespond && current.document.fields[4]?.response) {
+    const correction = element('p', current.document.fields[4].response);
+    correction.className = 'answer';
+    content.append(element('h3', 'What you added or corrected'), correction);
+  }
   if (canRespond) fieldForm = stageFields(stage, content);
   if (canRespond && [4, 5, 10, 19].includes(stage.number)) addDiscussion();
   if (stage.number === 8) content.append(element('p', 'Review the facts and assumptions behind your analysis, then compare your options.'));
@@ -391,7 +398,9 @@ function render() {
     24: [['Back to outcome review', 23], ['Open opportunity workspace', 25]],
     25: [['Back to opportunities', 24]],
   };
-  for (const [label, target] of navigation[stage.number]) button(label, () => navigate(target), actions);
+  for (const [label, target] of navigation[stage.number]) {
+    if (canRespond || target < stage.number) button(label, () => navigate(target), actions);
+  }
   if (current.document.returnStack.length) button('Return to previous workspace', async () => {
     await saveFields(); await command('return'); render();
   }, actions);
