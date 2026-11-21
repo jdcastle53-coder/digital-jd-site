@@ -26,9 +26,10 @@ export default async function handler(req, res) {
       return res.status(503).json({ error: "Transcription is temporarily unavailable." });
     }
     const rate = await checkRateLimit("transcription", access.userId);
-    if (!rate.allowed || rate.degraded) {
-      return res.status(rate.degraded ? 503 : 429).json({ error: "Transcription is temporarily unavailable. Try again later." });
+    if (!rate.allowed) {
+      return res.status(429).json({ error: "Too many recordings. Wait a few minutes and try again." });
     }
+    if (rate.degraded) console.warn("[TRANSCRIBE] Rate-limit store unavailable");
 
     const form = new FormData();
     form.set("model", "gpt-transcribe");
