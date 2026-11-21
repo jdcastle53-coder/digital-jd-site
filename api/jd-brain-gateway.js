@@ -513,6 +513,7 @@ export default async function handler(req, res) {
   const body = req.body || {};
   const message = (body.message || body.prompt || body.input || body.query || "").trim();
   const mode = (body.mode || "").trim();
+  const caseScoped = body.caseScoped === true;
   const conversationId = (body.conversationId || "").trim() || null;
 
   await log("INFO", "message_validation", { messageExists: !!message, messageLength: message.length, mode: mode || "advisory" });
@@ -574,7 +575,7 @@ export default async function handler(req, res) {
   // Within-conversation memory: only for authenticated callers with a
   // conversationId (the demo path has no account, so no history to load).
   let conversationHistory = [];
-  if (access.ok && conversationId) {
+  if (!caseScoped && access.ok && conversationId) {
     conversationHistory = await fetchConversationHistory(supabase, conversationId, access.userId);
     await log("INFO", "history_loaded", { conversationId, turns: conversationHistory.length });
   }
@@ -582,7 +583,7 @@ export default async function handler(req, res) {
   // Long-term memory: recall durable facts from ANY prior conversation,
   // regardless of which conversationId this request is on.
   let memoryFacts = [];
-  if (access.ok && access.userId) {
+  if (!caseScoped && access.ok && access.userId) {
     memoryFacts = await fetchUserMemoryFacts(supabase, access.userId);
     await log("INFO", "memory_facts_loaded", { facts: memoryFacts.length });
   }
@@ -602,7 +603,7 @@ export default async function handler(req, res) {
     if (mode === "clarify") {
       systemPrompt = buildClarifyingPrompt(message);
     } else {
-      papers = await fetchResearch(message);
+      if (!caseScoped) papers = await fetchResearch(message);
       await log("INFO", "research_fetched", { paperCount: papers.length });
       systemPrompt = buildSystemPrompt(message, formatResearchForPrompt(papers));
     }
@@ -664,7 +665,7 @@ export default async function handler(req, res) {
     // waitUntil keeps the function alive just for this background work
     // without making the user wait on it. Only for signed-in users; never
     // runs on the unauthenticated demo path.
-    if (access.ok && access.userId) {
+    if (!caseScoped && access.ok && access.userId) {
       waitUntil(
         extractAndStoreMemoryFacts({
           supabase,

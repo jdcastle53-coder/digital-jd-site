@@ -325,7 +325,10 @@
       }
 
       const session = await window.Auth.requireActiveSession();
-      if (session) window.location.href = "jd-brain.html";
+      if (session) {
+        const next = new URLSearchParams(window.location.search).get("next");
+        window.location.href = next === "executive-workspace.html" ? next : "jd-brain.html";
+      }
     }
 
     function renderUnconfirmedRecovery(email) {

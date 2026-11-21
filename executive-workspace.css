@@ -1,0 +1,33 @@
+* { box-sizing: border-box; }
+body { margin: 0; color: #152940; background: #f0f4f8; font: 17px/1.5 system-ui, sans-serif; }
+.masthead { display: flex; justify-content: space-between; gap: 1rem; background: #10253f; padding: 1rem max(1rem, calc((100% - 1230px) / 2)); }
+.masthead a { color: #fff; text-decoration-color: #d4af63; }
+main { max-width: 1260px; margin: auto; padding: 1.25rem 1rem 3rem; }
+h1, h2 { font-family: Georgia, serif; line-height: 1.14; }
+h1 { font-size: clamp(2rem, 5vw, 3.25rem); margin: .45em 0; }
+#status:empty { display: none; }
+#status[data-error] { color: #8d1a24; }
+#workspace:not([hidden]) { display: grid; grid-template-columns: minmax(175px, 240px) minmax(0,1fr); gap: 1rem; }
+article, #case-home, aside { padding: 1.2rem; background: #fff; border: 1px solid #c9d6e2; border-radius: .75rem; }
+aside { align-self: start; }
+#case-name { font-weight: 650; color: #38516c; }
+#stages { display: grid; gap: .3rem; margin-top: .8rem; }
+#stages button { text-align: left; background: transparent; border-color: transparent; }
+#stages [aria-current="step"] { background: #e4edf7; border-color: #9eb3cc; }
+form, .fields { display: grid; gap: .55rem; }
+label { font-weight: 600; }
+input, textarea, select, button { color: inherit; font: inherit; }
+input, textarea, select { width: 100%; min-width: 0; padding: .6rem; border: 1px solid #8196ac; border-radius: .35rem; background: #fff; }
+textarea { min-height: 7rem; resize: vertical; }
+button { border: 1px solid #536e8a; border-radius: .35rem; padding: .45rem .7rem; background: #f1f6fc; cursor: pointer; }
+button:hover { background: #dce8f6; }
+button:disabled { opacity: .55; cursor: default; }
+button.is-listening { color: white; background: #9c2531; }
+:focus-visible { outline: 3px solid #186ab9; outline-offset: 2px; }
+.actions { display: flex; flex-wrap: wrap; gap: .55rem; margin-top: 1rem; }
+li { margin-block: .5rem; }
+.answer { white-space: pre-wrap; overflow-wrap: anywhere; }
+@media (max-width: 680px) {
+  #workspace:not([hidden]) { grid-template-columns: 1fr; }
+  #stages { max-height: 13rem; overflow: auto; }
+}
