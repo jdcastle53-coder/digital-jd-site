@@ -345,7 +345,14 @@ function render(number) {
   for (const link of screen.links) {
     const button = document.createElement('button');
     button.type = 'button';
-    button.setAttribute('aria-label', link.label);
+    const roadmapContinue = number === 13 && link.label === 'Review progress';
+    button.setAttribute('aria-label', roadmapContinue ? 'Continue' : link.label);
+    if (roadmapContinue) {
+      const label = document.createElement('span');
+      label.className = 'deck-continue-label';
+      label.textContent = 'Continue';
+      button.append(label);
+    }
     if (number === 5 && link.label === 'Update understanding') button.dataset.conversationAction = 'update';
     if (number === 5 && link.label === 'Confirm understanding') button.dataset.conversationAction = 'confirm';
     place(button, link.rect);
