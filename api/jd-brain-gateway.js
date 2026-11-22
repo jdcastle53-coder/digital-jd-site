@@ -586,7 +586,7 @@ export default async function handler(req, res) {
   // Rate limit: per-user when authenticated, per-IP for the demo.
   const rlKind = access.ok ? "user" : "demo";
   const rlId = access.ok ? access.userId : getClientIp(req);
-  const rl = await checkRateLimit(rlKind, rlId);
+  const rl = await checkRateLimit(rlKind, rlId, caseScoped ? 350 : undefined);
   res.setHeader("X-RateLimit-Limit", rl.limit);
   res.setHeader("X-RateLimit-Remaining", rl.remaining);
   if (!rl.allowed) {

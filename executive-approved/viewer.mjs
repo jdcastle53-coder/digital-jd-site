@@ -98,6 +98,16 @@ function showCasePanels(number) {
     return node;
   });
   const first = regions[0];
+  const updateButton = number === 5 ? controls.querySelector('[data-conversation-action="update"]') : null;
+  const confirmButton = number === 5 ? controls.querySelector('[data-conversation-action="confirm"]') : null;
+
+  function showConversationPending(pending) {
+    if (!updateButton || !confirmButton) return;
+    updateButton.disabled = pending;
+    confirmButton.disabled = pending;
+    updateButton.textContent = pending ? 'Updating...' : '';
+    updateButton.classList.toggle('deck-action-pending', pending);
+  }
 
   async function generate() {
     const situation = fieldValue(2);
@@ -108,6 +118,7 @@ function showCasePanels(number) {
       return;
     }
     const answer = fieldValue(4);
+    const submitted = number === 5 ? fieldValue(5) : '';
     const correctionKey = JSON.stringify([situation, objective, depth, answer]);
     const pendingCorrection = readDraft(draftPrefix + ':correction-context') === correctionKey
       ? readDraft(draftPrefix + ':latest-correction') : '';
@@ -165,7 +176,10 @@ function showCasePanels(number) {
     const controller = new AbortController();
     insightRequest = controller;
     first.setAttribute('aria-busy', 'true');
-    first.textContent = 'Digital JD is working from your case...';
+    showConversationPending(true);
+    first.textContent = number === 5 && pendingCorrection
+      ? 'Digital JD is updating its understanding from your answer...'
+      : 'Digital JD is working from your case...';
     try {
       const reply = await askJD({
         message: context.join('\n\n'),
@@ -184,6 +198,14 @@ function showCasePanels(number) {
       insights.set(number, { fingerprint, values: clean, caseKey, answer, correction: pendingCorrection });
       if (number === 10) discussionAnswers = [...discussionAnswers, { caseKey, question, answer: clean.reply }].slice(-4);
       display(clean);
+      if (number === 5 && submitted && pendingCorrection.endsWith(submitted)) {
+        const input = controls.querySelector('.deck-input');
+        if (input?.value.trim() === submitted) {
+          input.value = '';
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        status.textContent = 'Understanding updated. You can answer the next question or confirm.';
+      }
     } catch (error) {
       if (controller.signal.aborted) return;
       first.textContent = error instanceof SyntaxError ? 'Digital JD could not format this response. Try again.' : error.message;
@@ -196,6 +218,7 @@ function showCasePanels(number) {
     } finally {
       if (insightRequest === controller) insightRequest = null;
       first.removeAttribute('aria-busy');
+      showConversationPending(false);
     }
   }
   generate();
@@ -207,6 +230,7 @@ function render(number) {
   window.JDDictation?.stop(true);
   insightRequest?.abort();
   current = number;
+  status.textContent = '';
   artwork.alt = screen.title;
   artwork.src = 'executive-approved/screen-' + String(number).padStart(3, '0') + '.png';
   picker.value = String(number);
@@ -215,6 +239,8 @@ function render(number) {
     const button = document.createElement('button');
     button.type = 'button';
     button.setAttribute('aria-label', link.label);
+    if (number === 5 && link.label === 'Update understanding') button.dataset.conversationAction = 'update';
+    if (number === 5 && link.label === 'Confirm understanding') button.dataset.conversationAction = 'confirm';
     place(button, link.rect);
     button.addEventListener('click', () => {
       if (current === 3 && ['Select Snapshot', 'Select In-depth'].includes(link.label)) {
@@ -247,11 +273,11 @@ function render(number) {
     });
     controls.append(button);
   }
+  if (window.JDDictation) screen.microphones?.forEach((field, index) => addDictation(field, index, number));
   showCasePanels(number);
   scope.textContent = number === 4 || PANELS[number] || [1, 2, 3, 6, 8].includes(number)
     ? 'Executive evaluation. Use sample information.'
     : 'Design and navigation preview. Example values on this screen are not results from your case.';
-  if (window.JDDictation) screen.microphones?.forEach((field, index) => addDictation(field, index, number));
 }
 
 function jump(number) {
