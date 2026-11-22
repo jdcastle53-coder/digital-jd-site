@@ -1,4 +1,3 @@
-import { PANELS as EXECUTIVE_PANELS } from "../executive-approved/case-panels.mjs";
 import { createClient } from "@supabase/supabase-js";
 import { readFileSync } from "fs";
 import { join } from "path";
@@ -36,6 +35,13 @@ const CONFIG = {
   maxHistoryMessages: 12,
   maxHistoryCharsPerMessage: 1500,
 };
+
+let executivePanels = {};
+try {
+  executivePanels = JSON.parse(readFileSync(join(process.cwd(), "data", "executive-panel-spec.json"), "utf8"));
+} catch {
+  console.warn("[JD-BRAIN-GATEWAY] Executive panel specification unavailable");
+}
 
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -535,7 +541,7 @@ export default async function handler(req, res) {
   const mode = (body.mode || "").trim();
   const caseScoped = body.caseScoped === true;
   const structuredExecutiveMode = caseScoped && (mode === "executive_turn" || mode === "executive_stage");
-  const executivePanel = structuredExecutiveMode && Number.isInteger(body.stage) && EXECUTIVE_PANELS[body.stage];
+  const executivePanel = structuredExecutiveMode && Number.isInteger(body.stage) && executivePanels[body.stage];
   if (structuredExecutiveMode && (!executivePanel || executivePanel.mode !== mode)) {
     return res.status(400).json({ error: "Choose a supported Executive screen." });
   }
@@ -628,7 +634,7 @@ export default async function handler(req, res) {
     if (caseScoped && mode === "executive_opening") {
       systemPrompt = buildExecutiveOpeningPrompt(message, body.depth);
     } else if (executivePanel) {
-      const keys = executivePanel.slots.map(slot => slot.key);
+      const keys = executivePanel.keys;
       systemPrompt = [
         JD_IDENTITY, JD_ALTITUDE, JD_REASONING, buildKnowledgeBlock(message),
         executivePanel.prompt,

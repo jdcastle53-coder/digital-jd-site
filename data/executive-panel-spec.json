@@ -1,0 +1,129 @@
+{
+  "5": {
+    "mode": "executive_turn",
+    "prompt": "Revise your understanding using the latest answer and earlier corrections. Explain what changed, distinguish known facts from assumptions, and ask the next question only if it can change the interpretation. If the facts are clear, invite confirmation.",
+    "keys": [
+      "understanding",
+      "question"
+    ]
+  },
+  "7": {
+    "mode": "executive_stage",
+    "prompt": "Connect the evidence to the four existing labels. Identify what the client actually reported and what remains unknown. Apply a relevant JD principle only when supported. Do not invent research or a source.",
+    "keys": [
+      "concern",
+      "objective",
+      "constraints",
+      "decision"
+    ]
+  },
+  "9": {
+    "mode": "executive_stage",
+    "prompt": "Compare a recommended approach with one genuinely distinct alternative for this case. State realistic benefits, risks, resources and timing as proposals or estimates. Tie the rationale to the case facts and confirmed objective.",
+    "keys": [
+      "recommendedTitle",
+      "recommendedBenefit",
+      "recommendedRisk",
+      "recommendedResources",
+      "recommendedTiming",
+      "recommendedRationale",
+      "alternativeTitle",
+      "alternativeBenefit",
+      "alternativeRisk",
+      "alternativeResources",
+      "alternativeTiming",
+      "alternativeRationale"
+    ]
+  },
+  "10": {
+    "mode": "executive_stage",
+    "prompt": "Answer the latest client question directly. Explain the tradeoff or assumption that matters and whether the answer changes the proposed approach.",
+    "keys": [
+      "reply"
+    ]
+  },
+  "11": {
+    "mode": "executive_stage",
+    "prompt": "Describe two concrete alternatives that are less suitable in this case. For each, state why and what would make it viable.",
+    "keys": [
+      "first",
+      "second"
+    ]
+  },
+  "12": {
+    "mode": "executive_stage",
+    "prompt": "Propose a practical plan based on the case and the options discussion. Identify unconfirmed owners, dates, budget and approvals explicitly. Describe a measurable target without inventing a baseline.",
+    "keys": [
+      "outcome",
+      "delivery",
+      "resources",
+      "measures"
+    ]
+  },
+  "13": {
+    "mode": "executive_stage",
+    "prompt": "Translate the proposed plan into up to six actionable roadmap rows in sequence. For each row, give a short action and status, owner role if known, timing or dependency, and success measure. Use two lines at most per value. Use Not assigned or Not scheduled for unknown commitments.",
+    "keys": [
+      "outcome",
+      "dates",
+      "progress",
+      "task0",
+      "owner0",
+      "timing0",
+      "measure0",
+      "task1",
+      "owner1",
+      "timing1",
+      "measure1",
+      "task2",
+      "owner2",
+      "timing2",
+      "measure2",
+      "task3",
+      "owner3",
+      "timing3",
+      "measure3",
+      "task4",
+      "owner4",
+      "timing4",
+      "measure4",
+      "task5",
+      "owner5",
+      "timing5",
+      "measure5"
+    ]
+  },
+  "19": {
+    "mode": "executive_stage",
+    "prompt": "Compare recorded actual results with the target. State the evidence, confidence, and next useful check. Do not infer progress, completion, causation, or percentages from a proposed plan.",
+    "keys": [
+      "assessment",
+      "result",
+      "direction",
+      "confidence",
+      "rationale"
+    ]
+  },
+  "22": {
+    "mode": "executive_stage",
+    "prompt": "Brief only what the case records. Distinguish a proposed plan from an approved decision. If there is no actual evidence, say results are unverified. State open responsibilities and next review only where known.",
+    "keys": [
+      "decision",
+      "plan",
+      "results",
+      "openItems",
+      "nextReview"
+    ]
+  },
+  "23": {
+    "mode": "executive_stage",
+    "prompt": "Review outcome against the original objective. Separate verified outcome from incomplete activity, and clearly mark unknowns. Never say the objective was reached unless recorded evidence supports it.",
+    "keys": [
+      "objective",
+      "actual",
+      "scope",
+      "openItems",
+      "conclusion"
+    ]
+  }
+}
