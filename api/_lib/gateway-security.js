@@ -118,7 +118,8 @@ export async function checkRateLimit(kind, identifier, maxWaitMs) {
     return await Promise.race([
       readRateLimit(kind, identifier),
       new Promise(resolve => {
-        timer = setTimeout(() => resolve({ allowed: true, degraded: true }), maxWaitMs);
+        const { requests, windowSec } = LIMITS[kind] || LIMITS.user;
+        timer = setTimeout(() => resolve({ allowed: true, remaining: requests, limit: requests, resetSec: windowSec, degraded: true }), maxWaitMs);
       }),
     ]);
   } finally {
