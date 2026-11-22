@@ -37,3 +37,5 @@ main { max-width: 1552px; margin: auto; padding: .75rem 1rem 1.5rem; }
 
 #controls .deck-option-choice { border: 1px solid #3151a3; background: #fff; color: #161565; font: 650 max(10px, 1.08cqw) system-ui, sans-serif; }
 #controls .deck-option-choice[aria-pressed="true"] { background: #ffeb42; border-color: #a78112; }
+
+.hurdle-count { position: absolute; background: #eaf1f9; color: #38516c; padding: .12em .25em; font: 600 max(10px, 1.03cqw) system-ui, sans-serif; }

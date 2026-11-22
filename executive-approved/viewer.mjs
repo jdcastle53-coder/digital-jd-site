@@ -279,6 +279,58 @@ function showCasePanels(number) {
   generate();
 }
 
+const hurdleScreens = [16, 83, 84];
+
+function addHurdleResolution(number) {
+  const index = hurdleScreens.indexOf(number);
+  const id = 'H0' + (index + 1);
+  const context = JSON.stringify([fieldValue(2), fieldValue(2, 1)]);
+  const keyFor = screen => draftPrefix + ':hurdle-resolution:' + context + ':' + screen;
+  const note = readDraft(keyFor(number));
+  const stillOpen = hurdleScreens.filter(screen => !readDraft(keyFor(screen))).length;
+  const count = document.createElement('span');
+  count.className = 'hurdle-count';
+  count.textContent = stillOpen + (stillOpen === 1 ? ' open hurdle' : ' open hurdles') + ' ? Evaluation case';
+  place(count, [19.8, 32, 22.5, 4]);
+  controls.append(count);
+
+  for (const [position, screen] of hurdleScreens.entries()) {
+    if (!readDraft(keyFor(screen))) continue;
+    const completion = document.createElement('span');
+    completion.className = 'hurdle-count';
+    completion.textContent = 'Complete';
+    place(completion, [19.8, 44.3 + position * 12.65, 22.5, 3.7]);
+    controls.append(completion);
+  }
+
+  const action = document.createElement('button');
+  action.type = 'button';
+  action.className = 'deck-option-choice';
+  action.textContent = note ? id + ' complete' : 'Mark ' + id + ' complete';
+  action.disabled = Boolean(note);
+  place(action, [78.9, 81.4, 15, 3.1]);
+  action.addEventListener('click', () => {
+    const resolution = fieldValue(number);
+    if (!resolution) {
+      status.textContent = 'Enter how the hurdle was resolved first.';
+      return;
+    }
+    saveDraft(keyFor(number), resolution);
+    render(number);
+    status.textContent = id + ' marked complete.';
+  });
+  controls.append(action);
+
+  if (note) {
+    const decision = document.createElement('div');
+    decision.className = 'deck-insight deck-insight-compact';
+    decision.setAttribute('aria-label', id + ' resolution');
+    decision.textContent = 'Complete: ' + note;
+    place(decision, [60, 56.7, 34.4, 7.4]);
+    controls.append(decision);
+  }
+}
+
 function render(number) {
   const screen = screens[number - 1];
   if (!screen) return;
@@ -330,6 +382,7 @@ function render(number) {
   }
   if (window.JDDictation) screen.microphones?.forEach((field, index) => addDictation(field, index, number));
   showCasePanels(number);
+  if (hurdleScreens.includes(number)) addHurdleResolution(number);
   scope.textContent = number === 4 || PANELS[number] || [1, 2, 3, 6, 8].includes(number)
     ? 'Executive evaluation. Use sample information.'
     : 'Design and navigation preview. Example values on this screen are not results from your case.';
