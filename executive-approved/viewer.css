@@ -1,0 +1,21 @@
+* { box-sizing: border-box; }
+body { margin: 0; color: #152940; background: #e8edf3; font: 16px/1.4 system-ui, sans-serif; }
+header { background: #10253f; color: #fff; display: flex; gap: 1rem; justify-content: space-between; align-items: center; padding: .55rem 1rem; }
+header a { color: #fff; }
+header p { margin: 0; }
+main { max-width: 1552px; margin: auto; padding: .75rem 1rem 1.5rem; }
+#stage { background: #fff; position: relative; aspect-ratio: 1520 / 720; }
+#artwork { display: block; width: 100%; height: auto; }
+#controls { position: absolute; inset: 0; pointer-events: none; }
+#controls button { position: absolute; border: 0; background: transparent; cursor: pointer; pointer-events: auto; padding: 0; border-radius: .25rem; }
+#controls button:hover { background: rgb(25 77 160 / 10%); }
+#controls button:focus-visible, select:focus-visible, .toolbar button:focus-visible { outline: 3px solid #1366bc; outline-offset: 3px; }
+.toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem .75rem; margin-top: .8rem; }
+.toolbar button, select { font: inherit; color: inherit; max-width: 100%; }
+.scope { font-size: .875rem; color: #3e5063; }
+#status:empty { display: none; }
+@media (max-width: 600px) {
+  header { flex-wrap: wrap; }
+  main { padding-inline: .35rem; overflow-x: auto; }
+  #stage { min-width: 620px; }
+}
