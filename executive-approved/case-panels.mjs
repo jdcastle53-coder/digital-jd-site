@@ -6,7 +6,7 @@ function option(prefix, x) {
     box(prefix + 'Title', 'Option title', x, 240, 515, 47),
     ...['Benefit', 'Risk', 'Resources', 'Timing'].map((field, i) =>
       row(prefix + field, field, x + 194, 299 + i * 47, 323, 42, i % 2 === 0)),
-    box(prefix + 'Rationale', 'Rationale', x - 8, 529, 520, 62),
+    box(prefix + 'Rationale', 'Rationale', x - 8, 529, 520, 42),
   ];
 }
 
@@ -28,7 +28,7 @@ export const PANELS = {
     box('first', 'First option considered', 269, 280, 958, 143, '#fff'),
     box('second', 'Second option considered', 269, 439, 958, 147, '#fff'),
   ] },
-  12: { mode: 'executive_stage', prompt: 'Propose a practical plan based on the case and the options discussion. Identify unconfirmed owners, dates, budget and approvals explicitly. Describe a measurable target without inventing a baseline.', slots: [
+  12: { mode: 'executive_stage', prompt: 'Propose a practical plan based on the case and the options discussion. If the client selected an approach, build the plan around that approach, including when it is the alternative. Identify unconfirmed owners, dates, budget and approvals explicitly. Describe a measurable target without inventing a baseline.', slots: [
     ...['Outcome', 'Delivery', 'Resources', 'Measures'].map((label, i) => row(label.toLowerCase(), label, 534, 241 + i * 82, 295, 69, i % 2 === 0)),
   ] },
   13: { mode: 'executive_stage', prompt: 'Translate the proposed plan into up to six actionable roadmap rows in sequence. For each row, give a short action and status, owner role if known, timing or dependency, and success measure. Use two lines at most per value. Use Not assigned or Not scheduled for unknown commitments.', slots: [

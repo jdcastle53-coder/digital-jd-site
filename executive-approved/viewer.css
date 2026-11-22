@@ -34,3 +34,6 @@ main { max-width: 1552px; margin: auto; padding: .75rem 1rem 1.5rem; }
 .deck-insight-compact { font-size: max(10px, 1.12cqw); line-height: 1.24; padding: .28em .45em; }
 
 #controls .deck-action-pending { background: #275ace; color: #fff; font: 600 max(12px, 1.16cqw) system-ui, sans-serif; cursor: wait; }
+
+#controls .deck-option-choice { border: 1px solid #3151a3; background: #fff; color: #161565; font: 650 max(10px, 1.08cqw) system-ui, sans-serif; }
+#controls .deck-option-choice[aria-pressed="true"] { background: #ffeb42; border-color: #a78112; }

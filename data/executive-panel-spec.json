@@ -52,7 +52,7 @@
   },
   "12": {
     "mode": "executive_stage",
-    "prompt": "Propose a practical plan based on the case and the options discussion. Identify unconfirmed owners, dates, budget and approvals explicitly. Describe a measurable target without inventing a baseline.",
+    "prompt": "Propose a practical plan based on the case and the options discussion. If the client selected an approach, build the plan around that approach, including when it is the alternative. Identify unconfirmed owners, dates, budget and approvals explicitly. Describe a measurable target without inventing a baseline.",
     "keys": [
       "outcome",
       "delivery",

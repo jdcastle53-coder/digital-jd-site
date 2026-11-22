@@ -80,6 +80,52 @@ async function askJD(body, signal) {
   return result.reply.trim();
 }
 
+function optionContext() {
+  return JSON.stringify([fieldValue(2), fieldValue(2, 1), readDraft(draftPrefix + ':depth') || 'Snapshot',
+    fieldValue(4), readDraft(draftPrefix + ':latest-correction')]);
+}
+
+function selectedOption() {
+  try {
+    const selection = JSON.parse(readDraft(draftPrefix + ':selected-option'));
+    return selection?.context === optionContext() ? selection : null;
+  } catch { return null; }
+}
+
+function addOptionChoices(values) {
+  controls.querySelectorAll('.deck-option-choice').forEach(button => button.remove());
+  const choices = [];
+  const selected = selectedOption();
+  for (const [key, label, x] of [
+    ['recommended', 'Select recommended option', 216],
+    ['alternative', 'Select best alternative', 800],
+  ]) {
+    const title = values[key + 'Title'];
+    if (!title) continue;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'deck-option-choice';
+    const isSelected = selected?.key === key && selected.title === title;
+    button.textContent = isSelected ? 'Selected' : label;
+    button.setAttribute('aria-label', label);
+    button.setAttribute('aria-pressed', String(isSelected));
+    place(button, [x * 100 / 1520, 572 * 100 / 720, 230 * 100 / 1520, 31 * 100 / 720]);
+    button.addEventListener('click', () => {
+      const details = Object.fromEntries(['Benefit', 'Risk', 'Resources', 'Timing', 'Rationale']
+        .map(field => [field, values[key + field] || '']));
+      saveDraft(draftPrefix + ':selected-option', JSON.stringify({ context: optionContext(), key, title, details, options: values }));
+      if (selected?.key !== key || selected.title !== title) saveDraft(draftPrefix + ':plan-confirmed', '');
+      for (const choice of choices) {
+        choice.button.setAttribute('aria-pressed', String(choice.button === button));
+        choice.button.textContent = choice.button === button ? 'Selected' : choice.label;
+      }
+      status.textContent = title + ' selected. Review proposed plan to continue.';
+    });
+    choices.push({ button, label });
+    controls.append(button);
+  }
+}
+
 function showCasePanels(number) {
   const spec = number === 4 ? {
     mode: 'executive_opening',
@@ -145,6 +191,7 @@ function showCasePanels(number) {
     const useUnderstanding = number > 5 && understanding?.caseKey === caseKey && understanding.answer === answer &&
       understanding.correction === pendingCorrection;
     const options = insights.get(9);
+    const chosen = number > 9 ? selectedOption() : null;
     const plan = insights.get(12);
     const planNotes = fieldValue(12);
     const decision = readDraft(draftPrefix + ':decision');
@@ -155,6 +202,7 @@ function showCasePanels(number) {
       number > 4 && answer && 'Client answer to the opening question: ' + answer.slice(0, 4000),
       number > 4 && pendingCorrection && 'Latest client correction or answer: ' + pendingCorrection.slice(0, 3000),
       useUnderstanding && 'Updated understanding: ' + understanding.values.understanding,
+      chosen && 'Client-selected approach: ' + chosen.title + '\nSelected approach details: ' + JSON.stringify(chosen.details).slice(0, 2500),
       number > 9 && options?.caseKey === caseKey && 'Options considered: ' + JSON.stringify(options.values).slice(0, 2000),
       number > 12 && plan?.caseKey === caseKey && 'Proposed plan: ' + JSON.stringify(plan.values).slice(0, 2000),
       number > 11 && 'Recent client discussion: ' + JSON.stringify(discussionAnswers.filter(entry => entry.caseKey === caseKey).slice(-2)).slice(0, 2000),
@@ -166,8 +214,15 @@ function showCasePanels(number) {
     ].filter(Boolean);
     function display(values) {
       regions.forEach((node, i) => { node.textContent = values[spec.slots[i].key] || 'Not established for this case.'; });
+      if (number === 9) addOptionChoices(values);
     }
     const fingerprint = JSON.stringify([number, depth, context]);
+    const savedOptions = number === 9 && selectedOption()?.options;
+    if (savedOptions) {
+      insights.set(9, { fingerprint, values: savedOptions, caseKey });
+      display(savedOptions);
+      return;
+    }
     const saved = insights.get(number);
     if (saved?.fingerprint === fingerprint) {
       display(saved.values);
