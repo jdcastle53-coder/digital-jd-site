@@ -4,12 +4,51 @@ const artwork = document.querySelector('#artwork');
 const controls = document.querySelector('#controls');
 const picker = document.querySelector('#screen-picker');
 let screens;
+let draftPrefix;
 let current = 1;
 const returnStack = [];
+
+function place(node, rect) {
+  const [left, top, width, height] = rect.map(value => value + '%');
+  Object.assign(node.style, { left, top, width, height });
+}
+
+function addDictation(field, index, number) {
+  const key = draftPrefix + ':' + number + ':' + index;
+  const input = document.createElement('textarea');
+  input.className = 'deck-input';
+  input.setAttribute('aria-label', field.label);
+  input.maxLength = 8000;
+  input.style.backgroundColor = field.fill;
+  place(input, field.field);
+  try {
+    input.value = localStorage.getItem(key) || '';
+  } catch {}
+  input.toggleAttribute('data-filled', Boolean(input.value));
+  input.addEventListener('input', () => {
+    input.toggleAttribute('data-filled', Boolean(input.value));
+    try {
+      if (input.value) localStorage.setItem(key, input.value);
+      else localStorage.removeItem(key);
+    } catch {
+      status.textContent = 'This browser could not save the text locally.';
+    }
+  });
+  const mic = document.createElement('button');
+  mic.type = 'button';
+  mic.className = 'mic-hit';
+  mic.setAttribute('aria-label', 'Dictate: ' + field.label);
+  place(mic, field.button);
+  mic.addEventListener('click', () => input.focus({ preventScroll: true }));
+  window.JDDictation.attach(mic, input);
+  mic.setAttribute('aria-label', 'Dictate: ' + field.label);
+  controls.append(input, mic);
+}
 
 function render(number) {
   const screen = screens[number - 1];
   if (!screen) return;
+  window.JDDictation?.stop(true);
   current = number;
   artwork.alt = screen.title;
   artwork.src = 'executive-approved/screen-' + String(number).padStart(3, '0') + '.png';
@@ -19,8 +58,7 @@ function render(number) {
     const button = document.createElement('button');
     button.type = 'button';
     button.setAttribute('aria-label', link.label);
-    const [left, top, width, height] = link.rect.map(value => value + '%');
-    Object.assign(button.style, { left, top, width, height });
+    place(button, link.rect);
     button.addEventListener('click', () => {
       if (link.kind === 'return') render(returnStack.pop() || 1);
       else {
@@ -31,12 +69,15 @@ function render(number) {
     });
     controls.append(button);
   }
+  if (window.JDDictation) screen.microphones?.forEach((field, index) => addDictation(field, index, number));
 }
 
 function jump(number) {
   returnStack.length = 0;
   render(number);
 }
+
+window.addEventListener('pagehide', () => window.JDDictation?.stop(true));
 
 try {
   if (!window.Auth) throw new Error('Sign-in is unavailable. Refresh and try again.');
@@ -47,6 +88,7 @@ try {
     if (session.user.user_metadata?.plan !== 'executive') {
       throw new Error('Sign in with an Executive account to open the design review.');
     }
+    draftPrefix = 'digital-jd:executive-design-draft:' + session.user.id;
     const response = await fetch('executive-approved/navigation.json');
     if (!response.ok) throw new Error('The approved screens could not be loaded. Refresh and try again.');
     screens = await response.json();

@@ -19,3 +19,10 @@ main { max-width: 1552px; margin: auto; padding: .75rem 1rem 1.5rem; }
   main { padding-inline: .35rem; overflow-x: auto; }
   #stage { min-width: 620px; }
 }
+
+#stage { container-type: inline-size; }
+.deck-input { position: absolute; pointer-events: auto; resize: none; border: 0; border-radius: .15rem; padding: .25em .55em; font: max(12px, 1.33cqw)/1.26 system-ui, sans-serif; color: #152940; opacity: 0; }
+.deck-input[data-filled], .deck-input:focus { opacity: 1; }
+.deck-input:focus-visible { outline: 2px solid #1366bc; }
+#controls .mic-hit { font-size: .6rem; color: #10253f; overflow: hidden; }
+#controls .mic-hit.is-listening { background: #9c2531; color: #fff; outline: 2px solid white; }
