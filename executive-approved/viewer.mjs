@@ -7,6 +7,24 @@ let screens;
 let draftPrefix;
 let current = 1;
 const returnStack = [];
+const drafts = new Map();
+let insightRequest;
+let lastInsight;
+
+function readDraft(key) {
+  if (drafts.has(key)) return drafts.get(key);
+  try { return localStorage.getItem(key) || ''; } catch { return ''; }
+}
+
+function saveDraft(key, value) {
+  drafts.set(key, value);
+  try {
+    if (value) localStorage.setItem(key, value);
+    else localStorage.removeItem(key);
+  } catch {
+    status.textContent = 'This browser could not save the text locally.';
+  }
+}
 
 function place(node, rect) {
   const [left, top, width, height] = rect.map(value => value + '%');
@@ -21,18 +39,11 @@ function addDictation(field, index, number) {
   input.maxLength = 8000;
   input.style.backgroundColor = field.fill;
   place(input, field.field);
-  try {
-    input.value = localStorage.getItem(key) || '';
-  } catch {}
+  input.value = readDraft(key);
   input.toggleAttribute('data-filled', Boolean(input.value));
   input.addEventListener('input', () => {
     input.toggleAttribute('data-filled', Boolean(input.value));
-    try {
-      if (input.value) localStorage.setItem(key, input.value);
-      else localStorage.removeItem(key);
-    } catch {
-      status.textContent = 'This browser could not save the text locally.';
-    }
+    saveDraft(key, input.value);
   });
   const mic = document.createElement('button');
   mic.type = 'button';
@@ -45,10 +56,76 @@ function addDictation(field, index, number) {
   controls.append(input, mic);
 }
 
+function showInsight() {
+  const panel = document.createElement('section');
+  panel.className = 'deck-insight';
+  panel.setAttribute('aria-label', 'Digital JD insight');
+  panel.setAttribute('aria-live', 'polite');
+  controls.append(panel);
+
+  async function generate() {
+    const situation = readDraft(draftPrefix + ':2:0').trim();
+    const objective = readDraft(draftPrefix + ':2:1').trim();
+    const depth = readDraft(draftPrefix + ':depth') || 'Snapshot';
+    if (!situation || !objective) {
+      panel.textContent = 'Go back to Executive Input and enter both what is happening and what you want to achieve.';
+      return;
+    }
+    const fingerprint = JSON.stringify([situation, objective, depth]);
+    if (lastInsight?.fingerprint === fingerprint) {
+      panel.textContent = lastInsight.text;
+      return;
+    }
+
+    const controller = new AbortController();
+    insightRequest = controller;
+    panel.setAttribute('aria-busy', 'true');
+    panel.textContent = 'Digital JD is reviewing your situation and objective...';
+    try {
+      const { data } = await window.Auth.client.auth.getSession();
+      const token = data?.session?.access_token;
+      if (!token) throw new Error('Sign in again to get your DJD insight.');
+      const response = await fetch('/api/jd-brain-gateway', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+        body: JSON.stringify({
+          message: 'Situation: ' + situation + '\n\nObjective: ' + objective,
+          mode: 'executive_opening',
+          caseScoped: true,
+          depth,
+        }),
+        signal: controller.signal,
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || 'Digital JD could not prepare your insight.');
+      const insight = typeof result.reply === 'string' ? result.reply.trim() : '';
+      if (!insight) throw new Error('Digital JD returned an empty insight.');
+      if (controller.signal.aborted) return;
+      lastInsight = { fingerprint, text: insight };
+      panel.textContent = insight;
+    } catch (error) {
+      if (controller.signal.aborted) return;
+      panel.textContent = error.message;
+      const retry = document.createElement('button');
+      retry.type = 'button';
+      retry.className = 'insight-retry';
+      retry.textContent = 'Try again';
+      retry.addEventListener('click', generate);
+      panel.append(retry);
+    } finally {
+      if (insightRequest === controller) insightRequest = null;
+      panel.removeAttribute('aria-busy');
+    }
+  }
+
+  generate();
+}
+
 function render(number) {
   const screen = screens[number - 1];
   if (!screen) return;
   window.JDDictation?.stop(true);
+  insightRequest?.abort();
   current = number;
   artwork.alt = screen.title;
   artwork.src = 'executive-approved/screen-' + String(number).padStart(3, '0') + '.png';
@@ -60,6 +137,9 @@ function render(number) {
     button.setAttribute('aria-label', link.label);
     place(button, link.rect);
     button.addEventListener('click', () => {
+      if (current === 3 && ['Select Snapshot', 'Select In-depth'].includes(link.label)) {
+        saveDraft(draftPrefix + ':depth', link.label.slice(7));
+      }
       if (link.kind === 'return') render(returnStack.pop() || 1);
       else {
         if (link.kind === 'show') returnStack.push(current);
@@ -69,6 +149,7 @@ function render(number) {
     });
     controls.append(button);
   }
+  if (number === 4) showInsight();
   if (window.JDDictation) screen.microphones?.forEach((field, index) => addDictation(field, index, number));
 }
 
@@ -77,7 +158,10 @@ function jump(number) {
   render(number);
 }
 
-window.addEventListener('pagehide', () => window.JDDictation?.stop(true));
+window.addEventListener('pagehide', () => {
+  window.JDDictation?.stop(true);
+  insightRequest?.abort();
+});
 
 try {
   if (!window.Auth) throw new Error('Sign-in is unavailable. Refresh and try again.');
