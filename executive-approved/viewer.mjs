@@ -305,7 +305,7 @@ function addHurdleResolution(number) {
 
   const action = document.createElement('button');
   action.type = 'button';
-  action.className = 'deck-option-choice';
+  action.className = 'deck-option-choice hurdle-complete-action';
   action.textContent = note ? id + ' complete' : 'Mark ' + id + ' complete';
   action.disabled = Boolean(note);
   place(action, [78.9, 81.4, 15, 3.1]);
