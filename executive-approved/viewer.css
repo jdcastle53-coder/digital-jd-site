@@ -44,3 +44,5 @@ main { max-width: 1552px; margin: auto; padding: .75rem 1rem 1.5rem; }
 
 #controls .hurdle-complete-action:not(:disabled) { background: #ffe32d; border-color: #a78112; color: #00005a; box-shadow: 0 1px 2px #0004; }
 #controls .hurdle-complete-action:not(:disabled):hover { background: #ffd522; }
+
+.deck-send-label { position: absolute; inset: 2px 3px; display: grid; place-items: center; background: #285cf0; color: #fff; border-radius: .15rem; font: 700 max(12px, 1.27cqw) Arial, sans-serif; pointer-events: none; }

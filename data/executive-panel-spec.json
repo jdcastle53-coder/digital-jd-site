@@ -125,5 +125,26 @@
       "openItems",
       "conclusion"
     ]
+  },
+  "45": {
+    "mode": "executive_stage",
+    "prompt": "Respond directly to the latest question or requested plan change. Explain how it affects the proposed plan and identify any approvals or trade-offs. Treat the discussion as provisional.",
+    "keys": [
+      "reply"
+    ]
+  },
+  "46": {
+    "mode": "executive_stage",
+    "prompt": "Summarize the changes explicitly discussed with the client. Return the current position, proposed changes, reason and effect, and any confirmation conditions. Also return the complete updated plan in outcome, delivery, resources and measures, keeping unchanged commitments intact. Do not infer approvals or add unrequested changes.",
+    "keys": [
+      "position",
+      "changes",
+      "effect",
+      "confirmation",
+      "outcome",
+      "delivery",
+      "resources",
+      "measures"
+    ]
   }
 }

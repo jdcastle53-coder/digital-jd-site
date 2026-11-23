@@ -14,6 +14,9 @@ const drafts = new Map();
 let insightRequest;
 const insights = new Map();
 let discussionAnswers = [];
+let planTurns = [];
+let planContext;
+let planQuestion = '';
 
 function readDraft(key) {
   if (drafts.has(key)) return drafts.get(key);
@@ -126,6 +129,18 @@ function addOptionChoices(values) {
   }
 }
 
+function planRevisionKey() {
+  return JSON.stringify([fieldValue(2), fieldValue(2, 1), readDraft(draftPrefix + ':depth'),
+    fieldValue(4), readDraft(draftPrefix + ':latest-correction'), selectedOption()?.key]);
+}
+
+function approvedPlan() {
+  try {
+    const revision = JSON.parse(readDraft(draftPrefix + ':plan-revision') || 'null');
+    if (revision?.key === planRevisionKey()) return revision.values;
+  } catch { return undefined; }
+}
+
 function showCasePanels(number) {
   const spec = number === 4 ? {
     mode: 'executive_opening',
@@ -168,14 +183,14 @@ function showCasePanels(number) {
     const correctionKey = JSON.stringify([situation, objective, depth, answer]);
     const pendingCorrection = readDraft(draftPrefix + ':correction-context') === correctionKey
       ? readDraft(draftPrefix + ':latest-correction') : '';
-    const question = fieldValue(10);
+    const question = number === 45 ? planQuestion || planTurns.at(-1)?.question : fieldValue(10);
     const evidence = fieldValue(15, 3);
     if (number === 5 && !answer) {
       first.textContent = 'Go back to Our Conversation and answer JD?s question first.';
       return;
     }
     if (spec.needsQuestion && !question) {
-      first.textContent = 'Enter a question above, then click Ask another question.';
+      first.textContent = number === 45 ? 'Enter a question or change above, then click Send to DJD.' : 'Enter a question above, then click Ask another question.';
       return;
     }
     if (spec.requiresEvidence && !evidence) {
@@ -193,6 +208,7 @@ function showCasePanels(number) {
     const options = insights.get(9);
     const chosen = number > 9 ? selectedOption() : null;
     const plan = insights.get(12);
+    const revisedPlan = approvedPlan();
     const planNotes = fieldValue(12);
     const decision = readDraft(draftPrefix + ':decision');
     const context = [
@@ -204,11 +220,12 @@ function showCasePanels(number) {
       useUnderstanding && 'Updated understanding: ' + understanding.values.understanding,
       chosen && 'Client-selected approach: ' + chosen.title + '\nSelected approach details: ' + JSON.stringify(chosen.details).slice(0, 2500),
       number > 9 && options?.caseKey === caseKey && 'Options considered: ' + JSON.stringify(options.values).slice(0, 2000),
-      number > 12 && plan?.caseKey === caseKey && 'Proposed plan: ' + JSON.stringify(plan.values).slice(0, 2000),
+      number > 12 && (revisedPlan || plan?.caseKey === caseKey) && 'Proposed plan: ' + JSON.stringify(revisedPlan || plan.values).slice(0, 3000),
+      [45, 46].includes(number) && planTurns.length > 0 && 'Plan discussion: ' + JSON.stringify(planTurns.slice(-4)).slice(0, 4000),
       number > 11 && 'Recent client discussion: ' + JSON.stringify(discussionAnswers.filter(entry => entry.caseKey === caseKey).slice(-2)).slice(0, 2000),
       number >= 12 && planNotes && 'Client plan notes: ' + planNotes.slice(0, 1500),
       number >= 17 && evidence && 'Reported actual result and evidence: ' + evidence.slice(0, 3000),
-      number >= 13 && readDraft(draftPrefix + ':plan-confirmed') === correctionKey && 'Client confirmed the proposed plan.',
+      number >= 13 && ![45, 46].includes(number) && readDraft(draftPrefix + ':plan-confirmed') === correctionKey && 'Client confirmed the proposed plan.',
       number >= 20 && decision && 'Client selected next move: ' + decision,
       spec.needsQuestion && 'Client question: ' + question.slice(0, 3000),
     ].filter(Boolean);
@@ -216,6 +233,9 @@ function showCasePanels(number) {
       regions.forEach((node, i) => { node.textContent = values[spec.slots[i].key] || 'Not established for this case.'; });
       if (number === 9) addOptionChoices(values);
     }
+    if (number === 12 && revisedPlan) { display(revisedPlan); return; }
+    if (number === 45 && !planQuestion) { display({ reply: planTurns.at(-1).answer }); return; }
+    if (number === 46 && !planTurns.length) { first.textContent = 'Use Keep discussing to request changes first.'; return; }
     const fingerprint = JSON.stringify([number, depth, context]);
     const savedOptions = number === 9 && selectedOption()?.options;
     if (savedOptions) {
@@ -243,15 +263,26 @@ function showCasePanels(number) {
         stage: number,
       }, controller.signal);
       if (controller.signal.aborted) return;
-      const values = number === 4 ? { reply } : JSON.parse(reply.replace(/^```(?:json)?s*|s*```$/gi, ''));
+      const values = number === 4 ? { reply } : JSON.parse(reply.replace(/^```(?:json)?\s*|\s*```$/gi, ''));
       if (!values || !spec.slots.some(slot => typeof values[slot.key] === 'string' && values[slot.key].trim())) {
         throw new Error('Digital JD did not return the information for this screen.');
       }
-      const clean = Object.fromEntries(spec.slots.map(slot => [
-        slot.key, typeof values[slot.key] === 'string' ? values[slot.key].trim() : '',
-      ]));
+      const keys = spec.slots.map(slot => slot.key);
+      if (number === 46) keys.push('outcome', 'delivery', 'resources', 'measures');
+      const clean = Object.fromEntries(keys.map(key => [key, typeof values[key] === 'string' ? values[key].trim() : '']));
+      if (number === 46 && keys.some(key => !clean[key])) throw new Error('Digital JD returned an incomplete revision.');
       insights.set(number, { fingerprint, values: clean, caseKey, answer, correction: pendingCorrection });
       if (number === 10) discussionAnswers = [...discussionAnswers, { caseKey, question, answer: clean.reply }].slice(-4);
+      if (number === 45) {
+        planTurns = [...planTurns, { question, answer: clean.reply }].slice(-6);
+        planQuestion = '';
+        insights.delete(46);
+        if (fieldValue(45) === question) {
+          const input = controls.querySelector('.deck-input');
+          input.value = '';
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+      }
       display(clean);
       if (number === 5 && submitted && pendingCorrection.endsWith(submitted)) {
         const input = controls.querySelector('.deck-input');
@@ -336,6 +367,12 @@ function render(number) {
   if (!screen) return;
   window.JDDictation?.stop(true);
   insightRequest?.abort();
+  if ([45, 46].includes(number) && planContext !== planRevisionKey()) {
+    planContext = planRevisionKey();
+    planTurns = [];
+    planQuestion = '';
+    insights.delete(46);
+  }
   current = number;
   status.textContent = '';
   artwork.alt = screen.title;
@@ -346,7 +383,14 @@ function render(number) {
     const button = document.createElement('button');
     button.type = 'button';
     const roadmapContinue = number === 13 && link.label === 'Review progress';
-    button.setAttribute('aria-label', roadmapContinue ? 'Continue' : link.label);
+    const sendPlanQuestion = number === 45 && link.label === 'Ask another question';
+    button.setAttribute('aria-label', roadmapContinue ? 'Continue' : sendPlanQuestion ? 'Send to DJD' : link.label);
+    if (sendPlanQuestion) {
+      const label = document.createElement('span');
+      label.className = 'deck-send-label';
+      label.textContent = 'Send to DJD';
+      button.append(label);
+    }
     if (roadmapContinue) {
       const label = document.createElement('span');
       label.className = 'deck-continue-label';
@@ -372,13 +416,48 @@ function render(number) {
           saveDraft(draftPrefix + ':latest-correction', [previous, correction].filter(Boolean).join('\n').slice(-3000));
         }
       }
+      if (current === 12 && link.target === 45) {
+        const key = planRevisionKey();
+        if (planContext !== key) {
+          planContext = key;
+          planTurns = [];
+          insights.delete(46);
+        }
+        const notes = fieldValue(12);
+        planQuestion = notes && !planTurns.some(turn => turn.question === notes) ? notes : '';
+      }
+      if (sendPlanQuestion) {
+        if (insightRequest) return;
+        planContext = planRevisionKey();
+        planQuestion = fieldValue(45);
+        if (!planQuestion) { status.textContent = 'Enter a question or requested change first.'; return; }
+        insights.delete(45);
+      }
+      if (current === 45 && link.target === 46 && (insightRequest || planQuestion || fieldValue(45) || !planTurns.length)) {
+        status.textContent = insightRequest ? 'Wait for Digital JD to respond before reviewing changes.' : 'Send your question or change to Digital JD first.';
+        return;
+      }
+      if (current === 46 && link.label === 'Confirm changes & return') {
+        const revision = insights.get(46);
+        if (insightRequest || !revision || !planTurns.length) { status.textContent = 'Generate and review the proposed changes first.'; return; }
+        const values = Object.fromEntries(['outcome', 'delivery', 'resources', 'measures'].map(key => [key, revision.values[key]]));
+        saveDraft(draftPrefix + ':plan-revision', JSON.stringify({ key: planRevisionKey(), values }));
+        saveDraft(draftPrefix + ':plan-confirmed', '');
+        saveDraft(draftPrefix + ':12:0', '');
+        planTurns = [];
+        insights.delete(46);
+        if (returnStack.at(-1) === 12) returnStack.pop();
+        render(12);
+        controls.querySelector('button')?.focus({ preventScroll: true });
+        return;
+      }
       if (current === 12 && link.target === 13 && link.label.startsWith('Confirm')) {
         const depth = readDraft(draftPrefix + ':depth') || 'Snapshot';
         saveDraft(draftPrefix + ':plan-confirmed', JSON.stringify([fieldValue(2), fieldValue(2, 1), depth, fieldValue(4)]));
       }
       if (current === 6 && /^(10|[1-9])$/.test(link.label)) saveDraft(draftPrefix + ':clarity', link.label);
       if (current === 34 && link.target >= 36 && link.target <= 40) saveDraft(draftPrefix + ':decision', link.label);
-      if (link.kind === 'return') render(returnStack.pop() || 1);
+      if (link.kind === 'return') render(returnStack.pop() || (current === 45 ? 12 : 1));
       else {
         if (link.kind === 'show') returnStack.push(current);
         render(link.target);
@@ -388,6 +467,14 @@ function render(number) {
     controls.append(button);
   }
   if (window.JDDictation) screen.microphones?.forEach((field, index) => addDictation(field, index, number));
+  if (number === 12) {
+    const guidance = document.createElement('div');
+    guidance.className = 'deck-insight deck-insight-compact';
+    guidance.textContent = 'Notes are optional. To request a change, add a note and choose Discuss / revise plan.';
+    guidance.style.backgroundColor = '#fff';
+    place(guidance, [60, 74.6, 34.1, 8.4]);
+    controls.append(guidance);
+  }
   showCasePanels(number);
   if (hurdleScreens.includes(number)) addHurdleResolution(number);
   scope.textContent = number === 4 || PANELS[number] || [1, 2, 3, 6, 8].includes(number)

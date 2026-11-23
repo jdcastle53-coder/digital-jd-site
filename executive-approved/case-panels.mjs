@@ -57,4 +57,10 @@ export const PANELS = {
   23: { mode: 'executive_stage', requiresEvidence: true, prompt: 'Review outcome against the original objective. Separate verified outcome from incomplete activity, and clearly mark unknowns. Never say the objective was reached unless recorded evidence supports it.', slots: [
     ...['Objective', 'Actual result', 'Scope', 'Open items', 'Conclusion'].map((label, i) => row(['objective','actual','scope','openItems','conclusion'][i], label, 533, 240 + i * 65, 886, 55, i % 2 === 0)),
   ] },
+  45: { mode: 'executive_stage', needsQuestion: true, slots: [
+    box('reply', 'DJD response', 915, 460, 518, 134),
+  ] },
+  46: { mode: 'executive_stage', slots: [
+    ...['position', 'changes', 'effect', 'confirmation'].map((key, i) => row(key, key, 510, 241 + i * 71, 923, 62, i % 2 === 0)),
+  ] },
 };
