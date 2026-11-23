@@ -99,9 +99,10 @@ function addOptionChoices(values) {
   controls.querySelectorAll('.deck-option-choice').forEach(button => button.remove());
   const choices = [];
   const selected = selectedOption();
-  for (const [key, label, x] of [
-    ['recommended', 'Select recommended option', 216],
-    ['alternative', 'Select best alternative', 800],
+  const buttonWidth = 160;
+  for (const [key, label, center] of [
+    ['recommended', 'Select recommended option', 462.5],
+    ['alternative', 'Select best alternative', 1052.5],
   ]) {
     const title = values[key + 'Title'];
     if (!title) continue;
@@ -109,22 +110,23 @@ function addOptionChoices(values) {
     button.type = 'button';
     button.className = 'deck-option-choice';
     const isSelected = selected?.key === key && selected.title === title;
-    button.textContent = isSelected ? 'Selected' : label;
+    button.textContent = isSelected ? 'Selected' : 'Select';
     button.setAttribute('aria-label', label);
     button.setAttribute('aria-pressed', String(isSelected));
-    place(button, [x * 100 / 1520, 572 * 100 / 720, 230 * 100 / 1520, 31 * 100 / 720]);
+    place(button, [(center - buttonWidth / 2) * 100 / 1520, 578 * 100 / 720,
+      buttonWidth * 100 / 1520, 26 * 100 / 720]);
     button.addEventListener('click', () => {
       const details = Object.fromEntries(['Benefit', 'Risk', 'Resources', 'Timing', 'Rationale']
         .map(field => [field, values[key + field] || '']));
       saveDraft(draftPrefix + ':selected-option', JSON.stringify({ context: optionContext(), key, title, details, options: values }));
       if (selected?.key !== key || selected.title !== title) saveDraft(draftPrefix + ':plan-confirmed', '');
       for (const choice of choices) {
-        choice.button.setAttribute('aria-pressed', String(choice.button === button));
-        choice.button.textContent = choice.button === button ? 'Selected' : choice.label;
+        choice.setAttribute('aria-pressed', String(choice === button));
+        choice.textContent = choice === button ? 'Selected' : 'Select';
       }
       status.textContent = title + ' selected. Review proposed plan to continue.';
     });
-    choices.push({ button, label });
+    choices.push(button);
     controls.append(button);
   }
 }
