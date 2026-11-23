@@ -62,36 +62,12 @@
   },
   "13": {
     "mode": "executive_stage",
-    "prompt": "Translate the proposed plan into up to six actionable roadmap rows in sequence. For each row, give a short action and status, owner role if known, timing or dependency, and success measure. Use two lines at most per value. Use Not assigned or Not scheduled for unknown commitments.",
+    "prompt": "Build a chronological action roadmap from the client case and plan. Group tasks at meaningful transitions in the work. Use three sections when they fit, and add or remove sections as warranted. Allow uneven section sizes and include all material tasks and explicit requested assignments. Return a JSON object with outcome (a concise string) and sections (an array of objects, each containing a tasks array). Each task has name, owner, and measure string fields. Use short concrete task names and mark unknown owners Unassigned. Do not include section labels or task numbers. Do not invent commitments or completion.",
     "keys": [
       "outcome",
-      "dates",
-      "progress",
-      "task0",
-      "owner0",
-      "timing0",
-      "measure0",
-      "task1",
-      "owner1",
-      "timing1",
-      "measure1",
-      "task2",
-      "owner2",
-      "timing2",
-      "measure2",
-      "task3",
-      "owner3",
-      "timing3",
-      "measure3",
-      "task4",
-      "owner4",
-      "timing4",
-      "measure4",
-      "task5",
-      "owner5",
-      "timing5",
-      "measure5"
-    ]
+      "sections"
+    ],
+    "roadmap": true
   },
   "19": {
     "mode": "executive_stage",

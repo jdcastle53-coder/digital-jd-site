@@ -1,4 +1,5 @@
 import { PANELS } from './case-panels.mjs';
+import { mountRoadmap, parseSuggestedRoadmap } from './roadmap.mjs';
 
 const status = document.querySelector('#status');
 const review = document.querySelector('#review');
@@ -6,6 +7,8 @@ const artwork = document.querySelector('#artwork');
 const controls = document.querySelector('#controls');
 const picker = document.querySelector('#screen-picker');
 const scope = document.querySelector('.scope');
+const stage = document.querySelector('#stage');
+const roadmap = document.querySelector('#action-roadmap');
 let screens;
 let draftPrefix;
 let current = 1;
@@ -364,6 +367,84 @@ function addHurdleResolution(number) {
   }
 }
 
+async function showRoadmap(screen) {
+  const situation = fieldValue(2), objective = fieldValue(2, 1);
+  const depth = readDraft(draftPrefix + ':depth') || 'Snapshot';
+  const storageKey = draftPrefix + ':roadmap:' + planRevisionKey();
+  const open = link => () => {
+    if (link.kind === 'show') returnStack.push(13);
+    render(link.target);
+  };
+  const back = screen.links.find(link => link.label === 'Back');
+  const next = screen.links.find(link => link.label === 'Review progress');
+  const navigation = [{ label: 'Back to your plan', run: open(back) },
+    { label: 'Continue to progress dashboard', run: open(next), primary: true }];
+  const shortcuts = screen.links.filter(link => !['Back', 'Review progress', 'Open'].includes(link.label))
+    .map(link => ({ label: link.label, run: open(link) }));
+  function show(plan) {
+    mountRoadmap(roadmap, {initialSections: plan.sections, outcome: plan.outcome || objective, navigation, shortcuts,
+      persist(sections) {
+        const value = JSON.stringify({ ...plan, sections, edited: true });
+        saveDraft(storageKey, value);
+        if (localStorage.getItem(storageKey) !== value) throw new Error('Roadmap storage unavailable');
+      },
+    });
+  }
+  const root = roadmap.shadowRoot || roadmap.attachShadow({mode: 'open'});
+  function message(text, action, callback) {
+    const content = document.createElement('div');
+    const heading = document.createElement('h1');
+    heading.textContent = 'Your Action Roadmap';
+    const description = document.createElement('p');
+    description.setAttribute('role', 'status');
+    description.textContent = text;
+    content.append(heading, description);
+    if (action) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = action;
+      button.addEventListener('click', callback);
+      content.append(button);
+    }
+    root.replaceChildren(content);
+  }
+  if (!situation || !objective) {
+    message('Enter your situation and objective before opening your roadmap.', 'Go to Executive Input', () => render(2));
+    return;
+  }
+  try {
+    const stored = JSON.parse(readDraft(storageKey) || 'null');
+    if (Array.isArray(stored?.sections) && stored.sections.length) { show(stored); return; }
+  } catch { /* Generate a fresh starting roadmap if the saved data cannot be read. */ }
+  message('Digital JD is grouping the work into a starting roadmap.');
+  const controller = new AbortController();
+  insightRequest = controller;
+  try {
+    const proposed = insights.get(12);
+    const plan = approvedPlan() || (proposed?.caseKey === JSON.stringify([situation, objective, depth]) ? proposed.values : null);
+    const selected = selectedOption();
+    const context = [
+      'Situation: ' + situation.slice(0, 4000),
+      'Objective: ' + objective.slice(0, 3000),
+      fieldValue(4) && 'Client clarification: ' + fieldValue(4).slice(0, 3000),
+      readDraft(draftPrefix + ':latest-correction') && 'Case corrections: ' + readDraft(draftPrefix + ':latest-correction').slice(0, 3000),
+      plan && 'Proposed plan: ' + JSON.stringify(plan).slice(0, 3500),
+      selected && 'Selected approach: ' + selected.title,
+      fieldValue(12) && 'Plan notes: ' + fieldValue(12).slice(0, 2000),
+    ].filter(Boolean).join('\n\n');
+    const reply = await askJD({ message: context, mode: 'executive_stage', depth, stage: 13 }, controller.signal);
+    if (controller.signal.aborted || current !== 13) return;
+    const generated = parseSuggestedRoadmap(reply);
+    saveDraft(storageKey, JSON.stringify(generated));
+    show(generated);
+  } catch (error) {
+    if (controller.signal.aborted) return;
+    message(error instanceof SyntaxError ? 'Digital JD could not read the generated roadmap.' : error.message, 'Try again', () => showRoadmap(screen));
+  } finally {
+    if (insightRequest === controller) insightRequest = null;
+  }
+}
+
 function render(number) {
   const screen = screens[number - 1];
   if (!screen) return;
@@ -377,29 +458,30 @@ function render(number) {
   }
   current = number;
   status.textContent = '';
-  artwork.alt = screen.title;
-  artwork.src = 'executive-approved/screen-' + String(number).padStart(3, '0') + '.png';
   picker.value = String(number);
   controls.replaceChildren();
+  stage.hidden = number === 13;
+  roadmap.hidden = number !== 13;
+  if (number === 13) {
+    scope.textContent = 'Executive evaluation. Use sample information.';
+    showRoadmap(screen);
+    return;
+  }
+  roadmap.shadowRoot?.replaceChildren();
+  artwork.alt = screen.title;
+  artwork.src = 'executive-approved/screen-' + String(number).padStart(3, '0') + '.png';
   for (const link of screen.links) {
     const button = document.createElement('button');
     button.type = 'button';
-    const roadmapContinue = number === 13 && link.label === 'Review progress';
     const sendPlanQuestion = number === 45 && link.label === 'Ask another question';
     const sendOptionsQuestion = number === 10 && link.target === 10 && link.label === 'Ask another question';
     const actionLabel = sendOptionsQuestion ? 'Ask another question, then click here' :
-      sendPlanQuestion ? 'Send to DJD' : roadmapContinue ? 'Continue' : link.label;
+      sendPlanQuestion ? 'Send to DJD' : link.label;
     button.setAttribute('aria-label', actionLabel);
     if (sendPlanQuestion || sendOptionsQuestion) {
       const label = document.createElement('span');
       label.className = sendOptionsQuestion ? 'deck-send-label deck-options-send-label' : 'deck-send-label';
       label.textContent = actionLabel;
-      button.append(label);
-    }
-    if (roadmapContinue) {
-      const label = document.createElement('span');
-      label.className = 'deck-continue-label';
-      label.textContent = 'Continue';
       button.append(label);
     }
     if (number === 5 && link.label === 'Update understanding') button.dataset.conversationAction = 'update';
@@ -447,6 +529,9 @@ function render(number) {
         if (insightRequest || !revision || !planTurns.length) { status.textContent = 'Generate and review the proposed changes first.'; return; }
         const values = Object.fromEntries(['outcome', 'delivery', 'resources', 'measures'].map(key => [key, revision.values[key]]));
         saveDraft(draftPrefix + ':plan-revision', JSON.stringify({ key: planRevisionKey(), values }));
+        const roadmapKey = draftPrefix + ':roadmap:' + planRevisionKey();
+        const storedRoadmap = readDraft(roadmapKey);
+        if (storedRoadmap && !JSON.parse(storedRoadmap).edited) saveDraft(roadmapKey, '');
         saveDraft(draftPrefix + ':plan-confirmed', '');
         saveDraft(draftPrefix + ':12:0', '');
         planTurns = [];

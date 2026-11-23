@@ -40,10 +40,11 @@ main { max-width: 1552px; margin: auto; padding: .75rem 1rem 1.5rem; }
 
 .hurdle-count { position: absolute; background: #eaf1f9; color: #38516c; padding: .12em .25em; font: 600 max(10px, 1.03cqw) system-ui, sans-serif; }
 
-.deck-continue-label { position: absolute; inset: 2px 3px; display: grid; place-items: center; background: #ffe32d; color: #00005a; border-radius: .15rem; font: 700 max(12px, 1.27cqw) Arial, sans-serif; pointer-events: none; }
 
 #controls .hurdle-complete-action:not(:disabled) { background: #ffe32d; border-color: #a78112; color: #00005a; box-shadow: 0 1px 2px #0004; }
 #controls .hurdle-complete-action:not(:disabled):hover { background: #ffd522; }
 
 .deck-send-label { position: absolute; inset: 2px 3px; display: grid; place-items: center; background: #285cf0; color: #fff; border-radius: .15rem; font: 700 max(12px, 1.27cqw) Arial, sans-serif; pointer-events: none; }
 .deck-options-send-label { inset: 0; padding-inline: .35em; text-align: center; font-size: max(9px, 1.1cqw); line-height: 1; }
+
+#action-roadmap[hidden] { display: none; }

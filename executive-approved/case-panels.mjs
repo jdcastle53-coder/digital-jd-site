@@ -31,21 +31,6 @@ export const PANELS = {
   12: { mode: 'executive_stage', prompt: 'Propose a practical plan based on the case and the options discussion. If the client selected an approach, build the plan around that approach, including when it is the alternative. Identify unconfirmed owners, dates, budget and approvals explicitly. Describe a measurable target without inventing a baseline.', slots: [
     ...['Outcome', 'Delivery', 'Resources', 'Measures'].map((label, i) => row(label.toLowerCase(), label, 534, 241 + i * 82, 295, 69, i % 2 === 0)),
   ] },
-  13: { mode: 'executive_stage', prompt: 'Translate the proposed plan into up to six actionable roadmap rows in sequence. For each row, give a short action and status, owner role if known, timing or dependency, and success measure. Use two lines at most per value. Use Not assigned or Not scheduled for unknown commitments.', slots: [
-    box('outcome', 'Agreed outcome', 306, 186, 630, 34, '#fff'),
-    box('dates', 'Plan dates', 959, 187, 252, 32, '#fff'),
-    box('progress', 'Progress', 1238, 187, 221, 32, '#fff'),
-    ...Array.from({ length: 6 }, (_, i) => {
-      const y = 319 + i * 51;
-      const fill = i < 2 ? '#fcfae9' : i < 4 ? '#fff' : '#f3f6fc';
-      return [
-        box('task' + i, 'Task ' + (i + 1), 453, y, 278, 45, fill),
-        box('owner' + i, 'Owner', 735, y, 114, 45, fill),
-        box('timing' + i, 'Timing', 853, y, 145, 45, fill),
-        box('measure' + i, 'Measure', 1003, y, 331, 45, fill),
-      ];
-    }).flat(),
-  ] },
   19: { mode: 'executive_stage', requiresEvidence: true, prompt: 'Compare recorded actual results with the target. State the evidence, confidence, and next useful check. Do not infer progress, completion, causation, or percentages from a proposed plan.', slots: [
     box('assessment', 'Current assessment', 331, 241, 500, 85),
     ...['Result', 'Direction', 'Confidence'].map((label, i) => row(label.toLowerCase(), label, 530, 344 + i * 61, 297, 49, i % 2 === 0)),
