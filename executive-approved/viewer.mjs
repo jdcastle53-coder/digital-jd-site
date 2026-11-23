@@ -192,7 +192,7 @@ function showCasePanels(number) {
       return;
     }
     if (spec.needsQuestion && !question) {
-      first.textContent = number === 45 ? 'Enter a question or change above, then click Send to DJD.' : 'Enter a question above, then click Ask another question.';
+      first.textContent = number === 45 ? 'Enter a question or change above, then click Send to DJD.' : 'Type your question in the box above, then click the button below to send it.';
       return;
     }
     if (spec.requiresEvidence && !evidence) {
@@ -386,11 +386,14 @@ function render(number) {
     button.type = 'button';
     const roadmapContinue = number === 13 && link.label === 'Review progress';
     const sendPlanQuestion = number === 45 && link.label === 'Ask another question';
-    button.setAttribute('aria-label', roadmapContinue ? 'Continue' : sendPlanQuestion ? 'Send to DJD' : link.label);
-    if (sendPlanQuestion) {
+    const sendOptionsQuestion = number === 10 && link.target === 10 && link.label === 'Ask another question';
+    const actionLabel = sendOptionsQuestion ? 'Ask another question, then click here' :
+      sendPlanQuestion ? 'Send to DJD' : roadmapContinue ? 'Continue' : link.label;
+    button.setAttribute('aria-label', actionLabel);
+    if (sendPlanQuestion || sendOptionsQuestion) {
       const label = document.createElement('span');
-      label.className = 'deck-send-label';
-      label.textContent = 'Send to DJD';
+      label.className = sendOptionsQuestion ? 'deck-send-label deck-options-send-label' : 'deck-send-label';
+      label.textContent = actionLabel;
       button.append(label);
     }
     if (roadmapContinue) {
