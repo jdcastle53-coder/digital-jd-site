@@ -48,3 +48,21 @@ main { max-width: 1552px; margin: auto; padding: .75rem 1rem 1.5rem; }
 .deck-options-send-label { inset: 0; padding-inline: .35em; text-align: center; font-size: max(9px, 1.1cqw); line-height: 1; }
 
 #action-roadmap[hidden] { display: none; }
+
+#controls .hurdle-save-update { background: #285cf0; border-color: #2149ab; color: #fff; }
+#controls .hurdle-save-update:hover { background: #1748bc; }
+.hurdle-note-status { position: absolute; color: #38516a; font: 600 max(9px, 1.03cqw)/1.15 system-ui, sans-serif; }
+
+.tracker-task-details { width: min(36rem, calc(100% - 2rem)); max-height: calc(100% - 2rem); padding: 1.25rem; color: #152940; border: 1px solid #abbfdf; border-radius: 12px; }
+.tracker-task-details::backdrop { background: #06153188; }
+.tracker-task-details h2, .tracker-task-details h3 { margin: 0; color: #12125f; }
+.tracker-task-details p { margin: .4rem 0 1rem; }
+.tracker-task-details dl { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem 1rem; margin: 1rem 0; }
+.tracker-task-details dt { font-weight: 700; }
+.tracker-task-details dd { margin: 0; }
+.tracker-task-details button { padding: .5rem .75rem; background: #285cf0; color: #fff; border: 1px solid #2149ab; border-radius: 7px; font: inherit; cursor: pointer; }
+
+.deck-client-label { inset: 0; padding: 0 .3em; font-size: max(9px, 1.14cqw); line-height: 1.05; text-align: center; }
+.deck-client-primary { background: #ffe32d; color: #00005a; }
+.deck-client-compact { padding: 0; font-size: max(8px, .99cqw); }
+.deck-client-row { background: #fff; color: #173474; border: 1px solid #577cc6; text-align: left; justify-items: start; padding-inline: .65em; }

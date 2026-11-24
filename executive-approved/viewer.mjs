@@ -1,5 +1,6 @@
 import { PANELS } from './case-panels.mjs';
 import { mountRoadmap, parseSuggestedRoadmap } from './roadmap.mjs';
+import { openTrackedTask } from './tracker-task-details.mjs';
 
 const status = document.querySelector('#status');
 const review = document.querySelector('#review');
@@ -15,6 +16,7 @@ let current = 1;
 const returnStack = [];
 const drafts = new Map();
 let insightRequest;
+let screenEvents;
 const insights = new Map();
 let discussionAnswers = [];
 let planTurns = [];
@@ -31,8 +33,10 @@ function saveDraft(key, value) {
   try {
     if (value) localStorage.setItem(key, value);
     else localStorage.removeItem(key);
+    return true;
   } catch {
     status.textContent = 'This browser could not save the text locally.';
+    return false;
   }
 }
 
@@ -54,6 +58,7 @@ function addDictation(field, index, number) {
   input.addEventListener('input', () => {
     input.toggleAttribute('data-filled', Boolean(input.value));
     saveDraft(key, input.value);
+    if (index === 0 && hurdleScreens.includes(number)) updateHurdleNoteStatus(number);
   });
   const mic = document.createElement('button');
   mic.type = 'button';
@@ -317,13 +322,36 @@ function showCasePanels(number) {
 
 const hurdleScreens = [16, 83, 84];
 
+function hurdleResolutionKey(number) {
+  const context = JSON.stringify([fieldValue(2), fieldValue(2, 1)]);
+  return draftPrefix + ':hurdle-resolution:' + context + ':' + number;
+}
+
+function hurdleUpdateKey(number) {
+  return hurdleResolutionKey(number) + ':update';
+}
+
+function updateHurdleNoteStatus(number) {
+  const feedback = controls.querySelector('.hurdle-note-status');
+  if (!feedback) return;
+  const resolution = readDraft(hurdleResolutionKey(number));
+  const update = readDraft(hurdleUpdateKey(number));
+  const text = fieldValue(number);
+  const state = resolution ? 'Hurdle complete.' : 'Hurdle still open.';
+  if (text && (text === update || text === resolution)) {
+    feedback.textContent = 'Update saved in this browser. ' + state;
+  } else if (text) {
+    feedback.textContent = 'Click Save update to keep your comment. ' + state;
+  } else {
+    feedback.textContent = 'Enter a comment, then click Save update.';
+  }
+}
+
 function addHurdleResolution(number) {
   const index = hurdleScreens.indexOf(number);
   const id = 'H0' + (index + 1);
-  const context = JSON.stringify([fieldValue(2), fieldValue(2, 1)]);
-  const keyFor = screen => draftPrefix + ':hurdle-resolution:' + context + ':' + screen;
-  const note = readDraft(keyFor(number));
-  const stillOpen = hurdleScreens.filter(screen => !readDraft(keyFor(screen))).length;
+  const note = readDraft(hurdleResolutionKey(number));
+  const stillOpen = hurdleScreens.filter(screen => !readDraft(hurdleResolutionKey(screen))).length;
   const count = document.createElement('span');
   count.className = 'hurdle-count';
   count.textContent = stillOpen + (stillOpen === 1 ? ' open hurdle' : ' open hurdles') + ' ? Evaluation case';
@@ -331,7 +359,7 @@ function addHurdleResolution(number) {
   controls.append(count);
 
   for (const [position, screen] of hurdleScreens.entries()) {
-    if (!readDraft(keyFor(screen))) continue;
+    if (!readDraft(hurdleResolutionKey(screen))) continue;
     const completion = document.createElement('span');
     completion.className = 'hurdle-count';
     completion.textContent = 'Complete';
@@ -351,11 +379,36 @@ function addHurdleResolution(number) {
       status.textContent = 'Enter how the hurdle was resolved first.';
       return;
     }
-    saveDraft(keyFor(number), resolution);
+    const key = hurdleResolutionKey(number);
+    if (!saveDraft(key, resolution)) { drafts.delete(key); return; }
     render(number);
     status.textContent = id + ' marked complete.';
   });
   controls.append(action);
+  const saveUpdate = document.createElement('button');
+  saveUpdate.type = 'button';
+  saveUpdate.className = 'deck-option-choice hurdle-save-update';
+  saveUpdate.textContent = 'Save update';
+  place(saveUpdate, [63.4, 81.4, 14.5, 3.1]);
+  controls.append(saveUpdate);
+
+  const feedback = document.createElement('span');
+  feedback.className = 'hurdle-note-status';
+  feedback.setAttribute('role', 'status');
+  place(feedback, [46.7, 84.8, 47.2, 3.6]);
+  controls.append(feedback);
+  updateHurdleNoteStatus(number);
+  saveUpdate.addEventListener('click', () => {
+    const update = fieldValue(number);
+    if (!update) { feedback.textContent = 'Enter a comment before saving an update.'; return; }
+    const key = hurdleUpdateKey(number);
+    if (!saveDraft(key, update)) {
+      drafts.delete(key);
+      feedback.textContent = 'Update could not be saved in this browser. Try again.';
+      return;
+    }
+    updateHurdleNoteStatus(number);
+  });
 
   if (note) {
     const decision = document.createElement('div');
@@ -380,7 +433,7 @@ async function showRoadmap(screen) {
   const navigation = [{ label: 'Back to your plan', run: open(back) },
     { label: 'Continue to progress dashboard', run: open(next), primary: true }];
   const shortcuts = screen.links.filter(link => !['Back', 'Review progress', 'Open'].includes(link.label))
-    .map(link => ({ label: link.label, run: open(link) }));
+    .map(link => ({ label: link.clientLabel || link.label, run: open(link) }));
   function show(plan) {
     mountRoadmap(roadmap, {initialSections: plan.sections, outcome: plan.outcome || objective, navigation, shortcuts,
       persist(sections) {
@@ -394,16 +447,25 @@ async function showRoadmap(screen) {
   function message(text, action, callback) {
     const content = document.createElement('div');
     const heading = document.createElement('h1');
-    heading.textContent = 'Your Action Roadmap';
+    heading.textContent = 'Slide 13 - Your Action Roadmap';
     const description = document.createElement('p');
     description.setAttribute('role', 'status');
     description.textContent = text;
+    content.className = 'roadmap-loading';
+    content.style.cssText = 'background:#fff;border:1px solid #c9d7eb;border-radius:12px;padding:1rem;margin:0 auto 1rem;max-width:1100px';
     content.append(heading, description);
     if (action) {
       const button = document.createElement('button');
       button.type = 'button';
       button.textContent = action;
       button.addEventListener('click', callback);
+      content.append(button);
+    }
+    for (const {label, run} of navigation) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.textContent = label;
+      button.addEventListener('click', run);
       content.append(button);
     }
     root.replaceChildren(content);
@@ -459,6 +521,8 @@ function render(number) {
   current = number;
   status.textContent = '';
   picker.value = String(number);
+  screenEvents?.abort();
+  screenEvents = new AbortController();
   controls.replaceChildren();
   stage.hidden = number === 13;
   roadmap.hidden = number !== 13;
@@ -470,24 +534,72 @@ function render(number) {
   roadmap.shadowRoot?.replaceChildren();
   artwork.alt = screen.title;
   artwork.src = 'executive-approved/screen-' + String(number).padStart(3, '0') + '.png';
+  if (number === 9) {
+    const planArtwork = new Image();
+    planArtwork.src = 'executive-approved/screen-012.png';
+  }
   for (const link of screen.links) {
     const button = document.createElement('button');
     button.type = 'button';
     const sendPlanQuestion = number === 45 && link.label === 'Ask another question';
     const sendOptionsQuestion = number === 10 && link.target === 10 && link.label === 'Ask another question';
     const actionLabel = sendOptionsQuestion ? 'Ask another question, then click here' :
-      sendPlanQuestion ? 'Send to DJD' : link.label;
-    button.setAttribute('aria-label', actionLabel);
-    if (sendPlanQuestion || sendOptionsQuestion) {
+      sendPlanQuestion ? 'Send to DJD' : link.clientLabel || link.label;
+    button.setAttribute('aria-label', link.accessibleLabel || actionLabel);
+    if (link.accessibleLabel) button.title = link.accessibleLabel;
+    const backToTaskList = number === 15 && link.label === 'Back to task list';
+    const saveTask = number === 15 && link.label === 'Save task';
+    const recordProgress = number === 17 && link.label === 'Record a progress update';
+    if (sendPlanQuestion || sendOptionsQuestion || backToTaskList || saveTask || recordProgress || link.clientLabel) {
       const label = document.createElement('span');
-      label.className = sendOptionsQuestion ? 'deck-send-label deck-options-send-label' : 'deck-send-label';
+      label.className = sendOptionsQuestion || recordProgress ? 'deck-send-label deck-options-send-label' : 'deck-send-label';
+      if (link.clientLabel) label.classList.add('deck-client-label');
+      if (link.labelTone) label.classList.add('deck-client-' + link.labelTone);
       label.textContent = actionLabel;
       button.append(label);
     }
     if (number === 5 && link.label === 'Update understanding') button.dataset.conversationAction = 'update';
     if (number === 5 && link.label === 'Confirm understanding') button.dataset.conversationAction = 'confirm';
     place(button, link.rect);
+    if (saveTask) {
+      const label = button.firstElementChild;
+      const storageKey = draftPrefix + ':saved-task-update:' + planRevisionKey();
+      const snapshot = () => JSON.stringify(Object.fromEntries(screen.microphones.map((field, index) => [field.label, fieldValue(15, index)])));
+      let savedUpdate;
+      try { savedUpdate = localStorage.getItem(storageKey); } catch { /* The save action reports storage errors. */ }
+      const buttonLabel = () => savedUpdate && savedUpdate === snapshot() ? 'Add another task' : 'Save task';
+      const refreshLabel = () => {
+        label.textContent = buttonLabel();
+        button.setAttribute('aria-label', label.textContent);
+      };
+      controls.addEventListener('input', () => {
+        if (current === 15) refreshLabel();
+      }, { signal: screenEvents.signal });
+      refreshLabel();
+      button.addEventListener('click', () => {
+        if (buttonLabel() === 'Add another task') { jump(14); return; }
+        const update = snapshot();
+        if (!Object.values(JSON.parse(update)).some(Boolean)) {
+          status.textContent = 'Enter a task update before saving.';
+          return;
+        }
+        try {
+          localStorage.setItem(storageKey, update);
+          savedUpdate = update;
+          status.textContent = 'Task update saved in this browser. You can add another task or submit this update for review.';
+          refreshLabel();
+        } catch {
+          status.textContent = 'This browser could not save the task update.';
+        }
+      });
+      controls.append(button);
+      continue;
+    }
     button.addEventListener('click', () => {
+      if (current === 18 && link.label === 'Open') {
+        openTrackedTask(link.target, button);
+        return;
+      }
       if (current === 3 && ['Select Snapshot', 'Select In-depth'].includes(link.label)) {
         saveDraft(draftPrefix + ':depth', link.label.slice(7));
       }

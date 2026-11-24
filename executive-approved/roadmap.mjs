@@ -26,23 +26,23 @@ dialog{max-width:min(29rem,calc(100% - 2rem));width:100%;padding:1.25rem;border:
 dialog::backdrop{background:#06153188}dialog h2{color:var(--navy);margin-bottom:.5rem}dialog label{display:block;margin-top:.65rem}dialog input,dialog select{width:100%;padding:.45rem;border:1px solid #8299bb;border-radius:6px}dialog .actions{justify-content:flex-end;margin-top:1rem}
 dl{display:grid;grid-template-columns:max-content 1fr;gap:.35rem .8rem}dt{font-weight:700}dd{margin:0}
 @media(max-width:580px){.task{grid-template-columns:4.9rem 1fr}.task .actions{grid-column:2;justify-content:flex-start}header{align-items:flex-start}}
-.navigation{margin-top:1rem;justify-content:space-between}
+.navigation{margin:0 0 1rem;justify-content:space-between}
 .shortcuts{margin-top:1rem}
 .request{padding:1rem}
 .request button{margin-top:.7rem}
 `;
 const markup = `
-<header><span class="brand">Digital JD · Intelligent Leadership System</span><span class="preview">Slide 13 prototype · Sample case</span></header>
+<header><span class="brand">Digital JD · Intelligent Leadership System</span><span class="preview">Slide 13</span></header>
 <main>
 <h1>Execution Plan</h1>
 <p class="intro">Digital JD groups the proposed work in chronological order. You can change the sections and tasks to fit your case.</p>
 <div class="summary"><div><strong>Agreed outcome</strong><span id="outcome"></span></div><div><strong>Progress</strong><span id="progress"></span></div></div>
+<div class="actions navigation" id="roadmap-navigation"></div>
 <section class="roadmap" aria-labelledby="roadmap-title">
 <div class="bar"><h2 id="roadmap-title">Your Action Roadmap</h2><div class="actions" id="toolbar"></div></div>
 <div id="sections"></div>
 </section>
 <p id="status" role="status"></p>
-<div class="actions navigation" id="roadmap-navigation"></div>
 <div class="actions shortcuts" id="roadmap-shortcuts"></div>
 </main>
 <dialog id="dialog" aria-labelledby="dialog-title">
@@ -111,6 +111,7 @@ export function mountRoadmap(host, {initialSections, outcome, persist, navigatio
     try { persist(saved); }
     catch { update('Roadmap saved for this open preview. Browser storage is unavailable.'); return; }
     update('Roadmap changes saved in this browser.');
+    byId('roadmap-navigation').lastElementChild.focus();
   }
   function reorder(index, direction) {
     const [section] = draft.splice(index,1);
@@ -203,11 +204,12 @@ export function mountRoadmap(host, {initialSections, outcome, persist, navigatio
   }
   function render() {
     const working = active();
+    for (const control of byId('roadmap-navigation').children) control.disabled = Boolean(draft);
     const tasks = working.flatMap(section => section.tasks);
     byId('progress').textContent = tasks.filter(task => task.status === 'Complete').length + ' of ' + tasks.length + ' tasks complete';
     const toolbar = byId('toolbar');
     toolbar.replaceChildren();
-    if(draft) toolbar.append(button('Add section',() => nameDialog()),button('Cancel changes',() => {draft=null;update('Draft changes discarded.');}),button('Save changes',save,{primary:true}));
+    if(draft) toolbar.append(button('Add section',() => nameDialog()),button('Cancel changes',() => {draft=null;update('Draft changes discarded.');byId('roadmap-navigation').lastElementChild.focus();}),button('Save changes',save,{primary:true}));
     else toolbar.append(button('Edit roadmap',() => {draft=structuredClone(saved);update('Editing the roadmap. Save changes when you are ready.');byId('toolbar').querySelector('button').focus();},{primary:true}));
     const container = byId('sections');
     container.replaceChildren();
