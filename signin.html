@@ -327,7 +327,7 @@
       const session = await window.Auth.requireActiveSession();
       if (session) {
         const next = new URLSearchParams(window.location.search).get("next");
-        window.location.href = next === "executive-workspace.html" ? next : "jd-brain.html";
+        window.location.href = ["executive-workspace.html", "executive-preview.html"].includes(next) ? next : "jd-brain.html";
       }
     }
 

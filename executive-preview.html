@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Executive Workspace Preview | Digital JD</title>
+  <link rel="stylesheet" href="executive-preview/viewer.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="auth.js"></script>
+  <script src="jd-dictation.js"></script>
+  <script type="module" src="executive-preview/viewer.mjs"></script>
+</head>
+<body>
+  <header>
+    <a href="jd-brain.html">Digital JD</a>
+    <p>Approved Executive design ? Navigation review</p>
+  </header>
+  <main>
+    <p id="status" role="status">Checking Executive access...</p>
+    <section id="review" hidden aria-label="Approved Executive screens">
+      <div id="stage">
+        <img id="artwork" width="1520" height="720" alt="">
+        <nav id="controls" aria-label="Controls on this screen"></nav>
+      </div>
+      <div id="action-roadmap" hidden></div>
+      <div class="toolbar">
+        <button id="begin" type="button">Start from the beginning</button>
+        <label for="screen-picker">Jump to a screen</label>
+        <select id="screen-picker"></select>
+      </div>
+      <p class="scope">This review uses the approved PowerPoint screens and their navigation. The microphone icons write into their fields. Use sample information during this review.</p>
+    </section>
+  </main>
+</body>
+</html>
