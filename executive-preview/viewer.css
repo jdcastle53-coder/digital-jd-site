@@ -84,7 +84,7 @@ body > header { padding: .25rem 1rem; }
     padding-block: .4rem;
     margin: 0 auto;
   }
-  #review:has(#stage:not([hidden])) {
+  #review:not([hidden]):has(#stage:not([hidden])) {
     display: grid;
     grid-column: 1;
     grid-row: 2;
@@ -94,6 +94,6 @@ body > header { padding: .25rem 1rem; }
   }
   #slide-frame { container-type: size; display: grid; place-items: center; min-height: 0; }
   #stage { width: min(100%, calc(100cqh * 1520 / 720)); }
-  #review:has(#stage:not([hidden])) > .toolbar { justify-content: center; margin-top: 0; }
-  #review:has(#stage:not([hidden])) > .scope { text-align: center; margin: 0; }
+  #review:not([hidden]):has(#stage:not([hidden])) > .toolbar { justify-content: center; margin-top: 0; }
+  #review:not([hidden]):has(#stage:not([hidden])) > .scope { text-align: center; margin: 0; }
 }
