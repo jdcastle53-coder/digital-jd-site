@@ -97,3 +97,8 @@ body > header { padding: .25rem 1rem; }
   #review:not([hidden]):has(#stage:not([hidden])) > .toolbar { justify-content: center; margin-top: 0; }
   #review:not([hidden]):has(#stage:not([hidden])) > .scope { text-align: center; margin: 0; }
 }
+
+.conversation-panel-title { position: absolute; display: flex; align-items: center; padding-inline: 1.25cqw; color: #fff; background: #12125f; font: 700 max(9px, 1.35cqw)/1 Arial, sans-serif; text-transform: uppercase; pointer-events: none; }
+#controls .conversation-advice-button { background: #285cf0; color: #fff; border: 1px solid #2149ab; padding-inline: .25em; font: 700 max(9px, 1.1cqw)/1.05 Arial, sans-serif; }
+#controls .conversation-advice-button:hover { background: #1748bc; }
+#controls [data-conversation-action]:disabled, #controls .conversation-advice-button:disabled { opacity: .65; cursor: wait; }

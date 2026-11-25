@@ -171,13 +171,36 @@ function showCasePanels(number) {
   const first = regions[0];
   const updateButton = number === 5 ? controls.querySelector('[data-conversation-action="update"]') : null;
   const confirmButton = number === 5 ? controls.querySelector('[data-conversation-action="confirm"]') : null;
+  let adviceButton, replyHeading, adviceRequest = '';
+  if (number === 5) {
+    replyHeading = document.createElement('span');
+    replyHeading.className = 'conversation-panel-title';
+    replyHeading.textContent = 'Digital JD reply';
+    place(replyHeading, [12.5, 55.35, 35.7, 6.05]);
+    const inputHeading = document.createElement('span');
+    inputHeading.className = 'conversation-panel-title';
+    inputHeading.textContent = 'Your answer or question';
+    place(inputHeading, [51, 55.35, 36.3, 6.05]);
+    regions[1].setAttribute('aria-live', 'polite');
+    adviceButton = document.createElement('button');
+    adviceButton.type = 'button';
+    adviceButton.className = 'conversation-advice-button';
+    adviceButton.textContent = 'Get Digital JD advice';
+    place(adviceButton, [80, 89.0278, 15.6, 6.1111]);
+    adviceButton.addEventListener('click', () => {
+      adviceRequest = fieldValue(5);
+      if (!adviceRequest) { status.textContent = 'Type or dictate what you would like advice on first.'; return; }
+      status.textContent = '';
+      generate();
+    });
+    controls.append(replyHeading, inputHeading, adviceButton);
+  }
 
   function showConversationPending(pending) {
     if (!updateButton || !confirmButton) return;
     updateButton.disabled = pending;
     confirmButton.disabled = pending;
-    updateButton.textContent = pending ? 'Updating...' : '';
-    updateButton.classList.toggle('deck-action-pending', pending);
+    adviceButton.disabled = pending;
   }
 
   async function generate() {
@@ -213,6 +236,7 @@ function showCasePanels(number) {
     const caseKey = JSON.stringify([situation, objective, depth]);
     const opening = insights.get(4);
     const understanding = insights.get(5);
+    const previousQuestion = number === 5 && understanding?.caseKey === caseKey ? understanding.values.question : '';
     const useUnderstanding = number > 5 && understanding?.caseKey === caseKey && understanding.answer === answer &&
       understanding.correction === pendingCorrection;
     const options = insights.get(9);
@@ -227,6 +251,9 @@ function showCasePanels(number) {
       number > 4 && opening?.caseKey === caseKey && 'JD opening: ' + opening.values.reply,
       number > 4 && answer && 'Client answer to the opening question: ' + answer.slice(0, 4000),
       number > 4 && pendingCorrection && 'Latest client correction or answer: ' + pendingCorrection.slice(0, 3000),
+      number === 5 && previousQuestion && 'Previous Digital JD question: ' + previousQuestion.slice(0, 1500),
+      number === 5 && submitted && pendingCorrection.endsWith(submitted) && 'Latest client message: ' + submitted.slice(0, 3000),
+      number === 5 && adviceRequest && 'Latest client request for advice: ' + adviceRequest.slice(0, 3000),
       useUnderstanding && 'Updated understanding: ' + understanding.values.understanding,
       chosen && 'Client-selected approach: ' + chosen.title + '\nSelected approach details: ' + JSON.stringify(chosen.details).slice(0, 2500),
       number > 9 && options?.caseKey === caseKey && 'Options considered: ' + JSON.stringify(options.values).slice(0, 2000),
@@ -241,12 +268,18 @@ function showCasePanels(number) {
     ].filter(Boolean);
     function display(values) {
       regions.forEach((node, i) => { node.textContent = values[spec.slots[i].key] || 'Not established for this case.'; });
+      if (number === 5) {
+        const advice = values.advice;
+        replyHeading.textContent = advice ? 'Digital JD advice' : 'Digital JD reply';
+        regions[1].setAttribute('aria-label', replyHeading.textContent);
+        regions[1].textContent = advice || values.question || 'Review the summary above, then confirm when it reflects your situation.';
+      }
       if (number === 9) addOptionChoices(values);
     }
     if (number === 12 && revisedPlan) { display(revisedPlan); return; }
     if (number === 45 && !planQuestion) { display({ reply: planTurns.at(-1).answer }); return; }
     if (number === 46 && !planTurns.length) { first.textContent = 'Use Keep discussing to request changes first.'; return; }
-    const fingerprint = JSON.stringify([number, depth, context]);
+    const fingerprint = JSON.stringify([number, depth, context, Boolean(adviceRequest)]);
     const savedOptions = number === 9 && selectedOption()?.options;
     if (savedOptions) {
       insights.set(9, { fingerprint, values: savedOptions, caseKey });
@@ -262,15 +295,21 @@ function showCasePanels(number) {
     insightRequest = controller;
     first.setAttribute('aria-busy', 'true');
     showConversationPending(true);
-    first.textContent = number === 5 && pendingCorrection
-      ? 'Digital JD is updating its understanding from your answer...'
-      : 'Digital JD is working from your case...';
+    if (number === 5 && adviceRequest) {
+      replyHeading.textContent = 'Digital JD advice';
+      regions[1].textContent = 'Digital JD is preparing suggestions for your case?';
+    } else {
+      first.textContent = number === 5 && pendingCorrection
+        ? 'Digital JD is updating its understanding from your answer...'
+        : 'Digital JD is working from your case...';
+    }
     try {
       const reply = await askJD({
         message: context.join('\n\n'),
         mode: spec.mode,
         depth,
         stage: number,
+        ...(number === 5 && adviceRequest ? { requestAdvice: true } : {}),
       }, controller.signal);
       if (controller.signal.aborted) return;
       const values = number === 4 ? { reply } : JSON.parse(reply.replace(/^```(?:json)?\s*|\s*```$/gi, ''));
@@ -278,9 +317,11 @@ function showCasePanels(number) {
         throw new Error('Digital JD did not return the information for this screen.');
       }
       const keys = spec.slots.map(slot => slot.key);
+      if (number === 5) keys.push('advice');
       if (number === 46) keys.push('outcome', 'delivery', 'resources', 'measures');
       const clean = Object.fromEntries(keys.map(key => [key, typeof values[key] === 'string' ? values[key].trim() : '']));
       if (number === 46 && keys.some(key => !clean[key])) throw new Error('Digital JD returned an incomplete revision.');
+      if (number === 5 && adviceRequest && !clean.advice) throw new Error('Digital JD did not return direct advice.');
       insights.set(number, { fingerprint, values: clean, caseKey, answer, correction: pendingCorrection });
       if (number === 10) discussionAnswers = [...discussionAnswers, { caseKey, question, answer: clean.reply }].slice(-4);
       if (number === 45) {
@@ -294,13 +335,15 @@ function showCasePanels(number) {
         }
       }
       display(clean);
-      if (number === 5 && submitted && pendingCorrection.endsWith(submitted)) {
+      if (number === 5 && submitted && (adviceRequest === submitted || pendingCorrection.endsWith(submitted))) {
         const input = controls.querySelector('.deck-input');
         if (input?.value.trim() === submitted) {
           input.value = '';
           input.dispatchEvent(new Event('input', { bubbles: true }));
         }
-        status.textContent = 'Understanding updated. You can answer the next question or confirm.';
+        status.textContent = clean.advice ? 'Advice ready. Ask a follow-up or confirm the case summary when ready.' :
+          'Understanding updated. You can answer the next question or confirm.';
+        adviceRequest = '';
       }
     } catch (error) {
       if (controller.signal.aborted) return;
@@ -543,14 +586,16 @@ function render(number) {
     button.type = 'button';
     const sendPlanQuestion = number === 45 && link.label === 'Ask another question';
     const sendOptionsQuestion = number === 10 && link.target === 10 && link.label === 'Ask another question';
-    const actionLabel = sendOptionsQuestion ? 'Ask another question, then click here' :
+    const actionLabel = number === 5 && link.label === 'Update understanding' ? 'Send your answer or question' :
+      sendOptionsQuestion ? 'Ask another question, then click here' :
       sendPlanQuestion ? 'Send to DJD' : link.clientLabel || link.label;
     button.setAttribute('aria-label', link.accessibleLabel || actionLabel);
     if (link.accessibleLabel) button.title = link.accessibleLabel;
     const backToTaskList = number === 15 && link.label === 'Back to task list';
     const saveTask = number === 15 && link.label === 'Save task';
+    const sendConversation = number === 5 && link.label === 'Update understanding';
     const recordProgress = number === 17 && link.label === 'Record a progress update';
-    if (sendPlanQuestion || sendOptionsQuestion || backToTaskList || saveTask || recordProgress || link.clientLabel) {
+    if (sendPlanQuestion || sendOptionsQuestion || backToTaskList || saveTask || recordProgress || sendConversation || link.clientLabel) {
       const label = document.createElement('span');
       label.className = sendOptionsQuestion || recordProgress ? 'deck-send-label deck-options-send-label' : 'deck-send-label';
       if (link.clientLabel) label.classList.add('deck-client-label');
@@ -605,7 +650,7 @@ function render(number) {
       }
       if (current === 5 && link.label === 'Update understanding') {
         const correction = fieldValue(5);
-        if (!correction) { status.textContent = 'Enter your answer or correction first.'; return; }
+        if (!correction) { status.textContent = 'Enter your answer, correction, or question first.'; return; }
         const depth = readDraft(draftPrefix + ':depth') || 'Snapshot';
         const key = JSON.stringify([fieldValue(2), fieldValue(2, 1), depth, fieldValue(4)]);
         const previous = readDraft(draftPrefix + ':correction-context') === key

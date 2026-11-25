@@ -1,10 +1,11 @@
 {
   "5": {
     "mode": "executive_turn",
-    "prompt": "Revise your understanding using the latest answer and earlier corrections. Explain what changed, distinguish known facts from assumptions, and ask the next question only if it can change the interpretation. If the facts are clear, invite confirmation.",
+    "prompt": "Update your understanding from the facts the client actually supplied, distinguishing facts and assumptions. If the client asks a direct question, requests suggestions, delegates a choice to you, or says they do not know and asks you to recommend something, answer directly in advice. Give two or three practical, case-specific suggestions and a recommended starting point when helpful. Use the previous Digital JD question to resolve references like \"I do not know, please tell me.\" On an explicit request for advice, answer even when some details are missing and state any necessary assumptions. When giving advice, leave question empty and never repeat the question back to the client. Otherwise leave advice empty and ask at most one new question, only if its answer materially affects the case. If nothing critical is unclear, invite the client to confirm.",
     "keys": [
       "understanding",
-      "question"
+      "question",
+      "advice"
     ]
   },
   "7": {
