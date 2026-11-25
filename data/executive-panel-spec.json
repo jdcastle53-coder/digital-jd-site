@@ -81,6 +81,18 @@
       "rationale"
     ]
   },
+  "20": {
+    "mode": "executive_stage",
+    "prompt": "Recommend one practical next move supported by the case evidence. Explain why, risks and unresolved conditions, any required approval, case status and next review. If no outcome evidence is recorded, recommend what to verify next and say what is missing. Never present a proposed next step as the client decision.",
+    "keys": [
+      "recommendation",
+      "evidence",
+      "risks",
+      "approval",
+      "status",
+      "review"
+    ]
+  },
   "22": {
     "mode": "executive_stage",
     "prompt": "Brief only what the case records. Distinguish a proposed plan from an approved decision. If there is no actual evidence, say results are unverified. State open responsibilities and next review only where known.",
@@ -103,6 +115,29 @@
       "conclusion"
     ]
   },
+  "24": {
+    "mode": "executive_stage",
+    "prompt": "Suggest only genuinely relevant follow-up opportunities grounded in the case record. Return empty strings when a category is unsupported. Each supported category should state the supporting fact or the evidence gap and a concrete first action. Efficiency requires data about effort, time or cost. Above objective requires actual result versus target. Gaps require a specific unresolved matter or known evidence limit. Additional value is a hypothesis to measure. Sustainability requires a credible way to check or maintain the outcome. Never treat improvement in accuracy alone as efficiency. If none are warranted leave every value empty.",
+    "keys": [
+      "efficiency",
+      "above",
+      "gaps",
+      "value",
+      "sustainability"
+    ]
+  },
+  "25": {
+    "mode": "executive_stage",
+    "prompt": "Review the selected opportunity, using the original case evidence and the client notes. Describe potential value, a way to measure it, plan and next action, and your review. Ask one question only if it changes the next step. Distinguish proposed tests from verified results.",
+    "keys": [
+      "opportunity",
+      "value",
+      "measure",
+      "plan",
+      "question",
+      "review"
+    ]
+  },
   "45": {
     "mode": "executive_stage",
     "prompt": "Respond directly to the latest question or requested plan change. Explain how it affects the proposed plan and identify any approvals or trade-offs. Treat the discussion as provisional.",
@@ -122,6 +157,13 @@
       "delivery",
       "resources",
       "measures"
+    ]
+  },
+  "110": {
+    "mode": "executive_stage",
+    "prompt": "Answer the client directly in a friendly Executive Workshop conversation. If asking how to use the product, explain only the known flow and current screen. If asking for business advice, give useful suggestions immediately, explicitly stating any assumptions. Use previous discussion as context. Do not claim to change, save or submit any case data.",
+    "keys": [
+      "reply"
     ]
   }
 }

@@ -36,6 +36,19 @@ export const PANELS = {
     ...['Result', 'Direction', 'Confidence'].map((label, i) => row(label.toLowerCase(), label, 530, 344 + i * 61, 297, 49, i % 2 === 0)),
     box('rationale', 'Rationale and attention', 912, 233, 516, 299),
   ] },
+  20: { mode: 'executive_stage', slots: [
+    box('recommendation','Recommended next move',331,236,508,99),
+    box('evidence','Supporting evidence',331,338,508,61),
+    box('risks','Risks and open conditions',331,403,508,61),
+    box('approval','Approvals',331,468,508,77),
+    row('status','Case status',1110,322,315,53,true),
+    row('review','Next review',1110,385,315,54,false),
+  ] },
+  25: { mode: 'executive_stage', slots: [
+    ...['Opportunity','Value','Measure','Plan'].map((label,i)=>row(label.toLowerCase(),label,530,241+i*69,303,61,i%2===0)),
+    box('question','Next question',326,558,513,43),
+    box('review','Digital JD review',912,464,523,135),
+  ] },
   22: { mode: 'executive_stage', prompt: 'Brief only what the case records. Distinguish a proposed plan from an approved decision. If there is no actual evidence, say results are unverified. State open responsibilities and next review only where known.', slots: [
     ...['Decision', 'Plan', 'Results', 'Open items', 'Next review'].map((label, i) => row(['decision','plan','results','openItems','nextReview'][i], label, 703, 240 + i * 66, 715, 55, i % 2 === 0)),
   ] },

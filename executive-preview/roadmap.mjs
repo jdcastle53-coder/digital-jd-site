@@ -2,7 +2,7 @@ const styles = `
 :host{font:16px/1.5 system-ui,sans-serif;color:#15284b;background:#f2f5fa;--navy:#12125f;--blue:#2156d9;--border:#c9d7eb}
 *{box-sizing:border-box}:host{display:block}
 header{background:linear-gradient(120deg,#0c1840,#182961);color:white;padding:1rem max(1.25rem,calc((100% - 1100px)/2));display:flex;gap:1rem;justify-content:space-between;align-items:center}
-.brand{color:#ffe44c;font-weight:750}.preview{font-size:.85rem;color:#e6ebff}
+.roadmap-brand{display:inline-flex;align-items:center;gap:.65rem}.roadmap-brand .standard-ask-brand img{width:2rem;height:2rem}.brand{color:#ffe44c;font-weight:750}.preview{font-size:.85rem;color:#e6ebff}
 main{max-width:1140px;margin:auto;padding:1.6rem 1.25rem 1.25rem}
 h1,h2,p{margin:0}h1{font:700 clamp(2rem,5vw,3rem) Georgia,serif;color:var(--navy)}
 .intro{margin:.45rem 0 1.2rem;color:#435775}.summary{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;background:white;border:1px solid var(--border);border-radius:12px;padding:1rem 1.2rem;margin-bottom:1rem}
@@ -27,13 +27,21 @@ dialog::backdrop{background:#06153188}dialog h2{color:var(--navy);margin-bottom:
 dl{display:grid;grid-template-columns:max-content 1fr;gap:.35rem .8rem}dt{font-weight:700}dd{margin:0}
 @media(max-width:580px){.task{grid-template-columns:4.9rem 1fr}.task .actions{grid-column:2;justify-content:flex-start}header{align-items:flex-start}}
 .navigation{margin:0 0 1rem;justify-content:space-between}
-.shortcuts{margin-top:1rem}
+.roadmap-layout{display:grid;grid-template-columns:minmax(8rem,10.5rem) minmax(0,1fr);gap:1.1rem}
+.roadmap-case-rail{display:flex;flex-direction:column;gap:.55rem;padding:.75rem;background:#eef3fd;border-radius:10px;align-self:start}
+.roadmap-case-rail button{background:linear-gradient(#407fc5,#092e73);color:white;box-shadow:0 2px 3px #14284c55;font-size:.9rem}
+.roadmap-case-rail button[aria-current]{border-left:4px solid #ffe34a;background:#141956}
+.bar{border-radius:10px 10px 0 0}.roadmap{border:3px solid #143c76;box-shadow:0 2px 4px #00143d44}
+.navigation{justify-content:center}.navigation button:active{transform:translateY(2px)}
+@media(max-width:650px){.roadmap-layout{grid-template-columns:1fr}.roadmap-case-rail{display:flex;flex-direction:row;flex-wrap:wrap}}
 .request{padding:1rem}
 .request button{margin-top:.7rem}
 `;
+const askStyles = "@keyframes standard-logo-glow { 0% { opacity:.25; transform:translate(-5%,3%) scale(.81); } 50% { opacity:.62; } 100% { opacity:.4; transform:translate(10%,-6%) scale(1.14); } }\n.standard-ask-brand {display:grid;justify-items:center;position:relative;isolation:isolate;font:700 .48em/1 Arial,sans-serif;color:#34e1f7;white-space:nowrap;}\n.standard-ask-brand::before {content:\"\";position:absolute;z-index:-1;inset:-.22em;background:radial-gradient(ellipse,#ffc632ba,transparent 67%);animation:standard-logo-glow 6.4s ease-in-out infinite alternate;}\n.standard-ask-brand img {width:2.8em;height:2.6em;object-fit:contain;}\n.standard-ask-bubble {position:relative;white-space:nowrap;border:1px solid #44e6ef;border-radius:.65em;padding:.1em .35em;font-style:italic;}\n.standard-ask-bubble::before {content:\"\";position:absolute;top:43%;left:-.24em;width:.35em;height:.35em;transform:rotate(45deg);border-left:1px solid #44e6ef;border-bottom:1px solid #44e6ef;background:#0a1d39;}";
 const markup = `
-<header><span class="brand">Digital JD · Intelligent Leadership System</span><span class="preview">Slide 13</span></header>
+<header><span class="brand roadmap-brand"><span class="standard-ask-brand"><img src="images/digital-jd-head-icon.png" alt=""></span>Digital JD · Intelligent Leadership System</span><span class="preview">Slide 13</span></header>
 <main>
+<div class="roadmap-layout"><nav class="roadmap-case-rail" id="roadmap-shortcuts" aria-label="Case shortcuts"></nav><div>
 <h1>Execution Plan</h1>
 <p class="intro">Digital JD groups the proposed work in chronological order. You can change the sections and tasks to fit your case.</p>
 <div class="summary"><div><strong>Agreed outcome</strong><span id="outcome"></span></div><div><strong>Progress</strong><span id="progress"></span></div></div>
@@ -43,7 +51,8 @@ const markup = `
 <div id="sections"></div>
 </section>
 <p id="status" role="status"></p>
-<div class="actions shortcuts" id="roadmap-shortcuts"></div>
+
+</div></div>
 </main>
 <dialog id="dialog" aria-labelledby="dialog-title">
 <form id="form">
@@ -75,10 +84,10 @@ export function parseSuggestedRoadmap(reply) {
   return { outcome: typeof plan.outcome === 'string' ? plan.outcome.trim() : '', sections };
 }
 
-export function mountRoadmap(host, {initialSections, outcome, persist, navigation, shortcuts}) {
+export function mountRoadmap(host, {initialSections, outcome, persist, navigation, shortcuts, ask}) {
   const root = host.shadowRoot || host.attachShadow({mode:'open'});
   const style = document.createElement('style');
-  style.textContent = styles;
+  style.textContent = styles + askStyles;
   const template = document.createElement('template');
   template.innerHTML = markup;
   root.replaceChildren(style,template.content.cloneNode(true));
@@ -247,7 +256,13 @@ export function mountRoadmap(host, {initialSections, outcome, persist, navigatio
 
   byId('outcome').textContent = outcome;
   for (const {label, run, primary} of navigation) byId('roadmap-navigation').append(button(label,run,{primary}));
-  for (const {label, run} of shortcuts) byId('roadmap-shortcuts').append(button(label,run));
+  if (ask) byId('roadmap-navigation').append(ask());
+  byId('roadmap-shortcuts').append(node('strong','Case Shortcuts'));
+  for (const {label, run} of shortcuts) {
+    const shortcut=button(label,run);
+    if (label === 'Review My Plan') shortcut.setAttribute('aria-current','location');
+    byId('roadmap-shortcuts').append(shortcut);
+  }
   render();
   byId('roadmap-title').tabIndex = -1;
   byId('roadmap-title').focus({preventScroll:true});

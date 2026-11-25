@@ -1,6 +1,8 @@
 import { PANELS } from './case-panels.mjs';
 import { mountRoadmap, parseSuggestedRoadmap } from './roadmap.mjs';
 import { openTrackedTask } from './tracker-task-details.mjs';
+import { askButton, decorateSlide } from './slide-standard.mjs';
+import { openWorkshop, renderOpportunities } from './workshop.mjs';
 
 const status = document.querySelector('#status');
 const review = document.querySelector('#review');
@@ -17,6 +19,9 @@ const returnStack = [];
 const drafts = new Map();
 let insightRequest;
 let screenEvents;
+let opportunity;
+let opportunityCase;
+let baseDraftPrefix;
 const insights = new Map();
 let discussionAnswers = [];
 let planTurns = [];
@@ -45,8 +50,13 @@ function place(node, rect) {
   Object.assign(node.style, { left, top, width, height });
 }
 
+function inputKey(number,index) {
+  const suffix = number === 25 && opportunity ? ':' + planRevisionKey() + ':' + opportunity.key : '';
+  return draftPrefix + ':' + number + ':' + index + suffix;
+}
+
 function addDictation(field, index, number) {
-  const key = draftPrefix + ':' + number + ':' + index;
+  const key = inputKey(number,index);
   const input = document.createElement('textarea');
   input.className = 'deck-input';
   input.setAttribute('aria-label', field.label);
@@ -72,7 +82,7 @@ function addDictation(field, index, number) {
 }
 
 function fieldValue(screen, index = 0) {
-  return readDraft(draftPrefix + ':' + screen + ':' + index).trim();
+  return readDraft(inputKey(screen,index)).trim();
 }
 
 async function askJD(body, signal) {
@@ -218,6 +228,7 @@ function showCasePanels(number) {
       ? readDraft(draftPrefix + ':latest-correction') : '';
     const question = number === 45 ? planQuestion || planTurns.at(-1)?.question : fieldValue(10);
     const evidence = fieldValue(15, 3);
+    if (number === 25 && !opportunity) { first.textContent = 'Go back to opportunities and choose one to explore.'; return; }
     if (number === 5 && !answer) {
       first.textContent = 'Go back to Our Conversation and answer JD?s question first.';
       return;
@@ -262,6 +273,11 @@ function showCasePanels(number) {
       number > 11 && 'Recent client discussion: ' + JSON.stringify(discussionAnswers.filter(entry => entry.caseKey === caseKey).slice(-2)).slice(0, 2000),
       number >= 12 && planNotes && 'Client plan notes: ' + planNotes.slice(0, 1500),
       number >= 17 && evidence && 'Reported actual result and evidence: ' + evidence.slice(0, 3000),
+      number === 20 && readDraft(draftPrefix + ':saved-task-update:' + planRevisionKey()) && 'Saved task update: ' + readDraft(draftPrefix + ':saved-task-update:' + planRevisionKey()).slice(0, 3000),
+      number === 20 && hurdleScreens.some(screen => readDraft(hurdleUpdateKey(screen)) || readDraft(hurdleResolutionKey(screen))) && 'Recorded hurdle updates: ' + JSON.stringify(hurdleScreens.map(screen => ({ update: readDraft(hurdleUpdateKey(screen)), resolution: readDraft(hurdleResolutionKey(screen)) }))).slice(0, 2000),
+      number === 20 && insights.get(19)?.caseKey === caseKey && 'Progress assessment: ' + JSON.stringify(insights.get(19).values).slice(0, 2000),
+      number === 25 && 'Selected opportunity: ' + opportunity.title + '. ' + opportunity.summary,
+      number === 25 && fieldValue(25) && 'Client notes for this opportunity: ' + fieldValue(25).slice(0, 3500),
       number >= 13 && ![45, 46].includes(number) && readDraft(draftPrefix + ':plan-confirmed') === correctionKey && 'Client confirmed the proposed plan.',
       number >= 20 && decision && 'Client selected next move: ' + decision,
       spec.needsQuestion && 'Client question: ' + question.slice(0, 3000),
@@ -478,7 +494,7 @@ async function showRoadmap(screen) {
   const shortcuts = screen.links.filter(link => !['Back', 'Review progress', 'Open'].includes(link.label))
     .map(link => ({ label: link.clientLabel || link.label, run: open(link) }));
   function show(plan) {
-    mountRoadmap(roadmap, {initialSections: plan.sections, outcome: plan.outcome || objective, navigation, shortcuts,
+    mountRoadmap(roadmap, {initialSections: plan.sections, outcome: plan.outcome || objective, navigation, shortcuts, ask: () => askButton(openSlideWorkshop),
       persist(sections) {
         const value = JSON.stringify({ ...plan, sections, edited: true });
         saveDraft(storageKey, value);
@@ -550,6 +566,60 @@ async function showRoadmap(screen) {
   }
 }
 
+function openSlideWorkshop(opener) {
+  const number = current;
+  const title = screens[number - 1].title;
+  openWorkshop({ opener, async send(question, history, signal) {
+    const caseContext = [42,43].includes(number) ? '' : [
+      fieldValue(2) && 'Situation: ' + fieldValue(2).slice(0, 2500),
+      fieldValue(2,1) && 'Objective: ' + fieldValue(2,1).slice(0, 2500),
+    ].filter(Boolean).join('\n');
+    const message = ['Executive screen ' + number + ': ' + title, caseContext,
+      history.length && 'Recent workshop conversation: ' + JSON.stringify(history).slice(-3500),
+      'Client request: ' + question].filter(Boolean).join('\n\n');
+    const reply = JSON.parse(await askJD({message, mode:'executive_stage',stage:110},signal));
+    if (typeof reply.reply !== 'string' || !reply.reply.trim()) throw new Error('No answer was returned. Try again.');
+    return reply.reply;
+  } });
+}
+
+async function showOutcomeOpportunities() {
+  const panel = document.createElement('section');
+  panel.className = 'deck-insight deck-insight-compact opportunity-list';
+  panel.setAttribute('aria-label','Case opportunities');
+  panel.setAttribute('aria-live','polite');
+  place(panel,[63.5,30.6,32.2,55.4]);
+  controls.append(panel);
+  const evidence = fieldValue(15,3);
+  if (!fieldValue(2) || !fieldValue(2,1) || !evidence) {
+    panel.textContent = 'Add a case outcome and supporting evidence before looking for follow-up opportunities.';
+    return;
+  }
+  const message = [ 'Situation: ' + fieldValue(2).slice(0,3000), 'Objective: ' + fieldValue(2,1).slice(0,3000),
+    'Actual result and evidence: ' + evidence.slice(0,3500),
+    'Open hurdle updates, if recorded: ' + hurdleScreens.filter(screen => !readDraft(hurdleResolutionKey(screen)))
+      .map(screen => readDraft(hurdleUpdateKey(screen))).filter(Boolean).join(' / ').slice(0,2000),
+    'Case plan, when available: ' + JSON.stringify(approvedPlan() || {}).slice(0,2000),
+  ].join('\n\n');
+  async function load() {
+    const controller = new AbortController();
+    insightRequest = controller;
+    panel.textContent = 'Digital JD is reviewing the evidence for follow-up opportunities...';
+    try {
+      const values = JSON.parse(await askJD({message,mode:'executive_stage',stage:24},controller.signal));
+      if (controller.signal.aborted) return;
+      renderOpportunities(panel,values,selected => { opportunity=selected; opportunityCase=planRevisionKey(); render(25); });
+    } catch (error) {
+      if (controller.signal.aborted) return;
+      panel.textContent = 'Digital JD could not prepare opportunities. ';
+      const retry=document.createElement('button');
+      retry.type='button'; retry.className='insight-retry'; retry.textContent='Try again';
+      retry.addEventListener('click',load); panel.append(retry);
+    } finally { if(insightRequest===controller) insightRequest=null; }
+  }
+  load();
+}
+
 function render(number) {
   const screen = screens[number - 1];
   if (!screen) return;
@@ -561,6 +631,7 @@ function render(number) {
     planQuestion = '';
     insights.delete(46);
   }
+  if (opportunity && opportunityCase !== planRevisionKey()) opportunity = null;
   current = number;
   status.textContent = '';
   picker.value = String(number);
@@ -581,12 +652,19 @@ function render(number) {
     const planArtwork = new Image();
     planArtwork.src = 'executive-approved/screen-012.png';
   }
+  const entries = [];
   for (const link of screen.links) {
+    if (number === 24 && (!link.label || link.target === 25)) {
+      if (link.rect[1] >= 85) entries.push({link,button:null});
+      continue;
+    }
     const button = document.createElement('button');
     button.type = 'button';
     const sendPlanQuestion = number === 45 && link.label === 'Ask another question';
     const sendOptionsQuestion = number === 10 && link.target === 10 && link.label === 'Ask another question';
-    const actionLabel = number === 5 && link.label === 'Update understanding' ? 'Send your answer or question' :
+    entries.push({link,button});
+    const actionLabel = number === 25 && link.label === 'Review & update' ? 'Send notes to Digital JD' :
+      number === 5 && link.label === 'Update understanding' ? 'Send your answer or question' :
       sendOptionsQuestion ? 'Ask another question, then click here' :
       sendPlanQuestion ? 'Send to DJD' : link.clientLabel || link.label;
     button.setAttribute('aria-label', link.accessibleLabel || actionLabel);
@@ -641,6 +719,14 @@ function render(number) {
       continue;
     }
     button.addEventListener('click', () => {
+      if (current === 1 && link.target === 2 && new URLSearchParams(location.search).get('new-case') === '1') {
+        const id = crypto.randomUUID();
+        draftPrefix = baseDraftPrefix + ':' + id;
+        const url = new URL(location.href);
+        url.searchParams.delete('new-case'); url.searchParams.set('case',id);
+        history.replaceState(null,'',url);
+        insights.clear(); discussionAnswers=[]; planTurns=[]; opportunity=null;
+      }
       if (current === 18 && link.label === 'Open') {
         openTrackedTask(link.target, button);
         return;
@@ -704,7 +790,7 @@ function render(number) {
       }
       if (current === 6 && /^(10|[1-9])$/.test(link.label)) saveDraft(draftPrefix + ':clarity', link.label);
       if (current === 34 && link.target >= 36 && link.target <= 40) saveDraft(draftPrefix + ':decision', link.label);
-      if (link.kind === 'return') render(returnStack.pop() || (current === 45 ? 12 : 1));
+      if (link.kind === 'return') render(returnStack.pop() || directReturn(current,link.label));
       else {
         if (link.kind === 'show') returnStack.push(current);
         render(link.target);
@@ -723,10 +809,26 @@ function render(number) {
     controls.append(guidance);
   }
   showCasePanels(number);
+  if (number === 24) showOutcomeOpportunities();
+  decorateSlide({number,screen,controls,entries,openHelp:openSlideWorkshop,
+    go(target,returnable) { if (!fieldValue(2) || !fieldValue(2,1)) { status.textContent = 'Enter your situation and objective to use this case shortcut.'; return; } if (returnable) returnStack.push(number); render(target); },
+    unavailable(label) { status.textContent = label + ' is not available for this sample case record in the preview.'; },
+  });
   if (hurdleScreens.includes(number)) addHurdleResolution(number);
   scope.textContent = number === 4 || PANELS[number] || [1, 2, 3, 6, 8].includes(number)
     ? 'Executive evaluation. Use sample information.'
     : 'Design and navigation preview. Example values on this screen are not results from your case.';
+}
+
+function directReturn(number,label) {
+  if (label === 'Return to task list') return 18;
+  if (label === 'Return to action list') return 21;
+  if ([16,83,84].includes(number)) return 17;
+  if (number === 32) return 16;
+  if ([42,43,44].includes(number)) return 30;
+  if (number >= 102) return 27;
+  const home = {26:18,30:1,45:12,47:13,49:18,51:15,53:16,55:17,57:18,59:19,61:20,63:21,65:22,67:23,69:24,71:25,73:27,75:28,77:29,79:31};
+  return home[number] || home[number-1] || 30;
 }
 
 function jump(number) {
@@ -742,13 +844,15 @@ window.addEventListener('pagehide', () => {
 try {
   if (!window.Auth) throw new Error('Sign-in is unavailable. Refresh and try again.');
   const session = await window.Auth.requireActiveSession({
-    onMissing: () => { location.href = 'signin.html?next=executive-preview.html'; },
+    onMissing: () => { const target = new URLSearchParams(location.search).get('new-case') === '1' ? 'executive-preview.html?new-case=1' : 'executive-preview.html'; location.href = 'signin.html?next=' + encodeURIComponent(target); },
   });
   if (session) {
     if (session.user.user_metadata?.plan !== 'executive') {
       throw new Error('Sign in with an Executive account to open the design review.');
     }
-    draftPrefix = 'digital-jd:executive-design-draft:' + session.user.id;
+    baseDraftPrefix = 'digital-jd:executive-design-draft:' + session.user.id;
+    const caseId = new URLSearchParams(location.search).get('case');
+    draftPrefix = caseId && /^[a-f0-9-]{36}$/i.test(caseId) ? baseDraftPrefix + ':' + caseId : baseDraftPrefix;
     const response = await fetch('executive-preview/navigation.json');
     if (!response.ok) throw new Error('The approved screens could not be loaded. Refresh and try again.');
     screens = await response.json();
