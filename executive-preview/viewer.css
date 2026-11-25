@@ -66,3 +66,34 @@ main { max-width: 1552px; margin: auto; padding: .75rem 1rem 1.5rem; }
 .deck-client-primary { background: #ffe32d; color: #00005a; }
 .deck-client-compact { padding: 0; font-size: max(8px, .99cqw); }
 .deck-client-row { background: #fff; color: #173474; border: 1px solid #577cc6; text-align: left; justify-items: start; padding-inline: .65em; }
+
+/* Allocate the remaining viewport to the artwork and its aligned controls. */
+body > header { padding: .25rem 1rem; }
+#slide-frame:has(> #stage[hidden]) { display: none; }
+@media (min-width: 761px) and (min-height: 480px) {
+  body:has(#review:not([hidden]) #stage:not([hidden])) {
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+  body:has(#review:not([hidden]) #stage:not([hidden])) > main {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    width: 100%;
+    min-height: 0;
+    padding-block: .4rem;
+    margin: 0 auto;
+  }
+  #review:has(#stage:not([hidden])) {
+    display: grid;
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-rows: minmax(0, 1fr) auto auto;
+    gap: .35rem;
+    min-height: 0;
+  }
+  #slide-frame { container-type: size; display: grid; place-items: center; min-height: 0; }
+  #stage { width: min(100%, calc(100cqh * 1520 / 720)); }
+  #review:has(#stage:not([hidden])) > .toolbar { justify-content: center; margin-top: 0; }
+  #review:has(#stage:not([hidden])) > .scope { text-align: center; margin: 0; }
+}
