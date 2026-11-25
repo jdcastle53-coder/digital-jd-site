@@ -20,6 +20,11 @@ export function openWorkshop({opener, send}) {
  input.required=true;
  input.maxLength=3000;
  label.append(input);
+ const microphone = ui('button','Use microphone');
+ microphone.type = 'button';
+ microphone.className = 'workshop-microphone';
+ const dictation = window.JDDictation;
+ if (dictation) dictation.attach(microphone,input);
  const answer=ui('div');
  answer.className='help-reply';
  answer.setAttribute('role','status');
@@ -31,9 +36,10 @@ export function openWorkshop({opener, send}) {
  let pending;
  const history=[];
  close.addEventListener('click',()=>dialog.close());
- dialog.addEventListener('close',()=>{pending?.abort();dialog.remove();opener.focus();},{once:true});
+ dialog.addEventListener('close',()=>{pending?.abort();dictation?.stop(true);dialog.remove();opener.focus();},{once:true});
  form.addEventListener('submit',async event=>{
   event.preventDefault();
+  dictation?.stop(true);
   const question=input.value.trim();
   if(!question||pending)return;
   pending=new AbortController();
@@ -52,6 +58,7 @@ export function openWorkshop({opener, send}) {
    submit.disabled=false;
   }
  });
+ if (dictation) buttons.append(microphone);
  buttons.append(submit,close);
  form.append(label,buttons);
  dialog.append(title,ui('p','Ask about this screen or get advice. Closing this conversation returns you to your case.'),form,answer);

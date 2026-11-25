@@ -45,10 +45,12 @@
   },
   "11": {
     "mode": "executive_stage",
-    "prompt": "Describe two concrete alternatives that are less suitable in this case. For each, state why and what would make it viable.",
+    "prompt": "Give up to two concrete alternatives the client could reasonably consider. In first and second, return an option name only. For each option, use firstReason or secondReason to explain in two or three sentences why it was not preferred for this specific case, using the objective, case facts, constraints, evidence and trade-offs. Say what condition would make it worth reconsidering when useful. When evidence is limited, explain why it ranks lower rather than claiming it is ruled out. Do not invent an alternative or its drawbacks. Leave both fields for the second option empty if only one is warranted.",
     "keys": [
       "first",
-      "second"
+      "firstReason",
+      "second",
+      "secondReason"
     ]
   },
   "12": {

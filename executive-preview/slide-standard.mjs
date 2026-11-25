@@ -178,7 +178,7 @@ export function decorateSlide({number, screen, controls, entries, openHelp, go, 
  row.append(askButton(openHelp));
  controls.append(row);
 
- if ([1,30,41,44].includes(number)) return;
+ if ([1,8,30,41,44].includes(number)) return;
  const hasRail = entries.some(({link}) => link.rect[0] < 3 && link.label === 'Task Tracker');
  const rail = element('nav',hasRail ? 'standard-shortcuts' : 'standard-shortcuts standard-shortcuts-narrow');
  rail.setAttribute('aria-label','Case shortcuts');

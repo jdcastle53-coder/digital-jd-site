@@ -3,6 +3,7 @@ import { mountRoadmap, parseSuggestedRoadmap } from './roadmap.mjs';
 import { openTrackedTask } from './tracker-task-details.mjs';
 import { askButton, decorateSlide } from './slide-standard.mjs';
 import { openWorkshop, renderOpportunities } from './workshop.mjs';
+import { renderProgressDashboard } from './progress-dashboard.mjs';
 
 const status = document.querySelector('#status');
 const review = document.querySelector('#review');
@@ -58,7 +59,7 @@ function inputKey(number,index) {
 function addDictation(field, index, number) {
   const key = inputKey(number,index);
   const input = document.createElement('textarea');
-  input.className = 'deck-input';
+  input.className = hurdleScreens.includes(number) || number === 15 ? 'deck-input deck-roomy-input' : 'deck-input';
   input.setAttribute('aria-label', field.label);
   input.maxLength = 8000;
   input.style.backgroundColor = field.fill;
@@ -290,6 +291,24 @@ function showCasePanels(number) {
         regions[1].setAttribute('aria-label', replyHeading.textContent);
         regions[1].textContent = advice || values.question || 'Review the summary above, then confirm when it reflects your situation.';
       }
+      if (number === 11) {
+        for (const [index,key] of ['first','second'].entries()) {
+          const region=regions[index];
+          region.classList.add('deck-option-rationale');
+          region.replaceChildren();
+          if (!values[key]) {
+            region.textContent = 'No additional supported alternative for this case.';
+            continue;
+          }
+          const title=document.createElement('strong');
+          title.textContent=values[key];
+          const label=document.createElement('span');
+          label.textContent='Why it was ranked lower';
+          const reason=document.createElement('p');
+          reason.textContent=values[key+'Reason'] || 'The available case information does not support a definitive reason.';
+          region.append(title,label,reason);
+        }
+      }
       if (number === 9) addOptionChoices(values);
     }
     if (number === 12 && revisedPlan) { display(revisedPlan); return; }
@@ -334,6 +353,7 @@ function showCasePanels(number) {
       }
       const keys = spec.slots.map(slot => slot.key);
       if (number === 5) keys.push('advice');
+      if (number === 11) keys.push('firstReason','secondReason');
       if (number === 46) keys.push('outcome', 'delivery', 'resources', 'measures');
       const clean = Object.fromEntries(keys.map(key => [key, typeof values[key] === 'string' ? values[key].trim() : '']));
       if (number === 46 && keys.some(key => !clean[key])) throw new Error('Digital JD returned an incomplete revision.');
@@ -503,16 +523,24 @@ async function showRoadmap(screen) {
     });
   }
   const root = roadmap.shadowRoot || roadmap.attachShadow({mode: 'open'});
-  function message(text, action, callback) {
+  function message(text, action, callback, preparing = false) {
     const content = document.createElement('div');
     const heading = document.createElement('h1');
-    heading.textContent = 'Slide 13 - Your Action Roadmap';
+    heading.textContent = preparing ? 'Preparing your roadmap' : 'Your Action Roadmap';
     const description = document.createElement('p');
     description.setAttribute('role', 'status');
     description.textContent = text;
     content.className = 'roadmap-loading';
-    content.style.cssText = 'background:#fff;border:1px solid #c9d7eb;border-radius:12px;padding:1rem;margin:0 auto 1rem;max-width:1100px';
-    content.append(heading, description);
+    content.style.cssText = 'background:#fff;border:4px solid #08265f;border-radius:16px;padding:clamp(1.4rem,5vw,3rem);margin:1rem auto;max-width:1050px;min-height:16rem;color:#152940;box-shadow:0 3px 8px #10244037;font:inherit';
+    if (preparing) content.setAttribute('aria-busy','true');
+    const kicker=document.createElement('strong'); kicker.textContent='SLIDE 13';
+    content.append(kicker, heading, description);
+    if (preparing) {
+      const indicator=document.createElement('progress');
+      indicator.setAttribute('aria-label','Generating roadmap');
+      indicator.style.cssText='display:block;width:min(100%,22rem);margin:1rem 0;accent-color:#2156d9';
+      content.append(indicator);
+    }
     if (action) {
       const button = document.createElement('button');
       button.type = 'button';
@@ -537,7 +565,7 @@ async function showRoadmap(screen) {
     const stored = JSON.parse(readDraft(storageKey) || 'null');
     if (Array.isArray(stored?.sections) && stored.sections.length) { show(stored); return; }
   } catch { /* Generate a fresh starting roadmap if the saved data cannot be read. */ }
-  message('Digital JD is grouping the work into a starting roadmap.');
+  message('Digital JD is turning your plan into sections and tasks. Your roadmap will appear here when it is ready.', null, null, true);
   const controller = new AbortController();
   insightRequest = controller;
   try {
@@ -566,13 +594,32 @@ async function showRoadmap(screen) {
   }
 }
 
+function workshopScreenDetails(number,screen) {
+  const caseKey=JSON.stringify([fieldValue(2),fieldValue(2,1),readDraft(draftPrefix+':depth') || 'Snapshot']);
+  const currentPanel=insights.get(number);
+  const panel=currentPanel?.caseKey === caseKey ? JSON.stringify(currentPanel.values).slice(0,3000) : '';
+  const notes=(screen.microphones || []).map((field,index)=>{
+    const note=fieldValue(number,index);
+    return note ? field.label+': '+note.slice(0,900) : '';
+  }).filter(Boolean).join('\n').slice(0,2400);
+  return [panel && 'Information shown on this screen: '+panel,notes && 'Client entries on this screen: '+notes].filter(Boolean).join('\n');
+}
+
 function openSlideWorkshop(opener) {
   const number = current;
-  const title = screens[number - 1].title;
+  const screen = screens[number - 1];
+  const title = screen.title;
   openWorkshop({ opener, async send(question, history, signal) {
     const caseContext = [42,43].includes(number) ? '' : [
       fieldValue(2) && 'Situation: ' + fieldValue(2).slice(0, 2500),
       fieldValue(2,1) && 'Objective: ' + fieldValue(2,1).slice(0, 2500),
+      fieldValue(4) && 'Client clarification: ' + fieldValue(4).slice(0, 1700),
+      selectedOption() && 'Selected approach: ' + selectedOption().title,
+      number >= 15 && fieldValue(15,3) && 'Recorded result or evidence: ' + fieldValue(15,3).slice(0,2400),
+      [16,83,84].includes(number) && readDraft(hurdleUpdateKey(number)) && 'Saved update for this hurdle: ' + readDraft(hurdleUpdateKey(number)).slice(0,1800),
+      [16,83,84].includes(number) && fieldValue(number) && 'Current hurdle note: ' + fieldValue(number).slice(0,1800),
+      number === 25 && opportunity && 'Selected opportunity: ' + opportunity.title + '. ' + opportunity.summary,
+      workshopScreenDetails(number,screen),
     ].filter(Boolean).join('\n');
     const message = ['Executive screen ' + number + ': ' + title, caseContext,
       history.length && 'Recent workshop conversation: ' + JSON.stringify(history).slice(-3500),
@@ -681,6 +728,7 @@ function render(number) {
       label.textContent = actionLabel;
       button.append(label);
     }
+    if (link.label === 'My Cases / Switch') button.classList.add('deck-case-switch');
     if (number === 5 && link.label === 'Update understanding') button.dataset.conversationAction = 'update';
     if (number === 5 && link.label === 'Confirm understanding') button.dataset.conversationAction = 'confirm';
     place(button, link.rect);
@@ -810,6 +858,14 @@ function render(number) {
   }
   showCasePanels(number);
   if (number === 24) showOutcomeOpportunities();
+  if (number === 17) {
+    let sections = [];
+    try { sections = JSON.parse(readDraft(draftPrefix + ':roadmap:' + planRevisionKey()) || 'null')?.sections || []; } catch {}
+    renderProgressDashboard(controls, {
+      sections, evidence:fieldValue(15,3),
+      hurdles:hurdleScreens.map((screen,i)=>({id:'H0'+(i+1),note:readDraft(hurdleUpdateKey(screen)),resolved:Boolean(readDraft(hurdleResolutionKey(screen)))})),
+    });
+  }
   decorateSlide({number,screen,controls,entries,openHelp:openSlideWorkshop,
     go(target,returnable) { if (!fieldValue(2) || !fieldValue(2,1)) { status.textContent = 'Enter your situation and objective to use this case shortcut.'; return; } if (returnable) returnStack.push(number); render(target); },
     unavailable(label) { status.textContent = label + ' is not available for this sample case record in the preview.'; },
