@@ -52,7 +52,11 @@ export function decorateSlide({number, screen, controls, entries, openHelp, go, 
    button.classList.add('standard-in-panel');
    if (number === 3 && link.label === 'Select Snapshot' || number === 30 && link.label === 'Open current case') button.classList.add('standard-in-panel-primary');
    if (link.rect[2] < 6) button.classList.add('standard-in-panel-compact');
-   if (link.label === 'My Cases / Switch') button.classList.add('standard-in-panel-switch');
+   if (link.label === 'My Cases / Switch') {
+     const mask = element('span','standard-case-switch-mask');
+     controls.append(mask);
+     button.classList.add('standard-in-panel-switch');
+   }
    if (['Next 6 actions','Previous 6 actions'].includes(link.label)) {
      const [x,y,w,h] = link.rect;
      const mask = element('span','standard-pagination-mask');
@@ -65,7 +69,7 @@ export function decorateSlide({number, screen, controls, entries, openHelp, go, 
    if (label) label.className = 'standard-in-panel-label';
    else button.textContent = link.clientLabel || link.label;
    if (link.label === 'My Cases / Switch' && label) {
-     label.replaceChildren(document.createTextNode('View or switch'), document.createElement('br'), document.createTextNode('cases'));
+     label.textContent = 'View or switch cases';
    }
    if (['Next 6 actions','Previous 6 actions'].includes(link.label)) {
      button.classList.add('standard-in-panel-pagination');

@@ -1,7 +1,7 @@
 import { PANELS } from './case-panels.mjs';
 import { mountRoadmap, parseSuggestedRoadmap } from './roadmap.mjs';
 import { openTrackedTask } from './tracker-task-details.mjs';
-import { askButton, decorateSlide } from './slide-standard.mjs';
+import { askButton, decorateSlide } from './slide-standard.mjs?v=case-switch-2';
 import { openWorkshop, renderOpportunities } from './workshop.mjs';
 import { renderProgressDashboard } from './progress-dashboard.mjs';
 
@@ -728,7 +728,6 @@ function render(number) {
       label.textContent = actionLabel;
       button.append(label);
     }
-    if (link.label === 'My Cases / Switch') button.classList.add('deck-case-switch');
     if (number === 5 && link.label === 'Update understanding') button.dataset.conversationAction = 'update';
     if (number === 5 && link.label === 'Confirm understanding') button.dataset.conversationAction = 'confirm';
     place(button, link.rect);
