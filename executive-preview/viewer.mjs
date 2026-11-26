@@ -1,7 +1,7 @@
 import { PANELS } from './case-panels.mjs';
 import { mountRoadmap, parseSuggestedRoadmap } from './roadmap.mjs';
 import { openTrackedTask } from './tracker-task-details.mjs';
-import { askButton, decorateSlide } from './slide-standard.mjs?v=analysis-plaque-3';
+import { askButton, decorateSlide } from './slide-standard.mjs?v=assessment-frame-1';
 import { openWorkshop, renderOpportunities } from './workshop.mjs';
 import { renderProgressDashboard } from './progress-dashboard.mjs';
 
@@ -160,6 +160,32 @@ function approvedPlan() {
     const revision = JSON.parse(readDraft(draftPrefix + ':plan-revision') || 'null');
     if (revision?.key === planRevisionKey()) return revision.values;
   } catch { return undefined; }
+}
+
+function drawAssessmentPanels() {
+  const background = document.createElement('div');
+  background.className = 'assessment-panel-background';
+  place(background, [19.75, 23.55, 76.3, 54.1]);
+  controls.append(background);
+  for (const [index, title] of ['Current assessment', 'Rationale and attention'].entries()) {
+    const panel = document.createElement('section');
+    panel.className = 'assessment-rounded-panel';
+    const heading = document.createElement('h2');
+    heading.textContent = title;
+    panel.append(heading);
+    place(panel, index === 0 ? [20, 24.03, 36.6, 52.92] : [58.55, 24.03, 37.2, 52.92]);
+    if (index === 0) {
+      const rows = document.createElement('div');
+      rows.className = 'assessment-panel-row-labels';
+      for (const label of ['Result', 'Direction', 'Confidence']) {
+        const row = document.createElement('div');
+        row.textContent = label;
+        rows.append(row);
+      }
+      panel.append(rows);
+    }
+    controls.append(panel);
+  }
 }
 
 function showCasePanels(number) {
@@ -855,6 +881,7 @@ function render(number) {
     place(guidance, [60, 74.6, 34.1, 8.4]);
     controls.append(guidance);
   }
+  if (number === 19) drawAssessmentPanels();
   showCasePanels(number);
   if (number === 24) showOutcomeOpportunities();
   if (number === 17) {
