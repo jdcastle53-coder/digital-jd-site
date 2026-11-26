@@ -31,7 +31,11 @@ dl{display:grid;grid-template-columns:max-content 1fr;gap:.35rem .8rem}dt{font-w
 .roadmap-case-rail{display:flex;flex-direction:column;gap:.55rem;padding:.75rem;background:#eef3fd;border-radius:10px;align-self:start}
 .roadmap-case-rail button{background:linear-gradient(#407fc5,#092e73);color:white;box-shadow:0 2px 3px #14284c55;font-size:.9rem}
 .roadmap-case-rail button[aria-current]{border-left:4px solid #ffe34a;background:#141956}
-.bar{border-radius:10px 10px 0 0}.roadmap{border:3px solid #143c76;box-shadow:0 2px 4px #00143d44}
+.roadmap{border:5px solid #08265f;border-radius:16px;box-shadow:0 0 0 1px #476fa9,0 3px 6px #00143d40}
+.bar{border-bottom:2px solid #f2d03a;border-radius:0;background:linear-gradient(100deg,#071950,#194780)}
+button:not(.standard-ask){background:linear-gradient(#4383c9,#12458e 25%,#082b65 75%,#17467e);color:#fff;border-color:#102b72;box-shadow:inset 0 1px 2px #c8e5ff90,0 2px 3px #101f434b}
+button.primary{background:linear-gradient(#fff387,#ffdf34 35%,#fac01a);color:#112456;border-color:#bd900b;box-shadow:inset 0 1px 2px #fffac0,0 2px 3px #3a300d4b}
+button:not(:disabled):hover{filter:brightness(1.12)} button:not(:disabled):active{transform:translateY(2px);box-shadow:inset 0 2px 2px #04142f66}
 .navigation{justify-content:center}.navigation button:active{transform:translateY(2px)}
 @media(max-width:650px){.roadmap-layout{grid-template-columns:1fr}.roadmap-case-rail{display:flex;flex-direction:row;flex-wrap:wrap}}
 .request{padding:1rem}

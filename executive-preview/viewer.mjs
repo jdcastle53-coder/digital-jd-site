@@ -451,7 +451,7 @@ function addHurdleResolution(number) {
   action.className = 'deck-option-choice hurdle-complete-action';
   action.textContent = note ? id + ' complete' : 'Mark ' + id + ' complete';
   action.disabled = Boolean(note);
-  place(action, [78.9, 81.4, 15, 3.1]);
+  place(action, [79, 81.7, 14.3, 2.95]);
   action.addEventListener('click', () => {
     const resolution = fieldValue(number);
     if (!resolution) {
@@ -468,13 +468,13 @@ function addHurdleResolution(number) {
   saveUpdate.type = 'button';
   saveUpdate.className = 'deck-option-choice hurdle-save-update';
   saveUpdate.textContent = 'Save update';
-  place(saveUpdate, [63.4, 81.4, 14.5, 3.1]);
+  place(saveUpdate, [64.3, 81.7, 13.5, 2.95]);
   controls.append(saveUpdate);
 
   const feedback = document.createElement('span');
   feedback.className = 'hurdle-note-status';
   feedback.setAttribute('role', 'status');
-  place(feedback, [46.7, 84.8, 47.2, 3.6]);
+  place(feedback, [47.5, 85.05, 46, 2.9]);
   controls.append(feedback);
   updateHurdleNoteStatus(number);
   saveUpdate.addEventListener('click', () => {
