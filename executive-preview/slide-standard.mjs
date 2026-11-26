@@ -1,6 +1,6 @@
+import { artworkPanelBounds } from './panel-frames.mjs?v=panel-trim-1';
 ﻿
 const primaryTargets = {1:2,2:3,3:4,4:5,5:6,6:7,7:9,8:7,9:12,10:12,11:9,12:13,14:15,15:18,16:17,17:15,18:19,19:20,20:34,21:22,22:23,23:28,24:25,25:24,28:29,31:17,35:21,40:21,45:46};
-const panelFrames = {14:[[287,153,1186,476]]};
 const shortcuts = [
  ['Discuss with Digital JD',null], ['Facing a Hurdle',16], ['Task Tracker',18],
  ['Review My Plan',12], ['Progress Dashboard',17], ['Decisions & Status',20],
@@ -32,10 +32,28 @@ export function askButton(open) {
 export function decorateSlide({number, screen, controls, entries, openHelp, go, unavailable}) {
  controls.append(element('span','standard-header-glow'));
  controls.append(element('h1','standard-slide-title',screen.title));
- for (const [x,y,width,height] of panelFrames[number] || []) {
-   const frame = element('span','standard-evidence-frame');
-   Object.assign(frame.style,{left:x*100/1520+'%',top:y*100/720+'%',width:width*100/1520+'%',height:height*100/720+'%'});
-   controls.append(frame);
+ const bounds = artworkPanelBounds[number];
+ if (bounds) {
+   const layer = element('div','standard-panel-artwork');
+   layer.setAttribute('aria-hidden','true');
+   const artworkUrl = 'executive-approved/screen-' + String(number).padStart(3,'0') + '.png';
+   for (const [x,y,width,height] of bounds) {
+     const mask = element('div','standard-panel-artwork-mask');
+     const panel = element('div','standard-panel-artwork-frame');
+     const margin = 3;
+     Object.assign(mask.style,{left:(x-margin)/15.2+'%',top:(y-margin)/7.2+'%',
+       width:(width+2*margin)/15.2+'%',height:(height+2*margin)/7.2+'%'});
+     if (number === 26) mask.classList.add('standard-panel-artwork-modal');
+     const inset = 2;
+     Object.assign(panel.style,{
+       left:(x+inset)/15.2+'%',top:(y+inset)/7.2+'%',width:(width-2*inset)/15.2+'%',height:(height-2*inset)/7.2+'%',
+       backgroundImage:'url("'+artworkUrl+'")',
+       backgroundSize:1520/(width-2*inset)*100+'% '+720/(height-2*inset)*100+'%',
+       backgroundPosition:(x+inset)/(1520-width+2*inset)*100+'% '+(y+inset)/(720-height+2*inset)*100+'%',
+     });
+     layer.append(mask,panel);
+   }
+   controls.prepend(layer);
  }
  const bottom = entries.filter(({link}) => link.rect[1] >= 85 && link.rect[1] < 94);
  const footer = new Set(bottom);

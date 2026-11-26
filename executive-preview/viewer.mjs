@@ -1,7 +1,7 @@
 import { PANELS } from './case-panels.mjs';
-import { mountRoadmap, parseSuggestedRoadmap } from './roadmap.mjs';
+import { mountRoadmap, parseSuggestedRoadmap } from './roadmap.mjs?v=panel-trim-1';
 import { openTrackedTask } from './tracker-task-details.mjs';
-import { askButton, decorateSlide } from './slide-standard.mjs?v=assessment-frame-1';
+import { askButton, decorateSlide } from './slide-standard.mjs?v=panel-trim-1';
 import { openWorkshop, renderOpportunities } from './workshop.mjs';
 import { renderProgressDashboard } from './progress-dashboard.mjs';
 
