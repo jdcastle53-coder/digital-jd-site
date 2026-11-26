@@ -40,6 +40,7 @@ export function decorateSlide({number, screen, controls, entries, openHelp, go, 
  const bottom = entries.filter(({link}) => link.rect[1] >= 85 && link.rect[1] < 94);
  const footer = new Set(bottom);
  const topStyles = number === 3 ? 'Choose your depth of analysis' : number === 30 ? 'Your cases' : '';
+ if (number === 3) controls.append(element('span','analysis-depth-mask'));
  if (topStyles) {
    const plaque = element('aside',number === 3 ? 'analysis-depth-plaque' : 'case-index-plaque');
    plaque.append(element('strong',null,topStyles));
