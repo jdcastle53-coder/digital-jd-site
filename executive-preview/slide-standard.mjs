@@ -1,4 +1,4 @@
-import { artworkPanelBounds } from './panel-frames.mjs?v=panel-trim-1';
+import { artworkPanelBounds } from './panel-frames.mjs?v=panel-trim-2';
 ﻿
 const primaryTargets = {1:2,2:3,3:4,4:5,5:6,6:7,7:9,8:7,9:12,10:12,11:9,12:13,14:15,15:18,16:17,17:15,18:19,19:20,20:34,21:22,22:23,23:28,24:25,25:24,28:29,31:17,35:21,40:21,45:46};
 const shortcuts = [

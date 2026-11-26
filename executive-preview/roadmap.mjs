@@ -31,7 +31,7 @@ dl{display:grid;grid-template-columns:max-content 1fr;gap:.35rem .8rem}dt{font-w
 .roadmap-case-rail{display:flex;flex-direction:column;gap:.55rem;padding:.75rem;background:#eef3fd;border-radius:10px;align-self:start}
 .roadmap-case-rail button{background:linear-gradient(#407fc5,#092e73);color:white;box-shadow:0 2px 3px #14284c55;font-size:.9rem}
 .roadmap-case-rail button[aria-current]{border-left:4px solid #ffe34a;background:#141956}
-.roadmap{border:2px solid #184986;border-radius:16px;box-shadow:0 3px 6px #00143d30}
+.roadmap{border:3px solid #184986;border-radius:16px;box-shadow:0 3px 6px #00143d30}
 .bar{border-bottom:2px solid #f2d03a;border-radius:0;background:linear-gradient(100deg,#071950,#194780)}
 button:not(.standard-ask){background:linear-gradient(#4383c9,#12458e 25%,#082b65 75%,#17467e);color:#fff;border-color:#102b72;box-shadow:inset 0 1px 2px #c8e5ff90,0 2px 3px #101f434b}
 button.primary{background:linear-gradient(#fff387,#ffdf34 35%,#fac01a);color:#112456;border-color:#bd900b;box-shadow:inset 0 1px 2px #fffac0,0 2px 3px #3a300d4b}

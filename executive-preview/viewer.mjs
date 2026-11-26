@@ -1,7 +1,7 @@
 import { PANELS } from './case-panels.mjs';
-import { mountRoadmap, parseSuggestedRoadmap } from './roadmap.mjs?v=panel-trim-1';
+import { mountRoadmap, parseSuggestedRoadmap } from './roadmap.mjs?v=panel-trim-2';
 import { openTrackedTask } from './tracker-task-details.mjs';
-import { askButton, decorateSlide } from './slide-standard.mjs?v=panel-trim-1';
+import { askButton, decorateSlide } from './slide-standard.mjs?v=panel-trim-2';
 import { openWorkshop, renderOpportunities } from './workshop.mjs';
 import { renderProgressDashboard } from './progress-dashboard.mjs';
 
@@ -477,7 +477,7 @@ function addHurdleResolution(number) {
   action.className = 'deck-option-choice hurdle-complete-action';
   action.textContent = note ? id + ' complete' : 'Mark ' + id + ' complete';
   action.disabled = Boolean(note);
-  place(action, [79, 81.7, 14.3, 2.95]);
+  place(action, [79, 81.05, 14.3, 2.65]);
   action.addEventListener('click', () => {
     const resolution = fieldValue(number);
     if (!resolution) {
@@ -494,7 +494,7 @@ function addHurdleResolution(number) {
   saveUpdate.type = 'button';
   saveUpdate.className = 'deck-option-choice hurdle-save-update';
   saveUpdate.textContent = 'Save update';
-  place(saveUpdate, [64.3, 81.7, 13.5, 2.95]);
+  place(saveUpdate, [64.3, 81.05, 13.5, 2.65]);
   controls.append(saveUpdate);
 
   const feedback = document.createElement('span');
@@ -661,7 +661,7 @@ async function showOutcomeOpportunities() {
   panel.className = 'deck-insight deck-insight-compact opportunity-list';
   panel.setAttribute('aria-label','Case opportunities');
   panel.setAttribute('aria-live','polite');
-  place(panel,[63.5,30.6,32.2,55.4]);
+  place(panel,[64.05,31.15,30.9,53.95]);
   controls.append(panel);
   const evidence = fieldValue(15,3);
   if (!fieldValue(2) || !fieldValue(2,1) || !evidence) {
@@ -945,7 +945,8 @@ try {
     document.querySelector('#begin').addEventListener('click', () => jump(1));
     artwork.addEventListener('error', () => { status.textContent = 'This image could not be loaded. Refresh and try again.'; });
     artwork.addEventListener('load', () => { status.textContent = ''; });
-    render(1);
+    const initialSlide = Number(new URLSearchParams(location.search).get('slide'));
+    render(Number.isInteger(initialSlide) && screens[initialSlide-1] ? initialSlide : 1);
     review.hidden = false;
     status.textContent = '';
   }
