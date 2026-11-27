@@ -24,7 +24,8 @@
     return;
   }
 
-  const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const betaEmailPage = document.documentElement.dataset.executiveBetaEmail === 'true';
+  const client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, betaEmailPage ? { auth: { storageKey: 'djd-beta-email-verification' } } : undefined);
 
   function getExpiryIso(hours) {
     const date = new Date();

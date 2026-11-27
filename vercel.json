@@ -1,13 +1,26 @@
 {
   "functions": {
     "api/jd-brain-gateway.js": {
-      "includeFiles": "data/**"
+      "includeFiles": "api/_lib/private-data/*.json"
+    },
+    "api/executive-beta.js": {
+      "includeFiles": "executive-preview.html"
     }
   },
   "crons": [
     {
       "path": "/api/reconcile",
       "schedule": "0 13 * * *"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/executive-beta/workspace",
+      "destination": "/api/executive-beta?action=workspace"
+    },
+    {
+      "source": "/data/:path*",
+      "destination": "/api/executive-beta?action=private"
     }
   ]
 }

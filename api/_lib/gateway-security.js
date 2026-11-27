@@ -1,3 +1,4 @@
+import { gatewayBeta } from './executive-beta.js';
 import { Redis } from "@upstash/redis";
 import { createClient } from "@supabase/supabase-js";
 
@@ -65,6 +66,7 @@ function getBearerToken(req) {
  * allowed — the demo path permits anonymous, the app path does not).
  */
 export async function verifyAccess(req) {
+  if (req.headers['x-djd-executive-beta'] === '1') return gatewayBeta(req);
   const token = getBearerToken(req);
   if (!token) {
     return { ok: false, status: null, code: "no_token", message: "Not signed in." };

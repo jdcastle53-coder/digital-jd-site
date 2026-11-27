@@ -119,12 +119,19 @@ export function mountRoadmap(host, {initialSections, outcome, persist, navigatio
     return element;
   }
   function update(message) { render(); byId('status').textContent = message; }
-  function save() {
-    saved = draft; draft = null;
-    try { persist(saved); }
-    catch { update('Roadmap saved for this open preview. Browser storage is unavailable.'); return; }
-    update('Roadmap changes saved in this browser.');
-    byId('roadmap-navigation').lastElementChild.focus();
+  async function save() {
+    const proposed=draft;
+    if (!proposed) return;
+    const toolbar=byId('toolbar');
+    for(const control of toolbar.children)control.disabled=true;
+    try {
+      await persist(proposed);
+      saved=proposed;draft=null;
+      update('Roadmap changes saved.');
+      byId('roadmap-navigation').lastElementChild.focus();
+    } catch {
+      update('The roadmap could not be saved. Your edits are still open so you can try again.');
+    }
   }
   function reorder(index, direction) {
     const [section] = draft.splice(index,1);

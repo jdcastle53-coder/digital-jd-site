@@ -1,5 +1,9 @@
 (() => {
-  async function authHeaders() {
+  async function authHeaders(path, body) {
+    if (document.documentElement.dataset.executiveBeta) {
+      const { signedBetaHeaders } = await import('/executive-beta-device.mjs');
+      return { 'Content-Type': 'application/json', 'X-DJD-Executive-Beta': '1', ...await signedBetaHeaders(path, body) };
+    }
     const { data } = await window.Auth.client.auth.getSession();
     const token = data?.session?.access_token;
     return { 'Content-Type': 'application/json', ...(token && { Authorization: 'Bearer ' + token }) };
@@ -99,10 +103,11 @@
         try {
           stream.getAudioTracks().forEach(track => peer.addTrack(track, stream));
           await peer.setLocalDescription(await peer.createOffer());
+          const body = { sdp: peer.localDescription.sdp };
           const response = await fetch('/api/live-transcription', {
             method: 'POST',
-            headers: await authHeaders(),
-            body: JSON.stringify({ sdp: peer.localDescription.sdp }),
+            headers: await authHeaders('/api/live-transcription', body),
+            body: JSON.stringify(body),
             signal: controller.signal,
           });
           if (!response.ok) throw new Error('Live transcription unavailable');
@@ -228,10 +233,11 @@
               reader.onerror = reject;
               reader.readAsDataURL(audio);
             });
+            const body = { audio: audioBase64, mimeType };
             const response = await fetch('/api/transcribe', {
               method: 'POST',
-              headers: await authHeaders(),
-              body: JSON.stringify({ audio: audioBase64, mimeType }),
+              headers: await authHeaders('/api/transcribe', body),
+              body: JSON.stringify(body),
               signal: upload.signal
             });
             const data = await response.json();

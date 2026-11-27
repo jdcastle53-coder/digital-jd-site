@@ -5,6 +5,20 @@ import { askButton, decorateSlide } from './slide-standard.mjs?v=panel-trim-2';
 import { openWorkshop, renderOpportunities } from './workshop.mjs';
 import { renderProgressDashboard } from './progress-dashboard.mjs';
 
+const betaWorkspace = document.documentElement.dataset.executiveBeta === 'true';
+let pendingBetaWrites = Promise.resolve();
+
+async function betaApi(action,body={}) {
+  const {signedBetaHeaders}=await import('/executive-beta-device.mjs');
+  const response=await fetch('/api/executive-beta?action='+action,{method:'POST',headers:{'Content-Type':'application/json',...await signedBetaHeaders(action,body)},body:JSON.stringify(body)});
+  const result=await response.json();
+  if(!response.ok) {
+    if([401,403].includes(response.status)) location.replace('/executive-beta.html');
+    throw Error(result.error || 'The Executive beta service is unavailable.');
+  }
+  return result;
+}
+
 const status = document.querySelector('#status');
 const review = document.querySelector('#review');
 const artwork = document.querySelector('#artwork');
@@ -31,11 +45,17 @@ let planQuestion = '';
 
 function readDraft(key) {
   if (drafts.has(key)) return drafts.get(key);
+  if (betaWorkspace) return '';
   try { return localStorage.getItem(key) || ''; } catch { return ''; }
 }
 
 function saveDraft(key, value) {
   drafts.set(key, value);
+  if (betaWorkspace) {
+    pendingBetaWrites = pendingBetaWrites.catch(()=>{}).then(()=>betaApi('save-case',{key,value}));
+    pendingBetaWrites.catch(()=>{status.textContent='The beta case could not be saved. Re-enter the update and try again.';});
+    return true;
+  }
   try {
     if (value) localStorage.setItem(key, value);
     else localStorage.removeItem(key);
@@ -86,14 +106,15 @@ function fieldValue(screen, index = 0) {
   return readDraft(inputKey(screen,index)).trim();
 }
 
-async function askJD(body, signal) {
-  const { data } = await window.Auth.client.auth.getSession();
-  const token = data?.session?.access_token;
-  if (!token) throw new Error('Sign in again to get your DJD insight.');
+async function askJD(payload, signal) {
+  const token = betaWorkspace ? null : (await window.Auth.client.auth.getSession()).data?.session?.access_token;
+  if (!betaWorkspace && !token) throw new Error('Sign in again to get your DJD insight.');
+  const body={...payload,caseScoped:true};
+  const browserProof=betaWorkspace?await (await import('/executive-beta-device.mjs')).signedBetaHeaders('/api/jd-brain-gateway',body):{};
   const response = await fetch('/api/jd-brain-gateway', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
-    body: JSON.stringify({ ...body, caseScoped: true }),
+    headers: { 'Content-Type': 'application/json', ...(betaWorkspace ? {'X-DJD-Executive-Beta':'1',...browserProof} : {Authorization:'Bearer '+token}) },
+    body: JSON.stringify(body),
     signal,
   });
   const result = await response.json().catch(() => ({}));
@@ -444,7 +465,7 @@ function updateHurdleNoteStatus(number) {
   const text = fieldValue(number);
   const state = resolution ? 'Hurdle complete.' : 'Hurdle still open.';
   if (text && (text === update || text === resolution)) {
-    feedback.textContent = 'Update saved in this browser. ' + state;
+    feedback.textContent = (betaWorkspace ? 'Update saved to your case. ' : 'Update saved in this browser. ') + state;
   } else if (text) {
     feedback.textContent = 'Click Save update to keep your comment. ' + state;
   } else {
@@ -478,14 +499,17 @@ function addHurdleResolution(number) {
   action.textContent = note ? id + ' complete' : 'Mark ' + id + ' complete';
   action.disabled = Boolean(note);
   place(action, [79, 81.05, 14.3, 2.65]);
-  action.addEventListener('click', () => {
+  action.addEventListener('click', async () => {
     const resolution = fieldValue(number);
     if (!resolution) {
       status.textContent = 'Enter how the hurdle was resolved first.';
       return;
     }
     const key = hurdleResolutionKey(number);
-    if (!saveDraft(key, resolution)) { drafts.delete(key); return; }
+    try {
+      if (!saveDraft(key, resolution)) throw Error();
+      if (betaWorkspace) await pendingBetaWrites;
+    } catch { drafts.delete(key); return; }
     render(number);
     status.textContent = id + ' marked complete.';
   });
@@ -503,13 +527,16 @@ function addHurdleResolution(number) {
   place(feedback, [47.5, 85.05, 46, 2.9]);
   controls.append(feedback);
   updateHurdleNoteStatus(number);
-  saveUpdate.addEventListener('click', () => {
+  saveUpdate.addEventListener('click', async () => {
     const update = fieldValue(number);
     if (!update) { feedback.textContent = 'Enter a comment before saving an update.'; return; }
     const key = hurdleUpdateKey(number);
-    if (!saveDraft(key, update)) {
+    try {
+      if (!saveDraft(key, update)) throw Error();
+      if (betaWorkspace) await pendingBetaWrites;
+    } catch {
       drafts.delete(key);
-      feedback.textContent = 'Update could not be saved in this browser. Try again.';
+      feedback.textContent = 'Update could not be saved. Try again.';
       return;
     }
     updateHurdleNoteStatus(number);
@@ -544,6 +571,7 @@ async function showRoadmap(screen) {
       persist(sections) {
         const value = JSON.stringify({ ...plan, sections, edited: true });
         saveDraft(storageKey, value);
+        if (betaWorkspace) return pendingBetaWrites;
         if (localStorage.getItem(storageKey) !== value) throw new Error('Roadmap storage unavailable');
       },
     });
@@ -762,7 +790,7 @@ function render(number) {
       const storageKey = draftPrefix + ':saved-task-update:' + planRevisionKey();
       const snapshot = () => JSON.stringify(Object.fromEntries(screen.microphones.map((field, index) => [field.label, fieldValue(15, index)])));
       let savedUpdate;
-      try { savedUpdate = localStorage.getItem(storageKey); } catch { /* The save action reports storage errors. */ }
+      try { savedUpdate = readDraft(storageKey); } catch { /* The save action reports storage errors. */ }
       const buttonLabel = () => savedUpdate && savedUpdate === snapshot() ? 'Add another task' : 'Save task';
       const refreshLabel = () => {
         label.textContent = buttonLabel();
@@ -772,7 +800,7 @@ function render(number) {
         if (current === 15) refreshLabel();
       }, { signal: screenEvents.signal });
       refreshLabel();
-      button.addEventListener('click', () => {
+      button.addEventListener('click', async () => {
         if (buttonLabel() === 'Add another task') { jump(14); return; }
         const update = snapshot();
         if (!Object.values(JSON.parse(update)).some(Boolean)) {
@@ -780,9 +808,10 @@ function render(number) {
           return;
         }
         try {
-          localStorage.setItem(storageKey, update);
+          if (betaWorkspace) { await betaApi('save-case',{key:storageKey,value:update}); drafts.set(storageKey,update); }
+          else localStorage.setItem(storageKey,update);
           savedUpdate = update;
-          status.textContent = 'Task update saved in this browser. You can add another task or submit this update for review.';
+          status.textContent = (betaWorkspace?'Task update saved to your case.':'Task update saved in this browser.') + ' You can add another task or submit this update for review.';
           refreshLabel();
         } catch {
           status.textContent = 'This browser could not save the task update.';
@@ -925,7 +954,11 @@ window.addEventListener('pagehide', () => {
 
 try {
   if (!window.Auth) throw new Error('Sign-in is unavailable. Refresh and try again.');
-  const session = await window.Auth.requireActiveSession({
+  const session = betaWorkspace ? await betaApi('session').then(async access => {
+    const {entries}=await betaApi('read-case');
+    for(const [key,value] of entries)drafts.set(key,value);
+    return {user:{id:access.id,user_metadata:{plan:'executive'}}};
+  }) : await window.Auth.requireActiveSession({
     onMissing: () => { const target = new URLSearchParams(location.search).get('new-case') === '1' ? 'executive-preview.html?new-case=1' : 'executive-preview.html'; location.href = 'signin.html?next=' + encodeURIComponent(target); },
   });
   if (session) {
@@ -947,6 +980,12 @@ try {
     artwork.addEventListener('load', () => { status.textContent = ''; });
     const initialSlide = Number(new URLSearchParams(location.search).get('slide'));
     render(Number.isInteger(initialSlide) && screens[initialSlide-1] ? initialSlide : 1);
+    if (betaWorkspace) {
+      const logout=document.createElement('button');logout.type='button';logout.textContent='End beta session';
+      logout.addEventListener('click',async()=>{try{await pendingBetaWrites;await betaApi('logout');location.replace('/executive-beta.html');}catch(error){status.textContent=error.message;}});
+      document.querySelector('header').append(logout);
+      setInterval(()=>betaApi('session').catch(error=>{review.hidden=true;status.textContent=error.message;}),30000);
+    }
     review.hidden = false;
     status.textContent = '';
   }
