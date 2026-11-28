@@ -91,11 +91,16 @@ export async function issueInvitation(email, limit) {
   if(Number(inserted)!==1) throw betaError(409,'This tester already has an invitation. Use Reset to replace it.');
   return {entry,token:id+'.'+secret};
 }
+const listRecords = /* lua */ `
+local records={}
+for _,id in ipairs(redis.call('ZREVRANGE',KEYS[1],0,199)) do
+ local record=redis.call('GET',ARGV[1]..id)
+ if record then table.insert(records,record) end
+end
+return records
+`;
 export async function listInvitations() {
-  const db=store();
-  const ids=await db.zrange(listKey,0,199,{rev:true});
-  if(ids == null || (Array.isArray(ids) && ids.length === 0)) return [];
-  return (await db.mget(...ids.map(recordKey))).map(parse).filter(Boolean);
+  return (await store().eval(listRecords,[listKey],[root+'invite:'])).map(parse);
 }
 export async function getInvitation(id) {return parse(await store().get(recordKey(requireId(id))));}
 

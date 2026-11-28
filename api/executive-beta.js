@@ -38,6 +38,7 @@ export default async function handler(req,res) {
   res.setHeader('Referrer-Policy','no-referrer');
   res.setHeader('X-Robots-Tag','noindex, nofollow');
   const action=String(req.query?.action||'');
+  let phase=action;
   try {
     if(action==='workspace'&&req.method==='GET') {
       try {await authorizeBeta(req);}
@@ -84,7 +85,9 @@ export default async function handler(req,res) {
       return res.status(200).json({ok:true});
     }
     if(action==='admin-list') {
+      phase='admin-list:owner';
       await owner(req);
+      phase='admin-list:storage';
       return res.status(200).json({invitations:(await listInvitations()).map(privateFields)});
     }
     if(action==='admin-issue') {
@@ -105,7 +108,11 @@ export default async function handler(req,res) {
     }
     return res.status(404).json({error:'Not found.'});
   } catch(error) {
-    if(!error.status) console.error('[EXECUTIVE-BETA]',action,error.name,String(error.stack||'').split('\n').filter(line=>line.trim().startsWith('at ')).slice(0,6).join(' | '), /WRONGPASS|unauthorized|invalid token/i.test(error.message||'')?'provider authorization failed':'');
+    if(!error.status) {
+      const frame=String(error.stack||'').split('\n').find(line=>line.trim().startsWith('at '))||'';
+      const typeDetail=error.name==='TypeError'?(String(error.message).match(/^(Cannot read properties of (?:null|undefined) \(reading '[\w]+'\)|[\w.]+ is not a function|fetch failed|Invalid URL)/)?.[0]||''):'';
+      console.error('[EXECUTIVE-BETA] '+phase+' '+error.name+' '+typeDetail+' '+frame.trim());
+    }
     return res.status(error.status||503).json({error:error.status?error.message:'Executive beta service is temporarily unavailable.'});
   }
 }
