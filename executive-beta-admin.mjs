@@ -2,16 +2,25 @@ import { registerBrowserKey } from './executive-beta-device.mjs';
 
 const byId=id=>document.getElementById(id);
 const result=byId('result');
+const signIn=byId('owner-sign-in');
+const retry=byId('retry-admin');
 let working=false;
 async function request(action,body={}) {
  const session=await window.Auth.client.auth.getSession();
  const token=session.data?.session?.access_token;
- if(!token)throw Error('Sign in to your Digital JD owner account to continue.');
+ if(!token) {
+  signIn.hidden=false;
+  throw Error('Sign in with your verified Digital JD owner account to continue.');
+ }
+ signIn.hidden=true;
  const response=await fetch('/api/executive-beta?action='+action,{method:'POST',headers:{
    'Content-Type':'application/json',Authorization:'Bearer '+token,
  },body:JSON.stringify(body)});
  const data=await response.json();
- if(!response.ok)throw Error(data.error||'Unable to continue.');
+ if(!response.ok) {
+  if([401,403].includes(response.status)) signIn.hidden=false;
+  throw Error(data.error||'Unable to continue.');
+ }
  return data;
 }
 function run(operation) {
@@ -57,4 +66,16 @@ byId('issue').addEventListener('submit',e=>{
 });
 byId('refresh').addEventListener('click',()=>run(refresh));
 byId('workspace').addEventListener('click',()=>run(async()=>{const data=await request('owner',{publicKey:await registerBrowserKey()});location.assign(data.workspace);}));
-run(refresh);
+async function loadAdmin() {
+ result.textContent='Checking your owner account…';
+ retry.hidden=true;
+ try {
+  await refresh();
+  result.textContent='';
+ } catch (error) {
+  retry.hidden=!signIn.hidden;
+  throw error;
+ }
+}
+retry.addEventListener('click',()=>run(loadAdmin));
+run(loadAdmin);

@@ -277,7 +277,7 @@
         </label>
         <label>
           <span>Password</span>
-          <input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="••••••••" />
+          <input id="password" type="password" required minlength="6" autocomplete="current-password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" />
         </label>
 
         <div id="status"></div>
@@ -324,6 +324,10 @@
         return;
       }
 
+      if (new URLSearchParams(window.location.search).get("next") === "executive-beta-admin.html") {
+        window.location.href = "executive-beta-admin.html";
+        return;
+      }
       const session = await window.Auth.requireActiveSession();
       if (session) {
         const next = new URLSearchParams(window.location.search).get("next");

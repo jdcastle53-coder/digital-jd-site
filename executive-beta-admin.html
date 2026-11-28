@@ -2,9 +2,9 @@
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><meta name="referrer" content="no-referrer">
 <title>Executive beta administration</title><link rel="stylesheet" href="/executive-beta.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/auth.js"></script><script type="module" src="/executive-beta-admin.mjs"></script></head>
-<body><main><h1>Executive beta administration</h1><p id="result" role="status"></p><a href="/signin.html?next=executive-beta-admin.html">Sign in to the owner account</a>
-<section id="admin" hidden><button id="workspace" type="button">Open permanent owner workspace</button><h2>Issue invitation</h2>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="/auth.js"></script><script type="module" src="/executive-beta-admin.mjs?v=2"></script></head>
+<body><main><h1>Executive beta administration</h1><p id="result" role="status"></p><a id="owner-sign-in" hidden href="/signin.html?next=executive-beta-admin.html">Sign in to the owner account</a>
+<button id="retry-admin" type="button" hidden>Retry loading admin controls</button><section id="admin" hidden><button id="workspace" type="button">Open permanent owner workspace</button><h2>Issue invitation</h2>
 <form id="issue"><label>Tester email <input name="email" type="email" required maxlength="254"></label>
 <label>AI requests per day <input name="limit" type="number" required min="1" max="1000" value="100"></label><button>Issue invitation</button></form>
 <label id="new-link" hidden>Copy this single-use link <input id="invitation-url" type="url" readonly></label>

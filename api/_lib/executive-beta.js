@@ -94,7 +94,7 @@ export async function issueInvitation(email, limit) {
 export async function listInvitations() {
   const db=store();
   const ids=await db.zrange(listKey,0,199,{rev:true});
-  if(!ids.length) return [];
+  if(ids == null || (Array.isArray(ids) && ids.length === 0)) return [];
   return (await db.mget(...ids.map(recordKey))).map(parse).filter(Boolean);
 }
 export async function getInvitation(id) {return parse(await store().get(recordKey(requireId(id))));}

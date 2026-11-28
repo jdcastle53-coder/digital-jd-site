@@ -105,7 +105,7 @@ export default async function handler(req,res) {
     }
     return res.status(404).json({error:'Not found.'});
   } catch(error) {
-    if(!error.status) console.error('[EXECUTIVE-BETA]',action,'storage or identity failure');
+    if(!error.status) console.error('[EXECUTIVE-BETA]',action,error.name,String(error.stack||'').split('\n').filter(line=>line.trim().startsWith('at ')).slice(0,6).join(' | '), /WRONGPASS|unauthorized|invalid token/i.test(error.message||'')?'provider authorization failed':'');
     return res.status(error.status||503).json({error:error.status?error.message:'Executive beta service is temporarily unavailable.'});
   }
 }
