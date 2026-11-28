@@ -18,7 +18,9 @@ export const betaError = (status, message) => Object.assign(new Error(message), 
 let redis;
 let identity;
 export function store() {
-  const url=process.env.KV_REST_API_URL, token=process.env.KV_REST_API_TOKEN;
+  const dedicated=Boolean(process.env.EXECUTIVE_BETA_KV_REST_API_URL || process.env.EXECUTIVE_BETA_KV_REST_API_TOKEN);
+  const url=dedicated ? process.env.EXECUTIVE_BETA_KV_REST_API_URL : process.env.KV_REST_API_URL;
+  const token=dedicated ? process.env.EXECUTIVE_BETA_KV_REST_API_TOKEN : process.env.KV_REST_API_TOKEN;
   if (!url || !token) throw betaError(503,'Executive beta storage is unavailable.');
   return redis ||= new Redis({url,token,automaticDeserialization:false});
 }
